@@ -379,32 +379,32 @@ for (i_basin in unique(GLODAP$basin)) {
           lm_fit_single <- lm(lm_best_single_formula,
                              data = GLODAP_basin_era_slab)
           
-          # plotting model diagnostics
-          # p_model <- ggnostic(
-          #   lm_fit_single,
-          #   columnsY = c("cstar", ".fitted", ".resid"),
-          #   title = paste("eras:", i_eras,
-          #                 "| era:", i_era,
-          #                 "| basin:", i_basin,
-          #                 "| gamma slab:", i_gamma_slab,
-          #                 "| predictors:", i_predictors)
-          # )
-          # 
-          # ggsave(
-          #   plot = p_model,
-          #   path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
-          #   filename = paste(
-          #     i_eras,
-          #     i_era,
-          #     i_basin,
-          #     i_gamma_slab,
-          #     i_predictors,
-          #     "eMLR_cstar_residuals.png",
-          #     sep = "_"
-          # ),
-          # width = 14,
-          # height = 8
-          # )
+          plotting model diagnostics
+          p_model <- ggnostic(
+            lm_fit_single,
+            columnsY = c("cstar", ".fitted", ".resid"),
+            title = paste("eras:", i_eras,
+                          "| era:", i_era,
+                          "| basin:", i_basin,
+                          "| gamma slab:", i_gamma_slab,
+                          "| predictors:", i_predictors)
+          )
+
+          ggsave(
+            plot = p_model,
+            path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
+            filename = paste(
+              i_eras,
+              i_era,
+              i_basin,
+              i_gamma_slab,
+              i_predictors,
+              "eMLR_cstar_residuals.png",
+              sep = "_"
+          ),
+          width = 14,
+          height = 8
+          )
 
           rm(p_model)
           
