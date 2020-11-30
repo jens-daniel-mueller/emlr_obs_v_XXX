@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -39,12 +70,9 @@ Required are:
 ```{r read_GLODAP_used_for_fitting}
 
 GLODAP <-
-  read_csv(
-    here::here(
-      "data/interim",
-      "GLODAPv2.2020_MLR_fitting_ready.csv"
-    )
-  )
+  read_csv(paste(path_version_data,
+                 "GLODAPv2.2020_MLR_fitting_ready.csv",
+                 sep = ""))
 
 ```
 
@@ -85,11 +113,11 @@ for (i_basin in unique(GLODAP$basin)) {
 
       # fit the full linear model, i.e. all predictor combinations
       lm_full <- lm(
-        parameters$MLR_full_model,
+        params_local$MLR_full_model,
         data = GLODAP_basin_era_slab)
       
       # fit linear models for all possible predictor combinations
-      # unfortunately, this functions does not provide model coeffcients (yet)
+      # unfortunately, this functions does not provide model coefficients (yet)
       lm_all <- ols_step_all_possible(lm_full)
       
       # extract diagnostics of each linear model
@@ -118,26 +146,28 @@ for (i_basin in unique(GLODAP$basin)) {
 }
 
 # write model diagnostics to file
-lm_all_stats %>%
-  write_csv(here::here("data/eMLR",
-                       "lm_all_stats.csv"))
+
+lm_all_stats %>% write_csv(paste(path_version_data,
+                             "lm_all_stats.csv",
+                             sep = ""))
 
 rm(i_gamma_slab, i_era, i_basin,
-   GLODAP_basin_era, GLODAP_basin_era_slab,
-   lm_all_stats)
+   GLODAP_basin_era, GLODAP_basin_era_slab)
 
 ```
 
-RMSE was plotted against the number of predictors (limited to `r parameters$predictors_min` - `r parameters$predictors_max`).
+RMSE was plotted against the number of predictors (limited to `r params_local$predictors_min` - `r params_local$predictors_max`).
 
 ```{r eMLR_predictor_model_quality, fig.asp=2}
 
-lm_all_stats <- read_csv(here::here("data/eMLR",
-                                    "lm_all_stats.csv"))
+# lm_all_stats <- read_csv(paste(path_version_data,
+#                                "lm_all_stats.csv",
+#                                sep = ""))
+
 
 lm_all_stats <- lm_all_stats %>% 
-  filter(n >= parameters$predictors_min,
-         n <= parameters$predictors_max)
+  filter(n >= params_local$predictors_min,
+         n <= params_local$predictors_max)
 
 lm_all_stats %>% 
   ggplot(aes(n, rmse, col = basin)) +
@@ -164,7 +194,7 @@ lm_all_stats %>%
 
 ## Predictor selection
 
-Within each basin and slab, the `r parameters$MLR_number` linear regression models with lowest summed RMSE across all eras were selected.
+Within each basin and slab, the `r params_local$MLR_number` linear regression models with lowest summed RMSE across all eras were selected.
 
 ```{r predictor_selection}
 
@@ -201,7 +231,7 @@ lm_best <- lm_all_stats %>%
   group_by(basin, gamma_slab, eras) %>%
   slice_min(order_by = rmse_sum,
             with_ties = FALSE,
-            n = parameters$MLR_number) %>%
+            n = params_local$MLR_number) %>%
   ungroup() %>% 
   arrange(basin, gamma_slab, eras, predictors)
 
@@ -271,7 +301,7 @@ sqrt(mean(lm_2$residuals^2))
 
 # Fitting best models
 
-After selecting `r parameters$MLR_number` linear regression models with lowest summed RMSE across all eras, models are fitted again and model coefficients are saved to file.
+After selecting `r params_local$MLR_number` linear regression models with lowest summed RMSE across all eras, models are fitted again and model coefficients are saved to file.
 
 ```{r prepare_model_table}
 
@@ -300,7 +330,7 @@ lm_best <- lm_best %>%
   select(basin, gamma_slab, era, eras, predictors, lm_coeff, rmse_sum)
 
 # run similar loop as for rmse calculation
-# to get model coeffcients for 10 best models
+# to get model coefficients for 10 best models
 for (i_basin in unique(GLODAP$basin)) {
   for (i_era in unique(GLODAP$era)) {
     # i_basin <- unique(GLODAP$basin)[1]
@@ -349,7 +379,7 @@ for (i_basin in unique(GLODAP$basin)) {
           lm_fit_single <- lm(lm_best_single_formula,
                              data = GLODAP_basin_era_slab)
           
-
+          # plotting model diagnostics
           # p_model <- ggnostic(
           #   lm_fit_single,
           #   columnsY = c("cstar", ".fitted", ".resid"),
@@ -362,20 +392,21 @@ for (i_basin in unique(GLODAP$basin)) {
           # 
           # ggsave(
           #   plot = p_model,
-          #   here::here(
-          #     "output/figure/eMLR/model_validation",
-          #     paste(i_eras,
-          #           i_era,
-          #           i_basin,
-          #           i_gamma_slab,
-          #           i_predictors,
-          #           "eMLR_cstar_residuals.png",
-          #           sep = "_")
-          #   ),
-          #   width = 14,
-          #   height = 8
+          #   path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
+          #   filename = paste(
+          #     i_eras,
+          #     i_era,
+          #     i_basin,
+          #     i_gamma_slab,
+          #     i_predictors,
+          #     "eMLR_cstar_residuals.png",
+          #     sep = "_"
+          # ),
+          # width = 14,
+          # height = 8
           # )
-          # rm(p_model)
+
+          rm(p_model)
           
           coefficients <- tidy(lm_fit_single)
           coefficients <- coefficients %>%
@@ -423,9 +454,9 @@ lm_all <- lm_all %>%
   mutate(estimate = if_else(is.na(estimate), 0, estimate))
 
 # write lm models to file
-lm_all %>%
-  write_csv(here::here("data/eMLR",
-                       "lm_all.csv"))
+lm_all %>% write_csv(paste(path_version_data,
+                           "lm_all.csv",
+                           sep = ""))
 
 # Prepare model coefficients for mapping of cstar
 lm_all_wide_cstar <- lm_all %>% 
@@ -434,9 +465,9 @@ lm_all_wide_cstar <- lm_all %>%
               names_prefix = "coeff_",
               values_fill = 0)
 
-lm_all_wide_cstar %>%
-  write_csv(here::here("data/eMLR",
-                       "lm_all_wide_cstar.csv"))
+lm_all_wide_cstar %>% write_csv(paste(path_version_data,
+                                      "lm_all_wide_cstar.csv",
+                                      sep = ""))
 
 rm(lm_all_wide_cstar)
 
@@ -467,13 +498,9 @@ lm_all_wide <- lm_all_long %>%
               names_prefix = "delta_coeff_",
               values_fill = 0)
 
-lm_all_wide %>%
-  write_csv(here::here("data/eMLR",
-                       "lm_all_wide.csv"))
-
-# lm_all_long %>%
-#   write_csv(here::here("data/eMLR",
-#                        "lm_all_long.csv"))
+lm_all_wide %>% write_csv(paste(path_version_data,
+                                      "lm_all_wide.csv",
+                                      sep = ""))
 
 rm(lm_all_long, lm_all_wide)
 

@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -32,13 +63,15 @@ Currently, we use combined predictor fields:
 
 ```{r read_predictor_files}
 
-predictors <- 
-    read_csv(here::here("data/mapping",
-                         "W18_st_G16_opsn.csv"))
+predictors <-
+  read_csv(paste(path_version_data,
+                 "W18_st_G16_opsn.csv",
+                 sep = ""))
 
-predictors_surface <- 
-    read_csv(here::here("data/mapping",
-                         "W18_st_G16_opsn_surface.csv"))
+predictors_surface <-
+  read_csv(paste(path_version_data,
+                 "W18_st_G16_opsn_surface.csv",
+                 sep = ""))
 
 ```
 
@@ -47,10 +80,9 @@ predictors_surface <-
 ```{r read_atm_pCO2}
 
 co2_atm_tref <-
-  read_csv(here::here(
-    "data/interim",
-    "co2_atm_tref.csv"
-  ))
+  read_csv(paste(path_version_data,
+                 "co2_atm_tref.csv",
+                 sep = ""))
 
 ```
 
@@ -61,8 +93,9 @@ co2_atm_tref <-
 ```{r load_eMLR_models}
 
 lm_all_wide <-
-  read_csv(here::here("data/eMLR",
-                       "lm_all_wide.csv"))
+  read_csv(paste(path_version_data,
+                 "lm_all_wide.csv",
+                 sep = ""))
 ```
 
 # Merge MLRs + climatologies
@@ -126,22 +159,24 @@ for (i_eras in unique(cant$eras)) {
         palette = "vik",
         limit = limits
       ) +
-      scale_y_reverse(limits = c(parameters$inventory_depth, NA)) +
+      scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
       scale_x_continuous(limits = c(-75, 65)) +
       guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
       labs(title = paste("eras:", i_eras,
                          "| lon:", i_lon,
-                         "|", parameters$Version_ID)) +
+                         "|", params_local$Version_ID)) +
       facet_wrap( ~ model, ncol = 5)
     
     ggsave(
-      here::here(
-        "output/figure/mapping",
+      paste(
+        path_version_figures,
+        "Cant_model_sections/",
         paste(i_eras,
               "lon",
               i_lon,
               "model_cant.png",
-              sep = "_")
+              sep = "_"),
+        sep = ""
       ),
       width = 17,
       height = 9
@@ -374,29 +409,26 @@ cant_inv <- m_cant_inv(cant_average)
 
 ```{r write_cant_files}
 
-# cant %>%
-#     write_csv(here::here("data/output",
-#                          "cant.csv"))
 
 cant_average %>%
-    write_csv(here::here("data/output",
-                         "cant_3d.csv"))
+  write_csv(paste(path_version_data,
+                  "cant_3d.csv", sep = ""))
 
 cant_predictor_average %>%
-    write_csv(here::here("data/output",
-                         "cant_predictor_3d.csv"))
+  write_csv(paste(path_version_data,
+                  "cant_predictor_3d.csv", sep = ""))
 
 cant_average_zonal %>%
-    write_csv(here::here("data/output",
-                         "cant_zonal.csv"))
+  write_csv(paste(path_version_data,
+                  "cant_zonal.csv", sep = ""))
 
 cant_predictor_average_zonal %>%
-    write_csv(here::here("data/output",
-                         "cant_predictor_zonal.csv"))
+  write_csv(paste(path_version_data,
+                  "cant_predictor_zonal.csv", sep = ""))
 
 cant_inv %>%
-    write_csv(here::here("data/output",
-                         "cant_inv.csv"))
+  write_csv(paste(path_version_data,
+                  "cant_inv.csv", sep = ""))
 
 ```
 

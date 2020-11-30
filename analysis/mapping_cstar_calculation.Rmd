@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Predictor fields
@@ -24,9 +55,10 @@ Currently, we use combined predictor fields:
 
 ```{r read_predictor_file}
 
-predictors <- 
-    read_csv(here::here("data/mapping",
-                         "W18_st_G16_opsn.csv"))
+predictors <-
+  read_csv(paste(path_version_data,
+                 "W18_st_G16_opsn.csv",
+                 sep = ""))
 
 ```
 
@@ -36,8 +68,9 @@ predictors <-
 ```{r load_eMLR_models}
 
 lm_all_wide_cstar <-
-  read_csv(here::here("data/eMLR",
-                       "lm_all_wide_cstar.csv"))
+  read_csv(paste(path_version_data,
+                 "lm_all_wide_cstar.csv",
+                 sep = ""))
 
 ```
 
@@ -51,6 +84,7 @@ lm_all_wide_cstar <- lm_all_wide_cstar %>%
 cstar <- full_join(predictors, lm_all_wide_cstar)
 
 rm(predictors, lm_all_wide_cstar)
+
 
 ```
 
@@ -99,11 +133,13 @@ cstar_average_zonal <- m_cut_gamma(cstar_average_zonal, "gamma_mean")
 ```{r write_cstar_files}
 
 cstar_average %>%
-    write_csv(here::here("data/output",
-                         "cstar_3d.csv"))
+  write_csv(paste(path_version_data,
+                  "cstar_3d.csv",
+                  sep = ""))
 
 cstar_average_zonal %>%
-    write_csv(here::here("data/output",
-                         "cstar_zonal.csv"))
+  write_csv(paste(path_version_data,
+                  "cstar_zonal.csv",
+                  sep = ""))
 
 ```

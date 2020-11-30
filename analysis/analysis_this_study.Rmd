@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -36,22 +67,25 @@ cant estimates from this study:
 
 ```{r read_cant_files}
 
-
 cant_3d <-
-  read_csv(here::here("data/output",
-                         "cant_3d.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_3d.csv",
+                 sep = ""))
 
 cant_zonal <-
-  read_csv(here::here("data/output",
-                         "cant_zonal.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_zonal.csv",
+                 sep = ""))
 
 cant_predictor_zonal <-
-  read_csv(here::here("data/output",
-                         "cant_predictor_zonal.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_predictor_zonal.csv",
+                 sep = ""))
 
 cant_inv <-
-  read_csv(here::here("data/output",
-                         "cant_inv.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_inv.csv",
+                 sep = ""))
 
 ```
 
@@ -63,12 +97,14 @@ C* estimates from this study:
 ```{r read_cstar_files}
 
 cstar_3d <-
-  read_csv(here::here("data/output",
-                         "cstar_3d.csv"))
+  read_csv(paste(path_version_data,
+                 "cstar_3d.csv",
+                 sep = ""))
 
 cstar_zonal <-
-  read_csv(here::here("data/output",
-                         "cstar_zonal.csv"))
+  read_csv(paste(path_version_data,
+                 "cstar_zonal.csv",
+                 sep = ""))
 
 
 ```
@@ -78,18 +114,17 @@ Cleaned GLODAPv2_2020 file as used in this study
 ```{r read_GLODAP_used_for_fitting}
 
 GLODAP <-
-  read_csv(
-    here::here(
-      "data/interim",
-      "GLODAPv2.2020_MLR_fitting_ready.csv"
-    )
-  )
+  read_csv(paste(
+    path_version_data,
+    "GLODAPv2.2020_MLR_fitting_ready.csv",
+    sep = ""
+  ))
 
 ```
 
 # C~ant~ budgets
 
-Global C~ant~ inventories were estimated in units of Pg C. Please note that here we only added positive C~ant~ values in the upper `r parameters$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global C~ant~ inventories were estimated in units of Pg C. Please note that here we only added positive C~ant~ values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
@@ -189,7 +224,7 @@ for (i_eras in unique(cant_gamma_maps$eras)) {
 
 ## Inventory map
 
-Column inventory of positive cant between the surface and `r parameters$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_pos_inventory_map, fig.asp=0.5}
 
@@ -248,7 +283,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
                  eras == i_eras),
         var = "cant_mean",
         gamma = "gamma_mean",
-        breaks = parameters$breaks_cant,
+        breaks = params_global$breaks_cant,
         col = "divergent",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| eras:", i_eras))
@@ -296,7 +331,7 @@ for (i_eras in unique(cant_gamma_maps$eras)) {
 
 ## Inventory map
 
-Column inventory of positive cant between the surface and `r parameters$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_all_inventory_map, fig.asp=0.5}
 
@@ -486,7 +521,7 @@ rm(variable)
 Please note that:
 
 - density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
-- predictor density slabs are only shown for the upper `r parameters$inventory_depth`m as used for the mapping, whereas GLODAP observations are displayed for the entire water column as used for fitting eMLRs (in both cases shallow waters are excluded at low density)
+- predictor density slabs are only shown for the upper `r params_global$inventory_depth`m as used for the mapping, whereas GLODAP observations are displayed for the entire water column as used for fitting eMLRs (in both cases shallow waters are excluded at low density)
 
 ```{r gamma_maps, fig.asp=2.5}
 
@@ -518,7 +553,7 @@ rm(GLODAP_obs_coverage)
 cstar_zonal <- cstar_zonal %>% 
     mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) 
 
-slab_breaks <- c(parameters$slabs_Atl[1:12],Inf)
+slab_breaks <- c(params_local$slabs_Atl[1:12],Inf)
 
 cstar_zonal %>% 
     ggplot(aes(lat, depth, z = cstar_mean)) +

@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -38,12 +69,9 @@ Required are:
 ```{r read_GLODAP_used_for_fitting}
 
 GLODAP <-
-  read_csv(
-    here::here(
-      "data/interim",
-      "GLODAPv2.2020_MLR_fitting_ready.csv"
-    )
-  )
+  read_csv(paste(path_version_data,
+                 "GLODAPv2.2020_MLR_fitting_ready.csv",
+                 sep = ""))
 
 ```
 
@@ -114,8 +142,6 @@ Individual correlation plots for each basin, era and neutral density (gamma) sla
 
 ```{r predictor_correlation_per_basin_era_slab, eval=FALSE}
 
-
-
 for (i_basin in unique(GLODAP$basin)) {
   for (i_era in unique(GLODAP$era)) {
     # i_basin <- unique(GLODAP$basin)[1]
@@ -172,10 +198,10 @@ for (i_basin in unique(GLODAP$basin)) {
           )
         )
       
-      
       png(
-        here::here(
-          "output/figure/eMLR/predictor_correlation",
+        filename = paste(
+          path_version_figures,
+          "Observations_correlation/",
           paste(
             "predictor_correlation",
             i_basin,
@@ -183,8 +209,8 @@ for (i_basin in unique(GLODAP$basin)) {
             i_gamma_slab,
             ".png",
             sep = "_"
-          )
-        ),
+          ),
+          sep = ""),
         width = 12,
         height = 12,
         units = "in",
@@ -287,13 +313,13 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
 }
 
 
-cor_predictors %>%
-  write_csv(here::here("data/eMLR",
-                       "cor_predictors.csv"))
-
-cor_cstar_predictor %>%
-  write_csv(here::here("data/eMLR",
-                       "cor_cstar_predictor.csv"))
+# cor_predictors %>%
+#   write_csv(here::here("data/eMLR",
+#                        "cor_predictors.csv"))
+# 
+# cor_cstar_predictor %>%
+#   write_csv(here::here("data/eMLR",
+#                        "cor_cstar_predictor.csv"))
 
 rm(cor_predictors_temp, cor_cstar_predictor_temp,
    i_gamma_slab, i_era, i_basin,
@@ -343,10 +369,13 @@ Below, the range of correlations coefficients for C* with each predictor is plot
 
 ```{r correlation_predictors, fig.asp=1.5}
 
-cor_cstar_predictor <-
-  read_csv(here::here("data/eMLR",
-                       "cor_cstar_predictor.csv")) %>% 
-  rename(predictor = rowname)
+# cor_cstar_predictor <-
+#   read_csv(here::here("data/eMLR",
+#                        "cor_cstar_predictor.csv")) %>% 
+#   rename(predictor = rowname)
+
+cor_cstar_predictor <- cor_cstar_predictor %>% 
+  rename(predictor = term)
 
 cor_cstar_predictor_stats <- cor_cstar_predictor %>% 
   group_by(predictor, basin, gamma_slab) %>% 

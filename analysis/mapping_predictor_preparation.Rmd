@@ -12,7 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -46,13 +77,14 @@ Following variables are currently used:
 variables <-
   c("oxygen", "PO4", "silicate")
 
+# i_variable <- variables[1]
+
 for (i_variable in variables) {
-  temp <- read_csv(
-    here::here(
-      "data/interim",
-      paste("GLODAPv2_2016_MappedClimatology",i_variable, ".csv", sep = "")
-    )
-  )
+  temp <- read_csv(paste(
+    path_preprocessing,
+    paste("GLODAPv2_2016_MappedClimatology_", i_variable, ".csv", sep = ""),
+    sep = ""
+  ))
   
   if (exists("GLODAP_predictors")) {
     GLODAP_predictors <- full_join(GLODAP_predictors, temp)
@@ -81,12 +113,11 @@ variables <-
   c("PO4", "silicate", "TAlk", "TCO2")
 
 for (i_variable in variables) {
-  temp <- read_csv(
-    here::here(
-      "data/interim",
-      paste("GLODAPv2_2016_MappedClimatology",i_variable, ".csv", sep = "")
-    )
-  )
+  temp <- read_csv(paste(
+    path_preprocessing,
+    paste("GLODAPv2_2016_MappedClimatology_", i_variable, ".csv", sep = ""),
+    sep = ""
+  ))
   
   if (exists("GLODAP_predictors_CO2")) {
     GLODAP_predictors_CO2 <- full_join(GLODAP_predictors_CO2, temp)
@@ -119,20 +150,9 @@ GLODAP_predictors_CO2 <- GLODAP_predictors_CO2 %>%
 ```{r load_WOA18}
 
 WOA18_predictors <-
-  read_csv(
-    here::here(
-      "data/interim",
-      "WOA18_sal_tem.csv"
-    )
-  )
-
-WOA18_predictors_surface <-
-  read_csv(
-    here::here(
-      "data/interim",
-      "WOA18_sal_tem_surface.csv"
-    )
-  )
+  read_csv(paste(path_preprocessing,
+                 "WOA18_sal_tem.csv",
+                 sep = ""))
 
 ```
 
@@ -148,23 +168,39 @@ predictors <- full_join(
   GLODAP_predictors,
   WOA18_predictors)
 
+# unique(GLODAP_predictors$depth)
+# unique(WOA18_predictors$depth)
+
 predictors <- predictors %>% 
   drop_na()
 
-rm(GLODAP_predictors, WOA18_predictors)
+predictors <- predictors %>%
+  filter(depth >= params_local$depth_min | gamma >= params_local$gamma_min)
+
+rm(GLODAP_predictors)
 
 ```
 
-```{r join_WOA18_GLODAP_predictors_surface, fig.asp=0.5}
+## Apply density threshold
+
+The predictor field was split into two parts:
+
+1. Deep water: neutral densities >= `r params_local$gamma_min` and depth >= `r params_local$depth_min`m
+2. Shallow water: rest
+
+```{r split_WOA18_GLODAP_predictors_surface}
 
 predictors_surface <- full_join(
   GLODAP_predictors_CO2,
-  WOA18_predictors_surface)
+  WOA18_predictors)
 
 predictors_surface <- predictors_surface %>% 
   drop_na()
 
-rm(GLODAP_predictors_CO2, WOA18_predictors_surface)
+predictors_surface <- predictors_surface %>%
+  filter(depth < params_local$depth_min,
+         gamma < params_local$gamma_min)
+
 
 ```
 
@@ -218,13 +254,13 @@ p_map_climatology(
 
 ### Predictor profiles
 
-Likewise, predictor profiles for the North Atlantic (`r parameters$lat_Atl_profile` / `r parameters$lon_Atl_section`) are plotted to control successful merging of the data sets.
+Likewise, predictor profiles for the North Atlantic (`r params_global$lat_Atl_profile` / `r params_global$lon_Atl_section`) are plotted to control successful merging of the data sets.
 
 ```{r predictor_profiles_N_Atl, fig.asp=1.5}
 
 N_Atl <- predictors %>% 
-  filter(lat == parameters$lat_Atl_profile,
-         lon == parameters$lon_Atl_section)
+  filter(lat == params_global$lat_Atl_profile,
+         lon == params_global$lon_Atl_section)
 
 N_Atl <- N_Atl %>% 
   select(-c(basin, basin_AIP)) %>% 
@@ -319,8 +355,8 @@ p_section_global(
 
 The following boundaries for isoneutral slabs were defined:
 
-- Atlantic: `r parameters$slabs_Atl`
-- Indo-Pacific: `r parameters$slabs_Ind_Pac`
+- Atlantic: `r params_local$slabs_Atl`
+- Indo-Pacific: `r params_local$slabs_Ind_Pac`
 
 Continuous neutral density (gamma) values based on WOA18 are grouped into isoneutral slabs.
 
@@ -342,7 +378,7 @@ map +
   geom_bin2d(data = predictors,
              aes(lon, lat),
              binwidth = c(1,1)) +
-  geom_vline(xintercept = parameters$longitude_sections_regular,
+  geom_vline(xintercept = params_global$longitude_sections_regular,
              col = "white") +
   scale_fill_viridis_c(direction = -1) +
   theme(legend.position = "bottom")
@@ -385,7 +421,7 @@ map +
   geom_bin2d(data = predictors_surface,
              aes(lon, lat),
              binwidth = c(1,1)) +
-  geom_vline(xintercept = parameters$longitude_sections_regular,
+  geom_vline(xintercept = params_global$longitude_sections_regular,
              col = "white") +
   scale_fill_viridis_c(direction = -1) +
   theme(legend.position = "bottom")
@@ -418,12 +454,14 @@ for (i_var in vars) {
 ```{r write_joined_predictor_fields}
 
 predictors %>%
-    write_csv(here::here("data/mapping",
-                         "W18_st_G16_opsn.csv"))
+  write_csv(paste(path_version_data,
+                  "W18_st_G16_opsn.csv",
+                  sep = ""))
 
 predictors_surface %>%
-    write_csv(here::here("data/mapping",
-                         "W18_st_G16_opsn_surface.csv"))
+  write_csv(paste(path_version_data,
+                  "W18_st_G16_opsn_surface.csv",
+                  sep = ""))
 
 ```
 

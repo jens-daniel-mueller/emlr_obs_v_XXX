@@ -12,8 +12,38 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
 
-```{r parent, child = here::here("analysis/child/setup.Rmd")}
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_updata_paths}
+path_preprocessing    <-
+  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+
+path_version_data     <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/data/",
+    sep = ""
+  )
+
+path_version_figures  <-
+  paste(
+    "/nfs/kryo/work/updata/emlr_cant/observations/",
+    params_local$Version_ID,
+    "/figures/",
+    sep = ""
+  )
 ```
 
 # Libraries
@@ -39,8 +69,9 @@ Following Cant estimates from this study (JDM) and Gruber 2019 (G19) are used:
 ```{r read_JDM_cant_files}
 
 cant_zonal_JDM <-
-  read_csv(here::here("data/output",
-                         "cant_zonal.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_zonal.csv",
+                 sep = ""))
 
 cant_zonal_JDM <- cant_zonal_JDM %>%
   filter(eras == "JGOFS_GO") %>%
@@ -54,11 +85,12 @@ cant_zonal_JDM <- cant_zonal_JDM %>%
 
 
 cant_inv_JDM <-
-  read_csv(here::here("data/output",
-                         "cant_inv.csv"))
+  read_csv(paste(path_version_data,
+                 "cant_inv.csv",
+                 sep = ""))
 
-cant_inv_JDM <- cant_inv_JDM %>% 
-  filter(eras == "JGOFS_GO") %>% 
+cant_inv_JDM <- cant_inv_JDM %>%
+  filter(eras == "JGOFS_GO") %>%
   select(-c(eras))
 
 ```
@@ -67,16 +99,18 @@ cant_inv_JDM <- cant_inv_JDM %>%
 
 ```{r read_Gruber_cant_file}
 
-cant_inv_G19 <- 
-  read_csv(here::here("data/interim",
-                       "G19_cant_inv.csv"))
+cant_inv_G19 <-
+  read_csv(paste(path_preprocessing,
+                 "G19_cant_inv.csv",
+                 sep = ""))
 
-cant_inv_G19 <- cant_inv_G19 %>% 
+cant_inv_G19 <- cant_inv_G19 %>%
   select(-eras)
 
-cant_zonal_G19 <- 
-  read_csv(here::here("data/interim",
-                       "G19_cant_zonal.csv"))
+cant_zonal_G19 <-
+  read_csv(paste(path_preprocessing,
+                 "G19_cant_zonal.csv",
+                 sep = ""))
 
 cant_zonal_G19 <- cant_zonal_G19 %>%
   filter(eras == "JGOFS_GO") %>%
@@ -135,7 +169,7 @@ cant_zonal_wide <- cant_zonal_wide %>%
 
 # C~ant~ budgets
 
-Global C~ant~ inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper `r parameters$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global C~ant~ inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
@@ -174,11 +208,11 @@ In a first series of plots we explore the distribution of Cant, taking only posi
 
 ### Absolute values
 
-Column inventory of positive cant between the surface and `r parameters$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_pos_inventory_map, fig.asp=0.5}
 
-i_estimate <- unique(cant_inv_long$estimate)[1]
+# i_estimate <- unique(cant_inv_long$estimate)[1]
 
 for (i_estimate in unique(cant_inv_long$estimate)) {
   
@@ -195,7 +229,7 @@ for (i_estimate in unique(cant_inv_long$estimate)) {
 
 ### Offset
 
-Column inventory of positive cant between the surface and `r parameters$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_pos_offset_inventory_map, fig.asp=0.5}
 
@@ -251,7 +285,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         df = cant_zonal_wide %>%
           filter(basin_AIP == i_basin_AIP),
         var = "cant_pos_mean_offset",
-        breaks = parameters$breaks_cant_offset,
+        breaks = params_global$breaks_cant_offset,
         plot_slabs = "n",
         col = "divergent",
         subtitle_text =
@@ -273,7 +307,7 @@ In a first series of plots we explore the distribution of cant, taking only posi
 
 ### Absolute values
 
-Column inventory of Cant (including positive and negative values) between the surface and `r parameters$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of Cant (including positive and negative values) between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
 
 ```{r cant_inventory_map, fig.asp=0.5}
@@ -327,7 +361,7 @@ for (i_basin_AIP in unique(cant_zonal_long$basin_AIP)) {
                  estimate == i_estimate),
         var = "cant_mean",
         col = "divergent",
-        breaks = parameters$breaks_cant,
+        breaks = params_global$breaks_cant,
         plot_slabs = "n",
         legend_title = expression(atop(Delta * C[ant],
                                           (mu * mol ~ kg ^ {-1}))),
@@ -361,7 +395,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         var = "cant_mean_offset",
         plot_slabs = "n",
         col = "divergent",
-        breaks = parameters$breaks_cant_offset,
+        breaks = params_global$breaks_cant_offset,
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| estimate:", i_estimate)
       )
