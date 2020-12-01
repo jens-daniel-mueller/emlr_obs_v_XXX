@@ -482,7 +482,7 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 ```{r obs_gamma_slab_Atl, fig.asp=1}
 
 GLODAP <- GLODAP %>% 
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) %>%
+  # mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) %>%
   mutate(gamma_slab = factor(gamma_slab), 
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
 
@@ -515,6 +515,8 @@ GLODAP %>%
 Zonal and meridional section plots are produce for each cruise individually and can be downloaded [here](https://github.com/jens-daniel-mueller/Cant_eMLR/tree/master/output/figure/eMLR/data_preparation/all_cruises_clean){target="_blank"}.
 
 ```{r plot_all_individual_cruises_clean}
+
+if (params_local$plot_all_figures == "y") {
 
 cruises <- GLODAP %>% 
   group_by(cruise) %>% 
@@ -668,6 +670,7 @@ rm(map_plot,
 
 }
 
+}
 
 ```
 

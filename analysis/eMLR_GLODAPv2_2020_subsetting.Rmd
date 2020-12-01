@@ -84,7 +84,7 @@ Samples were assigned to following eras:
 - new_era:    > `r params_local$year_GOSHIP_end+1`
 
 
-```{r assign_eras}
+```{r assign_eras, eval=FALSE}
 
 GLODAP <- GLODAP %>%
   filter(year >= params_local$year_JGOFS_start) %>% 
@@ -94,6 +94,19 @@ GLODAP <- GLODAP %>%
 
 GLODAP <- GLODAP %>% 
   mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
+
+```
+
+
+```{r assign_eras_new}
+
+GLODAP <- GLODAP %>%
+  filter(year > params_local$era_breaks[1]) %>% 
+  mutate(era = cut(year, params_local$era_breaks, dig.lab = 5))
+
+# GLODAP %>% 
+#   filter(year == 1999) %>% 
+#   select(era)
 
 ```
 
@@ -610,7 +623,7 @@ rm(GLODAP_cruises)
 ```
 
 
-```{r switch_eras_manually}
+```{r switch_eras_manually, eval=FALSE}
 
 GLODAP <- GLODAP %>%
   mutate(era = as.character(era)) %>% 
