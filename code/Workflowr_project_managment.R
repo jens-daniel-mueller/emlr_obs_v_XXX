@@ -139,9 +139,8 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "first rebuild on ETH server",
+message = "rebuild with flexible eras, A16 shifted and all plots = y",
 republish = TRUE)
-
 
 
 # Push latest version to GitHub
