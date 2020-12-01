@@ -623,15 +623,11 @@ rm(GLODAP_cruises)
 ```
 
 
-```{r switch_eras_manually, eval=FALSE}
+```{r switch_eras_manually}
 
 GLODAP <- GLODAP %>%
-  mutate(era = as.character(era)) %>% 
   mutate(era = if_else(cruise %in% c(1041, 1042),
-                      "GO_SHIP", era))
-
-GLODAP <- GLODAP %>% 
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
+                       sort(unique(GLODAP$era))[2], era))
 
 ```
 
@@ -655,14 +651,6 @@ GLODAP_stats_long <- GLODAP_stats %>%
   pivot_longer(1:length(GLODAP_stats),
                names_to = "parameter",
                values_to = "n")
-# 
-# GLODAP_stats_long  %>%  write_csv(
-#   here::here(
-#     "data/interim",
-#     "GLODAPv2.2020_stats.csv"
-#   )
-# )
-
 ##
 
 GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
@@ -763,8 +751,7 @@ era_median_year
 GLODAP_histogram_year %>%
   ggplot() +
   geom_vline(xintercept = c(
-    params_local$year_JGOFS_end + 0.5,
-    params_local$year_GOSHIP_end + 0.5
+    params_local$era_breaks + 0.5
   )) +
   geom_col(aes(year, n, fill = basin)) +
   geom_point(
@@ -818,8 +805,7 @@ rm(GLODAP_hovmoeller_year)
 ```{r coverage_maps_era_subsetting}
 
 GLODAP_obs_grid <- GLODAP_obs_grid %>%
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")),
-         cleaning_level = factor(
+  mutate(cleaning_level = factor(
            cleaning_level,
            unique(GLODAP_obs_grid$cleaning_level)
          ))
@@ -832,7 +818,7 @@ map +
   geom_raster(data = GLODAP_obs_grid %>%
                 filter(cleaning_level != "tco2_values"),
               aes(lon, lat, fill = "subset")) +
-  scale_fill_manual(values = c("red", "grey"), name = "") +
+  scale_fill_brewer(palette = "Set1", name = "") +
   theme(legend.position = "top",
         axis.title = element_blank())
 
@@ -848,7 +834,7 @@ map +
   geom_raster(data = GLODAP_obs_grid %>%
                 filter(cleaning_level != "tco2_values"),
               aes(lon, lat, fill = "subset")) +
-  scale_fill_manual(values = c("red", "grey"), name = "") +
+  scale_fill_brewer(palette = "Set1", name = "") +
   facet_grid(cleaning_level ~ era) +
   theme(legend.position = "top",
         axis.title = element_blank())
@@ -860,9 +846,6 @@ map +
 Grey pixels refer to sampling locations filtered for availability of tco2 data only.
 
 ```{r coverage_maps_era_clean, fig.asp=1.5}
-
-GLODAP <- GLODAP %>% 
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
 
 GLODAP_tco2_grid <- GLODAP %>%
   count(lat, lon, era)
