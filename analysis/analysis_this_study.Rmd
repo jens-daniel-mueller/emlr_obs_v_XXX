@@ -418,8 +418,8 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
 
 ```{r cant_vs_sd_by_basin_era}
 
-cant_3d <- cant_3d  %>% 
-  mutate(eras = factor(eras, c("JGOFS_GO", "GO_new")))
+# cant_3d <- cant_3d  %>% 
+#   mutate(eras = factor(eras, c("JGOFS_GO", "GO_new")))
 
 cant_3d %>% 
   ggplot(aes(cant, cant_sd)) +
@@ -485,8 +485,8 @@ cant_zonal %>%
 
 ```{r cant_section_predictor_contribution}
 
-cant_predictor_zonal <- cant_predictor_zonal %>% 
-  mutate(eras = factor(eras, c("JGOFS_GO", "GO_new")))
+# cant_predictor_zonal <- cant_predictor_zonal %>% 
+#   mutate(eras = factor(eras, c("JGOFS_GO", "GO_new")))
 
 variable <- "cant_intercept"
 
@@ -526,8 +526,9 @@ Please note that:
 ```{r gamma_maps, fig.asp=2.5}
 
 GLODAP_obs_coverage <- GLODAP %>% 
-  count(lat, lon, gamma_slab, era) %>% 
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
+  count(lat, lon, gamma_slab, era)
+# %>% 
+#   mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
   
 map +
   geom_raster(data = cant_gamma_maps,
@@ -550,8 +551,8 @@ rm(GLODAP_obs_coverage)
 
 ```{r cstar_zonal_mean_era}
 
-cstar_zonal <- cstar_zonal %>% 
-    mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) 
+# cstar_zonal <- cstar_zonal %>% 
+#     mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) 
 
 slab_breaks <- c(params_local$slabs_Atl[1:12],Inf)
 

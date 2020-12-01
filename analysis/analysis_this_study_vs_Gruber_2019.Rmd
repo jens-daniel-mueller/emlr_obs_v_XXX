@@ -74,7 +74,7 @@ cant_zonal_JDM <-
                  sep = ""))
 
 cant_zonal_JDM <- cant_zonal_JDM %>%
-  filter(eras == "JGOFS_GO") %>%
+  filter(eras == unique(cant_zonal_JDM$eras)[1]) %>%
   select(lat,
          depth,
          basin_AIP,
@@ -90,7 +90,7 @@ cant_inv_JDM <-
                  sep = ""))
 
 cant_inv_JDM <- cant_inv_JDM %>%
-  filter(eras == "JGOFS_GO") %>%
+  filter(eras == unique(cant_inv_JDM$eras)[1]) %>%
   select(-c(eras))
 
 ```
