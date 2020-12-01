@@ -78,7 +78,7 @@ lm_all_wide_cstar <-
 
 ```{r merge_model_coeff_predictor_climatology}
 
-lm_all_wide_cstar <- lm_all_wide_cstar %>% 
+lm_all_wide_cstar <- lm_all_wide_cstar %>%
   mutate(model = str_remove(model, "cstar ~ "))
          
 cstar <- full_join(predictors, lm_all_wide_cstar)

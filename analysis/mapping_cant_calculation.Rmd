@@ -139,6 +139,8 @@ Zonal sections plots are produced for every 20° longitude, each era and for all
 
 ```{r cant_section_by_model_eras_lon}
 
+if (params_local$plot_all_figures == "y") {
+
 for (i_eras in unique(cant$eras)) {
   # i_eras <- unique(cant$eras)[2]
   cant_eras <- cant %>%
@@ -183,6 +185,7 @@ for (i_eras in unique(cant$eras)) {
     )
     
   }
+}
 }
 
 ```
@@ -275,12 +278,20 @@ p_section_climatology_regular(
 
 ```{r cant_surface}
 
+# # calculate increase in atm pCO2 between eras
+# co2_atm_tref <- co2_atm_tref %>% 
+#   arrange(pCO2_tref) %>% 
+#   mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref)) %>% 
+#   drop_na() %>% 
+#   mutate(eras = c("JGOFS_GO", "GO_new")) %>% 
+#   select(eras, d_pCO2_tref)
+
 # calculate increase in atm pCO2 between eras
 co2_atm_tref <- co2_atm_tref %>% 
   arrange(pCO2_tref) %>% 
-  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref)) %>% 
+  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref),
+         eras = paste(lag(era), era, sep = " --> ")) %>% 
   drop_na() %>% 
-  mutate(eras = c("JGOFS_GO", "GO_new")) %>% 
   select(eras, d_pCO2_tref)
 
 cant_surface <- full_join(predictors_surface, co2_atm_tref,
