@@ -86,8 +86,6 @@ co2_atm_tref <-
 
 ```
 
-
-
 # Load MLR models
 
 ```{r load_eMLR_models}
@@ -278,14 +276,6 @@ p_section_climatology_regular(
 
 ```{r cant_surface}
 
-# # calculate increase in atm pCO2 between eras
-# co2_atm_tref <- co2_atm_tref %>% 
-#   arrange(pCO2_tref) %>% 
-#   mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref)) %>% 
-#   drop_na() %>% 
-#   mutate(eras = c("JGOFS_GO", "GO_new")) %>% 
-#   select(eras, d_pCO2_tref)
-
 # calculate increase in atm pCO2 between eras
 co2_atm_tref <- co2_atm_tref %>% 
   arrange(pCO2_tref) %>% 
@@ -308,20 +298,33 @@ cant_surface <- cant_surface %>%
 ```
 
 
-```{r cant_surface_climatology_map}
+```{r cant_surface_climatology_map, fig.asp=1}
+
+# i_eras <- unique(cant_average$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
 
 p_map_climatology(
-  df = cant_surface,
-  var = "cant")
-
+  df = cant_surface %>% filter(eras == i_eras),
+  var = "cant")  +
+  labs(subtitle = paste("era:", i_eras))
+  
+}
 ```
 
 
 ```{r cant_surface_climatology_sections}
 
+# i_eras <- unique(cant_surface$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+
 p_section_climatology_regular(
-  df = cant_surface,
-  var = "cant")
+  df = cant_surface %>% filter(eras == i_eras),
+  var = "cant") +
+  labs(subtitle = paste("era:", i_eras))
+  
+}
 
 ```
 
@@ -345,6 +348,41 @@ cant_average <- m_cant_model_average(cant)
 rm(cant)
 
 ```
+
+
+
+```{r cant_deep_climatology_map, fig.asp=1}
+
+# i_eras <- unique(cant_average$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+
+p_map_climatology(
+  df = cant_average %>% filter(eras == i_eras),
+  var = "cant_pos",
+  subtitle_text = paste("era:", i_eras))
+  
+}
+
+```
+
+
+```{r cant_deep_climatology_sections}
+
+# i_eras <- unique(cant_surface$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+
+p_section_climatology_regular(
+  df = cant_average %>% filter(eras == i_eras),
+  var = "cant_pos",
+  subtitle_text = paste("era:", i_eras))
+  
+}
+
+```
+
+
 
 ### Surface water averaging
 
