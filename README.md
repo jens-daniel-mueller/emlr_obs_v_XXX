@@ -1,10 +1,20 @@
 # Instructions to run the code in this repository
 
-This code was written to be executed within RStudio.
-
 ## Scientific scope
 
 The code in this repository is intended to estimate anthropogenic carbon in the ocean based on the eMLR(C*) method.
+
+# General instructions
+
+This code was written to be executed within RStudio.
+
+1. Copy the template repository on Github.
+2. Name it according to version.
+3. Create folders on update.
+4. Add as RStudio project.
+5. Change Version_ID and others parameters in config_parameterization_local.Rmd. The Version_ID must be consistent with the respective folder name on /update/emlr_cant.
+6. 
+
 
 ## Sharing code across analysis
 
