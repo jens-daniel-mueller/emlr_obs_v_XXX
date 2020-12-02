@@ -23,9 +23,11 @@ library(tidyverse)
 
 # Definition
 
-Following parameterizations were chosen to run analysis and display results:
+Following local (i.e. relevant for this sensitivity run) parameterizations were chosen to run analysis:
 
 ```{r define_params_local}
+
+# neutral density thresholds to cut the Atlantic ocean into slabs
 slabs_Atl <-
   c(
     -Inf,
@@ -45,6 +47,7 @@ slabs_Atl <-
     Inf
   )
 
+# neutral density thresholds to cut the Indo-Pacific ocean into slabs
 slabs_Ind_Pac <-
   c(-Inf,
     26.00,
@@ -60,6 +63,8 @@ slabs_Ind_Pac <-
     28.10,
     Inf)
 
+# MLR model to be fitted with all predictors taken into account
+# Please note that for the mapping step, predictors need to be adjusted manually
 MLR_full_model <- "cstar ~ 
                 sal  + 
                 tem  + 
@@ -71,25 +76,43 @@ MLR_full_model <- "cstar ~
 
 params_local <-
   lst(
+    # ID of current sensitivity run
     Version_ID = "v_XXX",
+    # f flags accepted for GLODAP data
     flag_f = c(2, 0),
+    # qc flags accepted for GLODAP data
     flag_qc = 1,
+    # Shallowest depth for data to be included in MLR fitting
     depth_min = 150,
-    depth_shallow_max = 500,
+    # Shallowest water depth for data to be included in MLR fitting
     bottomdepth_min = 0,
+    # Lowest neutral density to map Cant with eMLR approach
     gamma_min = 26,
+    # break years for eras, numbers indicate the upper end of the respective era
     era_breaks = c(1981, 1999, 2012, Inf),
+    # see above
     MLR_full_model = MLR_full_model,
+    # Maxmimum number of MLR predictors
     predictors_max = 5,
+    # Minimum number of MLR predictors
     predictors_min = 2,
+    # Total number of MLR fits taken into account
     MLR_number = 10,
+    # see above
     slabs_Atl = slabs_Atl,
+    # see above
     slabs_Ind_Pac = slabs_Ind_Pac,
+    # Stoichiometric ratio of C to P
     rCP = 117,
+    # Stoichiometric ratio of N to P
     rNP = 16,
+    # Stoichiometric ratio of P to O (PO4* calculation)
     rPO = 170,
+    # Offset P to O (PO4* calculation)
     rPO_offset = 1.95,
+    # Preindustrial atmospheric pCO2
     preind_atm_pCO2 = 280,
+    # generate a high number of diagnostic plots while running the analysis (y/n)
     plot_all_figures = "n"
   )
 

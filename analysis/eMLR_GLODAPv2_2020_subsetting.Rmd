@@ -75,38 +75,13 @@ GLODAP <-
 
 Samples were assigned to following eras:
 
-- JGOFS_WOCE:
-`r params_local$year_JGOFS_start` - `r params_local$year_JGOFS_end`
-
-- GO_SHIP:
-`r params_local$year_JGOFS_end+1` - `r params_local$year_GOSHIP_end`
-
-- new_era:    > `r params_local$year_GOSHIP_end+1`
-
-
-```{r assign_eras, eval=FALSE}
-
-GLODAP <- GLODAP %>%
-  filter(year >= params_local$year_JGOFS_start) %>% 
-  mutate(era = "JGOFS_WOCE",
-         era = if_else(year > params_local$year_JGOFS_end, "GO_SHIP", era),
-         era = if_else(year > params_local$year_GOSHIP_end, "new_era", era))
-
-GLODAP <- GLODAP %>% 
-  mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
-
-```
-
-
-```{r assign_eras_new}
+```{r assign_eras}
 
 GLODAP <- GLODAP %>%
   filter(year > params_local$era_breaks[1]) %>% 
   mutate(era = cut(year, params_local$era_breaks, dig.lab = 5))
 
-# GLODAP %>% 
-#   filter(year == 1999) %>% 
-#   select(era)
+unique(GLODAP$era)
 
 ```
 
@@ -146,7 +121,7 @@ GLODAP <- GLODAP %>%
 
 ## Flags and missing data
 
-Only rows (samples) for which all relevant params_local are available were selected, ie NA's were removed.
+Only rows (samples) for which all relevant parameters are available were selected, ie NA's were removed.
 
 According to Olsen et al (2020), flags within the merged master file identify:
 
@@ -172,7 +147,9 @@ Summary statistics were calculated during cleaning process.
 
 ### tco2
 
-Rows with missing tco2 observations were already removed in the preprocessing
+#### NA
+
+Rows with missing tco2 observations were already removed in the preprocessing.
 
 ```{r tco2_na_subset}
 
@@ -271,8 +248,6 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-Quite a few tco2 observations are discarded, due to missing talk data, in particular in the JGOFS/WOCE era. However, there seems to be a high number of observations remaining from the affected cruises, so that the coverage does not seem to be reduced drastically.
-
 ```{r talk_na_subset, fig.asp=1}
 
 GLODAP <- GLODAP %>% 
@@ -316,8 +291,6 @@ rm(GLODAP_obs_grid_temp)
 ```
 
 #### f flag
-
-Restricting the f flag to 2 would results in data gaps in the south-east Pacific. Interpolated or calculated data (f flag 0) are therefore included.
 
 ```{r talk_f_subset, fig.asp=1}
 
@@ -388,8 +361,6 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-Quite a few tco2/talk observations are discarded, due to missing phosphate data. However, there seems to be a high number of observations remaining from the affected cruises, so that the coverage does not seem to be reduced drastically.
-
 ```{r phosphate_na_subset, fig.asp=1}
 
 GLODAP <- GLODAP %>% 
@@ -434,8 +405,6 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-Restricting the f flag to 2 would not drastically reduce available data. Interpolated or calculated data (f flag 0) are therefore included.
-
 ```{r phosphate_f_subset, fig.asp=1}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
@@ -459,8 +428,6 @@ GLODAP <- GLODAP %>%
 ```
 
 #### qc flag
-
-Phosphate data for which secondary quality was not applied (qc flag 0) were removed.
 
 ```{r phosphate_qc_subset, fig.asp=1}
 
@@ -504,10 +471,7 @@ rm(GLODAP_obs_grid_temp)
 ```
 
 
-
 ### eMLR variables
-
-Rows with missing eMLR variables were removed, only the qc flag was considered.
 
 ```{r eMLR_subset}
 
@@ -603,7 +567,7 @@ GLODAP <- GLODAP %>%
 
 ### Manual adjustment A16 cruise
 
-For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the GO_SHIP area despite taking place in 2013/14.
+For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the 2000-2012 era despite taking place in 2013/14.
 
 ```{r GLODAP_Atl_cruises_2013_2014_map}
 
@@ -659,6 +623,7 @@ GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
 
 ##
 
+# select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
   select(year, date, era, basin, lat, lon, cruise,
          bottomdepth, depth, tem, sal, gamma,
