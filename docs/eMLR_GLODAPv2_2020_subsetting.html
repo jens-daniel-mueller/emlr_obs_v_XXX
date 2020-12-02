@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5ffd0657d37da77b0bc3f26c0f58d7fa2d3ed900targetblank5ffd065a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5ffd0657d37da77b0bc3f26c0f58d7fa2d3ed900" target="_blank">5ffd065</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9ff071b6a1effde8a6747657cc5e89293fe922c5targetblank9ff071ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9ff071b6a1effde8a6747657cc5e89293fe922c5" target="_blank">9ff071b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5ffd0657d37da77b0bc3f26c0f58d7fa2d3ed900targetblank5ffd065a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9ff071b6a1effde8a6747657cc5e89293fe922c5targetblank9ff071ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5ffd0657d37da77b0bc3f26c0f58d7fa2d3ed900" target="_blank">5ffd065</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9ff071b6a1effde8a6747657cc5e89293fe922c5" target="_blank">9ff071b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -659,6 +659,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9ff071b6a1effde8a6747657cc5e89293fe922c5/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">9ff071b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+minor improvement of tref adejustment, formatting
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -955,13 +989,8 @@ first rebuild on ETH server
 </div>
 </div>
 </div>
-<div id="libraries" class="section level1">
-<h1><span class="header-section-number">1</span> Libraries</h1>
-<p>Loading libraries specific to the the analysis performed in this section.</p>
-<pre class="r"><code>library(lubridate)</code></pre>
-</div>
 <div id="read-files" class="section level1">
-<h1><span class="header-section-number">2</span> Read files</h1>
+<h1><span class="header-section-number">1</span> Read files</h1>
 <p>Main data source for this project is the preprocessed version of the <code>GLODAPv2.2020_Merged_Master_File.csv</code> downloaded from <a href="https://www.glodap.info/" target="_blank">glodap.info</a> in June 2020.</p>
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(path_preprocessing,
@@ -969,11 +998,12 @@ first rebuild on ETH server
                  sep = &quot;&quot;))</code></pre>
 </div>
 <div id="data-preparation" class="section level1">
-<h1><span class="header-section-number">3</span> Data preparation</h1>
+<h1><span class="header-section-number">2</span> Data preparation</h1>
 <div id="reference-eras" class="section level2">
-<h2><span class="header-section-number">3.1</span> Reference eras</h2>
+<h2><span class="header-section-number">2.1</span> Reference eras</h2>
 <p>Samples were assigned to following eras:</p>
-<pre class="r"><code>labels &lt;- bind_cols(
+<pre class="r"><code># create clear labels for era
+labels &lt;- bind_cols(
   start = params_local$era_breaks+1,
   end = lead(params_local$era_breaks))
 
@@ -984,6 +1014,7 @@ labels &lt;- labels %&gt;%
   select(label) %&gt;% 
   pull()
 
+# cut observation years into era applying the labels
 GLODAP &lt;- GLODAP %&gt;%
   filter(year &gt; params_local$era_breaks[1]) %&gt;% 
   mutate(era = cut(year,
@@ -992,11 +1023,12 @@ GLODAP &lt;- GLODAP %&gt;%
 
 levels(GLODAP$era)</code></pre>
 <pre><code>[1] &quot;1982-1999&quot; &quot;2000-2012&quot; &quot;2013-2019&quot;</code></pre>
+<pre class="r"><code>rm(labels)</code></pre>
 </div>
 <div id="spatial-boundaries" class="section level2">
-<h2><span class="header-section-number">3.2</span> Spatial boundaries</h2>
+<h2><span class="header-section-number">2.2</span> Spatial boundaries</h2>
 <div id="depth" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Depth</h3>
+<h3><span class="header-section-number">2.2.1</span> Depth</h3>
 <p>Observations collected shallower than:</p>
 <ul>
 <li>minimum sampling depth: 150m</li>
@@ -1006,7 +1038,7 @@ levels(GLODAP$era)</code></pre>
   filter(depth &gt;= params_local$depth_min)</code></pre>
 </div>
 <div id="bottomdepth" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Bottomdepth</h3>
+<h3><span class="header-section-number">2.2.2</span> Bottomdepth</h3>
 <p>Observations collected in an area with a:</p>
 <ul>
 <li>minimum bottom depth: 0m</li>
@@ -1017,7 +1049,7 @@ levels(GLODAP$era)</code></pre>
 </div>
 </div>
 <div id="flags-and-missing-data" class="section level2">
-<h2><span class="header-section-number">3.3</span> Flags and missing data</h2>
+<h2><span class="header-section-number">2.3</span> Flags and missing data</h2>
 <p>Only rows (samples) for which all relevant parameters are available were selected, ie NA’s were removed.</p>
 <p>According to Olsen et al (2020), flags within the merged master file identify:</p>
 <ul>
@@ -1041,9 +1073,9 @@ levels(GLODAP$era)</code></pre>
 </ul>
 <p>Summary statistics were calculated during cleaning process.</p>
 <div id="tco2" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> tco2</h3>
+<h3><span class="header-section-number">2.3.1</span> tco2</h3>
 <div id="na" class="section level4">
-<h4><span class="header-section-number">3.3.1.1</span> NA</h4>
+<h4><span class="header-section-number">2.3.1.1</span> NA</h4>
 <p>Rows with missing tco2 observations were already removed in the preprocessing.</p>
 <pre class="r"><code>GLODAP_stats &lt;- GLODAP %&gt;% 
   summarise(tco2_values = n())
@@ -1087,6 +1119,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/WOA18_basin_mask_GLODAP_observations_map-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/WOA18_basin_mask_GLODAP_observations_map-1.png" target="_blank">b02b7a4</a>
 </td>
 <td>
@@ -1114,7 +1157,7 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_obs)</code></pre>
 </div>
 <div id="f-flag" class="section level4">
-<h4><span class="header-section-number">3.3.1.2</span> f flag</h4>
+<h4><span class="header-section-number">2.3.1.2</span> f flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, tco2f)
 
@@ -1150,6 +1193,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/tco2_f_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/tco2_f_subset-1.png" target="_blank">b02b7a4</a>
 </td>
 <td>
@@ -1180,7 +1234,7 @@ GLODAP &lt;- GLODAP %&gt;%
   filter(tco2f %in% params_local$flag_f)</code></pre>
 </div>
 <div id="qc-flag" class="section level4">
-<h4><span class="header-section-number">3.3.1.3</span> qc flag</h4>
+<h4><span class="header-section-number">2.3.1.3</span> qc flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, tco2qc)
 
@@ -1214,6 +1268,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/tco2_qc_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/tco2_qc_subset-1.png" target="_blank">b02b7a4</a>
@@ -1264,9 +1329,9 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 </div>
 <div id="talk" class="section level3">
-<h3><span class="header-section-number">3.3.2</span> talk</h3>
+<h3><span class="header-section-number">2.3.2</span> talk</h3>
 <div id="na-1" class="section level4">
-<h4><span class="header-section-number">3.3.2.1</span> NA</h4>
+<h4><span class="header-section-number">2.3.2.1</span> NA</h4>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   mutate(talkna = if_else(is.na(talk), &quot;NA&quot;, &quot;Value&quot;))
 
@@ -1303,6 +1368,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_na_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_na_subset-1.png" target="_blank">b02b7a4</a>
@@ -1353,7 +1429,7 @@ GLODAP_obs_grid &lt;-
 rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 <div id="f-flag-1" class="section level4">
-<h4><span class="header-section-number">3.3.2.2</span> f flag</h4>
+<h4><span class="header-section-number">2.3.2.2</span> f flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, talkf)
 
@@ -1390,6 +1466,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_f_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_f_subset-1.png" target="_blank">b02b7a4</a>
 </td>
 <td>
@@ -1420,7 +1507,7 @@ GLODAP &lt;- GLODAP %&gt;%
   filter(talkf %in% params_local$flag_f)</code></pre>
 </div>
 <div id="qc-flag-1" class="section level4">
-<h4><span class="header-section-number">3.3.2.3</span> qc flag</h4>
+<h4><span class="header-section-number">2.3.2.3</span> qc flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, talkqc)
 
@@ -1457,6 +1544,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_qc_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/talk_qc_subset-1.png" target="_blank">b02b7a4</a>
 </td>
 <td>
@@ -1485,6 +1583,7 @@ jens-daniel-mueller
 
 GLODAP &lt;- GLODAP %&gt;%
   filter(talkqc %in% params_local$flag_qc)
+
 ##
 
 GLODAP_stats_temp &lt;- GLODAP %&gt;%
@@ -1506,9 +1605,9 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 </div>
 <div id="phosphate" class="section level3">
-<h3><span class="header-section-number">3.3.3</span> Phosphate</h3>
+<h3><span class="header-section-number">2.3.3</span> Phosphate</h3>
 <div id="na-2" class="section level4">
-<h4><span class="header-section-number">3.3.3.1</span> NA</h4>
+<h4><span class="header-section-number">2.3.3.1</span> NA</h4>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   mutate(phosphatena = if_else(is.na(phosphate), &quot;NA&quot;, &quot;Value&quot;))
 
@@ -1545,6 +1644,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_na_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_na_subset-1.png" target="_blank">b02b7a4</a>
@@ -1595,7 +1705,7 @@ GLODAP_obs_grid &lt;-
 rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 <div id="f-flag-2" class="section level4">
-<h4><span class="header-section-number">3.3.3.2</span> f flag</h4>
+<h4><span class="header-section-number">2.3.3.2</span> f flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, phosphatef)
 
@@ -1632,6 +1742,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_f_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_f_subset-1.png" target="_blank">b02b7a4</a>
 </td>
 <td>
@@ -1662,7 +1783,7 @@ GLODAP &lt;- GLODAP %&gt;%
   filter(phosphatef %in% params_local$flag_f)</code></pre>
 </div>
 <div id="qc-flag-2" class="section level4">
-<h4><span class="header-section-number">3.3.3.3</span> qc flag</h4>
+<h4><span class="header-section-number">2.3.3.3</span> qc flag</h4>
 <pre class="r"><code>GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
   count(lat, lon, era, phosphateqc)
 
@@ -1697,6 +1818,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_qc_subset-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/phosphate_qc_subset-1.png" target="_blank">b02b7a4</a>
@@ -1749,7 +1881,7 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 </div>
 <div id="emlr-variables" class="section level3">
-<h3><span class="header-section-number">3.3.4</span> eMLR variables</h3>
+<h3><span class="header-section-number">2.3.4</span> eMLR variables</h3>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   filter(!is.na(tem))
 
@@ -1832,7 +1964,7 @@ rm(GLODAP_obs_grid_temp)</code></pre>
   select(-ends_with(c(&quot;f&quot;, &quot;qc&quot;)))</code></pre>
 </div>
 <div id="manual-adjustment-a16-cruise" class="section level3">
-<h3><span class="header-section-number">3.3.5</span> Manual adjustment A16 cruise</h3>
+<h3><span class="header-section-number">2.3.5</span> Manual adjustment A16 cruise</h3>
 <p>For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the 2000-2012 era despite taking place in 2013/14.</p>
 <pre class="r"><code>GLODAP_cruises &lt;- GLODAP %&gt;% 
   filter(basin == &quot;Atlantic&quot;,
@@ -1889,24 +2021,17 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="create-clean-observations-grid" class="section level2">
-<h2><span class="header-section-number">3.4</span> Create clean observations grid</h2>
+<h2><span class="header-section-number">2.4</span> Create clean observations grid</h2>
+<p>Grid containing all grid cells where at least one observation remains available after cleaning.</p>
 <pre class="r"><code>GLODAP_obs_grid_clean &lt;- GLODAP %&gt;% 
   count(lat, lon) %&gt;% 
   select(-n)</code></pre>
 </div>
 <div id="write-summary-file" class="section level2">
-<h2><span class="header-section-number">3.5</span> Write summary file</h2>
-<pre class="r"><code>GLODAP_stats_long &lt;- GLODAP_stats %&gt;%
-  pivot_longer(1:length(GLODAP_stats),
-               names_to = &quot;parameter&quot;,
-               values_to = &quot;n&quot;)
-##
-
-GLODAP_obs_grid_clean  %&gt;%  write_csv(paste(path_version_data,
+<h2><span class="header-section-number">2.5</span> Write summary file</h2>
+<pre class="r"><code>GLODAP_obs_grid_clean  %&gt;%  write_csv(paste(path_version_data,
                                             &quot;GLODAPv2.2020_clean_obs_grid.csv&quot;,
                                             sep = &quot;&quot;))
-
-##
 
 # select relevant columns for further analysis
 GLODAP &lt;- GLODAP %&gt;% 
@@ -1922,11 +2047,16 @@ GLODAP  %&gt;%  write_csv(paste(path_version_data,
 </div>
 </div>
 <div id="overview-plots" class="section level1">
-<h1><span class="header-section-number">4</span> Overview plots</h1>
+<h1><span class="header-section-number">3</span> Overview plots</h1>
 <div id="cleaning-stats" class="section level2">
-<h2><span class="header-section-number">4.1</span> Cleaning stats</h2>
+<h2><span class="header-section-number">3.1</span> Cleaning stats</h2>
 <p>Number of observations at various steps of data cleaning.</p>
-<pre class="r"><code>GLODAP_stats_long &lt;- GLODAP_stats_long %&gt;%
+<pre class="r"><code>GLODAP_stats_long &lt;- GLODAP_stats %&gt;%
+  pivot_longer(1:length(GLODAP_stats),
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;n&quot;)
+
+GLODAP_stats_long &lt;- GLODAP_stats_long %&gt;%
   mutate(parameter = fct_reorder(parameter, n))
 
 GLODAP_stats_long %&gt;% 
@@ -1987,7 +2117,7 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_stats_long)</code></pre>
 </div>
 <div id="assign-coarse-spatial-grid" class="section level2">
-<h2><span class="header-section-number">4.2</span> Assign coarse spatial grid</h2>
+<h2><span class="header-section-number">3.2</span> Assign coarse spatial grid</h2>
 <p>For the following plots, the cleaned data set was re-opened and observations were gridded spatially to intervals of:</p>
 <ul>
 <li>5° x 5°</li>
@@ -1995,7 +2125,7 @@ jens-daniel-mueller
 <pre class="r"><code>GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)</code></pre>
 </div>
 <div id="histogram-zonal-coverage" class="section level2">
-<h2><span class="header-section-number">4.3</span> Histogram Zonal coverage</h2>
+<h2><span class="header-section-number">3.3</span> Histogram Zonal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
   group_by(era, lat_grid, basin) %&gt;%
   tally() %&gt;%
@@ -2032,6 +2162,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">0ff728b</a>
@@ -2072,7 +2213,7 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_histogram_lat)</code></pre>
 </div>
 <div id="histogram-temporal-coverage" class="section level2">
-<h2><span class="header-section-number">4.4</span> Histogram temporal coverage</h2>
+<h2><span class="header-section-number">3.4</span> Histogram temporal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_year &lt;- GLODAP %&gt;%
   group_by(year, basin) %&gt;%
   tally() %&gt;%
@@ -2176,17 +2317,19 @@ jens-daniel-mueller
    era_median_year)</code></pre>
 </div>
 <div id="zonal-temporal-coverage-hovmoeller" class="section level2">
-<h2><span class="header-section-number">4.5</span> Zonal temporal coverage (Hovmoeller)</h2>
+<h2><span class="header-section-number">3.5</span> Zonal temporal coverage (Hovmoeller)</h2>
 <pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
   group_by(year, lat_grid, basin) %&gt;%
   tally() %&gt;%
   ungroup()
 
 GLODAP_hovmoeller_year %&gt;%
-  ggplot(aes(year, lat_grid, fill = log10(n))) +
+  ggplot(aes(year, lat_grid, fill = n)) +
   geom_tile() +
   geom_vline(xintercept = c(1999.5, 2012.5)) +
-  scale_fill_viridis_c(option = &quot;magma&quot;, direction = -1) +
+  scale_fill_viridis_c(option = &quot;magma&quot;,
+                       direction = -1,
+                       trans = &quot;log10&quot;) +
   facet_wrap( ~ basin, ncol = 1) +
   theme(legend.position = &quot;top&quot;,
         axis.title.x = element_blank())</code></pre>
@@ -2242,9 +2385,9 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_hovmoeller_year)</code></pre>
 </div>
 <div id="coverage-maps-by-era" class="section level2">
-<h2><span class="header-section-number">4.6</span> Coverage maps by era</h2>
+<h2><span class="header-section-number">3.6</span> Coverage maps by era</h2>
 <div id="subsetting-process" class="section level3">
-<h3><span class="header-section-number">4.6.1</span> Subsetting process</h3>
+<h3><span class="header-section-number">3.6.1</span> Subsetting process</h3>
 <p>The following plots show the remaining data after several cleaning steps, separately for each era.</p>
 <pre class="r"><code>GLODAP_obs_grid &lt;- GLODAP_obs_grid %&gt;%
   mutate(cleaning_level = factor(
@@ -2287,6 +2430,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting_era_cleaning_level-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d5c53787317ea52839f86464397e531df9d341f1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting_era_cleaning_level-1.png" target="_blank">d5c5378</a>
@@ -2337,7 +2491,7 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="final-input-data" class="section level3">
-<h3><span class="header-section-number">4.6.2</span> Final input data</h3>
+<h3><span class="header-section-number">3.6.2</span> Final input data</h3>
 <p>The following plots show the remaining data density in each grid cell after all cleaning steps, separately for each era.</p>
 <pre class="r"><code>GLODAP_tco2_grid &lt;- GLODAP %&gt;%
   count(lat, lon)
@@ -2375,6 +2529,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_clean-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d5c53787317ea52839f86464397e531df9d341f1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_clean-1.png" target="_blank">d5c5378</a>
