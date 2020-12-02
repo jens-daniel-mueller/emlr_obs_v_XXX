@@ -303,11 +303,11 @@ cant_surface <- cant_surface %>%
 # i_eras <- unique(cant_average$eras)[2]
 
 for (i_eras in unique(cant_surface$eras)) {
-
-p_map_climatology(
-  df = cant_surface %>% filter(eras == i_eras),
-  var = "cant")  +
-  labs(subtitle = paste("era:", i_eras))
+  print(
+    p_map_climatology(df = cant_surface %>% filter(eras == i_eras),
+                      var = "cant")  +
+      labs(subtitle = paste("era:", i_eras))
+  )
   
 }
 ```
@@ -318,11 +318,11 @@ p_map_climatology(
 # i_eras <- unique(cant_surface$eras)[2]
 
 for (i_eras in unique(cant_surface$eras)) {
-
-p_section_climatology_regular(
-  df = cant_surface %>% filter(eras == i_eras),
-  var = "cant") +
-  labs(subtitle = paste("era:", i_eras))
+  print(
+    p_section_climatology_regular(df = cant_surface %>% filter(eras == i_eras),
+                                  var = "cant") +
+      labs(subtitle = paste("era:", i_eras))
+  )
   
 }
 
@@ -356,11 +356,13 @@ rm(cant)
 # i_eras <- unique(cant_average$eras)[2]
 
 for (i_eras in unique(cant_surface$eras)) {
-
-p_map_climatology(
-  df = cant_average %>% filter(eras == i_eras),
-  var = "cant_pos",
-  subtitle_text = paste("era:", i_eras))
+  print(
+    p_map_climatology(
+      df = cant_average %>% filter(eras == i_eras),
+      var = "cant_pos",
+      subtitle_text = paste("era:", i_eras)
+    )
+  )
   
 }
 
@@ -372,12 +374,13 @@ p_map_climatology(
 # i_eras <- unique(cant_surface$eras)[2]
 
 for (i_eras in unique(cant_surface$eras)) {
-
-p_section_climatology_regular(
-  df = cant_average %>% filter(eras == i_eras),
-  var = "cant_pos",
-  subtitle_text = paste("era:", i_eras))
-  
+  print(
+    p_section_climatology_regular(
+      df = cant_average %>% filter(eras == i_eras),
+      var = "cant_pos",
+      subtitle_text = paste("era:", i_eras)
+    )
+  )
 }
 
 ```
