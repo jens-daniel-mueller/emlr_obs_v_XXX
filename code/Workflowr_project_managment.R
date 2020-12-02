@@ -126,7 +126,6 @@ wflow_publish(here::here(
   c(
     "index.Rmd",
     "config_dependencies.Rmd",
-    "config_nomenclature.Rmd",
     "config_parameterization_local.Rmd",
     "eMLR_GLODAPv2_2020_subsetting.Rmd",
     "eMLR_data_preparation.Rmd",
@@ -139,7 +138,7 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "rebuild with flexible eras, A16 shifted and all plots = y",
+message = "rebuild without nomencalture, after complete revision",
 republish = TRUE)
 
 
