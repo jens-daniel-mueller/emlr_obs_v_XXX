@@ -46,11 +46,7 @@ path_version_figures  <-
   )
 ```
 
-# Libraries
-
-Loading libraries specific to the the analysis performed in this section.
-
-```{r load_libraries_specific, message=FALSE, warning=FALSE}
+```{r load_libraries_specific, include = FALSE}
 library(lubridate)
 ```
 
@@ -77,6 +73,7 @@ Samples were assigned to following eras:
 
 ```{r assign_eras}
 
+# create clear labels for era
 labels <- bind_cols(
   start = params_local$era_breaks+1,
   end = lead(params_local$era_breaks))
@@ -88,6 +85,7 @@ labels <- labels %>%
   select(label) %>% 
   pull()
 
+# cut observation years into era applying the labels
 GLODAP <- GLODAP %>%
   filter(year > params_local$era_breaks[1]) %>% 
   mutate(era = cut(year,
@@ -95,6 +93,7 @@ GLODAP <- GLODAP %>%
                    labels = labels))
 
 levels(GLODAP$era)
+rm(labels)
 
 ```
 
@@ -196,7 +195,7 @@ rm(GLODAP_obs)
 
 #### f flag
 
-```{r tco2_f_subset, fig.asp=1}
+```{r tco2_f_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2f)
@@ -219,7 +218,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r tco2_qc_subset, fig.asp=1}
+```{r tco2_qc_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2qc)
@@ -261,7 +260,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r talk_na_subset, fig.asp=1}
+```{r talk_na_subset, fig.asp=0.8}
 
 GLODAP <- GLODAP %>% 
   mutate(talkna = if_else(is.na(talk), "NA", "Value"))
@@ -305,7 +304,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r talk_f_subset, fig.asp=1}
+```{r talk_f_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkf)
@@ -330,7 +329,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r talk_qc_subset, fig.asp=1}
+```{r talk_qc_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkqc)
@@ -348,6 +347,7 @@ map +
 
 GLODAP <- GLODAP %>%
   filter(talkqc %in% params_local$flag_qc)
+
 ##
 
 GLODAP_stats_temp <- GLODAP %>%
@@ -374,7 +374,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r phosphate_na_subset, fig.asp=1}
+```{r phosphate_na_subset, fig.asp=0.8}
 
 GLODAP <- GLODAP %>% 
   mutate(phosphatena = if_else(is.na(phosphate), "NA", "Value"))
@@ -418,7 +418,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r phosphate_f_subset, fig.asp=1}
+```{r phosphate_f_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphatef)
@@ -442,7 +442,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r phosphate_qc_subset, fig.asp=1}
+```{r phosphate_qc_subset, fig.asp=0.8}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphateqc)
@@ -580,7 +580,7 @@ GLODAP <- GLODAP %>%
 
 ### Manual adjustment A16 cruise
 
-For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the 2000-2012 era despite taking place in 2013/14.
+For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the `r sort(unique(GLODAP$era))[2]` era despite taking place in 2013/14.
 
 ```{r GLODAP_Atl_cruises_2013_2014_map}
 
@@ -599,7 +599,6 @@ rm(GLODAP_cruises)
 
 ```
 
-
 ```{r switch_eras_manually}
 
 GLODAP <- GLODAP %>%
@@ -609,6 +608,8 @@ GLODAP <- GLODAP %>%
 ```
 
 ## Create clean observations grid
+
+Grid containing all grid cells where at least one observation remains available after cleaning.
 
 ```{r create_clean_obs_grid}
 
@@ -624,17 +625,9 @@ GLODAP_obs_grid_clean <- GLODAP %>%
  
 ```{r write_clean_data_files}
 
-GLODAP_stats_long <- GLODAP_stats %>%
-  pivot_longer(1:length(GLODAP_stats),
-               names_to = "parameter",
-               values_to = "n")
-##
-
 GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
                                             "GLODAPv2.2020_clean_obs_grid.csv",
                                             sep = ""))
-
-##
 
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
@@ -659,6 +652,11 @@ GLODAP  %>%  write_csv(paste(path_version_data,
 Number of observations at various steps of data cleaning.
 
 ```{r GLODAP_cleaning_stats}
+
+GLODAP_stats_long <- GLODAP_stats %>%
+  pivot_longer(1:length(GLODAP_stats),
+               names_to = "parameter",
+               values_to = "n")
 
 GLODAP_stats_long <- GLODAP_stats_long %>%
   mutate(parameter = fct_reorder(parameter, n))
@@ -764,10 +762,12 @@ GLODAP_hovmoeller_year <- GLODAP %>%
   ungroup()
 
 GLODAP_hovmoeller_year %>%
-  ggplot(aes(year, lat_grid, fill = log10(n))) +
+  ggplot(aes(year, lat_grid, fill = n)) +
   geom_tile() +
   geom_vline(xintercept = c(1999.5, 2012.5)) +
-  scale_fill_viridis_c(option = "magma", direction = -1) +
+  scale_fill_viridis_c(option = "magma",
+                       direction = -1,
+                       trans = "log10") +
   facet_wrap( ~ basin, ncol = 1) +
   theme(legend.position = "top",
         axis.title.x = element_blank())
@@ -782,7 +782,7 @@ rm(GLODAP_hovmoeller_year)
 
 The following plots show the remaining data after several cleaning steps, separately for each era.
 
-```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.2}
+```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.1}
 
 GLODAP_obs_grid <- GLODAP_obs_grid %>%
   mutate(cleaning_level = factor(
@@ -809,7 +809,7 @@ map +
 
 The following plots show the remaining data density in each grid cell after all cleaning steps, separately for each era.
 
-```{r coverage_maps_era_clean, fig.asp=1.5}
+```{r coverage_maps_era_clean, fig.asp=1.3}
 
 GLODAP_tco2_grid <- GLODAP %>%
   count(lat, lon)

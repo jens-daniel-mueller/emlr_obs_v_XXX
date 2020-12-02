@@ -25,7 +25,7 @@ params_local <-
 
 ```
 
-```{r define_updata_paths}
+```{r define_updata_paths, include = FALSE}
 path_preprocessing    <-
   "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
 
@@ -46,11 +46,7 @@ path_version_figures  <-
   )
 ```
 
-# Libraries
-
-Loading libraries specific to the the analysis performed in this section.
-
-```{r load_libraries_specific, message=FALSE, warning=FALSE}
+```{r load_libraries_specific, include = FALSE}
 library(marelac)
 library(lubridate)
 ```
@@ -91,6 +87,21 @@ co2_atm <-
 ```
 
 
+# PO~4~*
+
+## Calculation 
+
+The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
+
+```{r calculate_phosphate_star}
+
+GLODAP <- GLODAP %>% 
+  mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
+
+```
+
+
+
 # C*
 
 C* serves as a conservative tracer of anthropogenic CO~2~ uptake. It is derived from measured DIC by removing the impact of  
@@ -109,7 +120,7 @@ The stoichiometric nutrient ratios for the production and mineralization of orga
 
 ## Calculation
 
-C* is calculated as:  
+C* was calculated as:  
 
 ```{r calculate_cstar}
 
@@ -123,27 +134,13 @@ GLODAP <- GLODAP %>%
 
 ```
 
-# PO~4~* calculation 
-
-The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
-
-```{r calculate_phosphate_star}
-
-GLODAP <- GLODAP %>% 
-  mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
-
-```
-
-
-# Reference year adjustment
+## Reference year adjustment
 
 The reference year adjustment relies on an apriori estimate of Cant at a given location and depth, which is used as a scaling factor for the concurrent change in atmospheric CO~2~. The underlying assumption is a transient steady state for the oceanic Cant uptake. Here, Cant from the GLODAP mapped Climatology was used.  
 
 Note that eq. 6 in Clement and Gruber (2018) misses pCO~2~ pre-industrial in the denominator. Here we use the equation published in Gruber et al. (2019).
 
-## Merge data sets
-
-### GLODAP + Cant
+### Combine GLODAP + Cant
 
 
 ```{r merge_cstar_cant}
@@ -239,7 +236,7 @@ rm(GLODAP_cant_obs)
 
 ```
 
-### GLODAP + atm. pCO~2~
+### Merge GLODAP + atm. pCO~2~
 
 GLODAP observations were merged with mean annual atmospheric pCO~2~ levels by year.
 
@@ -249,11 +246,10 @@ GLODAP <- left_join(GLODAP, co2_atm)
 
 ```
 
-## Calculate adjustment
+### Calculation
 
-C~ant~ for tref = 2007 was calculated by applying alpha = 0.28 to the estimate of Sabine et al. (2004).
+C~ant~ for median year of each era was calculated by applying alpha = 0.28/13 * (median year - 1994) to the estimate of Sabine et al. (2004).
 
-For tref = 2015 we scaled alpha as 0.28/13 * dt.
 
 
 ```{r adjust_reference_year}
@@ -281,7 +277,7 @@ rm(co2_atm, tref)
 
 # scale cant to reference year
 GLODAP <- GLODAP %>%
-  mutate(alpha = (tref - min(tref)) * (0.28 / 13),
+  mutate(alpha = (tref - 1994) * (0.28 / 13),
          cant_pos = cant_pos * (1 + alpha))
 
 # calculate cstar for reference year
