@@ -769,7 +769,7 @@ rm(GLODAP_hovmoeller_year)
 
 The following plots show the remaining data after several cleaning steps, separately for each era.
 
-```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.5}
+```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.2}
 
 GLODAP_obs_grid <- GLODAP_obs_grid %>%
   mutate(cleaning_level = factor(
@@ -802,7 +802,7 @@ GLODAP_tco2_grid <- GLODAP %>%
   count(lat, lon)
 
 map +
-  geom_raster(data = GLODAP_tco2_grid, aes(lon, lat), fill = "grey80") +
+  # geom_raster(data = GLODAP_tco2_grid, aes(lon, lat), fill = "grey80") +
   geom_bin2d(data = GLODAP,
              aes(lon, lat),
              binwidth = c(1,1)) +
