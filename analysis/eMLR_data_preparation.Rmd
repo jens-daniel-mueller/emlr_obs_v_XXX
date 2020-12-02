@@ -62,7 +62,7 @@ Required are:
 - GLODAPv2.2020
   - cleaned data file
   - horizontal grid of sampling coordinates
-- Cant from GLODAPv2_2016b_MappedClimatologies
+- Cant from Sabine 2004
 - annual mean atmospheric pCO~2~ 
 
 ```{r read_required_data_sets}
@@ -111,8 +111,6 @@ The stoichiometric nutrient ratios for the production and mineralization of orga
 
 C* is calculated as:  
 
-
-
 ```{r calculate_cstar}
 
 print(b_cstar)
@@ -127,7 +125,7 @@ GLODAP <- GLODAP %>%
 
 # PO~4~* calculation 
 
-The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an errornous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
+The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
 
 ```{r calculate_phosphate_star}
 
@@ -135,7 +133,6 @@ GLODAP <- GLODAP %>%
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
 
 ```
-
 
 
 # Reference year adjustment
@@ -424,6 +421,8 @@ rm(lat_section, GLODAP_cruise)
 
 ```{r test_isoneutral_density_calculation, eval=FALSE, hide=TRUE}
 
+# this section was only used to calculate gamma locally, and compare it to the value provided in GLODAP data set
+
 GLODAP_cruise <- GLODAP %>% 
   filter(cruise %in% params_global$cruises_meridional)
 
@@ -482,7 +481,6 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 ```{r obs_gamma_slab_Atl, fig.asp=1}
 
 GLODAP <- GLODAP %>% 
-  # mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) %>%
   mutate(gamma_slab = factor(gamma_slab), 
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
 
@@ -679,6 +677,8 @@ rm(map_plot,
 
 ```{r write_csv_GLODAP_used_for_fitting}
 
+# rename the cstar variable,
+# in scripts downstrea from here, we refer to cstar as the value adjusted to the reference year
 GLODAP <- GLODAP %>% 
   rename(cstar = cstar_tref)
 

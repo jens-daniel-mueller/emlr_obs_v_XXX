@@ -315,15 +315,6 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   }
 }
 
-
-# cor_predictors %>%
-#   write_csv(here::here("data/eMLR",
-#                        "cor_predictors.csv"))
-# 
-# cor_cstar_predictor %>%
-#   write_csv(here::here("data/eMLR",
-#                        "cor_cstar_predictor.csv"))
-
 rm(cor_predictors_temp, cor_cstar_predictor_temp,
    i_gamma_slab, i_era, i_basin,
    GLODAP_basin_era, GLODAP_basin_era_slab)
@@ -371,11 +362,6 @@ rm(cor_predictors, cor_predictors_stats)
 Below, the range of correlations coefficients for C* with each predictor is plotted per basin (facet) and density slab (color). Note that the range indicates the min and max values of in total 3 calculated coefficients (one per era).
 
 ```{r correlation_predictors, fig.asp=1.5}
-
-# cor_cstar_predictor <-
-#   read_csv(here::here("data/eMLR",
-#                        "cor_cstar_predictor.csv")) %>% 
-#   rename(predictor = rowname)
 
 cor_cstar_predictor <- cor_cstar_predictor %>% 
   rename(predictor = term)
