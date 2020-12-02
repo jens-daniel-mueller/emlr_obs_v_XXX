@@ -602,16 +602,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8f3d29db63719e959f4728e9447719bd84f0de85targetblank8f3d29da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8f3d29db63719e959f4728e9447719bd84f0de85" target="_blank">8f3d29d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef4520b2112129b7173f050f6b6e44cbfcc509214targetblankf4520b2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f4520b2112129b7173f050f6b6e44cbfcc509214" target="_blank">f4520b2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8f3d29db63719e959f4728e9447719bd84f0de85targetblank8f3d29da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef4520b2112129b7173f050f6b6e44cbfcc509214targetblankf4520b2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8f3d29db63719e959f4728e9447719bd84f0de85" target="_blank">8f3d29d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f4520b2112129b7173f050f6b6e44cbfcc509214" target="_blank">f4520b2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -663,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f4520b2112129b7173f050f6b6e44cbfcc509214/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">f4520b2</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+code cleaning and commenting
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/632c84fa67ab706b0a8d5324879615f47bfd5c08/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">632c84f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2121,6 +2155,7 @@ jens-daniel-mueller
 <h2><span class="header-section-number">4.6</span> Coverage maps by era</h2>
 <div id="subsetting-process" class="section level3">
 <h3><span class="header-section-number">4.6.1</span> Subsetting process</h3>
+<p>The following plots show the remaining data after several cleaning steps, separately for each era.</p>
 <pre class="r"><code>GLODAP_obs_grid &lt;- GLODAP_obs_grid %&gt;%
   mutate(cleaning_level = factor(
            cleaning_level,
@@ -2128,77 +2163,6 @@ jens-daniel-mueller
          ))
 
 map +
-  geom_raster(data = GLODAP_obs_grid %&gt;%
-                filter(cleaning_level == &quot;tco2_values&quot;) %&gt;%
-                select(-cleaning_level),
-              aes(lon, lat, fill = &quot;tco2_values&quot;)) +
-  geom_raster(data = GLODAP_obs_grid %&gt;%
-                filter(cleaning_level != &quot;tco2_values&quot;),
-              aes(lon, lat, fill = &quot;subset&quot;)) +
-  scale_fill_brewer(palette = &quot;Set1&quot;, name = &quot;&quot;) +
-  theme(legend.position = &quot;top&quot;,
-        axis.title = element_blank())</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-coverage_maps_era_subsetting-1">
-Past versions of coverage_maps_era_subsetting-1.png
-</button>
-</p>
-<div id="fig-coverage_maps_era_subsetting-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting-1.png" target="_blank">0ff728b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b02b7a468a8785aceae53e2c535d32c444b0242d/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting-1.png" target="_blank">b02b7a4</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_subsetting-1.png" target="_blank">196be51</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>map +
   geom_raster(data = GLODAP_obs_grid %&gt;%
                 filter(cleaning_level == &quot;tco2_values&quot;) %&gt;%
                 select(-cleaning_level),
@@ -2271,22 +2235,22 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="emlr-variables-1" class="section level3">
-<h3><span class="header-section-number">4.6.2</span> eMLR variables</h3>
-<p>Grey pixels refer to sampling locations filtered for availability of tco2 data only.</p>
+<div id="final-input-data" class="section level3">
+<h3><span class="header-section-number">4.6.2</span> Final input data</h3>
+<p>The following plots show the remaining data density in each grid cell after all cleaning steps, separately for each era.</p>
 <pre class="r"><code>GLODAP_tco2_grid &lt;- GLODAP %&gt;%
-  count(lat, lon, era)
+  count(lat, lon)
 
 map +
   geom_raster(data = GLODAP_tco2_grid, aes(lon, lat), fill = &quot;grey80&quot;) +
   geom_bin2d(data = GLODAP,
              aes(lon, lat),
              binwidth = c(1,1)) +
-  scale_fill_viridis_c(option = &quot;magma&quot;, direction = -1, trans = &quot;log10&quot;,
-                       name = &quot;log10(eMLR_variables)&quot;) +
+  scale_fill_viridis_c(option = &quot;magma&quot;, direction = -1, trans = &quot;log10&quot;) +
   facet_wrap(~era, ncol = 1) +
-  theme(legend.position = &quot;top&quot;,
-        axis.title = element_blank())</code></pre>
+  labs(title = &quot;Cleaned GLODAP observations&quot;,
+       subtitle = paste(&quot;Version:&quot;, params_local$Version_ID)) +
+  theme(axis.title = element_blank())</code></pre>
 <p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_clean-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-coverage_maps_era_clean-1">
