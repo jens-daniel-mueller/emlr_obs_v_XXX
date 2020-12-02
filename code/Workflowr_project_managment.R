@@ -139,7 +139,7 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "rebuild with corrected Gruber cant inventory and github source link",
+message = "cleaned subsetting and data preparation",
 republish = TRUE)
 
 

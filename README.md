@@ -12,7 +12,7 @@ This code was written to be executed within RStudio.
 2. Name it according to version.
 3. Create folders on update.
 4. Add as RStudio project.
-5. Change Version_ID and others parameters in config_parameterization_local.Rmd. The Version_ID must be consistent with the respective folder name on /update/emlr_cant.
+5. Change `Version_ID` and others parameters in `config_parameterization_local.Rmd.` The Version_ID must be consistent with the respective folder name on `/update/emlr_cant`.
 6. 
 
 
