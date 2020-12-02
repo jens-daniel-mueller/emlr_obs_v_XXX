@@ -25,7 +25,7 @@ params_local <-
 
 ```
 
-```{r define_updata_paths}
+```{r define_updata_paths, include = FALSE}
 path_preprocessing    <-
   "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
 
@@ -77,11 +77,24 @@ Samples were assigned to following eras:
 
 ```{r assign_eras}
 
+labels <- bind_cols(
+  start = params_local$era_breaks+1,
+  end = lead(params_local$era_breaks))
+
+labels <- labels %>% 
+  filter(!is.na(end)) %>% 
+  mutate(end = if_else(end == Inf, max(GLODAP$year), end),
+         label = paste(start, end, sep = "-")) %>% 
+  select(label) %>% 
+  pull()
+
 GLODAP <- GLODAP %>%
   filter(year > params_local$era_breaks[1]) %>% 
-  mutate(era = cut(year, params_local$era_breaks, dig.lab = 5))
+  mutate(era = cut(year,
+                   params_local$era_breaks,
+                   labels = labels))
 
-unique(GLODAP$era)
+levels(GLODAP$era)
 
 ```
 
@@ -162,7 +175,7 @@ GLODAP_obs_grid <- GLODAP %>%
 
 ```
 
-```{r WOA18_basin_mask_GLODAP_observations_map}
+```{r WOA18_basin_mask_GLODAP_observations_map, fig.asp=0.6}
 
 GLODAP_obs <- GLODAP %>% 
   group_by(lat, lon) %>% 
