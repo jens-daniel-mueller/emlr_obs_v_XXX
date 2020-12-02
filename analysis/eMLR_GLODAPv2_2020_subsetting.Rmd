@@ -767,7 +767,9 @@ rm(GLODAP_hovmoeller_year)
 
 ### Subsetting process
 
-```{r coverage_maps_era_subsetting}
+The following plots show the remaining data after several cleaning steps, separately for each era.
+
+```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.5}
 
 GLODAP_obs_grid <- GLODAP_obs_grid %>%
   mutate(cleaning_level = factor(
@@ -784,47 +786,31 @@ map +
                 filter(cleaning_level != "tco2_values"),
               aes(lon, lat, fill = "subset")) +
   scale_fill_brewer(palette = "Set1", name = "") +
-  theme(legend.position = "top",
-        axis.title = element_blank())
-
-```
-
-```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.5}
-
-map +
-  geom_raster(data = GLODAP_obs_grid %>%
-                filter(cleaning_level == "tco2_values") %>%
-                select(-cleaning_level),
-              aes(lon, lat, fill = "tco2_values")) +
-  geom_raster(data = GLODAP_obs_grid %>%
-                filter(cleaning_level != "tco2_values"),
-              aes(lon, lat, fill = "subset")) +
-  scale_fill_brewer(palette = "Set1", name = "") +
   facet_grid(cleaning_level ~ era) +
   theme(legend.position = "top",
         axis.title = element_blank())
 
 ```
 
-### eMLR variables
+### Final input data
 
-Grey pixels refer to sampling locations filtered for availability of tco2 data only.
+The following plots show the remaining data density in each grid cell after all cleaning steps, separately for each era.
 
 ```{r coverage_maps_era_clean, fig.asp=1.5}
 
 GLODAP_tco2_grid <- GLODAP %>%
-  count(lat, lon, era)
+  count(lat, lon)
 
 map +
   geom_raster(data = GLODAP_tco2_grid, aes(lon, lat), fill = "grey80") +
   geom_bin2d(data = GLODAP,
              aes(lon, lat),
              binwidth = c(1,1)) +
-  scale_fill_viridis_c(option = "magma", direction = -1, trans = "log10",
-                       name = "log10(eMLR_variables)") +
+  scale_fill_viridis_c(option = "magma", direction = -1, trans = "log10") +
   facet_wrap(~era, ncol = 1) +
-  theme(legend.position = "top",
-        axis.title = element_blank())
+  labs(title = "Cleaned GLODAP observations",
+       subtitle = paste("Version:", params_local$Version_ID)) +
+  theme(axis.title = element_blank())
 
 ggsave(path = path_version_figures,
        filename = "data_distribution_era.png",
