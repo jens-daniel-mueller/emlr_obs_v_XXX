@@ -348,26 +348,26 @@ lat_section <-
 GLODAP_cruise %>%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c() +
+  scale_fill_viridis_c() +
   theme(axis.title.x = element_blank())
 
 lat_section +
-  geom_point(aes(col = tco2))
+  stat_summary_2d(aes(z = tco2))
 
 lat_section +
-  geom_point(aes(col = rCP_phosphate))
+  stat_summary_2d(aes(z = rCP_phosphate))
 
 lat_section +
-  geom_point(aes(col = talk_05))
+  stat_summary_2d(aes(z = talk_05))
 
 lat_section +
-  geom_point(aes(col = rNP_phosphate_05))
+  stat_summary_2d(aes(z = rNP_phosphate_05))
 
 lat_section +
-  geom_point(aes(col = cstar))
+  stat_summary_2d(aes(z = cstar))
 
 lat_section +
-  geom_point(aes(col = cstar_tref))
+  stat_summary_2d(aes(z = cstar_tref))
 
 rm(lat_section, GLODAP_cruise)
 
@@ -458,7 +458,7 @@ GLODAP_cruise %>%
   theme(legend.position = "bottom")
 
 lat_section +
-  geom_point(aes(col = gamma_delta)) +
+  stat_summary_2d(aes(z = gamma_delta)) +
   scale_color_viridis_c()
 
 GLODAP_cruise %>% 
@@ -546,61 +546,61 @@ map_plot <-
 lon_section <- GLODAP_cruise %>%
   ggplot(aes(lon, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c()
+  scale_fill_viridis_c()
 
 lon_tco2 <- lon_section+
-  geom_point(aes(col=tco2))
+  stat_summary_2d(aes(z=tco2))
 
 lon_talk <- lon_section+
-  geom_point(aes(col=talk))
+  stat_summary_2d(aes(z=talk))
 
 lon_phosphate <- lon_section+
-  geom_point(aes(col=phosphate))
+  stat_summary_2d(aes(z=phosphate))
 
 lon_oxygen <- lon_section+
-  geom_point(aes(col=oxygen))
+  stat_summary_2d(aes(z=oxygen))
 
 lon_aou <- lon_section+
-  geom_point(aes(col=aou))
+  stat_summary_2d(aes(z=aou))
 
 lon_phosphate_star <- lon_section+
-  geom_point(aes(col=phosphate_star))
+  stat_summary_2d(aes(z=phosphate_star))
 
 lon_nitrate <- lon_section+
-  geom_point(aes(col=nitrate))
+  stat_summary_2d(aes(z=nitrate))
 
 lon_cstar <- lon_section+
-  geom_point(aes(col=cstar_tref))
+  stat_summary_2d(aes(z=cstar_tref))
 
 
 lat_section <- GLODAP_cruise %>%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c()
+  scale_fill_viridis_c()
 
 lat_tco2 <- lat_section+
-  geom_point(aes(col=tco2))
+  stat_summary_2d(aes(z=tco2))
 
 lat_talk <- lat_section+
-  geom_point(aes(col=talk))
+  stat_summary_2d(aes(z=talk))
 
 lat_phosphate <- lat_section+
-  geom_point(aes(col=phosphate))
+  stat_summary_2d(aes(z=phosphate))
 
 lat_oxygen <- lat_section+
-  geom_point(aes(col=oxygen))
+  stat_summary_2d(aes(z=oxygen))
 
 lat_aou <- lat_section+
-  geom_point(aes(col=aou))
+  stat_summary_2d(aes(z=aou))
 
 lat_phosphate_star <- lat_section+
-  geom_point(aes(col=phosphate_star))
+  stat_summary_2d(aes(z=phosphate_star))
 
 lat_nitrate <- lat_section+
-  geom_point(aes(col=nitrate))
+  stat_summary_2d(aes(z=nitrate))
 
 lat_cstar <- lat_section+
-  geom_point(aes(col=cstar_tref))
+  stat_summary_2d(aes(z=cstar_tref))
 
 hist_tco2 <- GLODAP_cruise %>%
   ggplot(aes(tco2)) +

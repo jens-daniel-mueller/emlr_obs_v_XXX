@@ -152,16 +152,18 @@ for (i_eras in unique(cant$eras)) {
     limits = max(abs(cant_eras_lon$cant)) * c(-1,1)
     
     cant_eras_lon %>%
-      ggplot(aes(lat, depth, col = cant)) +
-      geom_point() +
-      scale_color_scico(
+      ggplot(aes(lat, depth, z = cant)) +
+      stat_summary_2d(fun = "mean",
+                      na.rm = TRUE,
+                      bins = 20,
+                      col = "grey") +
+      scale_fill_scico(
         name = "Cant",
         palette = "vik",
         limit = limits
       ) +
       scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
       scale_x_continuous(limits = c(-85, 85)) +
-      guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
       labs(title = paste("eras:", i_eras,
                          "| lon:", i_lon,
                          "|", params_local$Version_ID)) +
