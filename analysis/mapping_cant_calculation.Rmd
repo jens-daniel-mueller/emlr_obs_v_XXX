@@ -144,8 +144,8 @@ for (i_eras in unique(cant$eras)) {
   cant_eras <- cant %>%
     filter(eras == i_eras)
   
-  for (i_lon in seq(20.5, 360, 20)) {
-    # i_lon <- seq(20.5, 360, 20)[7]
+  for (i_lon in params_global$longitude_sections_regular) {
+    # i_lon <- params_global$longitude_sections_regular[7]
     cant_eras_lon <- cant_eras %>%
       filter(lon == i_lon)
     
@@ -155,12 +155,12 @@ for (i_eras in unique(cant$eras)) {
       ggplot(aes(lat, depth, col = cant)) +
       geom_point() +
       scale_color_scico(
-        name = "cant",
+        name = "Cant",
         palette = "vik",
         limit = limits
       ) +
       scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
-      scale_x_continuous(limits = c(-75, 65)) +
+      scale_x_continuous(limits = c(-85, 85)) +
       guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
       labs(title = paste("eras:", i_eras,
                          "| lon:", i_lon,
@@ -171,10 +171,11 @@ for (i_eras in unique(cant$eras)) {
       paste(
         path_version_figures,
         "Cant_model_sections/",
-        paste(i_eras,
+        paste("Cant_model",
+              i_eras,
               "lon",
               i_lon,
-              "model_cant.png",
+              "section.png",
               sep = "_"),
         sep = ""
       ),
@@ -428,7 +429,7 @@ cant_average_zonal <- m_cut_gamma(cant_average_zonal, "gamma_mean")
 
 For each basin and era combination, the zonal mean cant is calculated by model coefficient.
 
-```{r Calculate_cant_predictor_mean_sections}
+```{r calculate_cant_predictor_mean_sections}
 
 cant_predictor_average <- full_join(cant_predictor_average,
                                 basinmask %>% select(-basin))
@@ -450,7 +451,7 @@ To calculate cant column inventories, we:
 
 Step 2 is performed again for all cant and positive cant values only
 
-```{r calculate_inventories}
+```{r cant_inventories, fig.asp=1}
 
 cant_inv <- m_cant_inv(cant_average)
 

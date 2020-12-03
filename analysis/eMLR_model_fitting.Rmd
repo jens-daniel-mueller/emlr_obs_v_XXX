@@ -395,8 +395,9 @@ for (i_basin in unique(GLODAP$basin)) {
                               data = GLODAP_basin_era_slab)
           
 
-          if (params_local$plot_all_figures == "y") {
           # plotting model diagnostics
+          if (params_local$plot_all_figures == "y") {
+          
           p_model <- ggnostic(
             lm_fit_single,
             columnsY = c("cstar", ".fitted", ".resid"),
@@ -411,12 +412,13 @@ for (i_basin in unique(GLODAP$basin)) {
             plot = p_model,
             path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
             filename = paste(
+              "MLR_residuals",
               i_eras,
               i_era,
               i_basin,
               i_gamma_slab,
               i_predictors,
-              "eMLR_cstar_residuals.png",
+              "predictors.png",
               sep = "_"
           ),
           width = 14,
