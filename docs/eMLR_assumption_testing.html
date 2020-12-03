@@ -485,7 +485,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR - assumption testing</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">02 December, 2020</h4>
+<h4 class="date">03 December, 2020</h4>
 
 </div>
 
@@ -510,7 +510,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-02
+<strong>Last updated:</strong> 2020-12-03
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -601,16 +601,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec98d27b9268bbea527d61157be304470b105c48btargetblankc98d27ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c98d27b9268bbea527d61157be304470b105c48b" target="_blank">c98d27b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83203dbbb39d4a67d8fb5c8b15893966159295a5targetblank83203dba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83203dbbb39d4a67d8fb5c8b15893966159295a5" target="_blank">83203db</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec98d27b9268bbea527d61157be304470b105c48btargetblankc98d27ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83203dbbb39d4a67d8fb5c8b15893966159295a5targetblank83203dba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c98d27b9268bbea527d61157be304470b105c48b" target="_blank">c98d27b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83203dbbb39d4a67d8fb5c8b15893966159295a5" target="_blank">83203db</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,10 +619,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   README.md
-    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -661,6 +657,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83203dbbb39d4a67d8fb5c8b15893966159295a5/analysis/eMLR_assumption_testing.Rmd" target="_blank">83203db</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+<td>
+calculate cant with variable inventory depth
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/eMLR_assumption_testing.html" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -940,37 +970,8 @@ Initial commit
 </div>
 </div>
 </div>
-<pre class="r"><code>path_preprocessing    &lt;-
-  &quot;/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/&quot;
-
-path_version_data     &lt;-
-  paste(
-    &quot;/nfs/kryo/work/updata/emlr_cant/observations/&quot;,
-    params_local$Version_ID,
-    &quot;/data/&quot;,
-    sep = &quot;&quot;
-  )
-
-path_version_figures  &lt;-
-  paste(
-    &quot;/nfs/kryo/work/updata/emlr_cant/observations/&quot;,
-    params_local$Version_ID,
-    &quot;/figures/&quot;,
-    sep = &quot;&quot;
-  )</code></pre>
-<div id="libraries" class="section level1">
-<h1><span class="header-section-number">1</span> Libraries</h1>
-<p>Loading libraries specific to the the analysis performed in this section.</p>
-<pre class="r"><code>library(lubridate)
-library(GGally)
-library(olsrr)
-library(knitr)
-library(kableExtra)
-library(broom)
-library(corrr)</code></pre>
-</div>
 <div id="required-data" class="section level1">
-<h1><span class="header-section-number">2</span> Required data</h1>
+<h1><span class="header-section-number">1</span> Required data</h1>
 <p>Required are:</p>
 <ul>
 <li>cleaned and prepared GLODAPv2.2020 file</li>
@@ -981,7 +982,7 @@ library(corrr)</code></pre>
                  sep = &quot;&quot;))</code></pre>
 </div>
 <div id="predictor-correlation" class="section level1">
-<h1><span class="header-section-number">3</span> Predictor correlation</h1>
+<h1><span class="header-section-number">2</span> Predictor correlation</h1>
 <p>The correlation between:</p>
 <ul>
 <li>pairs of seven potential predictor variables and</li>
@@ -993,7 +994,7 @@ library(corrr)</code></pre>
 <li>calculated correlation coeffcients.</li>
 </ul>
 <div id="correlation-plots" class="section level2">
-<h2><span class="header-section-number">3.1</span> Correlation plots</h2>
+<h2><span class="header-section-number">2.1</span> Correlation plots</h2>
 <p>For an overview, a random subset of data from all eras was plotted separately for both basins, with color indicating neutral density slabs (high density = dark-purple color).</p>
 <pre class="r"><code>GLODAP %&gt;% 
   filter(basin == &quot;Atlantic&quot;) %&gt;% 
@@ -1035,6 +1036,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_Atlantic-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_Atlantic-1.png" target="_blank">0ff728b</a>
@@ -1125,6 +1137,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_Indo_Pacific-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_Indo_Pacific-1.png" target="_blank">0ff728b</a>
 </td>
 <td>
@@ -1171,7 +1194,7 @@ Jens Müller
 </table>
 </div>
 </div>
-<p>Individual correlation plots for each basin, era and neutral density (gamma) slab are available <a href="https://github.com/jens-daniel-mueller/Cant_eMLR/tree/master/output/figure/eMLR/predictor_correlation" target="_blank">here</a>.</p>
+<p>Individual correlation plots for each basin, era and neutral density (gamma) slab are available at updata.</p>
 <pre class="r"><code>if (params_local$plot_all_figures == &quot;y&quot;) {
 
 for (i_basin in unique(GLODAP$basin)) {
@@ -1260,9 +1283,9 @@ for (i_basin in unique(GLODAP$basin)) {
 }</code></pre>
 </div>
 <div id="correlation-assesment" class="section level2">
-<h2><span class="header-section-number">3.2</span> Correlation assesment</h2>
+<h2><span class="header-section-number">2.2</span> Correlation assesment</h2>
 <div id="calculation-of-correlation-coeffcients" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Calculation of correlation coeffcients</h3>
+<h3><span class="header-section-number">2.2.1</span> Calculation of correlation coeffcients</h3>
 <p>Correlation coefficients were calculated indivdually within each slabs, era and basin.</p>
 <pre class="r"><code>for (i_basin in unique(GLODAP$basin)) {
   for (i_era in unique(GLODAP$era)) {
@@ -1345,7 +1368,7 @@ rm(cor_predictors_temp, cor_cstar_predictor_temp,
    GLODAP_basin_era, GLODAP_basin_era_slab)</code></pre>
 </div>
 <div id="predictor-pairs" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> Predictor pairs</h3>
+<h3><span class="header-section-number">2.2.2</span> Predictor pairs</h3>
 <p>Below, the range of correlations coefficients for each predictor pair is plotted per basin (facet) and density slab (color). Note that the range indicates the min and max values of in total 3 calculated coefficients (one per era).</p>
 <pre class="r"><code>cor_predictors_stats &lt;- cor_predictors %&gt;% 
   group_by(pair, basin, gamma_slab) %&gt;% 
@@ -12392,7 +12415,7 @@ Indo-Pacific
 <pre class="r"><code>rm(cor_predictors, cor_predictors_stats)</code></pre>
 </div>
 <div id="c-vs-individual-predictors" class="section level3">
-<h3><span class="header-section-number">3.2.3</span> C* vs individual predictors</h3>
+<h3><span class="header-section-number">2.2.3</span> C* vs individual predictors</h3>
 <p>Below, the range of correlations coefficients for C* with each predictor is plotted per basin (facet) and density slab (color). Note that the range indicates the min and max values of in total 3 calculated coefficients (one per era).</p>
 <pre class="r"><code>cor_cstar_predictor &lt;- cor_cstar_predictor %&gt;% 
   rename(predictor = term)
@@ -12439,6 +12462,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictors-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictors-1.png" target="_blank">0ff728b</a>

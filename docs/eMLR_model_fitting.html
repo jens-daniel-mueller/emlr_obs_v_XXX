@@ -485,7 +485,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR - model fitting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">02 December, 2020</h4>
+<h4 class="date">03 December, 2020</h4>
 
 </div>
 
@@ -510,7 +510,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-02
+<strong>Last updated:</strong> 2020-12-03
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -601,16 +601,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec98d27b9268bbea527d61157be304470b105c48btargetblankc98d27ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c98d27b9268bbea527d61157be304470b105c48b" target="_blank">c98d27b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83203dbbb39d4a67d8fb5c8b15893966159295a5targetblank83203dba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83203dbbb39d4a67d8fb5c8b15893966159295a5" target="_blank">83203db</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec98d27b9268bbea527d61157be304470b105c48btargetblankc98d27ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83203dbbb39d4a67d8fb5c8b15893966159295a5targetblank83203dba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c98d27b9268bbea527d61157be304470b105c48b" target="_blank">c98d27b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83203dbbb39d4a67d8fb5c8b15893966159295a5" target="_blank">83203db</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,10 +619,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   README.md
-    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -661,6 +657,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83203dbbb39d4a67d8fb5c8b15893966159295a5/analysis/eMLR_model_fitting.Rmd" target="_blank">83203db</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+<td>
+calculate cant with variable inventory depth
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/eMLR_model_fitting.html" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -940,38 +970,8 @@ Initial commit
 </div>
 </div>
 </div>
-<pre class="r"><code>path_preprocessing    &lt;-
-  &quot;/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/&quot;
-
-path_version_data     &lt;-
-  paste(
-    &quot;/nfs/kryo/work/updata/emlr_cant/observations/&quot;,
-    params_local$Version_ID,
-    &quot;/data/&quot;,
-    sep = &quot;&quot;
-  )
-
-path_version_figures  &lt;-
-  paste(
-    &quot;/nfs/kryo/work/updata/emlr_cant/observations/&quot;,
-    params_local$Version_ID,
-    &quot;/figures/&quot;,
-    sep = &quot;&quot;
-  )</code></pre>
-<div id="libraries" class="section level1">
-<h1><span class="header-section-number">1</span> Libraries</h1>
-<p>Loading libraries specific to the the analysis performed in this section.</p>
-<pre class="r"><code>library(lubridate)
-library(GGally)
-library(olsrr)
-library(knitr)
-library(kableExtra)
-library(broom)
-library(corrr)
-library(GGally)</code></pre>
-</div>
 <div id="required-data" class="section level1">
-<h1><span class="header-section-number">2</span> Required data</h1>
+<h1><span class="header-section-number">1</span> Required data</h1>
 <p>Required are:</p>
 <ul>
 <li>cleaned and prepared GLODAPv2_2020 file</li>
@@ -982,9 +982,9 @@ library(GGally)</code></pre>
                  sep = &quot;&quot;))</code></pre>
 </div>
 <div id="fitting-all-models" class="section level1">
-<h1><span class="header-section-number">3</span> Fitting all models</h1>
+<h1><span class="header-section-number">2</span> Fitting all models</h1>
 <div id="rmse-calculation" class="section level2">
-<h2><span class="header-section-number">3.1</span> RMSE calculation</h2>
+<h2><span class="header-section-number">2.1</span> RMSE calculation</h2>
 <p>Individual linear regression models were fitted for C* as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. The root mean squared error (RMSE) was calculated for each fitted model.</p>
 <pre class="r"><code># loops across all basins and eras
 for (i_basin in unique(GLODAP$basin)) {
@@ -1094,6 +1094,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality-1.png" target="_blank">7c25f7a</a>
 </td>
 <td>
@@ -1142,7 +1153,7 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="rmse-alternatives" class="section level2">
-<h2><span class="header-section-number">3.2</span> RMSE alternatives</h2>
+<h2><span class="header-section-number">2.2</span> RMSE alternatives</h2>
 <p>AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.</p>
 <pre class="r"><code>lm_all_stats %&gt;% 
   ggplot(aes(rmse, aic, col = gamma_slab)) +
@@ -1172,6 +1183,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_model_fitting.Rmd/AIC_RMSE-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_model_fitting.Rmd/AIC_RMSE-1.png" target="_blank">7c25f7a</a>
@@ -1222,7 +1244,7 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="predictor-selection" class="section level2">
-<h2><span class="header-section-number">3.3</span> Predictor selection</h2>
+<h2><span class="header-section-number">2.3</span> Predictor selection</h2>
 <p>Within each basin and slab, the 10 linear regression models with lowest summed RMSE across two adjacent (ie compared) eras were selected.</p>
 <pre class="r"><code># select relevant columns
 lm_all_stats &lt;- lm_all_stats %&gt;%
@@ -13245,9 +13267,9 @@ tem aou silicate phosphate phosphate_star
 </div>
 </div>
 <div id="correlations-rmse-between-eras" class="section level2">
-<h2><span class="header-section-number">3.4</span> Correlations RMSE between eras</h2>
+<h2><span class="header-section-number">2.4</span> Correlations RMSE between eras</h2>
 <div id="all-models" class="section level3">
-<h3><span class="header-section-number">3.4.1</span> All models</h3>
+<h3><span class="header-section-number">2.4.1</span> All models</h3>
 <pre class="r"><code>max_rmse &lt;-
   max(c(lm_all_stats_eras$rmse,
         lm_all_stats_eras$rmse_sum - lm_all_stats_eras$rmse))
@@ -13282,6 +13304,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">7c25f7a</a>
@@ -13333,7 +13366,7 @@ jens-daniel-mueller
 <pre class="r"><code>rm(max_rmse)</code></pre>
 </div>
 <div id="best-models" class="section level3">
-<h3><span class="header-section-number">3.4.2</span> Best models</h3>
+<h3><span class="header-section-number">2.4.2</span> Best models</h3>
 <pre class="r"><code>max_rmse &lt;-
   max(c(lm_best$rmse,
         lm_best$rmse_sum - lm_best$rmse))
@@ -13368,6 +13401,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_10_models-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_10_models-1.png" target="_blank">7c25f7a</a>
@@ -13439,7 +13483,7 @@ sqrt(mean(lm_2$residuals^2))</code></pre>
 </div>
 </div>
 <div id="fitting-best-models" class="section level1">
-<h1><span class="header-section-number">4</span> Fitting best models</h1>
+<h1><span class="header-section-number">3</span> Fitting best models</h1>
 <p>After selecting 10 linear regression models with lowest summed RMSE across all eras, models are fitted again and model coefficients are saved to file.</p>
 <pre class="r"><code># format model formula
 lm_best &lt;- lm_best %&gt;% 
@@ -13596,8 +13640,954 @@ rm(lm_fit_single, coefficients, i_rmse_sum,
    lm_best, lm_best_basin_era, lm_best_basin_era_slab, lm_best_basin_era_slab_eras,
    lm_best_single, lm_best_single_formula,
    i_basin, i_era, i_gamma_slab, i_predictors)</code></pre>
+<div id="predictor-counts" class="section level2">
+<h2><span class="header-section-number">3.1</span> Predictor counts</h2>
+<p>The number of models where a particular predictor was included were counted for each basin, density slab and compared eras</p>
+<pre class="r"><code>lm_all_stats &lt;- lm_all %&gt;% 
+  filter(term != &quot;(Intercept)&quot;) %&gt;% 
+  group_by(basin, eras, gamma_slab) %&gt;% 
+  count(term) %&gt;% 
+  ungroup() %&gt;% 
+  pivot_wider(values_from = n, names_from = term)
+
+
+lm_all_stats %&gt;%
+  gt(rowname_col = &quot;gamma_slab&quot;,
+     groupname_col = c(&quot;basin&quot;, &quot;eras&quot;)) %&gt;% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = &quot;sum&quot;)
+  )</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#tfuewjlzsl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tfuewjlzsl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tfuewjlzsl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tfuewjlzsl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tfuewjlzsl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tfuewjlzsl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tfuewjlzsl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tfuewjlzsl .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tfuewjlzsl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tfuewjlzsl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tfuewjlzsl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tfuewjlzsl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tfuewjlzsl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#tfuewjlzsl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfuewjlzsl .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tfuewjlzsl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tfuewjlzsl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#tfuewjlzsl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tfuewjlzsl .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#tfuewjlzsl .gt_left {
+  text-align: left;
+}
+
+#tfuewjlzsl .gt_center {
+  text-align: center;
+}
+
+#tfuewjlzsl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tfuewjlzsl .gt_font_normal {
+  font-weight: normal;
+}
+
+#tfuewjlzsl .gt_font_bold {
+  font-weight: bold;
+}
+
+#tfuewjlzsl .gt_font_italic {
+  font-style: italic;
+}
+
+#tfuewjlzsl .gt_super {
+  font-size: 65%;
+}
+
+#tfuewjlzsl .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="tfuewjlzsl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">aou</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">oxygen</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">phosphate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">phosphate_star</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">sal</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">silicate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">tem</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">Atlantic - 1982-1999 --&gt; 2000-2012</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">196.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">162.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">172.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">188.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">224.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">192.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">218.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">Atlantic - 2000-2012 --&gt; 2013-2019</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">16</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">16</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">208.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">158.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">178.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">180.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">206.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">220.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">220.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">Indo-Pacific - 1982-1999 --&gt; 2000-2012</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">224.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">156.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">162.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">166.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">154.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">136.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">146.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">Indo-Pacific - 2000-2012 --&gt; 2013-2019</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">20</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">194.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">134.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">156.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">156.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">182.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">180.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">158.00</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+</div>
 <div id="prepare-coeffcients" class="section level2">
-<h2><span class="header-section-number">4.1</span> Prepare coeffcients</h2>
+<h2><span class="header-section-number">3.2</span> Prepare coeffcients</h2>
 <p>Coefficients are prepared for the mapping of cstar and cant.</p>
 <pre class="r"><code># select relevant columns
 lm_all &lt;- lm_all %&gt;% 
@@ -13635,7 +14625,7 @@ lm_all_cant &lt;- lm_all_long %&gt;%
               values_fill = 0)</code></pre>
 </div>
 <div id="write-files" class="section level2">
-<h2><span class="header-section-number">4.2</span> Write files</h2>
+<h2><span class="header-section-number">3.3</span> Write files</h2>
 <pre class="r"><code>lm_all_cstar %&gt;% write_csv(paste(path_version_data,
                                       &quot;lm_all_cstar.csv&quot;,
                                       sep = &quot;&quot;))
@@ -13671,12 +14661,12 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] corrr_0.4.3      broom_0.7.2      kableExtra_1.3.1 knitr_1.30      
- [5] olsrr_0.5.3.9000 GGally_2.0.0     lubridate_1.7.9  metR_0.9.0      
- [9] scico_1.2.0      patchwork_1.1.0  collapse_1.4.2   forcats_0.5.0   
-[13] stringr_1.4.0    dplyr_1.0.2      purrr_0.3.4      readr_1.4.0     
-[17] tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.2    tidyverse_1.3.0 
-[21] workflowr_1.6.2 
+ [1] gt_0.2.2         corrr_0.4.3      broom_0.7.2      kableExtra_1.3.1
+ [5] knitr_1.30       olsrr_0.5.3.9000 GGally_2.0.0     lubridate_1.7.9 
+ [9] metR_0.9.0       scico_1.2.0      patchwork_1.1.0  collapse_1.4.2  
+[13] forcats_0.5.0    stringr_1.4.0    dplyr_1.0.2      purrr_0.3.4     
+[17] readr_1.4.0      tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.2   
+[21] tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 webshot_0.5.2            RColorBrewer_1.1-2      
@@ -13685,27 +14675,27 @@ loaded via a namespace (and not attached):
 [10] DBI_1.1.0                colorspace_2.0-0         withr_2.3.0             
 [13] gridExtra_2.3            tidyselect_1.1.0         curl_4.3                
 [16] compiler_4.0.3           git2r_0.27.1             cli_2.2.0               
-[19] rvest_0.3.6              xml2_1.3.2               labeling_0.4.2          
-[22] scales_1.1.1             checkmate_2.0.0          goftest_1.2-2           
-[25] digest_0.6.27            foreign_0.8-80           rmarkdown_2.5           
-[28] rio_0.5.16               pkgconfig_2.0.3          htmltools_0.5.0         
-[31] highr_0.8                dbplyr_1.4.4             rlang_0.4.9             
-[34] readxl_1.3.1             rstudioapi_0.13          farver_2.0.3            
-[37] generics_0.0.2           jsonlite_1.7.1           zip_2.1.1               
-[40] car_3.0-10               magrittr_2.0.1           Matrix_1.2-18           
-[43] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
-[46] abind_1.4-5              lifecycle_0.2.0          stringi_1.5.3           
-[49] whisker_0.4              yaml_2.2.1               carData_3.0-4           
-[52] plyr_1.8.6               grid_4.0.3               blob_1.2.1              
-[55] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[58] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[61] pillar_1.4.7             reprex_0.3.0             glue_1.4.2              
-[64] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.13.2       
-[67] modelr_0.1.8             vctrs_0.3.5              httpuv_1.5.4            
-[70] cellranger_1.1.0         gtable_0.3.0             reshape_0.8.8           
-[73] assertthat_0.2.1         xfun_0.18                openxlsx_4.2.3          
-[76] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
-[79] ellipsis_0.3.1           here_0.1                </code></pre>
+[19] rvest_0.3.6              xml2_1.3.2               sass_0.2.0              
+[22] labeling_0.4.2           scales_1.1.1             checkmate_2.0.0         
+[25] goftest_1.2-2            digest_0.6.27            foreign_0.8-80          
+[28] rmarkdown_2.5            rio_0.5.16               pkgconfig_2.0.3         
+[31] htmltools_0.5.0          highr_0.8                dbplyr_1.4.4            
+[34] rlang_0.4.9              readxl_1.3.1             rstudioapi_0.13         
+[37] farver_2.0.3             generics_0.0.2           jsonlite_1.7.1          
+[40] zip_2.1.1                car_3.0-10               magrittr_2.0.1          
+[43] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[46] fansi_0.4.1              abind_1.4-5              lifecycle_0.2.0         
+[49] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
+[52] carData_3.0-4            plyr_1.8.6               grid_4.0.3              
+[55] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[58] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
+[61] hms_0.5.3                pillar_1.4.7             reprex_0.3.0            
+[64] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[67] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
+[70] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
+[73] reshape_0.8.8            assertthat_0.2.1         xfun_0.18               
+[76] openxlsx_4.2.3           RcppEigen_0.3.3.7.0      later_1.1.0.1           
+[79] viridisLite_0.3.0        ellipsis_0.3.1           here_0.1                </code></pre>
 </div>
 </div>
 </div>
