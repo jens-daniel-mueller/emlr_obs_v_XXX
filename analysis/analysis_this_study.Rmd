@@ -46,19 +46,16 @@ path_version_figures  <-
   )
 ```
 
-# Libraries
-
-Loading libraries specific to the the analysis performed in this section.
-
-```{r load_libraries_specific, message=FALSE, warning=FALSE}
+```{r load_libraries_specific, include = FALSE}
 library(scales)
 library(marelac)
 library(kableExtra)
+library(gt)
 ```
 
 # Data sources
 
-cant estimates from this study:
+Cant estimates from this study:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
@@ -122,35 +119,72 @@ GLODAP <-
 
 ```
 
-# C~ant~ budgets
+# Cant budgets
 
-Global C~ant~ inventories were estimated in units of Pg C. Please note that here we only added positive C~ant~ values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global Cant inventories were estimated in units of Pg C. Please note that here we only added positive Cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
 cant_inv_budget <- cant_inv %>% 
   mutate(surface_area = earth_surf(lat, lon),
-         cant_inv_grid = cant_inv*surface_area) %>% 
-  group_by(eras, basin_AIP) %>% 
+         cant_inv_grid = cant_inv*surface_area,
+         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
+  group_by(basin_AIP, eras, inv_depth) %>% 
   summarise(cant_total = sum(cant_inv_grid)*12*1e-15,
-            cant_total = round(cant_total,1)) %>% 
-  ungroup() %>% 
-  arrange(desc(eras)) %>% 
-  pivot_wider(values_from = cant_total, names_from = basin_AIP) %>% 
-  mutate(total = Atlantic + Indian + Pacific)
+            cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
+            cant_pos_total = round(cant_pos_total,1)) %>% 
+  ungroup()
 
-cant_inv_budget %>% 
-  kableExtra::kable() %>% 
-  add_header_above() %>%
-  kable_styling(full_width = FALSE)
+
+```
+
+## Standard depth
+
+```{r cant_budget_standard_depth}
+
+cant_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("eras", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+
+```
+
+## Other depths
+
+```{r cant_budget_other_depth}
+
+cant_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("eras", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
 
 rm(cant_inv_budget)
 
 ```
 
+The following analysis is restricted to the standard inventory depth of `r params_global$inventory_depth_standard` m.
+
+```{r filter_standard_inventory_depth}
+
+cant_inv <- cant_inv %>%
+  filter(inv_depth == params_global$inventory_depth_standard)
+
+```
 
 
-# C~ant~ - positive
+# Cant - positive
 
 In a first series of plots we explore the distribution of cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 

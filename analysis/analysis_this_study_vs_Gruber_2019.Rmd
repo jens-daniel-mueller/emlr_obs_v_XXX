@@ -25,7 +25,7 @@ params_local <-
 
 ```
 
-```{r define_updata_paths}
+```{r define_updata_paths, include = FALSE}
 path_preprocessing    <-
   "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
 
@@ -46,11 +46,7 @@ path_version_figures  <-
   )
 ```
 
-# Libraries
-
-Loading libraries specific to the the analysis performed in this section.
-
-```{r load_libraries_specific, message=FALSE, warning=FALSE}
+```{r load_libraries_specific, include = FALSE}
 library(scales)
 library(marelac)
 library(gt)
@@ -90,7 +86,8 @@ cant_inv_JDM <-
                  sep = ""))
 
 cant_inv_JDM <- cant_inv_JDM %>%
-  filter(eras == unique(cant_inv_JDM$eras)[1]) %>%
+  filter(eras == unique(cant_inv_JDM$eras)[1],
+         inv_depth == params_global$inventory_depth_standard) %>%
   select(-c(eras))
 
 ```
@@ -167,9 +164,9 @@ cant_zonal_wide <- cant_zonal_wide %>%
 ```
 
 
-# C~ant~ budgets
+# Cant budgets
 
-Global C~ant~ inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global Cant inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
