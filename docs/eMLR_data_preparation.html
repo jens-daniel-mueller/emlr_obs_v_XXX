@@ -483,7 +483,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR - data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">03 December, 2020</h4>
+<h4 class="date">04 December, 2020</h4>
 
 </div>
 
@@ -508,7 +508,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-03
+<strong>Last updated:</strong> 2020-12-04
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree992ba15f65af707261785bcd5572be197512a051targetblank992ba15a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/992ba15f65af707261785bcd5572be197512a051" target="_blank">992ba15</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee11f4559a72464eab8aef84bd1f4f30c8c845ed5targetblanke11f455a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e11f4559a72464eab8aef84bd1f4f30c8c845ed5" target="_blank">e11f455</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree992ba15f65af707261785bcd5572be197512a051targetblank992ba15a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee11f4559a72464eab8aef84bd1f4f30c8c845ed5targetblanke11f455a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/992ba15f65af707261785bcd5572be197512a051" target="_blank">992ba15</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e11f4559a72464eab8aef84bd1f4f30c8c845ed5" target="_blank">e11f455</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -659,6 +659,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e11f4559a72464eab8aef84bd1f4f30c8c845ed5/analysis/eMLR_data_preparation.Rmd" target="_blank">e11f455</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-04
+</td>
+<td>
+improved output plots by using stat_2d instead of points
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/eMLR_data_preparation.html" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1629,11 +1663,11 @@ Jens Müller
 GLODAP_cruise %&gt;%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c() +
+  scale_fill_viridis_c() +
   theme(axis.title.x = element_blank())
 
 lat_section +
-  geom_point(aes(col = tco2))</code></pre>
+  stat_summary_2d(aes(z = tco2))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-2">
@@ -1695,7 +1729,7 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>lat_section +
-  geom_point(aes(col = rCP_phosphate))</code></pre>
+  stat_summary_2d(aes(z = rCP_phosphate))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-3">
@@ -1757,7 +1791,7 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>lat_section +
-  geom_point(aes(col = talk_05))</code></pre>
+  stat_summary_2d(aes(z = talk_05))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-4">
@@ -1819,7 +1853,7 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>lat_section +
-  geom_point(aes(col = rNP_phosphate_05))</code></pre>
+  stat_summary_2d(aes(z = rNP_phosphate_05))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-5">
@@ -1881,7 +1915,7 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>lat_section +
-  geom_point(aes(col = cstar))</code></pre>
+  stat_summary_2d(aes(z = cstar))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-6.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-6">
@@ -1943,7 +1977,7 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>lat_section +
-  geom_point(aes(col = cstar_tref))</code></pre>
+  stat_summary_2d(aes(z = cstar_tref))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-7">
@@ -2157,7 +2191,7 @@ GLODAP_cruise %&gt;%
   theme(legend.position = &quot;bottom&quot;)
 
 lat_section +
-  geom_point(aes(col = gamma_delta)) +
+  stat_summary_2d(aes(z = gamma_delta)) +
   scale_color_viridis_c()
 
 GLODAP_cruise %&gt;% 
@@ -2381,61 +2415,61 @@ map_plot &lt;-
 lon_section &lt;- GLODAP_cruise %&gt;%
   ggplot(aes(lon, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c()
+  scale_fill_viridis_c()
 
 lon_tco2 &lt;- lon_section+
-  geom_point(aes(col=tco2))
+  stat_summary_2d(aes(z=tco2))
 
 lon_talk &lt;- lon_section+
-  geom_point(aes(col=talk))
+  stat_summary_2d(aes(z=talk))
 
 lon_phosphate &lt;- lon_section+
-  geom_point(aes(col=phosphate))
+  stat_summary_2d(aes(z=phosphate))
 
 lon_oxygen &lt;- lon_section+
-  geom_point(aes(col=oxygen))
+  stat_summary_2d(aes(z=oxygen))
 
 lon_aou &lt;- lon_section+
-  geom_point(aes(col=aou))
+  stat_summary_2d(aes(z=aou))
 
 lon_phosphate_star &lt;- lon_section+
-  geom_point(aes(col=phosphate_star))
+  stat_summary_2d(aes(z=phosphate_star))
 
 lon_nitrate &lt;- lon_section+
-  geom_point(aes(col=nitrate))
+  stat_summary_2d(aes(z=nitrate))
 
 lon_cstar &lt;- lon_section+
-  geom_point(aes(col=cstar_tref))
+  stat_summary_2d(aes(z=cstar_tref))
 
 
 lat_section &lt;- GLODAP_cruise %&gt;%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
-  scale_color_viridis_c()
+  scale_fill_viridis_c()
 
 lat_tco2 &lt;- lat_section+
-  geom_point(aes(col=tco2))
+  stat_summary_2d(aes(z=tco2))
 
 lat_talk &lt;- lat_section+
-  geom_point(aes(col=talk))
+  stat_summary_2d(aes(z=talk))
 
 lat_phosphate &lt;- lat_section+
-  geom_point(aes(col=phosphate))
+  stat_summary_2d(aes(z=phosphate))
 
 lat_oxygen &lt;- lat_section+
-  geom_point(aes(col=oxygen))
+  stat_summary_2d(aes(z=oxygen))
 
 lat_aou &lt;- lat_section+
-  geom_point(aes(col=aou))
+  stat_summary_2d(aes(z=aou))
 
 lat_phosphate_star &lt;- lat_section+
-  geom_point(aes(col=phosphate_star))
+  stat_summary_2d(aes(z=phosphate_star))
 
 lat_nitrate &lt;- lat_section+
-  geom_point(aes(col=nitrate))
+  stat_summary_2d(aes(z=nitrate))
 
 lat_cstar &lt;- lat_section+
-  geom_point(aes(col=cstar_tref))
+  stat_summary_2d(aes(z=cstar_tref))
 
 hist_tco2 &lt;- GLODAP_cruise %&gt;%
   ggplot(aes(tco2)) +

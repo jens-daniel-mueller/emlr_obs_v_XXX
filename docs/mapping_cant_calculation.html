@@ -483,7 +483,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping cant</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">03 December, 2020</h4>
+<h4 class="date">04 December, 2020</h4>
 
 </div>
 
@@ -508,7 +508,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-03
+<strong>Last updated:</strong> 2020-12-04
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree992ba15f65af707261785bcd5572be197512a051targetblank992ba15a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/992ba15f65af707261785bcd5572be197512a051" target="_blank">992ba15</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee11f4559a72464eab8aef84bd1f4f30c8c845ed5targetblanke11f455a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e11f4559a72464eab8aef84bd1f4f30c8c845ed5" target="_blank">e11f455</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree992ba15f65af707261785bcd5572be197512a051targetblank992ba15a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee11f4559a72464eab8aef84bd1f4f30c8c845ed5targetblanke11f455a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/992ba15f65af707261785bcd5572be197512a051" target="_blank">992ba15</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e11f4559a72464eab8aef84bd1f4f30c8c845ed5" target="_blank">e11f455</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -659,6 +659,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e11f4559a72464eab8aef84bd1f4f30c8c845ed5/analysis/mapping_cant_calculation.Rmd" target="_blank">e11f455</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-04
+</td>
+<td>
+improved output plots by using stat_2d instead of points
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/mapping_cant_calculation.html" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1167,16 +1201,18 @@ for (i_eras in unique(cant$eras)) {
     limits = max(abs(cant_eras_lon$cant)) * c(-1,1)
     
     cant_eras_lon %&gt;%
-      ggplot(aes(lat, depth, col = cant)) +
-      geom_point() +
-      scale_color_scico(
+      ggplot(aes(lat, depth, z = cant)) +
+      stat_summary_2d(fun = &quot;mean&quot;,
+                      na.rm = TRUE,
+                      bins = 20,
+                      col = &quot;grey&quot;) +
+      scale_fill_scico(
         name = &quot;Cant&quot;,
         palette = &quot;vik&quot;,
         limit = limits
       ) +
       scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
       scale_x_continuous(limits = c(-85, 85)) +
-      guides(fill = guide_colorsteps(barheight = unit(10, &quot;cm&quot;))) +
       labs(title = paste(&quot;eras:&quot;, i_eras,
                          &quot;| lon:&quot;, i_lon,
                          &quot;|&quot;, params_local$Version_ID)) +
@@ -1248,6 +1284,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/pCO2_climatology_map-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03ddb84fa1d49bc81e5f2bf0bf448c2f343614e/docs/figure/mapping_cant_calculation.Rmd/pCO2_climatology_map-1.png" target="_blank">b03ddb8</a>
@@ -1344,6 +1391,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/pCO2_climatology_sections-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f8358f8829b196b5e7e7f1ed109972cacfab8296/docs/figure/mapping_cant_calculation.Rmd/pCO2_climatology_sections-1.png" target="_blank">f8358f8</a>
@@ -1466,6 +1524,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/revelle_factor_climatology_map-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03ddb84fa1d49bc81e5f2bf0bf448c2f343614e/docs/figure/mapping_cant_calculation.Rmd/revelle_factor_climatology_map-1.png" target="_blank">b03ddb8</a>
 </td>
 <td>
@@ -1560,6 +1629,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/revelle_factor_climatology_sections-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f8358f8829b196b5e7e7f1ed109972cacfab8296/docs/figure/mapping_cant_calculation.Rmd/revelle_factor_climatology_sections-1.png" target="_blank">f8358f8</a>
@@ -1695,6 +1775,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-1.png" target="_blank">7c25f7a</a>
@@ -1834,6 +1925,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-2.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-2.png" target="_blank">7c25f7a</a>
 </td>
 <td>
@@ -1891,6 +1993,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-1.png" target="_blank">7c25f7a</a>
@@ -2030,6 +2143,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-2.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-2.png" target="_blank">7c25f7a</a>
 </td>
 <td>
@@ -2102,6 +2226,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-1.png" target="_blank">090e4d5</a>
 </td>
 <td>
@@ -2160,6 +2295,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-2.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-2.png" target="_blank">090e4d5</a>
@@ -2233,6 +2379,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-1.png" target="_blank">090e4d5</a>
 </td>
 <td>
@@ -2291,6 +2448,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-2.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-2.png" target="_blank">090e4d5</a>
@@ -2380,6 +2548,43 @@ p_map_cant_inv(
 ) +
   facet_grid(inv_depth ~ eras)</code></pre>
 <p><img src="figure/mapping_cant_calculation.Rmd/cant_inventories-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_inventories-1">
+Past versions of cant_inventories-1.png
+</button>
+</p>
+<div id="fig-cant_inventories-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/figure/mapping_cant_calculation.Rmd/cant_inventories-1.png" target="_blank">abc6818</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="write-csv" class="section level1">
