@@ -115,7 +115,7 @@ wflow_publish(here::here(
 message = "use setup child Rmd file")
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "editorial changes")
+wflow_publish(all = TRUE, message = "calculate cant with variable inventory depth")
 
 
 # commit changes including _site.yml (locally) and rebuild site

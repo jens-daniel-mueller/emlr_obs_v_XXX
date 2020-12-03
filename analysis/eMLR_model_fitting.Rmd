@@ -25,7 +25,7 @@ params_local <-
 
 ```
 
-```{r define_updata_paths}
+```{r define_updata_paths, include = FALSE}
 path_preprocessing    <-
   "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
 
@@ -46,11 +46,7 @@ path_version_figures  <-
   )
 ```
 
-# Libraries
-
-Loading libraries specific to the the analysis performed in this section.
-
-```{r load_libraries_specific, message=FALSE, warning=FALSE}
+```{r load_libraries_specific, include = FALSE}
 library(lubridate)
 library(GGally)
 library(olsrr)
@@ -59,6 +55,7 @@ library(kableExtra)
 library(broom)
 library(corrr)
 library(GGally)
+library(gt)
 ```
 
 # Required data
@@ -469,6 +466,33 @@ rm(lm_fit_single, coefficients, i_rmse_sum,
 
 
 ```
+
+## Predictor counts
+
+The number of models where a particular predictor was included were counted for each basin, density slab and compared eras
+
+```{r predictor_counts}
+
+lm_all_stats <- lm_all %>% 
+  filter(term != "(Intercept)") %>% 
+  group_by(basin, eras, gamma_slab) %>% 
+  count(term) %>% 
+  ungroup() %>% 
+  pivot_wider(values_from = n, names_from = term)
+
+
+lm_all_stats %>%
+  gt(rowname_col = "gamma_slab",
+     groupname_col = c("basin", "eras")) %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+```
+
+
+
 
 ## Prepare coeffcients
 
