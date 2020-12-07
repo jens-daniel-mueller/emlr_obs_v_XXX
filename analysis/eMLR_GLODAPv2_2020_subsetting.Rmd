@@ -578,7 +578,7 @@ GLODAP <- GLODAP %>%
 ```
 
 
-### Manual adjustment A16 cruise
+## Manual adjustment A16 cruise
 
 For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the `r sort(unique(GLODAP$era))[2]` era despite taking place in 2013/14.
 
@@ -599,7 +599,7 @@ rm(GLODAP_cruises)
 
 ```
 
-```{r switch_eras_manually}
+```{r switch_eras_manually, eval=FALSE}
 
 GLODAP <- GLODAP %>%
   mutate(era = if_else(cruise %in% c(1041, 1042),
