@@ -145,8 +145,8 @@ for (i_basin in unique(GLODAP$basin)) {
     # i_basin <- unique(GLODAP$basin)[1]
     # i_era   <- unique(GLODAP$era)[1]
     
-    print(i_basin)
-    print(i_era)
+    # print(i_basin)
+    # print(i_era)
     
     GLODAP_basin_era <- GLODAP %>%
       filter(basin == i_basin,
@@ -154,7 +154,7 @@ for (i_basin in unique(GLODAP$basin)) {
     
     for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
       # i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[5]
-      print(i_gamma_slab)
+      # print(i_gamma_slab)
       
       GLODAP_highlight <- GLODAP_basin_era %>%
         mutate(gamma_highlight = if_else(gamma_slab == i_gamma_slab,
