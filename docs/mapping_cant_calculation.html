@@ -483,7 +483,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping cant</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">07 December, 2020</h4>
+<h4 class="date">09 December, 2020</h4>
 
 </div>
 
@@ -508,7 +508,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-07
+<strong>Last updated:</strong> 2020-12-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6f8a60670c0087d3876395c974cd787689df868dtargetblank6f8a606a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6f8a60670c0087d3876395c974cd787689df868d" target="_blank">6f8a606</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree71c63b0421c3622f991aa00fa346dfcea3d86457targetblank71c63b0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/71c63b0421c3622f991aa00fa346dfcea3d86457" target="_blank">71c63b0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6f8a60670c0087d3876395c974cd787689df868dtargetblank6f8a606a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree71c63b0421c3622f991aa00fa346dfcea3d86457targetblank71c63b0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6f8a60670c0087d3876395c974cd787689df868d" target="_blank">6f8a606</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/71c63b0421c3622f991aa00fa346dfcea3d86457" target="_blank">71c63b0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -620,6 +620,7 @@ Ignored files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -658,6 +659,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/71c63b0421c3622f991aa00fa346dfcea3d86457/analysis/mapping_cant_calculation.Rmd" target="_blank">71c63b0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-09
+</td>
+<td>
+rerun with variable predictor assignment
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/24a632fdf0071851b000dac2ee9b25bec501b691/docs/mapping_cant_calculation.html" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1279,11 +1314,7 @@ rm(predictors, lm_all_wide)</code></pre>
 </div>
 <div id="apply-mlrs-to-predictor" class="section level2">
 <h2><span class="header-section-number">6.2</span> Apply MLRs to predictor</h2>
-<pre class="r"><code>cant &lt;- b_cant(cant)
-
-cant &lt;- cant %&gt;%
-  mutate(cant_pos = if_else(cant &lt; 0, 0, cant))</code></pre>
-<pre class="r"><code>cant &lt;- b_cant_predictor(cant)</code></pre>
+<pre class="r"><code>cant &lt;- b_cant(cant)</code></pre>
 <div id="sections-by-model" class="section level3">
 <h3><span class="header-section-number">6.2.1</span> Sections by model</h3>
 <p>Zonal sections plots are produced for every 20° longitude, each era and for all models individually and can be downloaded <a href="https://github.com/jens-daniel-mueller/cant_eMLR/tree/master/output/figure/mapping" target="_blank">here</a>.</p>
@@ -1922,6 +1953,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-1.png" target="_blank">6a8004b</a>
 </td>
 <td>
@@ -2114,6 +2156,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-2.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_map-2.png" target="_blank">6a8004b</a>
 </td>
 <td>
@@ -2215,6 +2268,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-1.png" target="_blank">6a8004b</a>
@@ -2409,6 +2473,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-2.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_surface_climatology_sections-2.png" target="_blank">6a8004b</a>
 </td>
 <td>
@@ -2480,12 +2555,34 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="mean-cant-fields" class="section level2">
-<h2><span class="header-section-number">6.4</span> Mean cant fields</h2>
+<h2><span class="header-section-number">6.4</span> Mean Cant fields</h2>
 <p>Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only. This averaging step summarizes the information derived from ten best fitting MLRs.</p>
 <div id="deep-water-averaging" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Deep water averaging</h3>
-<pre class="r"><code>cant_predictor_average &lt;- m_cant_predictor_model_average(cant)
-cant_predictor_average &lt;- m_cut_gamma(cant_predictor_average, &quot;gamma&quot;)</code></pre>
+<pre class="r"><code># cant &lt;- cant %&gt;%
+#   select(lon, lat, depth, eras, basin,
+#             starts_with(&quot;cant&quot;),
+#             gamma)
+# 
+# cant_average &lt;- cant %&gt;%
+#     fgroup_by(lon, lat, depth, eras, basin) %&gt;% {
+#       add_vars(fgroup_vars(.,&quot;unique&quot;),
+#                fmean(., keep.group_vars = FALSE),
+#                fsd(., keep.group_vars = FALSE) %&gt;% add_stub(pre = FALSE, &quot;_sd&quot;))
+#     }
+
+cant_average &lt;- m_cant_model_average(cant)
+# cant_predictor_average &lt;- m_cut_gamma(cant_predictor_average, &quot;gamma&quot;)
+
+cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)
+
+cant_predictor_average &lt;- cant_average %&gt;% 
+  select(-c(&quot;cant&quot;, &quot;cant_pos&quot;, ends_with(&quot;_sd&quot;)))
+
+cant_average &lt;- cant_average %&gt;% 
+  select(lon, lat, depth, eras, basin,
+            cant, cant_pos, cant_sd, cant_pos_sd,
+            gamma, gamma_sd, gamma_slab)</code></pre>
 <pre class="r"><code>cant_average &lt;- m_cant_model_average(cant)
 rm(cant)</code></pre>
 <pre class="r"><code># i_eras &lt;- unique(cant_average$eras)[2]
@@ -2523,6 +2620,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-1.png" target="_blank">6a8004b</a>
@@ -2638,6 +2746,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-2.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_map-2.png" target="_blank">6a8004b</a>
@@ -2766,6 +2885,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-1.png" target="_blank">6a8004b</a>
 </td>
 <td>
@@ -2881,6 +3011,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-2.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_deep_climatology_sections-2.png" target="_blank">6a8004b</a>
 </td>
 <td>
@@ -2975,6 +3116,7 @@ jens-daniel-mueller
 <div id="surface-water-averaging" class="section level3">
 <h3><span class="header-section-number">6.4.2</span> Surface water averaging</h3>
 <pre class="r"><code>cant_surface_average &lt;- m_cant_model_average(cant_surface)
+cant_surface_average &lt;- m_cut_gamma(cant_surface_average, &quot;gamma&quot;)
 rm(cant_surface)</code></pre>
 </div>
 <div id="join-surface-and-deep-water" class="section level3">
@@ -2982,7 +3124,7 @@ rm(cant_surface)</code></pre>
 <pre class="r"><code>cant_average &lt;- full_join(cant_average, cant_surface_average)
 rm(cant_surface_average)
 
-cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)</code></pre>
+# cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)</code></pre>
 </div>
 </div>
 <div id="mean-cant-sections" class="section level2">
@@ -3045,6 +3187,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/mapping_cant_calculation.Rmd/cant_inventories-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/mapping_cant_calculation.Rmd/cant_inventories-1.png" target="_blank">6a8004b</a>
