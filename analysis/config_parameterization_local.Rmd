@@ -63,17 +63,7 @@ slabs_Ind_Pac <-
     28.10,
     Inf)
 
-# MLR model to be fitted with all predictors taken into account
-# Please note that for the mapping step, predictors need to be adjusted manually
-MLR_full_model <- "cstar ~ 
-                sal  + 
-                tem  + 
-                aou  + 
-                oxygen  + 
-                silicate  + 
-                phosphate  + 
-                phosphate_star"
-
+# Predictors for MLR model
 MLR_predictors <- c(
                 "sal",
                 "tem",
@@ -100,7 +90,6 @@ params_local <-
     # break years for eras, numbers indicate the upper end of the respective era
     era_breaks = c(1981, 1999, 2012, Inf),
     # see above
-    # MLR_full_model = MLR_full_model,
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
     predictors_max = 5,

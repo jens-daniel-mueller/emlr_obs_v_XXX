@@ -332,23 +332,10 @@ Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combi
 
 ```{r calculate_cant_predictor_mean}
 
-# cant <- cant %>%
-#   select(lon, lat, depth, eras, basin,
-#             starts_with("cant"),
-#             gamma)
-# 
-# cant_average <- cant %>%
-#     fgroup_by(lon, lat, depth, eras, basin) %>% {
-#       add_vars(fgroup_vars(.,"unique"),
-#                fmean(., keep.group_vars = FALSE),
-#                fsd(., keep.group_vars = FALSE) %>% add_stub(pre = FALSE, "_sd"))
-#     }
-
 cant_average <- m_cant_model_average(cant)
-# cant_predictor_average <- m_cut_gamma(cant_predictor_average, "gamma")
-
 cant_average <- m_cut_gamma(cant_average, "gamma")
 
+# split data set for individual predictor contributions and total cant
 cant_predictor_average <- cant_average %>% 
   select(-c("cant", "cant_pos", ends_with("_sd")))
 

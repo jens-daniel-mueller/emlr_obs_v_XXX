@@ -501,6 +501,36 @@ GLODAP %>%
 
 ```
 
+## Histograms
+
+```{r histogram_predictor, fig.asp=1}
+
+GLODAP_vars <- GLODAP %>% 
+  select(cstar_tref,
+         sal,
+         tem,
+         oxygen,
+         aou,
+         silicate,
+         phosphate,
+         phosphate_star)
+
+GLODAP_vars_long <- GLODAP_vars %>% 
+  pivot_longer(cstar_tref:phosphate_star, names_to = "variable", values_to = "value")
+
+GLODAP_vars_long %>% 
+  ggplot(aes(value)) +
+  geom_histogram() +
+  facet_wrap(~ variable,
+             ncol = 2,
+             scales = "free")
+
+rm(GLODAP_vars, GLODAP_vars_long)
+
+```
+
+
+
 
 # Individual cruise sections
 
