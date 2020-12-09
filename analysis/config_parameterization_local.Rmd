@@ -74,6 +74,15 @@ MLR_full_model <- "cstar ~
                 phosphate  + 
                 phosphate_star"
 
+MLR_predictors <- c(
+                "sal",
+                "tem",
+                "aou",
+                "oxygen",
+                "silicate",
+                "phosphate",
+                "phosphate_star")
+
 params_local <-
   lst(
     # ID of current sensitivity run
@@ -91,7 +100,8 @@ params_local <-
     # break years for eras, numbers indicate the upper end of the respective era
     era_breaks = c(1981, 1999, 2012, Inf),
     # see above
-    MLR_full_model = MLR_full_model,
+    # MLR_full_model = MLR_full_model,
+    MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
     predictors_max = 5,
     # Minimum number of MLR predictors

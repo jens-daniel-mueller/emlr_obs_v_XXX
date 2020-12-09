@@ -108,10 +108,17 @@ for (i_basin in unique(GLODAP$basin)) {
       GLODAP_basin_era_slab <- GLODAP_basin_era %>% 
         filter(gamma_slab == i_gamma_slab)
 
-      # fit the full linear model, i.e. all predictor combinations
+            # fit the full linear model, i.e. all predictor combinations
       lm_full <- lm(
-        params_local$MLR_full_model,
+        paste("cstar",
+              paste(params_local$MLR_predictors, collapse = " + "),
+              sep = " ~ "),
         data = GLODAP_basin_era_slab)
+      
+      # # old version: fit the full linear model, i.e. all predictor combinations
+      # lm_full <- lm(
+      #   params_local$MLR_full_model,
+      #   data = GLODAP_basin_era_slab)
       
       # fit linear models for all possible predictor combinations
       # unfortunately, this functions does not provide model coefficients (yet)

@@ -119,16 +119,8 @@ rm(predictors, lm_all_wide)
 
 cant <- b_cant(cant)
 
-cant <- cant %>%
-  mutate(cant_pos = if_else(cant < 0, 0, cant))
-
 ```
 
-```{r calculate_predictor_contributions_to_cant}
-
-cant <- b_cant_predictor(cant)
-
-```
 
 ### Sections by model
 
@@ -332,7 +324,7 @@ for (i_eras in unique(cant_surface$eras)) {
 ```
 
 
-## Mean cant fields
+## Mean Cant fields
 
 Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only. This averaging step summarizes the information derived from ten best fitting MLRs. 
 
@@ -340,12 +332,34 @@ Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combi
 
 ```{r calculate_cant_predictor_mean}
 
-cant_predictor_average <- m_cant_predictor_model_average(cant)
-cant_predictor_average <- m_cut_gamma(cant_predictor_average, "gamma")
+# cant <- cant %>%
+#   select(lon, lat, depth, eras, basin,
+#             starts_with("cant"),
+#             gamma)
+# 
+# cant_average <- cant %>%
+#     fgroup_by(lon, lat, depth, eras, basin) %>% {
+#       add_vars(fgroup_vars(.,"unique"),
+#                fmean(., keep.group_vars = FALSE),
+#                fsd(., keep.group_vars = FALSE) %>% add_stub(pre = FALSE, "_sd"))
+#     }
+
+cant_average <- m_cant_model_average(cant)
+# cant_predictor_average <- m_cut_gamma(cant_predictor_average, "gamma")
+
+cant_average <- m_cut_gamma(cant_average, "gamma")
+
+cant_predictor_average <- cant_average %>% 
+  select(-c("cant", "cant_pos", ends_with("_sd")))
+
+cant_average <- cant_average %>% 
+  select(lon, lat, depth, eras, basin,
+            cant, cant_pos, cant_sd, cant_pos_sd,
+            gamma, gamma_sd, gamma_slab)
 
 ```
 
-```{r calculate_cant_mean}
+```{r calculate_cant_mean, eval=FALSE}
 
 cant_average <- m_cant_model_average(cant)
 rm(cant)
@@ -395,6 +409,7 @@ for (i_eras in unique(cant_surface$eras)) {
 ```{r calculate_cant_mean_surface}
 
 cant_surface_average <- m_cant_model_average(cant_surface)
+cant_surface_average <- m_cut_gamma(cant_surface_average, "gamma")
 rm(cant_surface)
 
 ```
@@ -408,7 +423,7 @@ rm(cant_surface)
 cant_average <- full_join(cant_average, cant_surface_average)
 rm(cant_surface_average)
 
-cant_average <- m_cut_gamma(cant_average, "gamma")
+# cant_average <- m_cut_gamma(cant_average, "gamma")
 
 ```
 
