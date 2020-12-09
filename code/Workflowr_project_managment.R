@@ -142,7 +142,6 @@ wflow_publish(here::here(
 message = "cleaned subsetting and data preparation",
 republish = TRUE)
 
-
 # Push latest version to GitHub
 wflow_git_push()
 jens-daniel-mueller
