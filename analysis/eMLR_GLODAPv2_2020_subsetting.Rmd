@@ -624,7 +624,7 @@ For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S)
 ```{r GLODAP_Atl_cruises_2013_2014_map}
 
 GLODAP_cruises <- GLODAP %>% 
-  filter(basin == "Atlantic",
+  filter(basin_AIP == "Atlantic",
          year %in% c(2013, 2014)) %>% 
   count(lat, lon, cruise)
 
@@ -670,7 +670,7 @@ GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
 
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
-  select(year, date, era, basin, lat, lon, cruise,
+  select(year, date, era, basin, basin_AIP, lat, lon, cruise,
          bottomdepth, depth, temp, sal, gamma,
          tco2, talk, phosphate,
          oxygen, aou, nitrate, silicate)

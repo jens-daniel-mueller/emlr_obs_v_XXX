@@ -351,23 +351,18 @@ GLODAP_cruise %>%
   scale_fill_viridis_c() +
   theme(axis.title.x = element_blank())
 
-lat_section +
-  stat_summary_2d(aes(z = tco2))
-
-lat_section +
-  stat_summary_2d(aes(z = rCP_phosphate))
-
-lat_section +
-  stat_summary_2d(aes(z = talk_05))
-
-lat_section +
-  stat_summary_2d(aes(z = rNP_phosphate_05))
-
-lat_section +
-  stat_summary_2d(aes(z = cstar))
-
-lat_section +
-  stat_summary_2d(aes(z = cstar_tref))
+for (i_var in c("tco2",
+                "rCP_phosphate",
+                "talk_05",
+                "rNP_phosphate_05",
+                "cstar",
+                "cstar_tref")) {
+  print(lat_section +
+          stat_summary_2d(aes(z = tco2))+
+          scale_fill_viridis_c(name = i_var)
+        )
+  
+}
 
 rm(lat_section, GLODAP_cruise)
 
@@ -430,7 +425,7 @@ GLODAP_cruise <- GLODAP_cruise %>%
 
 GLODAP_cruise <- GLODAP_cruise %>% 
   mutate(THETA = swTheta(salinity = sal,
-                         temperature = tem,
+                         temperature = temp,
                          pressure = CTDPRS,
                          referencePressure = 0,
                          longitude = lon-180,
@@ -472,34 +467,36 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 # Observations coverage
 
-```{r obs_gamma_slab_Atl, fig.asp=1}
+```{r obs_gamma_slab, fig.asp=1}
 
 GLODAP <- GLODAP %>% 
   mutate(gamma_slab = factor(gamma_slab), 
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
 
-GLODAP %>% 
-  filter(basin == "Atlantic") %>% 
-  ggplot(aes(lat, gamma_slab)) +
-  geom_bin2d(binwidth = 5) +
-  scale_fill_viridis_c(option = "magma", direction = -1, trans = "log10") +
-  scale_x_continuous(breaks = seq(-100,100,20)) +
-  facet_grid(era~basin)
+for (i_basin in unique(GLODAP$basin)) {
+  # i_basin <- unique(GLODAP$basin)[3]
+  
+  print(
+    GLODAP %>%
+      filter(basin == i_basin) %>%
+      ggplot(aes(lat, gamma_slab)) +
+      geom_bin2d(binwidth = 5) +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10"
+      ) +
+      scale_x_continuous(breaks = seq(-100, 100, 20),
+                         limits = c(params_global$lat_min,
+                                    params_global$lat_max)) +
+      facet_grid(era ~ .) +
+      labs(title = paste("MLR region: ", i_basin))
+  )
+  
+}
 
 ```
 
-
-```{r obs_gamma_slab_Pac, fig.asp=1}
-
-GLODAP %>% 
-  filter(basin == "Indo-Pacific") %>% 
-  ggplot(aes(lat, gamma_slab)) +
-  geom_bin2d(binwidth = 5) +
-  scale_fill_viridis_c(option = "magma", direction = -1, trans = "log10") +
-  scale_x_continuous(breaks = seq(-100,100,20)) +
-  facet_grid(era~basin)
-
-```
 
 ## Histograms
 
@@ -508,7 +505,7 @@ GLODAP %>%
 GLODAP_vars <- GLODAP %>% 
   select(cstar_tref,
          sal,
-         tem,
+         temp,
          oxygen,
          aou,
          silicate,
