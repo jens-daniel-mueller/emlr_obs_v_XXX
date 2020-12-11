@@ -483,7 +483,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">09 December, 2020</h4>
+<h4 class="date">11 December, 2020</h4>
 
 </div>
 
@@ -508,7 +508,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-09
+<strong>Last updated:</strong> 2020-12-11
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree71c63b0421c3622f991aa00fa346dfcea3d86457targetblank71c63b0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/71c63b0421c3622f991aa00fa346dfcea3d86457" target="_blank">71c63b0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd436c1f9965ce247d52813a5d951bd3b655867dtargetblankcd436c1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd436c1f9965ce247d52813a5d951bd3b655867d" target="_blank">cd436c1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree71c63b0421c3622f991aa00fa346dfcea3d86457targetblank71c63b0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd436c1f9965ce247d52813a5d951bd3b655867dtargetblankcd436c1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/71c63b0421c3622f991aa00fa346dfcea3d86457" target="_blank">71c63b0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd436c1f9965ce247d52813a5d951bd3b655867d" target="_blank">cd436c1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,6 +619,8 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/analysis_this_study.Rmd
+    Modified:   analysis/mapping_cant_calculation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -659,6 +661,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/cd436c1f9965ce247d52813a5d951bd3b655867d/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">cd436c1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-11
+</td>
+<td>
+selectable basinmask
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b01a3676f930a519651bc7eec122b7e2ddbee952/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">b01a367</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1214,8 +1250,15 @@ levels(GLODAP$era)</code></pre>
 </div>
 <div id="spatial-boundaries" class="section level2">
 <h2><span class="header-section-number">2.2</span> Spatial boundaries</h2>
+<div id="basin-mask" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Basin mask</h3>
+<p>The basin mask from the World Ocean Atlas was used. For details consult the data base subsection for <a href="https://jens-daniel-mueller.github.io/Cant_eMLR/read_World_Ocean_Atlas_2018.html">WOA18</a> data.</p>
+<p>Please note that some GLODAP observations were made outside the WOA18 basin mask (i.e. in marginal seas) and will be removed for further analysis.</p>
+<pre class="r"><code># use only data inside basinmask
+GLODAP &lt;- inner_join(GLODAP, basinmask)</code></pre>
+</div>
 <div id="depth" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Depth</h3>
+<h3><span class="header-section-number">2.2.2</span> Depth</h3>
 <p>Observations collected shallower than:</p>
 <ul>
 <li>minimum sampling depth: 150m</li>
@@ -1225,7 +1268,7 @@ levels(GLODAP$era)</code></pre>
   filter(depth &gt;= params_local$depth_min)</code></pre>
 </div>
 <div id="bottomdepth" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Bottomdepth</h3>
+<h3><span class="header-section-number">2.2.3</span> Bottomdepth</h3>
 <p>Observations collected in an area with a:</p>
 <ul>
 <li>minimum bottom depth: 0m</li>
@@ -1233,6 +1276,16 @@ levels(GLODAP$era)</code></pre>
 <p>were excluded from the analysis to avoid coastal impacts. Please note that minimum bottom depth criterion of 0m means that no filtering was applied here.</p>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   filter(bottomdepth &gt;= params_local$bottomdepth_min)</code></pre>
+</div>
+<div id="neutral-density-threshold" class="section level3">
+<h3><span class="header-section-number">2.2.4</span> Neutral density threshold</h3>
+<p>Observations collected in an area with a:</p>
+<ul>
+<li>neutral density below: 0m</li>
+</ul>
+<p>were excluded from the analysis due to expected high seasonality.</p>
+<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
+  filter(gamma &gt; params_local$gamma_min)</code></pre>
 </div>
 </div>
 <div id="flags-and-missing-data" class="section level2">
@@ -2576,7 +2629,7 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 <div id="emlr-variables" class="section level3">
 <h3><span class="header-section-number">2.3.4</span> eMLR variables</h3>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(tem))
+  filter(!is.na(temp))
 
 ##
   
@@ -2762,7 +2815,7 @@ jens-daniel-mueller
 # select relevant columns for further analysis
 GLODAP &lt;- GLODAP %&gt;% 
   select(year, date, era, basin, lat, lon, cruise,
-         bottomdepth, depth, tem, sal, gamma,
+         bottomdepth, depth, temp, sal, gamma,
          tco2, talk, phosphate,
          oxygen, aou, nitrate, silicate)
 
@@ -2917,7 +2970,7 @@ GLODAP_histogram_lat %&gt;%
   geom_col() +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   facet_wrap( ~ basin) +
-  coord_flip(expand = 0) +
+  coord_flip() +
   theme(legend.position = &quot;top&quot;,
         legend.title = element_blank())</code></pre>
 <p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -3082,7 +3135,7 @@ era_median_year</code></pre>
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   scale_shape_manual(values = 24, name = &quot;&quot;) +
   scale_y_continuous() +
-  coord_cartesian(expand = 0) +
+  coord_cartesian() +
   theme(
     legend.position = &quot;top&quot;,
     legend.direction = &quot;vertical&quot;,
