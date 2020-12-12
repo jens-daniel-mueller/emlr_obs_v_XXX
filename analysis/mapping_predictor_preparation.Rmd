@@ -46,6 +46,16 @@ path_version_figures  <-
   )
 ```
 
+```{r select_basin_mask, include=FALSE}
+
+basinmask <- basinmask %>% 
+  filter(MLR_basins == params_local$MLR_basins) %>% 
+  select(-MLR_basins)
+
+```
+
+
+
 # Libraries
 
 Loading libraries specific to the the analysis performed in this section.
@@ -151,7 +161,7 @@ GLODAP_predictors_CO2 <- GLODAP_predictors_CO2 %>%
 
 WOA18_predictors <-
   read_csv(paste(path_preprocessing,
-                 "WOA18_sal_tem.csv",
+                 "WOA18_sal_temp.csv",
                  sep = ""))
 
 ```
@@ -164,22 +174,27 @@ WOA18 and GLODAP predictor climatologies are merged. Only horizontal grid cells 
 
 ```{r join_WOA18_GLODAP_predictors}
 
+# join deep water predictors
 predictors <- full_join(
   GLODAP_predictors,
   WOA18_predictors)
 
-# unique(GLODAP_predictors$depth)
-# unique(WOA18_predictors$depth)
+rm(GLODAP_predictors)
 
 predictors <- predictors %>% 
   drop_na()
 
-predictors <- predictors %>%
-  filter(depth >= params_local$depth_min | gamma >= params_local$gamma_min)
 
-rm(GLODAP_predictors)
+# join surface water predictors
+predictors_surface <- full_join(
+  GLODAP_predictors_CO2,
+  WOA18_predictors)
+
+predictors_surface <- predictors_surface %>% 
+  drop_na()
 
 ```
+
 
 ## Apply density threshold
 
@@ -188,15 +203,13 @@ The predictor field was split into two parts:
 1. Deep water: neutral densities >= `r params_local$gamma_min` and depth >= `r params_local$depth_min`m
 2. Shallow water: rest
 
-```{r split_WOA18_GLODAP_predictors_surface}
+```{r split_WOA18_GLODAP_predictors_deep_surface}
 
-predictors_surface <- full_join(
-  GLODAP_predictors_CO2,
-  WOA18_predictors)
+# predictors for deep waters
+predictors <- predictors %>%
+  filter(depth >= params_local$depth_min | gamma >= params_local$gamma_min)
 
-predictors_surface <- predictors_surface %>% 
-  drop_na()
-
+# predictors for surface waters
 predictors_surface <- predictors_surface %>%
   filter(depth < params_local$depth_min,
          gamma < params_local$gamma_min)
@@ -204,6 +217,17 @@ predictors_surface <- predictors_surface %>%
 
 ```
 
+
+## Apply basin mask
+
+Data outside the WOA18 basin mask were removed for further analysis.
+
+```{r join_basin_mask}
+
+predictors <- inner_join(predictors, basinmask)
+predictors_surface <- inner_join(predictors_surface, basinmask)
+
+```
 
 ## Control plots
 
@@ -217,10 +241,10 @@ p_map_climatology(
   var = "phosphate")
 ```
 
-```{r joined_climatology_control_tem, fig.asp=0.6}
+```{r joined_climatology_control_temp, fig.asp=0.6}
 p_map_climatology(
   df = predictors, 
-  var = "tem")
+  var = "temp")
 ```
 
 ### Maps surface
@@ -245,10 +269,10 @@ p_map_climatology(
   var = "sal")
 ```
 
-```{r joined_climatology_control_tem_surface, fig.asp=0.6}
+```{r joined_climatology_control_temp_surface, fig.asp=0.6}
 p_map_climatology(
   df = predictors_surface, 
-  var = "tem")
+  var = "temp")
 ```
 
 
@@ -325,7 +349,11 @@ AOU was calculated as the difference between saturation concentration and observ
 ```{r calculate_aou_climatology}
 
 predictors <- predictors %>% 
-  mutate(aou = b_aou(sal, tem, depth, oxygen))
+  mutate(aou = b_aou(
+    sal = sal,
+    tem = temp,
+    depth = depth,
+    oxygen = oxygen))
 
 ```
 
@@ -385,13 +413,13 @@ map +
 
 ```
 
-```{r all_predictor_sections, fig.asp=1}
+```{r all_predictor_sections, fig.asp=1.2}
 
 vars <-
   c(
     "gamma",
     "sal",
-    "tem",
+    "temp",
     "phosphate",
     "phosphate_star",
     "oxygen",
@@ -428,13 +456,13 @@ map +
 
 ```
 
-```{r all_predictor_sections_surface, fig.asp=1}
+```{r all_predictor_sections_surface, fig.asp=1.2}
 
 vars <-
   c(
     "gamma",
     "sal",
-    "tem",
+    "temp",
     "TCO2",
     "TAlk"
   )

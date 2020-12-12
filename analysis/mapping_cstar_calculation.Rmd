@@ -98,7 +98,7 @@ rm(predictors, lm_all_wide_cstar)
 cstar <- b_cstar_model(cstar)
 
 cstar <- cstar %>% 
-  select(lon, lat, depth, era, basin, cstar, gamma)
+  select(lon, lat, depth, era, basin, basin_AIP, cstar, gamma)
 
 ```
 
@@ -117,10 +117,6 @@ cstar_average <- m_cut_gamma(cstar_average, "gamma")
 For each basin and era combination, the zonal mean cstar is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
 
 ```{r Calculate_cstar_mean_sections}
-
-cstar_average <- left_join(cstar_average,
-                           basinmask %>% select(-basin))
-
 
 cstar_average_zonal <- m_cstar_zonal_mean(cstar_average)
 

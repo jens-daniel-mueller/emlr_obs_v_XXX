@@ -102,7 +102,7 @@ lm_all_wide <-
 
 lm_all_wide <- lm_all_wide %>% 
   mutate(model = str_remove(model, "Cstar ~ "))
-         
+   
 cant <- full_join(predictors, lm_all_wide)
 
 rm(predictors, lm_all_wide)
@@ -204,7 +204,7 @@ predictors_surface <- predictors_surface %>%
                      var1 = TAlk*1e-6,
                      var2 = TCO2*1e-6,
                      S = sal,
-                     T = tem,
+                     T = temp,
                      P = depth/10,
                      Pt = phosphate*1e-6,
                      Sit = silicate*1e-6,
@@ -213,7 +213,7 @@ predictors_surface <- predictors_surface %>%
 ```
 
 
-```{r pCO2_climatology_map}
+```{r pCO2_climatology_map, fig.asp=0.6}
 
 p_map_climatology(
   df = predictors_surface,
@@ -222,7 +222,7 @@ p_map_climatology(
 ```
 
 
-```{r pCO2_climatology_sections}
+```{r pCO2_climatology_sections, fig.asp=1}
 
 p_section_climatology_regular(
   df = predictors_surface,
@@ -240,7 +240,7 @@ predictors_surface <- predictors_surface %>%
                      var1 = TAlk*1e-6,
                      var2 = TCO2*1e-6,
                      S = sal,
-                     T = tem,
+                     T = temp,
                      P = depth/10,
                      Pt = phosphate*1e-6,
                      Sit = silicate*1e-6,
@@ -249,7 +249,7 @@ predictors_surface <- predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_map}
+```{r revelle_factor_climatology_map, fig.asp=0.6}
 
 p_map_climatology(
   df = predictors_surface,
@@ -258,7 +258,7 @@ p_map_climatology(
 ```
 
 
-```{r revelle_factor_climatology_sections}
+```{r revelle_factor_climatology_sections, fig.asp=1}
 
 p_section_climatology_regular(
   df = predictors_surface,
@@ -293,7 +293,7 @@ cant_surface <- cant_surface %>%
 ```
 
 
-```{r cant_surface_climatology_map, fig.asp=1}
+```{r cant_surface_climatology_map, fig.asp=0.6}
 
 # i_eras <- unique(cant_average$eras)[2]
 
@@ -308,7 +308,7 @@ for (i_eras in unique(cant_surface$eras)) {
 ```
 
 
-```{r cant_surface_climatology_sections}
+```{r cant_surface_climatology_sections, fig.asp=1}
 
 # i_eras <- unique(cant_surface$eras)[2]
 
@@ -340,22 +340,14 @@ cant_predictor_average <- cant_average %>%
   select(-c("cant", "cant_pos", ends_with("_sd")))
 
 cant_average <- cant_average %>% 
-  select(lon, lat, depth, eras, basin,
+  select(lon, lat, depth, eras, basin, basin_AIP,
             cant, cant_pos, cant_sd, cant_pos_sd,
             gamma, gamma_sd, gamma_slab)
 
 ```
 
-```{r calculate_cant_mean, eval=FALSE}
 
-cant_average <- m_cant_model_average(cant)
-rm(cant)
-
-```
-
-
-
-```{r cant_deep_climatology_map, fig.asp=1}
+```{r cant_deep_climatology_map, fig.asp=0.6}
 
 # i_eras <- unique(cant_average$eras)[2]
 
@@ -373,7 +365,7 @@ for (i_eras in unique(cant_surface$eras)) {
 ```
 
 
-```{r cant_deep_climatology_sections}
+```{r cant_deep_climatology_sections, fig.asp=1}
 
 # i_eras <- unique(cant_surface$eras)[2]
 
@@ -410,8 +402,6 @@ rm(cant_surface)
 cant_average <- full_join(cant_average, cant_surface_average)
 rm(cant_surface_average)
 
-# cant_average <- m_cut_gamma(cant_average, "gamma")
-
 ```
 
 
@@ -420,9 +410,6 @@ rm(cant_surface_average)
 For each basin and era combination, the zonal mean cant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
 
 ```{r calc_cant_zonal_mean_sections}
-
-cant_average <- left_join(cant_average,
-                          basinmask %>% select(-basin))
 
 cant_average_zonal <- m_cant_zonal_mean(cant_average)
 cant_average_zonal <- m_cut_gamma(cant_average_zonal, "gamma_mean")
@@ -434,9 +421,6 @@ cant_average_zonal <- m_cut_gamma(cant_average_zonal, "gamma_mean")
 For each basin and era combination, the zonal mean cant is calculated by model coefficient.
 
 ```{r calculate_cant_predictor_mean_sections}
-
-cant_predictor_average <- full_join(cant_predictor_average,
-                                basinmask %>% select(-basin))
 
 cant_predictor_average_zonal <-
   m_cant_predictor_zonal_mean(cant_predictor_average)
