@@ -12,7 +12,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r parent, child = "/nfs/kryo/work/updata/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -25,25 +25,26 @@ params_local <-
 
 ```
 
-```{r define_updata_paths}
+```{r define_paths, include = FALSE}
+
+# only path_observations needs to be changed to model
+path_observations <-
+  paste(path_root, "/observations/", sep = "")
+
 path_preprocessing    <-
-  "/nfs/kryo/work/updata/emlr_cant/observations/preprocessing/"
+  paste(path_observations, "preprocessing/", sep = "")
 
 path_version_data     <-
-  paste(
-    "/nfs/kryo/work/updata/emlr_cant/observations/",
-    params_local$Version_ID,
-    "/data/",
-    sep = ""
-  )
+  paste(path_observations,
+        params_local$Version_ID,
+        "/data/",
+        sep = "")
 
 path_version_figures  <-
-  paste(
-    "/nfs/kryo/work/updata/emlr_cant/observations/",
-    params_local$Version_ID,
-    "/figures/",
-    sep = ""
-  )
+  paste(path_observations,
+        params_local$Version_ID,
+        "/figures/",
+        sep = "")
 ```
 
 ```{r load_libraries_specific, include = FALSE}
