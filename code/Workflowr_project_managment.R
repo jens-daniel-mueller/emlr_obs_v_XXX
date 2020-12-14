@@ -139,8 +139,29 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "cleaned subsetting and data preparation",
+message = "test 3 basins for MLR",
 republish = TRUE)
+
+wflow_publish(here::here(
+  "analysis",
+  c(
+    "index.Rmd",
+    "config_dependencies.Rmd",
+    "config_parameterization_local.Rmd",
+    "eMLR_GLODAPv2_2020_subsetting.Rmd",
+    "eMLR_data_preparation.Rmd",
+    "eMLR_assumption_testing.Rmd",
+    "eMLR_model_fitting.Rmd",
+    "mapping_predictor_preparation.Rmd",
+    "mapping_cant_calculation.Rmd",
+    "mapping_cstar_calculation.Rmd",
+    "analysis_this_study_vs_Gruber_2019.Rmd",
+    "analysis_this_study.Rmd"
+  )
+),
+message = "rebuild with new path and auto folder creation",
+republish = TRUE)
+
 
 # Push latest version to GitHub
 wflow_git_push()

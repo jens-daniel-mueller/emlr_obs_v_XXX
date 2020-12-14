@@ -2,7 +2,7 @@
 
 ## Scientific scope
 
-The code in this repository is intended to estimate anthropogenic carbon in the ocean based on the eMLR(C*) method.
+The code in this repository is intended to estimate anthropogenic carbon in the ocean based on the eMLR(C*) method. Two separate template versions exist to be run on observational or synthetic data from a ocean BGC model.
 
 # General instructions
 
@@ -10,10 +10,18 @@ This code was written to be executed within RStudio.
 
 1. Copy the template repository on Github.
 2. Name it according to version.
-3. Create folders on update.
-4. Add as RStudio project.
-5. Change `Version_ID` and others parameters in `config_parameterization_local.Rmd.` The Version_ID must be consistent with the respective folder name on `/update/emlr_cant`.
-6. 
+3. Activate github pages under settings.
+4. Copy URL in repository description.
+5. Open as new version controlled project in RStudio.
+6. Change the `Version_ID` in:
+  a. config_parameterization_local.Rmd
+  b. _site.yml title
+7. Change others parameters in `config_parameterization_local.Rmd.`
+8. Change link to github repo in _site.yml.
+9. Run the code / build the website. All necessary folders will be created automatically.
+10. Push to github.
+
+Workflowr comments for steps 9. and 10. can be found under `/code/workflowr_project_managment.R`
 
 
 ## Sharing code across analysis
