@@ -16,7 +16,7 @@ editor_options:
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
 
-```{r library, message=FALSE, warning=FALSE}
+```{r library, include=FALSE}
 library(tidyverse)
 ```
 
@@ -128,5 +128,23 @@ params_local %>%
   write_rds(here::here("data/auxillary",
                        "params_local.rds"))
 
+
+```
+
+# Create folders
+
+```{r create_folder_structure, include=FALSE}
+
+path_root           <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
+
+dir.create(paste(path_root, params_local$Version_ID, sep = "/"))
+
+dir.create(paste(path_root, params_local$Version_ID, "data", sep = "/"))
+
+dir.create(paste(path_root, params_local$Version_ID, "figures", sep = "/"))
+dir.create(paste(path_root, params_local$Version_ID, "figures/Cant_model_sections", sep = "/"))
+dir.create(paste(path_root, params_local$Version_ID, "figures/Cruise_sections_histograms", sep = "/"))
+dir.create(paste(path_root, params_local$Version_ID, "figures/eMLR_diagnostics", sep = "/"))
+dir.create(paste(path_root, params_local$Version_ID, "figures/Observations_correlation", sep = "/"))
 
 ```
