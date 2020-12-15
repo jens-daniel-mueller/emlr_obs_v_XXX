@@ -426,10 +426,10 @@ div.tocify {
       <a href="mapping_predictor_preparation.html">Predictor preparation</a>
     </li>
     <li>
-      <a href="mapping_cant_calculation.html">Cant calculation</a>
+      <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cstar_calculation.html">Cstar calculation</a>
+      <a href="mapping_target_variable.html">Cstar calculation</a>
     </li>
   </ul>
 </li>
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree29407a5c3979ee94f633081e7c8f7ac557ac2ba5targetblank29407a5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/29407a5c3979ee94f633081e7c8f7ac557ac2ba5" target="_blank">29407a5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree29407a5c3979ee94f633081e7c8f7ac557ac2ba5targetblank29407a5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/29407a5c3979ee94f633081e7c8f7ac557ac2ba5" target="_blank">29407a5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,6 +619,9 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/_site.yml
+    Deleted:    analysis/mapping_cant_calculation.Rmd
+    Deleted:    analysis/mapping_cstar_calculation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -659,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/29407a5c3979ee94f633081e7c8f7ac557ac2ba5/analysis/analysis_this_study.Rmd" target="_blank">29407a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+rebuild with eMLR target variable selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/analysis_this_study.html" target="_blank">953caf3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1276,14 +1313,14 @@ cant_inv &lt;-
 <li>Mean and SD per grid cell (lat, lon, depth)</li>
 <li>Zonal mean and SD (basin, lat, depth)</li>
 </ul>
-<pre class="r"><code>cstar_3d &lt;-
+<pre class="r"><code>target_3d &lt;-
   read_csv(paste(path_version_data,
-                 &quot;cstar_3d.csv&quot;,
+                 &quot;target_3d.csv&quot;,
                  sep = &quot;&quot;))
 
-cstar_zonal &lt;-
+target_zonal &lt;-
   read_csv(paste(path_version_data,
-                 &quot;cstar_zonal.csv&quot;,
+                 &quot;target_zonal.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 <p>Cleaned GLODAPv2_2020 file as used in this study</p>
 <pre class="r"><code>GLODAP &lt;-
@@ -1321,7 +1358,7 @@ cstar_zonal &lt;-
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#dqsasutgqq .gt_table {
+#czusaedqsa .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1346,7 +1383,7 @@ cstar_zonal &lt;-
   border-left-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_heading {
+#czusaedqsa .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1358,7 +1395,7 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_title {
+#czusaedqsa .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1368,7 +1405,7 @@ cstar_zonal &lt;-
   border-bottom-width: 0;
 }
 
-#dqsasutgqq .gt_subtitle {
+#czusaedqsa .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1378,13 +1415,13 @@ cstar_zonal &lt;-
   border-top-width: 0;
 }
 
-#dqsasutgqq .gt_bottom_border {
+#czusaedqsa .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_col_headings {
+#czusaedqsa .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1399,7 +1436,7 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_col_heading {
+#czusaedqsa .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1419,7 +1456,7 @@ cstar_zonal &lt;-
   overflow-x: hidden;
 }
 
-#dqsasutgqq .gt_column_spanner_outer {
+#czusaedqsa .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1431,15 +1468,15 @@ cstar_zonal &lt;-
   padding-right: 4px;
 }
 
-#dqsasutgqq .gt_column_spanner_outer:first-child {
+#czusaedqsa .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dqsasutgqq .gt_column_spanner_outer:last-child {
+#czusaedqsa .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dqsasutgqq .gt_column_spanner {
+#czusaedqsa .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1451,7 +1488,7 @@ cstar_zonal &lt;-
   width: 100%;
 }
 
-#dqsasutgqq .gt_group_heading {
+#czusaedqsa .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1473,7 +1510,7 @@ cstar_zonal &lt;-
   vertical-align: middle;
 }
 
-#dqsasutgqq .gt_empty_group_heading {
+#czusaedqsa .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1488,15 +1525,15 @@ cstar_zonal &lt;-
   vertical-align: middle;
 }
 
-#dqsasutgqq .gt_from_md > :first-child {
+#czusaedqsa .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dqsasutgqq .gt_from_md > :last-child {
+#czusaedqsa .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dqsasutgqq .gt_row {
+#czusaedqsa .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1515,7 +1552,7 @@ cstar_zonal &lt;-
   overflow-x: hidden;
 }
 
-#dqsasutgqq .gt_stub {
+#czusaedqsa .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1527,7 +1564,7 @@ cstar_zonal &lt;-
   padding-left: 12px;
 }
 
-#dqsasutgqq .gt_summary_row {
+#czusaedqsa .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1537,7 +1574,7 @@ cstar_zonal &lt;-
   padding-right: 5px;
 }
 
-#dqsasutgqq .gt_first_summary_row {
+#czusaedqsa .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1547,7 +1584,7 @@ cstar_zonal &lt;-
   border-top-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_grand_summary_row {
+#czusaedqsa .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1557,7 +1594,7 @@ cstar_zonal &lt;-
   padding-right: 5px;
 }
 
-#dqsasutgqq .gt_first_grand_summary_row {
+#czusaedqsa .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1567,11 +1604,11 @@ cstar_zonal &lt;-
   border-top-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_striped {
+#czusaedqsa .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dqsasutgqq .gt_table_body {
+#czusaedqsa .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1580,7 +1617,7 @@ cstar_zonal &lt;-
   border-bottom-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_footnotes {
+#czusaedqsa .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1594,13 +1631,13 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_footnote {
+#czusaedqsa .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#dqsasutgqq .gt_sourcenotes {
+#czusaedqsa .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1614,46 +1651,46 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#dqsasutgqq .gt_sourcenote {
+#czusaedqsa .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#dqsasutgqq .gt_left {
+#czusaedqsa .gt_left {
   text-align: left;
 }
 
-#dqsasutgqq .gt_center {
+#czusaedqsa .gt_center {
   text-align: center;
 }
 
-#dqsasutgqq .gt_right {
+#czusaedqsa .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dqsasutgqq .gt_font_normal {
+#czusaedqsa .gt_font_normal {
   font-weight: normal;
 }
 
-#dqsasutgqq .gt_font_bold {
+#czusaedqsa .gt_font_bold {
   font-weight: bold;
 }
 
-#dqsasutgqq .gt_font_italic {
+#czusaedqsa .gt_font_italic {
   font-style: italic;
 }
 
-#dqsasutgqq .gt_super {
+#czusaedqsa .gt_super {
   font-size: 65%;
 }
 
-#dqsasutgqq .gt_footnote_marks {
+#czusaedqsa .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="dqsasutgqq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="czusaedqsa" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1729,7 +1766,7 @@ cstar_zonal &lt;-
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#mclscpkezn .gt_table {
+#sutgqqmcls .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1754,7 +1791,7 @@ cstar_zonal &lt;-
   border-left-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_heading {
+#sutgqqmcls .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1766,7 +1803,7 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_title {
+#sutgqqmcls .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1776,7 +1813,7 @@ cstar_zonal &lt;-
   border-bottom-width: 0;
 }
 
-#mclscpkezn .gt_subtitle {
+#sutgqqmcls .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1786,13 +1823,13 @@ cstar_zonal &lt;-
   border-top-width: 0;
 }
 
-#mclscpkezn .gt_bottom_border {
+#sutgqqmcls .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_col_headings {
+#sutgqqmcls .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1807,7 +1844,7 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_col_heading {
+#sutgqqmcls .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1827,7 +1864,7 @@ cstar_zonal &lt;-
   overflow-x: hidden;
 }
 
-#mclscpkezn .gt_column_spanner_outer {
+#sutgqqmcls .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1839,15 +1876,15 @@ cstar_zonal &lt;-
   padding-right: 4px;
 }
 
-#mclscpkezn .gt_column_spanner_outer:first-child {
+#sutgqqmcls .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mclscpkezn .gt_column_spanner_outer:last-child {
+#sutgqqmcls .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mclscpkezn .gt_column_spanner {
+#sutgqqmcls .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1859,7 +1896,7 @@ cstar_zonal &lt;-
   width: 100%;
 }
 
-#mclscpkezn .gt_group_heading {
+#sutgqqmcls .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1881,7 +1918,7 @@ cstar_zonal &lt;-
   vertical-align: middle;
 }
 
-#mclscpkezn .gt_empty_group_heading {
+#sutgqqmcls .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1896,15 +1933,15 @@ cstar_zonal &lt;-
   vertical-align: middle;
 }
 
-#mclscpkezn .gt_from_md > :first-child {
+#sutgqqmcls .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mclscpkezn .gt_from_md > :last-child {
+#sutgqqmcls .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mclscpkezn .gt_row {
+#sutgqqmcls .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1923,7 +1960,7 @@ cstar_zonal &lt;-
   overflow-x: hidden;
 }
 
-#mclscpkezn .gt_stub {
+#sutgqqmcls .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1935,7 +1972,7 @@ cstar_zonal &lt;-
   padding-left: 12px;
 }
 
-#mclscpkezn .gt_summary_row {
+#sutgqqmcls .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1945,7 +1982,7 @@ cstar_zonal &lt;-
   padding-right: 5px;
 }
 
-#mclscpkezn .gt_first_summary_row {
+#sutgqqmcls .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1955,7 +1992,7 @@ cstar_zonal &lt;-
   border-top-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_grand_summary_row {
+#sutgqqmcls .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1965,7 +2002,7 @@ cstar_zonal &lt;-
   padding-right: 5px;
 }
 
-#mclscpkezn .gt_first_grand_summary_row {
+#sutgqqmcls .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1975,11 +2012,11 @@ cstar_zonal &lt;-
   border-top-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_striped {
+#sutgqqmcls .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mclscpkezn .gt_table_body {
+#sutgqqmcls .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1988,7 +2025,7 @@ cstar_zonal &lt;-
   border-bottom-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_footnotes {
+#sutgqqmcls .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2002,13 +2039,13 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_footnote {
+#sutgqqmcls .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#mclscpkezn .gt_sourcenotes {
+#sutgqqmcls .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2022,46 +2059,46 @@ cstar_zonal &lt;-
   border-right-color: #D3D3D3;
 }
 
-#mclscpkezn .gt_sourcenote {
+#sutgqqmcls .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#mclscpkezn .gt_left {
+#sutgqqmcls .gt_left {
   text-align: left;
 }
 
-#mclscpkezn .gt_center {
+#sutgqqmcls .gt_center {
   text-align: center;
 }
 
-#mclscpkezn .gt_right {
+#sutgqqmcls .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mclscpkezn .gt_font_normal {
+#sutgqqmcls .gt_font_normal {
   font-weight: normal;
 }
 
-#mclscpkezn .gt_font_bold {
+#sutgqqmcls .gt_font_bold {
   font-weight: bold;
 }
 
-#mclscpkezn .gt_font_italic {
+#sutgqqmcls .gt_font_italic {
   font-style: italic;
 }
 
-#mclscpkezn .gt_super {
+#sutgqqmcls .gt_super {
   font-size: 65%;
 }
 
-#mclscpkezn .gt_footnote_marks {
+#sutgqqmcls .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="mclscpkezn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="sutgqqmcls" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -19951,19 +19988,18 @@ Jens Müller
 <pre class="r"><code>rm(GLODAP_obs_coverage)</code></pre>
 </div>
 </div>
-<div id="c" class="section level1">
-<h1><span class="header-section-number">8</span> C*</h1>
+<div id="target-variable" class="section level1">
+<h1><span class="header-section-number">8</span> Target variable</h1>
+<p>The predicted target variable (either tco2, cstar or cstar_tref) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.</p>
 <div id="zonal-mean-sections-2" class="section level2">
 <h2><span class="header-section-number">8.1</span> Zonal mean sections</h2>
-<pre class="r"><code># cstar_zonal &lt;- cstar_zonal %&gt;% 
-#     mutate(era = factor(era, c(&quot;JGOFS_WOCE&quot;, &quot;GO_SHIP&quot;, &quot;new_era&quot;))) 
+<pre class="r"><code>slab_breaks &lt;- c(params_local$slabs_Atl[1:12],Inf)
 
-slab_breaks &lt;- c(params_local$slabs_Atl[1:12],Inf)
-
-cstar_zonal %&gt;% 
-    ggplot(aes(lat, depth, z = cstar_mean)) +
+target_zonal %&gt;% 
+    ggplot(aes(lat, depth,
+               z = !!sym(paste(params_local$MLR_target, &quot;mean&quot;, sep = &quot;_&quot;)))) +
     geom_contour_filled(bins = 11) +
-    scale_fill_viridis_d(name = &quot;cstar&quot;) +
+    scale_fill_viridis_d(name = params_local$MLR_target) +
     geom_contour(aes(lat, depth, z = gamma_mean),
                  breaks = slab_breaks,
                  col = &quot;white&quot;) +
@@ -19978,176 +20014,7 @@ cstar_zonal %&gt;%
     coord_cartesian(expand = 0) +
     guides(fill = guide_colorsteps(barheight = unit(10, &quot;cm&quot;))) +
     facet_grid(basin_AIP ~ era)</code></pre>
-<p><img src="figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_zonal_mean_era-1">
-Past versions of cstar_zonal_mean_era-1.png
-</button>
-</p>
-<div id="fig-cstar_zonal_mean_era-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/984697eaaad05416debe49cbe5f44edbb216c1de/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">984697e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">3ebff89</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">24a632f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">6a8004b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">70bf1a5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">7555355</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">143d6fa</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">090e4d5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">7c25f7a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">902f65a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">0ff728b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">92edddb</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cstar_zonal_mean_era-1.png" target="_blank">196be51</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_this_study.Rmd/target_zonal_mean_era-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>rm(slab_breaks)</code></pre>
 </div>
 </div>
