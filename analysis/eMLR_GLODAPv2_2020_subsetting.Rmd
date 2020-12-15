@@ -530,70 +530,88 @@ rm(GLODAP_obs_grid_temp)
 
 ### eMLR variables
 
+Variables required as predictors for the MLR fits, are subsetted for NAs and flags.
+
 ```{r eMLR_subset}
 
-GLODAP <- GLODAP %>% 
-  filter(!is.na(temp))
+if ("temp" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(temp))
+}
 
 ##
+
+if ("sal" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(sal))
   
-GLODAP <- GLODAP %>% 
-  filter(!is.na(sal))
-
-GLODAP <- GLODAP %>%
-  filter(salinityf %in% params_local$flag_f)
-
-GLODAP <- GLODAP %>%
-  filter(salinityqc %in% params_local$flag_qc)
-
-##
+  GLODAP <- GLODAP %>%
+    filter(salinityf %in% params_local$flag_f)
   
-GLODAP <- GLODAP %>% 
-  filter(!is.na(silicate))
+  GLODAP <- GLODAP %>%
+    filter(salinityqc %in% params_local$flag_qc)
+}
 
-GLODAP <- GLODAP %>%
-  filter(silicatef %in% params_local$flag_f)
-
-GLODAP <- GLODAP %>%
-  filter(silicateqc %in% params_local$flag_qc)
 ##
+
+if ("silicate" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(silicate))
   
-GLODAP <- GLODAP %>% 
-  filter(!is.na(oxygen))
-
-GLODAP <- GLODAP %>%
-  filter(oxygenf %in% params_local$flag_f)
-
-GLODAP <- GLODAP %>%
-  filter(oxygenqc %in% params_local$flag_qc)
-##
-
-GLODAP <- GLODAP %>% 
-  filter(!is.na(aou))
-
-GLODAP <- GLODAP %>%
-  filter(aouf %in% params_local$flag_f)
-##
+  GLODAP <- GLODAP %>%
+    filter(silicatef %in% params_local$flag_f)
   
-GLODAP <- GLODAP %>% 
-  filter(!is.na(nitrate))
+  GLODAP <- GLODAP %>%
+    filter(silicateqc %in% params_local$flag_qc)
+}
 
-GLODAP <- GLODAP %>%
-  filter(nitratef %in% params_local$flag_f)
-
-GLODAP <- GLODAP %>%
-  filter(nitrateqc %in% params_local$flag_qc)
 ##
 
-GLODAP <- GLODAP %>% 
+if ("oxygen" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(oxygen))
+  
+  GLODAP <- GLODAP %>%
+    filter(oxygenf %in% params_local$flag_f)
+  
+  GLODAP <- GLODAP %>%
+    filter(oxygenqc %in% params_local$flag_qc)
+}
+
+##
+
+if ("aou" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(aou))
+  
+  GLODAP <- GLODAP %>%
+    filter(aouf %in% params_local$flag_f)
+}
+
+##
+
+if ("nitrate" %in% params_local$MLR_predictors) {
+  GLODAP <- GLODAP %>%
+    filter(!is.na(nitrate))
+  
+  GLODAP <- GLODAP %>%
+    filter(nitratef %in% params_local$flag_f)
+  
+  GLODAP <- GLODAP %>%
+    filter(nitrateqc %in% params_local$flag_qc)
+}
+
+##
+
+GLODAP <- GLODAP %>%
   filter(!is.na(depth))
 
-GLODAP <- GLODAP %>% 
+GLODAP <- GLODAP %>%
   filter(!is.na(gamma))
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>% 
+GLODAP_stats_temp <- GLODAP %>%
   summarise(eMLR_variables = n())
 
 GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
@@ -602,8 +620,8 @@ rm(GLODAP_stats_temp)
 
 ##
 
-GLODAP_obs_grid_temp <- GLODAP %>% 
-  count(lat, lon, era) %>% 
+GLODAP_obs_grid_temp <- GLODAP %>%
+  count(lat, lon, era) %>%
   mutate(cleaning_level = "eMLR_variables")
 
 GLODAP_obs_grid <-
@@ -676,7 +694,8 @@ GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
   select(year, date, era, basin, basin_AIP, lat, lon, cruise,
-         bottomdepth, depth, temp, sal, gamma,
+         bottomdepth, depth,
+         temp, sal, gamma,
          tco2, talk, phosphate,
          oxygen, aou, nitrate, silicate)
 

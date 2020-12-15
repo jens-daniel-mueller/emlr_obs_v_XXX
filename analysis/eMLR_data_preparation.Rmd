@@ -92,9 +92,13 @@ co2_atm <-
 
 ## Calculation 
 
-The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
+The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.  
+
+Here we use following equation:
 
 ```{r calculate_phosphate_star}
+
+print(b_phosphate_star)
 
 GLODAP <- GLODAP %>% 
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
@@ -547,8 +551,8 @@ n <- 0
 for (i_cruise in unique(cruises$cruise)) {
 
 # i_cruise <- unique(cruises$cruise)[1]
-n <- n + 1
-print(n)  
+# n <- n + 1
+# print(n)  
   
 GLODAP_cruise <- GLODAP %>%
   filter(cruise == i_cruise) %>% 
