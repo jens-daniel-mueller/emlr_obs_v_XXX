@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed234226e1d97d06285c5d9d99f6f11e5dc318157targetblankd234226a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d234226e1d97d06285c5d9d99f6f11e5dc318157" target="_blank">d234226</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree449195a32afcb4aa61b9c8a8a7d26a9add8619e5targetblank449195aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/449195a32afcb4aa61b9c8a8a7d26a9add8619e5" target="_blank">449195a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed234226e1d97d06285c5d9d99f6f11e5dc318157targetblankd234226a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree449195a32afcb4aa61b9c8a8a7d26a9add8619e5targetblank449195aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d234226e1d97d06285c5d9d99f6f11e5dc318157" target="_blank">d234226</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/449195a32afcb4aa61b9c8a8a7d26a9add8619e5" target="_blank">449195a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/449195a32afcb4aa61b9c8a8a7d26a9add8619e5/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">449195a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+rebuild without subsetting nitrate
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -3074,68 +3108,85 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 </div>
 <div id="emlr-variables" class="section level3">
 <h3><span class="header-section-number">2.3.4</span> eMLR variables</h3>
-<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(temp))
+<p>Variables required as predictors for the MLR fits, are subsetted for NAs and flags.</p>
+<pre class="r"><code>if (&quot;temp&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(temp))
+}
 
 ##
+
+if (&quot;sal&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(sal))
   
-GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(sal))
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(salinityf %in% params_local$flag_f)
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(salinityqc %in% params_local$flag_qc)
-
-##
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(salinityf %in% params_local$flag_f)
   
-GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(silicate))
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(salinityqc %in% params_local$flag_qc)
+}
 
-GLODAP &lt;- GLODAP %&gt;%
-  filter(silicatef %in% params_local$flag_f)
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(silicateqc %in% params_local$flag_qc)
 ##
+
+if (&quot;silicate&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(silicate))
   
-GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(oxygen))
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(oxygenf %in% params_local$flag_f)
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(oxygenqc %in% params_local$flag_qc)
-##
-
-GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(aou))
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(aouf %in% params_local$flag_f)
-##
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(silicatef %in% params_local$flag_f)
   
-GLODAP &lt;- GLODAP %&gt;% 
-  filter(!is.na(nitrate))
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(silicateqc %in% params_local$flag_qc)
+}
 
-GLODAP &lt;- GLODAP %&gt;%
-  filter(nitratef %in% params_local$flag_f)
-
-GLODAP &lt;- GLODAP %&gt;%
-  filter(nitrateqc %in% params_local$flag_qc)
 ##
 
-GLODAP &lt;- GLODAP %&gt;% 
+if (&quot;oxygen&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(oxygen))
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(oxygenf %in% params_local$flag_f)
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(oxygenqc %in% params_local$flag_qc)
+}
+
+##
+
+if (&quot;aou&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(aou))
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(aouf %in% params_local$flag_f)
+}
+
+##
+
+if (&quot;nitrate&quot; %in% params_local$MLR_predictors) {
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(!is.na(nitrate))
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(nitratef %in% params_local$flag_f)
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    filter(nitrateqc %in% params_local$flag_qc)
+}
+
+##
+
+GLODAP &lt;- GLODAP %&gt;%
   filter(!is.na(depth))
 
-GLODAP &lt;- GLODAP %&gt;% 
+GLODAP &lt;- GLODAP %&gt;%
   filter(!is.na(gamma))
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;% 
+GLODAP_stats_temp &lt;- GLODAP %&gt;%
   summarise(eMLR_variables = n())
 
 GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
@@ -3144,8 +3195,8 @@ rm(GLODAP_stats_temp)
 
 ##
 
-GLODAP_obs_grid_temp &lt;- GLODAP %&gt;% 
-  count(lat, lon, era) %&gt;% 
+GLODAP_obs_grid_temp &lt;- GLODAP %&gt;%
+  count(lat, lon, era) %&gt;%
   mutate(cleaning_level = &quot;eMLR_variables&quot;)
 
 GLODAP_obs_grid &lt;-
@@ -3283,7 +3334,8 @@ jens-daniel-mueller
 # select relevant columns for further analysis
 GLODAP &lt;- GLODAP %&gt;% 
   select(year, date, era, basin, basin_AIP, lat, lon, cruise,
-         bottomdepth, depth, temp, sal, gamma,
+         bottomdepth, depth,
+         temp, sal, gamma,
          tco2, talk, phosphate,
          oxygen, aou, nitrate, silicate)
 
@@ -3651,7 +3703,7 @@ era_median_year</code></pre>
 <pre><code># A tibble: 3 x 2
   era       t_ref
   &lt;fct&gt;     &lt;dbl&gt;
-1 1982-1999  1995
+1 1982-1999  1994
 2 2000-2012  2007
 3 2013-2019  2015</code></pre>
 <pre class="r"><code>GLODAP_histogram_year %&gt;%

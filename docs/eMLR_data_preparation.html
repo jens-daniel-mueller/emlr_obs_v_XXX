@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed234226e1d97d06285c5d9d99f6f11e5dc318157targetblankd234226a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d234226e1d97d06285c5d9d99f6f11e5dc318157" target="_blank">d234226</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree449195a32afcb4aa61b9c8a8a7d26a9add8619e5targetblank449195aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/449195a32afcb4aa61b9c8a8a7d26a9add8619e5" target="_blank">449195a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed234226e1d97d06285c5d9d99f6f11e5dc318157targetblankd234226a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree449195a32afcb4aa61b9c8a8a7d26a9add8619e5targetblank449195aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d234226e1d97d06285c5d9d99f6f11e5dc318157" target="_blank">d234226</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/449195a32afcb4aa61b9c8a8a7d26a9add8619e5" target="_blank">449195a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/449195a32afcb4aa61b9c8a8a7d26a9add8619e5/analysis/eMLR_data_preparation.Rmd" target="_blank">449195a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+rebuild without subsetting nitrate
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/eMLR_data_preparation.html" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1454,6 +1488,14 @@ co2_atm &lt;-
 <div id="calculation" class="section level2">
 <h2><span class="header-section-number">2.1</span> Calculation</h2>
 <p>The predictor PO<sub>4</sub>* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.</p>
+<p>Here we use following equation:</p>
+<pre class="r"><code>print(b_phosphate_star)</code></pre>
+<pre><code>function (phosphate, oxygen) 
+{
+    phosphate_star = phosphate + (oxygen/params_local$rPO) - 
+        params_local$rPO_offset
+    return(phosphate_star)
+}</code></pre>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))</code></pre>
 </div>
@@ -2453,6 +2495,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7d82772</a>
 </td>
 <td>
@@ -2555,6 +2608,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7d82772</a>
@@ -2661,6 +2725,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-5.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-5.png" target="_blank">7d82772</a>
 </td>
 <td>
@@ -2765,6 +2840,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-6.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-6.png" target="_blank">7d82772</a>
 </td>
 <td>
@@ -2867,6 +2953,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">7d82772</a>
@@ -3459,8 +3556,8 @@ n &lt;- 0
 for (i_cruise in unique(cruises$cruise)) {
 
 # i_cruise &lt;- unique(cruises$cruise)[1]
-n &lt;- n + 1
-print(n)  
+# n &lt;- n + 1
+# print(n)  
   
 GLODAP_cruise &lt;- GLODAP %&gt;%
   filter(cruise == i_cruise) %&gt;% 
