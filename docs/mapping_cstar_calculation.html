@@ -12,7 +12,7 @@
 <meta name="author" content="Jens Daniel Müller" />
 
 
-<title>Mapping cstar</title>
+<title>Mapping target variable</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -481,7 +481,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Mapping cstar</h1>
+<h1 class="title toc-ignore">Mapping target variable</h1>
 <h4 class="author">Jens Daniel Müller</h4>
 <h4 class="date">15 December, 2020</h4>
 
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree60f05d046fcdb799b69e7933b744ee2cde303163targetblank60f05d0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/60f05d046fcdb799b69e7933b744ee2cde303163" target="_blank">60f05d0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree60f05d046fcdb799b69e7933b744ee2cde303163targetblank60f05d0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/60f05d046fcdb799b69e7933b744ee2cde303163" target="_blank">60f05d0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,6 +619,10 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/analysis_this_study.Rmd
+    Modified:   analysis/config_parameterization_local.Rmd
+    Modified:   analysis/eMLR_assumption_testing.Rmd
+    Modified:   analysis/eMLR_data_preparation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -659,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/60f05d046fcdb799b69e7933b744ee2cde303163/analysis/mapping_cstar_calculation.Rmd" target="_blank">60f05d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+eMLR target variable selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/mapping_cstar_calculation.html" target="_blank">953caf3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1193,8 +1231,12 @@ Initial commit
 </div>
 </div>
 </div>
+<div id="scope" class="section level1">
+<h1><span class="header-section-number">1</span> Scope</h1>
+<p>Map 3d fields of the predicted target variable (either tco2, cstar or cstar_tref) based on fitted MLRs and climatological fields of predictor variables, for each era.</p>
+</div>
 <div id="predictor-fields" class="section level1">
-<h1><span class="header-section-number">1</span> Predictor fields</h1>
+<h1><span class="header-section-number">2</span> Predictor fields</h1>
 <p>Currently, we use combined predictor fields:</p>
 <ul>
 <li>WOA18: S, T, and derived variables</li>
@@ -1206,53 +1248,54 @@ Initial commit
                  sep = &quot;&quot;))</code></pre>
 </div>
 <div id="load-mlr-models" class="section level1">
-<h1><span class="header-section-number">2</span> Load MLR models</h1>
-<pre class="r"><code>lm_all_wide_cstar &lt;-
+<h1><span class="header-section-number">3</span> Load MLR models</h1>
+<pre class="r"><code>lm_all_wide_target &lt;-
   read_csv(paste(path_version_data,
-                 &quot;lm_all_cstar.csv&quot;,
+                 &quot;lm_all_target.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
 <div id="merge-mlrs-climatologies" class="section level1">
-<h1><span class="header-section-number">3</span> Merge MLRs + climatologies</h1>
-<pre class="r"><code>lm_all_wide_cstar &lt;- lm_all_wide_cstar %&gt;%
-  mutate(model = str_remove(model, &quot;cstar ~ &quot;))
-         
-cstar &lt;- full_join(predictors, lm_all_wide_cstar)
+<h1><span class="header-section-number">4</span> Merge MLRs + climatologies</h1>
+<pre class="r"><code>lm_all_wide_target &lt;- lm_all_wide_target %&gt;%
+  mutate(model = str_remove(model, paste(params_local$MLR_target, &quot;~ &quot;)))
 
-rm(predictors, lm_all_wide_cstar)</code></pre>
+target &lt;- full_join(predictors, lm_all_wide_target)
+
+rm(predictors, lm_all_wide_target)</code></pre>
 </div>
-<div id="map-cstar" class="section level1">
-<h1><span class="header-section-number">4</span> Map cstar</h1>
+<div id="map-target-variable" class="section level1">
+<h1><span class="header-section-number">5</span> Map target variable</h1>
 <div id="apply-mlrs-to-predictor" class="section level2">
-<h2><span class="header-section-number">4.1</span> Apply MLRs to predictor</h2>
-<pre class="r"><code>cstar &lt;- b_cstar_model(cstar)
+<h2><span class="header-section-number">5.1</span> Apply MLRs to predictor</h2>
+<pre class="r"><code>target &lt;- b_target_model(target)
 
-cstar &lt;- cstar %&gt;% 
-  select(lon, lat, depth, era, basin, basin_AIP, cstar, gamma)</code></pre>
-<pre class="r"><code>cstar_average &lt;- m_cstar_model_average(cstar)
+target &lt;- target %&gt;% 
+  select(lon, lat, depth, era, basin, basin_AIP, gamma,
+         params_local$MLR_target)</code></pre>
+<pre class="r"><code>target_average &lt;- m_target_model_average(target)
 
-rm(cstar)
+rm(target)
 
-cstar_average &lt;- m_cut_gamma(cstar_average, &quot;gamma&quot;)</code></pre>
+target_average &lt;- m_cut_gamma(target_average, &quot;gamma&quot;)</code></pre>
 </div>
-<div id="mean-cstar-sections" class="section level2">
-<h2><span class="header-section-number">4.2</span> Mean cstar sections</h2>
-<p>For each basin and era combination, the zonal mean cstar is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
-<pre class="r"><code>cstar_average_zonal &lt;- m_cstar_zonal_mean(cstar_average)
+<div id="mean-target-variable-sections" class="section level2">
+<h2><span class="header-section-number">5.2</span> Mean target variable sections</h2>
+<p>For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
+<pre class="r"><code>target_average_zonal &lt;- m_target_zonal_mean(target_average)
 
-cstar_average_zonal &lt;- m_cut_gamma(cstar_average_zonal, &quot;gamma_mean&quot;)</code></pre>
+target_average_zonal &lt;- m_cut_gamma(target_average_zonal, &quot;gamma_mean&quot;)</code></pre>
 </div>
 </div>
 <div id="write-csv" class="section level1">
-<h1><span class="header-section-number">5</span> Write csv</h1>
-<pre class="r"><code>cstar_average %&gt;%
+<h1><span class="header-section-number">6</span> Write csv</h1>
+<pre class="r"><code>target_average %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;cstar_3d.csv&quot;,
+                  &quot;target_3d.csv&quot;,
                   sep = &quot;&quot;))
 
-cstar_average_zonal %&gt;%
+target_average_zonal %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;cstar_zonal.csv&quot;,
+                  &quot;target_zonal.csv&quot;,
                   sep = &quot;&quot;))</code></pre>
 <br>
 <p>
