@@ -1,5 +1,5 @@
 ---
-title: "Mapping cstar"
+title: "Mapping target variable"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -47,6 +47,10 @@ path_version_figures  <-
         sep = "")
 ```
 
+# Scope
+
+Map 3d fields of the predicted target variable (either tco2, cstar or cstar_tref) based on fitted MLRs and climatological fields of predictor variables, for each era.
+
 # Predictor fields
 
 Currently, we use combined predictor fields:
@@ -68,9 +72,9 @@ predictors <-
 
 ```{r load_eMLR_models}
 
-lm_all_wide_cstar <-
+lm_all_wide_target <-
   read_csv(paste(path_version_data,
-                 "lm_all_cstar.csv",
+                 "lm_all_target.csv",
                  sep = ""))
 
 ```
@@ -79,64 +83,64 @@ lm_all_wide_cstar <-
 
 ```{r merge_model_coeff_predictor_climatology}
 
-lm_all_wide_cstar <- lm_all_wide_cstar %>%
-  mutate(model = str_remove(model, "cstar ~ "))
-         
-cstar <- full_join(predictors, lm_all_wide_cstar)
+lm_all_wide_target <- lm_all_wide_target %>%
+  mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
 
-rm(predictors, lm_all_wide_cstar)
+target <- full_join(predictors, lm_all_wide_target)
 
+rm(predictors, lm_all_wide_target)
 
 ```
 
 
-# Map cstar
+# Map target variable
 
 ## Apply MLRs to predictor
 
-```{r calculate_cstar}
+```{r calculate_target}
 
-cstar <- b_cstar_model(cstar)
+target <- b_target_model(target)
 
-cstar <- cstar %>% 
-  select(lon, lat, depth, era, basin, basin_AIP, cstar, gamma)
-
-```
-
-```{r cstar_average}
-
-cstar_average <- m_cstar_model_average(cstar)
-
-rm(cstar)
-
-cstar_average <- m_cut_gamma(cstar_average, "gamma")
+target <- target %>% 
+  select(lon, lat, depth, era, basin, basin_AIP, gamma,
+         params_local$MLR_target)
 
 ```
 
-## Mean cstar sections
+```{r target_average}
 
-For each basin and era combination, the zonal mean cstar is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
+target_average <- m_target_model_average(target)
 
-```{r Calculate_cstar_mean_sections}
+rm(target)
 
-cstar_average_zonal <- m_cstar_zonal_mean(cstar_average)
+target_average <- m_cut_gamma(target_average, "gamma")
 
-cstar_average_zonal <- m_cut_gamma(cstar_average_zonal, "gamma_mean")
+```
+
+## Mean target variable sections
+
+For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r Calculate_target_mean_sections}
+
+target_average_zonal <- m_target_zonal_mean(target_average)
+
+target_average_zonal <- m_cut_gamma(target_average_zonal, "gamma_mean")
 
 ```
 
 # Write csv
 
-```{r write_cstar_files}
+```{r write_target_files}
 
-cstar_average %>%
+target_average %>%
   write_csv(paste(path_version_data,
-                  "cstar_3d.csv",
+                  "target_3d.csv",
                   sep = ""))
 
-cstar_average_zonal %>%
+target_average_zonal %>%
   write_csv(paste(path_version_data,
-                  "cstar_zonal.csv",
+                  "target_zonal.csv",
                   sep = ""))
 
 ```
