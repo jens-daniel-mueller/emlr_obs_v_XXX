@@ -601,16 +601,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7992c49c9839b4ae6d89c6e30d563075cf38635targetblankd7992c4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7992c49c9839b4ae6d89c6e30d563075cf38635" target="_blank">d7992c4</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7992c49c9839b4ae6d89c6e30d563075cf38635targetblankd7992c4a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7992c49c9839b4ae6d89c6e30d563075cf38635" target="_blank">d7992c4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -621,6 +621,11 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/analysis_this_study.Rmd
+    Modified:   analysis/config_parameterization_local.Rmd
+    Modified:   analysis/eMLR_assumption_testing.Rmd
+    Modified:   analysis/eMLR_data_preparation.Rmd
+    Modified:   analysis/mapping_cstar_calculation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -661,6 +666,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7992c49c9839b4ae6d89c6e30d563075cf38635/analysis/eMLR_model_fitting.Rmd" target="_blank">d7992c4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+eMLR target variable selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/eMLR_model_fitting.html" target="_blank">953caf3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1305,7 +1344,7 @@ for (i_basin in unique(GLODAP$basin)) {
 
       # fit the full linear model, i.e. all predictor combinations
       lm_full &lt;- lm(
-        paste(&quot;cstar&quot;,
+        paste(params_local$MLR_target,
               paste(params_local$MLR_predictors, collapse = &quot; + &quot;),
               sep = &quot; ~ &quot;),
         data = GLODAP_basin_era_slab)
@@ -19655,7 +19694,7 @@ sqrt(mean(lm_2$residuals^2))</code></pre>
 <pre class="r"><code># format model formula
 lm_best &lt;- lm_best %&gt;% 
   mutate(lm_coeff = str_replace_all(predictors, &quot; &quot;, &quot; + &quot;),
-         lm_coeff = paste(&quot;cstar ~&quot;, lm_coeff))
+         lm_coeff = paste(params_local$MLR_target, &quot;~&quot;, lm_coeff))
 
 
 # create table with two era belonging to one eras
@@ -19744,7 +19783,7 @@ for (i_basin in unique(GLODAP$basin)) {
           
           p_model &lt;- ggnostic(
             lm_fit_single,
-            columnsY = c(&quot;cstar&quot;, &quot;.fitted&quot;, &quot;.resid&quot;),
+            columnsY = c(params_local$MLR_target, &quot;.fitted&quot;, &quot;.resid&quot;),
             title = paste(&quot;eras:&quot;, i_eras,
                           &quot;| era:&quot;, i_era,
                           &quot;| basin:&quot;, i_basin,
@@ -19831,7 +19870,7 @@ lm_all_stats %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#anvxktrtfu .gt_table {
+#zdtxdianvx .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -19856,7 +19895,7 @@ lm_all_stats %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_heading {
+#zdtxdianvx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -19868,7 +19907,7 @@ lm_all_stats %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_title {
+#zdtxdianvx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -19878,7 +19917,7 @@ lm_all_stats %&gt;%
   border-bottom-width: 0;
 }
 
-#anvxktrtfu .gt_subtitle {
+#zdtxdianvx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -19888,13 +19927,13 @@ lm_all_stats %&gt;%
   border-top-width: 0;
 }
 
-#anvxktrtfu .gt_bottom_border {
+#zdtxdianvx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_col_headings {
+#zdtxdianvx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -19909,7 +19948,7 @@ lm_all_stats %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_col_heading {
+#zdtxdianvx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -19929,7 +19968,7 @@ lm_all_stats %&gt;%
   overflow-x: hidden;
 }
 
-#anvxktrtfu .gt_column_spanner_outer {
+#zdtxdianvx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -19941,15 +19980,15 @@ lm_all_stats %&gt;%
   padding-right: 4px;
 }
 
-#anvxktrtfu .gt_column_spanner_outer:first-child {
+#zdtxdianvx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#anvxktrtfu .gt_column_spanner_outer:last-child {
+#zdtxdianvx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#anvxktrtfu .gt_column_spanner {
+#zdtxdianvx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -19961,7 +20000,7 @@ lm_all_stats %&gt;%
   width: 100%;
 }
 
-#anvxktrtfu .gt_group_heading {
+#zdtxdianvx .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -19983,7 +20022,7 @@ lm_all_stats %&gt;%
   vertical-align: middle;
 }
 
-#anvxktrtfu .gt_empty_group_heading {
+#zdtxdianvx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -19998,15 +20037,15 @@ lm_all_stats %&gt;%
   vertical-align: middle;
 }
 
-#anvxktrtfu .gt_from_md > :first-child {
+#zdtxdianvx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#anvxktrtfu .gt_from_md > :last-child {
+#zdtxdianvx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#anvxktrtfu .gt_row {
+#zdtxdianvx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -20025,7 +20064,7 @@ lm_all_stats %&gt;%
   overflow-x: hidden;
 }
 
-#anvxktrtfu .gt_stub {
+#zdtxdianvx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -20037,7 +20076,7 @@ lm_all_stats %&gt;%
   padding-left: 12px;
 }
 
-#anvxktrtfu .gt_summary_row {
+#zdtxdianvx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -20047,7 +20086,7 @@ lm_all_stats %&gt;%
   padding-right: 5px;
 }
 
-#anvxktrtfu .gt_first_summary_row {
+#zdtxdianvx .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -20057,7 +20096,7 @@ lm_all_stats %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_grand_summary_row {
+#zdtxdianvx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -20067,7 +20106,7 @@ lm_all_stats %&gt;%
   padding-right: 5px;
 }
 
-#anvxktrtfu .gt_first_grand_summary_row {
+#zdtxdianvx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -20077,11 +20116,11 @@ lm_all_stats %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_striped {
+#zdtxdianvx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#anvxktrtfu .gt_table_body {
+#zdtxdianvx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -20090,7 +20129,7 @@ lm_all_stats %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_footnotes {
+#zdtxdianvx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -20104,13 +20143,13 @@ lm_all_stats %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_footnote {
+#zdtxdianvx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#anvxktrtfu .gt_sourcenotes {
+#zdtxdianvx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -20124,46 +20163,46 @@ lm_all_stats %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_sourcenote {
+#zdtxdianvx .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#anvxktrtfu .gt_left {
+#zdtxdianvx .gt_left {
   text-align: left;
 }
 
-#anvxktrtfu .gt_center {
+#zdtxdianvx .gt_center {
   text-align: center;
 }
 
-#anvxktrtfu .gt_right {
+#zdtxdianvx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#anvxktrtfu .gt_font_normal {
+#zdtxdianvx .gt_font_normal {
   font-weight: normal;
 }
 
-#anvxktrtfu .gt_font_bold {
+#zdtxdianvx .gt_font_bold {
   font-weight: bold;
 }
 
-#anvxktrtfu .gt_font_italic {
+#zdtxdianvx .gt_font_italic {
   font-style: italic;
 }
 
-#anvxktrtfu .gt_super {
+#zdtxdianvx .gt_super {
   font-size: 65%;
 }
 
-#anvxktrtfu .gt_footnote_marks {
+#zdtxdianvx .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="anvxktrtfu" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="zdtxdianvx" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -21023,7 +21062,7 @@ lm_all_stats %&gt;%
 </div>
 <div id="prepare-coeffcients" class="section level2">
 <h2><span class="header-section-number">3.2</span> Prepare coeffcients</h2>
-<p>Coefficients are prepared for the mapping of cstar and cant.</p>
+<p>Coefficients are prepared for the mapping of Cant and the target variable.</p>
 <pre class="r"><code># select relevant columns
 lm_all &lt;- lm_all %&gt;% 
   select(basin, gamma_slab, era, eras, model, term, estimate)
@@ -21033,8 +21072,8 @@ lm_all &lt;- lm_all %&gt;%
   mutate(estimate = if_else(is.na(estimate), 0, estimate))
 
 
-# Prepare model coefficients for mapping of cstar
-lm_all_cstar &lt;- lm_all %&gt;% 
+# Prepare model coefficients for mapping of target variable
+lm_all_target &lt;- lm_all %&gt;% 
   pivot_wider(values_from = estimate,
               names_from = term,
               names_prefix = &quot;coeff_&quot;,
@@ -21061,8 +21100,8 @@ lm_all_cant &lt;- lm_all_long %&gt;%
 </div>
 <div id="write-files" class="section level2">
 <h2><span class="header-section-number">3.3</span> Write files</h2>
-<pre class="r"><code>lm_all_cstar %&gt;% write_csv(paste(path_version_data,
-                                      &quot;lm_all_cstar.csv&quot;,
+<pre class="r"><code>lm_all_target %&gt;% write_csv(paste(path_version_data,
+                                      &quot;lm_all_target.csv&quot;,
                                       sep = &quot;&quot;))
 
 lm_all_cant %&gt;% write_csv(paste(path_version_data,
@@ -21104,34 +21143,33 @@ other attached packages:
 [21] tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-150             fs_1.5.0                 webshot_0.5.2           
- [4] RColorBrewer_1.1-2       httr_1.4.2               rprojroot_2.0.2         
- [7] tools_4.0.3              backports_1.1.10         R6_2.5.0                
-[10] mgcv_1.8-33              nortest_1.0-4            DBI_1.1.0               
-[13] colorspace_2.0-0         withr_2.3.0              gridExtra_2.3           
-[16] tidyselect_1.1.0         curl_4.3                 compiler_4.0.3          
-[19] git2r_0.27.1             cli_2.2.0                rvest_0.3.6             
-[22] xml2_1.3.2               sass_0.2.0               labeling_0.4.2          
-[25] scales_1.1.1             checkmate_2.0.0          goftest_1.2-2           
-[28] digest_0.6.27            foreign_0.8-80           rmarkdown_2.5           
-[31] rio_0.5.16               pkgconfig_2.0.3          htmltools_0.5.0         
-[34] highr_0.8                dbplyr_1.4.4             rlang_0.4.9             
-[37] readxl_1.3.1             rstudioapi_0.13          farver_2.0.3            
-[40] generics_0.0.2           jsonlite_1.7.1           zip_2.1.1               
-[43] car_3.0-10               magrittr_2.0.1           Matrix_1.2-18           
-[46] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
-[49] abind_1.4-5              lifecycle_0.2.0          stringi_1.5.3           
-[52] whisker_0.4              yaml_2.2.1               carData_3.0-4           
-[55] plyr_1.8.6               grid_4.0.3               blob_1.2.1              
-[58] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[61] lattice_0.20-41          splines_4.0.3            haven_2.3.1             
-[64] hms_0.5.3                pillar_1.4.7             reprex_0.3.0            
-[67] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
-[70] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
-[73] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
-[76] reshape_0.8.8            assertthat_0.2.1         xfun_0.18               
-[79] openxlsx_4.2.3           RcppEigen_0.3.3.7.0      later_1.1.0.1           
-[82] viridisLite_0.3.0        ellipsis_0.3.1           here_0.1                </code></pre>
+ [1] fs_1.5.0                 webshot_0.5.2            RColorBrewer_1.1-2      
+ [4] httr_1.4.2               rprojroot_2.0.2          tools_4.0.3             
+ [7] backports_1.1.10         R6_2.5.0                 nortest_1.0-4           
+[10] DBI_1.1.0                colorspace_2.0-0         withr_2.3.0             
+[13] gridExtra_2.3            tidyselect_1.1.0         curl_4.3                
+[16] compiler_4.0.3           git2r_0.27.1             cli_2.2.0               
+[19] rvest_0.3.6              xml2_1.3.2               sass_0.2.0              
+[22] labeling_0.4.2           scales_1.1.1             checkmate_2.0.0         
+[25] goftest_1.2-2            digest_0.6.27            foreign_0.8-80          
+[28] rmarkdown_2.5            rio_0.5.16               pkgconfig_2.0.3         
+[31] htmltools_0.5.0          highr_0.8                dbplyr_1.4.4            
+[34] rlang_0.4.9              readxl_1.3.1             rstudioapi_0.13         
+[37] farver_2.0.3             generics_0.0.2           jsonlite_1.7.1          
+[40] zip_2.1.1                car_3.0-10               magrittr_2.0.1          
+[43] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[46] fansi_0.4.1              abind_1.4-5              lifecycle_0.2.0         
+[49] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
+[52] carData_3.0-4            plyr_1.8.6               grid_4.0.3              
+[55] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[58] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
+[61] hms_0.5.3                pillar_1.4.7             reprex_0.3.0            
+[64] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[67] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
+[70] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
+[73] reshape_0.8.8            assertthat_0.2.1         xfun_0.18               
+[76] openxlsx_4.2.3           RcppEigen_0.3.3.7.0      later_1.1.0.1           
+[79] viridisLite_0.3.0        ellipsis_0.3.1           here_0.1                </code></pre>
 </div>
 </div>
 </div>
