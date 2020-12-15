@@ -359,7 +359,7 @@ for (i_var in c("tco2",
                 "cstar",
                 "cstar_tref")) {
   print(lat_section +
-          stat_summary_2d(aes(z = tco2))+
+          stat_summary_2d(aes(z = !!sym(i_var))) +
           scale_fill_viridis_c(name = i_var)
         )
   
