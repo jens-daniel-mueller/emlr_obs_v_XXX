@@ -428,10 +428,10 @@ div.tocify {
       <a href="mapping_predictor_preparation.html">Predictor preparation</a>
     </li>
     <li>
-      <a href="mapping_cant_calculation.html">Cant calculation</a>
+      <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cstar_calculation.html">Cstar calculation</a>
+      <a href="mapping_target_variable.html">Cstar calculation</a>
     </li>
   </ul>
 </li>
@@ -485,7 +485,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR - assumption testing</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">14 December, 2020</h4>
+<h4 class="date">15 December, 2020</h4>
 
 </div>
 
@@ -510,7 +510,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-14
+<strong>Last updated:</strong> 2020-12-15
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -601,16 +601,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee7e5ff13551764418ca9e31dc07405c77598f6f9targetblanke7e5ff1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e7e5ff13551764418ca9e31dc07405c77598f6f9" target="_blank">e7e5ff1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee7e5ff13551764418ca9e31dc07405c77598f6f9targetblanke7e5ff1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e7e5ff13551764418ca9e31dc07405c77598f6f9" target="_blank">e7e5ff1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -621,6 +621,10 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/analysis_this_study.Rmd
+    Deleted:    analysis/mapping_cant_calculation.Rmd
+    Deleted:    analysis/mapping_cstar_calculation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -661,6 +665,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7e5ff13551764418ca9e31dc07405c77598f6f9/analysis/eMLR_assumption_testing.Rmd" target="_blank">e7e5ff1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+rebuild with eMLR target variable selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/eMLR_assumption_testing.html" target="_blank">953caf3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1296,14 +1334,8 @@ print(
 GLODAP %&gt;% 
   filter(basin == i_basin) %&gt;% 
   sample_frac(0.05) %&gt;% 
-  ggpairs(columns = c(&quot;cstar&quot;,
-                      &quot;sal&quot;,
-                      &quot;temp&quot;,
-                      &quot;aou&quot;,
-                      &quot;oxygen&quot;,
-                      &quot;silicate&quot;,
-                      &quot;phosphate&quot;,
-                      &quot;phosphate_star&quot;),
+  ggpairs(columns = c(params_local$MLR_target,
+                      params_local$MLR_predictors),
           upper = &quot;blank&quot;,
           ggplot2::aes(col = gamma_slab, fill = gamma_slab, alpha = 0.01)) +
       scale_fill_viridis_d(direction = -1) +
@@ -1518,16 +1550,8 @@ for (i_basin in unique(GLODAP$basin)) {
       
       p &lt;- GLODAP_highlight %&gt;%
         ggpairs(
-          columns = c(
-            &quot;cstar&quot;,
-            &quot;sal&quot;,
-            &quot;temp&quot;,
-            &quot;aou&quot;,
-            &quot;oxygen&quot;,
-            &quot;silicate&quot;,
-            &quot;phosphate&quot;,
-            &quot;phosphate_star&quot;
-          ),
+          columns = c(params_local$MLR_target,
+                      params_local$MLR_predictors),
           ggplot2::aes(
             col = gamma_highlight,
             fill = gamma_highlight,
@@ -1593,20 +1617,14 @@ for (i_basin in unique(GLODAP$basin)) {
 print(i_basin)
 print(i_era)
 
-GLODAP_basin_era &lt;- GLODAP %&gt;% 
+GLODAP_basin_era &lt;- GLODAP %&gt;%
   filter(basin == i_basin,
-         era == i_era) %&gt;% 
+         era == i_era) %&gt;%
   select(basin,
          era,
          gamma_slab,
-         cstar,
-         sal,
-         temp,
-         aou,
-         oxygen,
-         silicate,
-         phosphate,
-         phosphate_star)
+         params_local$MLR_target,
+         params_local$MLR_predictors)
 
 for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   
@@ -1616,20 +1634,20 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   GLODAP_basin_era_slab &lt;- GLODAP_basin_era %&gt;%
     filter(gamma_slab == i_gamma_slab)
 
-  cor_cstar_predictor_temp &lt;- GLODAP_basin_era_slab %&gt;% 
+  cor_target_predictor_temp &lt;- GLODAP_basin_era_slab %&gt;% 
     select(-c(basin, era, gamma_slab)) %&gt;% 
     correlate() %&gt;% 
-    focus(cstar) %&gt;% 
+    focus(params_local$MLR_target) %&gt;% 
     mutate(basin = i_basin,
        era = i_era,
        gamma_slab = i_gamma_slab)
   
-  if (exists(&quot;cor_cstar_predictor&quot;)) {
-        cor_cstar_predictor &lt;- bind_rows(cor_cstar_predictor, cor_cstar_predictor_temp)
+  if (exists(&quot;cor_target_predictor&quot;)) {
+        cor_target_predictor &lt;- bind_rows(cor_target_predictor, cor_target_predictor_temp)
       }
       
-    if (!exists(&quot;cor_cstar_predictor&quot;)) {
-        cor_cstar_predictor &lt;- cor_cstar_predictor_temp
+    if (!exists(&quot;cor_target_predictor&quot;)) {
+        cor_target_predictor &lt;- cor_target_predictor_temp
     }
   
   
@@ -1639,8 +1657,8 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
     shave %&gt;% 
     stretch() %&gt;% 
     filter(!is.na(r),
-           x != &quot;cstar&quot;,
-           y != &quot;cstar&quot;) %&gt;% 
+           x != params_local$MLR_target,
+           y != params_local$MLR_target) %&gt;% 
     mutate(pair = paste(x, y, sep = &quot; + &quot;)) %&gt;% 
     select(-c(x, y)) %&gt;% 
     mutate(basin = i_basin,
@@ -1661,7 +1679,7 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   }
 }
 
-rm(cor_predictors_temp, cor_cstar_predictor_temp,
+rm(cor_predictors_temp, cor_target_predictor_temp,
    i_gamma_slab, i_era, i_basin,
    GLODAP_basin_era, GLODAP_basin_era_slab)</code></pre>
 </div>
@@ -17843,17 +17861,16 @@ Pacific
 <div id="c-vs-individual-predictors" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> C* vs individual predictors</h3>
 <p>Below, the range of correlations coefficients for C* with each predictor is plotted per basin (facet) and density slab (color). Note that the range indicates the min and max values of in total 3 calculated coefficients (one per era).</p>
-<pre class="r"><code>cor_cstar_predictor &lt;- cor_cstar_predictor %&gt;% 
+<pre class="r"><code>cor_target_predictor &lt;- cor_target_predictor %&gt;% 
   rename(predictor = term)
 
-cor_cstar_predictor_stats &lt;- cor_cstar_predictor %&gt;% 
+cor_target_predictor_stats &lt;- cor_target_predictor %&gt;%
+  select(-era) %&gt;% 
   group_by(predictor, basin, gamma_slab) %&gt;% 
-  summarise(mean_r = mean(cstar),
-            min_r = min(cstar),
-            max_r = max(cstar)) %&gt;% 
+  summarise_all(list(mean_r = mean, min_r = min, max_r = max)) %&gt;% 
   ungroup()
 
-cor_cstar_predictor_stats %&gt;% 
+cor_target_predictor_stats %&gt;% 
   mutate(predictor = reorder(predictor, mean_r)) %&gt;%
   ggplot() +
   geom_vline(xintercept = c(-0.9, 0.9), col = &quot;red&quot;) +
@@ -18035,7 +18052,7 @@ Jens Müller
 </table>
 </div>
 </div>
-<pre class="r"><code>kable(cor_cstar_predictor_stats) %&gt;%
+<pre class="r"><code>kable(cor_target_predictor_stats) %&gt;%
   add_header_above() %&gt;%
   kable_styling() %&gt;%
   scroll_box(width = &quot;100%&quot;, height = &quot;400px&quot;)</code></pre>
@@ -23387,7 +23404,7 @@ Pacific
 </tbody>
 </table>
 </div>
-<pre class="r"><code>rm(cor_cstar_predictor, cor_cstar_predictor_stats)</code></pre>
+<pre class="r"><code>rm(cor_target_predictor, cor_target_predictor_stats)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

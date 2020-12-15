@@ -12,7 +12,7 @@
 <meta name="author" content="Jens Daniel Müller" />
 
 
-<title>Home</title>
+<title>Mapping cant</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,6 +20,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
@@ -274,6 +277,75 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
 
 </head>
 
@@ -281,6 +353,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -399,7 +481,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Home</h1>
+<h1 class="title toc-ignore">Mapping cant</h1>
 <h4 class="author">Jens Daniel Müller</h4>
 <h4 class="date">15 December, 2020</h4>
 
@@ -557,7 +639,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML (<code>docs/index.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/mapping_cant.Rmd</code>) and HTML (<code>docs/mapping_cant.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -583,10 +665,10 @@ Message
 <tbody>
 <tr>
 <td>
-html
+Rmd
 </td>
 <td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/index.html" target="_blank">953caf3</a>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7e5ff13551764418ca9e31dc07405c77598f6f9/analysis/mapping_cant.Rmd" target="_blank">e7e5ff1</a>
 </td>
 <td>
 jens-daniel-mueller
@@ -595,517 +677,7 @@ jens-daniel-mueller
 2020-12-15
 </td>
 <td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/42daf5cf2e67a16013bf556167ffcf0a8691ed49/docs/index.html" target="_blank">42daf5c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/5cc68e2bcfb4978ebdd63944f6b71fc3766c0eeb/docs/index.html" target="_blank">5cc68e2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/984697eaaad05416debe49cbe5f44edbb216c1de/docs/index.html" target="_blank">984697e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/3ebff890e641ba3f8cc320711281a2dae3536822/docs/index.html" target="_blank">3ebff89</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-12
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7d827723016938befca90b1edf5866ab728333ac/docs/index.html" target="_blank">7d82772</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c8acfcba4f0a1c58c347a16af5374323fd2ccd67/docs/index.html" target="_blank">c8acfcb</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/2fd0a2a6e79cb90300deb394be20d3294ed0249f/docs/index.html" target="_blank">2fd0a2a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b01a3676f930a519651bc7eec122b7e2ddbee952/docs/index.html" target="_blank">b01a367</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-09
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/24a632fdf0071851b000dac2ee9b25bec501b691/docs/index.html" target="_blank">24a632f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/92dca917345360cf8a27bf1527c86120f00eaea4/docs/index.html" target="_blank">92dca91</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/6a8004b17dc721099696be1f578df0043169555d/docs/index.html" target="_blank">6a8004b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/index.html" target="_blank">70bf1a5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/755535567864e4b7ba9e2966906eea49df4790dc/docs/index.html" target="_blank">7555355</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/index.html" target="_blank">143d6fa</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-07
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/abc68187c24c7062621c40f2e655ca628b3bc1e6/docs/index.html" target="_blank">abc6818</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-03
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/index.html" target="_blank">090e4d5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/37e9dac55ea95474a4b484fe99971477dd3e060e/docs/index.html" target="_blank">37e9dac</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/index.html" target="_blank">7c25f7a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/ec8dc3893208a22874625bec9885b7b7b75887a1/docs/index.html" target="_blank">ec8dc38</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c987de13e58431079ab072e5914f01a7cf6dd491/docs/index.html" target="_blank">c987de1</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/632c84fa67ab706b0a8d5324879615f47bfd5c08/docs/index.html" target="_blank">632c84f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-02
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/22d012770b414ab9571450c36ff8512f64d585fe/docs/index.html" target="_blank">22d0127</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/index.html" target="_blank">0ff728b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7ff39ce781b5776639a871228382f73a3b54b811/docs/index.html" target="_blank">7ff39ce</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/88749c562515693d942689621fe07932e9304a95/docs/index.html" target="_blank">88749c5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-01
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/cf1965212ba6269434668a9336da507fb6183faa/docs/index.html" target="_blank">cf19652</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/index.html" target="_blank">196be51</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/27e58472259787f56f0bfcfb1655865ad8913f85/docs/index.html" target="_blank">27e5847</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/analysis/index.Rmd" target="_blank">bc61ce3</a>
-</td>
-<td>
-Jens Müller
-</td>
-<td>
-2020-11-30
-</td>
-<td>
-Initial commit
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/index.html" target="_blank">bc61ce3</a>
-</td>
-<td>
-Jens Müller
-</td>
-<td>
-2020-11-30
-</td>
-<td>
-Initial commit
+rebuild with eMLR target variable selection
 </td>
 </tr>
 </tbody>
@@ -1115,10 +687,312 @@ Initial commit
 </div>
 </div>
 </div>
-<div id="welcome" class="section level1">
-<h1>WELCOME!</h1>
-<p>On this website we present our ongoing ambition to quantify anthropogenic CO<sub>2</sub> in the ocean based on observations.</p>
-<p>Navigate trough the navbar on top to take a look at the various chapters of this project. The links in the upper right corner bring you to the source code of this project and to Jens’ homepage.</p>
+<div id="predictor-fields" class="section level1">
+<h1><span class="header-section-number">1</span> Predictor fields</h1>
+<p>Currently, we use combined predictor fields:</p>
+<ul>
+<li>WOA18: S, T, and derived variables</li>
+<li>GLODAP16: Oxygen, PO4, NO3, Silicate, and derived variables</li>
+</ul>
+<pre class="r"><code>predictors &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;W18_st_G16_opsn.csv&quot;,
+                 sep = &quot;&quot;))
+
+predictors_surface &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;W18_st_G16_opsn_surface.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
+</div>
+<div id="atm.-pco2" class="section level1">
+<h1><span class="header-section-number">2</span> Atm. pCO2</h1>
+<pre class="r"><code>co2_atm_tref &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;co2_atm_tref.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
+</div>
+<div id="load-mlr-models" class="section level1">
+<h1><span class="header-section-number">3</span> Load MLR models</h1>
+<pre class="r"><code>lm_all_wide &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;lm_all_cant.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
+</div>
+<div id="merge-mlrs-climatologies" class="section level1">
+<h1><span class="header-section-number">4</span> Merge MLRs + climatologies</h1>
+<pre class="r"><code>lm_all_wide &lt;- lm_all_wide %&gt;% 
+  mutate(model = str_remove(model, &quot;Cstar ~ &quot;))
+   
+cant &lt;- full_join(predictors, lm_all_wide)
+
+rm(predictors, lm_all_wide)</code></pre>
+</div>
+<div id="map-cant" class="section level1">
+<h1><span class="header-section-number">5</span> Map cant</h1>
+<div id="deep-water" class="section level2">
+<h2><span class="header-section-number">5.1</span> Deep water</h2>
+</div>
+<div id="apply-mlrs-to-predictor" class="section level2">
+<h2><span class="header-section-number">5.2</span> Apply MLRs to predictor</h2>
+<pre class="r"><code>cant &lt;- b_cant(cant)</code></pre>
+<div id="sections-by-model" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Sections by model</h3>
+<p>Zonal sections plots are produced for every 20° longitude, each era and for all models individually and can be downloaded <a href="https://github.com/jens-daniel-mueller/cant_eMLR/tree/master/output/figure/mapping" target="_blank">here</a>.</p>
+<pre class="r"><code>if (params_local$plot_all_figures == &quot;y&quot;) {
+
+for (i_eras in unique(cant$eras)) {
+  # i_eras &lt;- unique(cant$eras)[2]
+  cant_eras &lt;- cant %&gt;%
+    filter(eras == i_eras)
+  
+  for (i_lon in params_global$longitude_sections_regular) {
+    # i_lon &lt;- params_global$longitude_sections_regular[7]
+    cant_eras_lon &lt;- cant_eras %&gt;%
+      filter(lon == i_lon)
+    
+    limits = max(abs(cant_eras_lon$cant)) * c(-1,1)
+    
+    cant_eras_lon %&gt;%
+      ggplot(aes(lat, depth, z = cant)) +
+      stat_summary_2d(fun = &quot;mean&quot;,
+                      na.rm = TRUE,
+                      bins = 20,
+                      col = &quot;grey&quot;) +
+      scale_fill_scico(
+        name = &quot;Cant&quot;,
+        palette = &quot;vik&quot;,
+        limit = limits
+      ) +
+      scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
+      scale_x_continuous(limits = c(-85, 85)) +
+      labs(title = paste(&quot;eras:&quot;, i_eras,
+                         &quot;| lon:&quot;, i_lon,
+                         &quot;|&quot;, params_local$Version_ID)) +
+      facet_wrap( ~ model, ncol = 5)
+    
+    ggsave(
+      paste(
+        path_version_figures,
+        &quot;Cant_model_sections/&quot;,
+        paste(&quot;Cant_model&quot;,
+              i_eras,
+              &quot;lon&quot;,
+              i_lon,
+              &quot;section.png&quot;,
+              sep = &quot;_&quot;),
+        sep = &quot;&quot;
+      ),
+      width = 17,
+      height = 9
+    )
+    
+  }
+}
+}</code></pre>
+</div>
+</div>
+<div id="surface-water" class="section level2">
+<h2><span class="header-section-number">5.3</span> Surface water</h2>
+<p>As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate cant in surface waters, assuming that the CO<sub>2</sub> system in these waters has followed the increase in atmospheric CO<sub>2</sub> closely.</p>
+<p>Using eq 10.2.16 from OBD, the change in anthropogenic CO<sub>2</sub> in the upper ocean was computed as:</p>
+<p><sub>t</sub>C<sub>ant,eq</sub>(t2,ref − t1,ref) = 1∕γ ⋅ DIC/pCO2 ⋅ (pCO2atm (t2ref)− pCO2atm (t1ref))</p>
+<p>, where DIC and pCO<sub>2</sub> are the in situ values, where γ is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Mehrbach constants as refitted by Dickson and Millero using the climatological values for temperature, salinity, DIC and Alk.</p>
+<div id="pco2-climatology" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> pCO<sub>2</sub> climatology</h3>
+<pre class="r"><code># calculate pCO2 from talk and tco2 climatology
+predictors_surface &lt;- predictors_surface %&gt;% 
+  mutate(pCO2 = carb(flag = 15,
+                     var1 = TAlk*1e-6,
+                     var2 = TCO2*1e-6,
+                     S = sal,
+                     T = temp,
+                     P = depth/10,
+                     Pt = phosphate*1e-6,
+                     Sit = silicate*1e-6,
+                     k1k2 = &quot;l&quot;)$pCO2)</code></pre>
+<pre class="r"><code>p_map_climatology(
+  df = predictors_surface,
+  var = &quot;pCO2&quot;)</code></pre>
+<p><img src="figure/mapping_cant.Rmd/pCO2_climatology_map-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p_section_climatology_regular(
+  df = predictors_surface,
+  var = &quot;pCO2&quot;)</code></pre>
+<p><img src="figure/mapping_cant.Rmd/pCO2_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="revelle-factor" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> Revelle factor</h3>
+<pre class="r"><code>predictors_surface &lt;- predictors_surface %&gt;% 
+  mutate(rev_fac = buffer(flag = 15,
+                     var1 = TAlk*1e-6,
+                     var2 = TCO2*1e-6,
+                     S = sal,
+                     T = temp,
+                     P = depth/10,
+                     Pt = phosphate*1e-6,
+                     Sit = silicate*1e-6,
+                     k1k2 = &quot;l&quot;)$BetaD)</code></pre>
+<pre class="r"><code>p_map_climatology(
+  df = predictors_surface,
+  var = &quot;rev_fac&quot;)</code></pre>
+<p><img src="figure/mapping_cant.Rmd/revelle_factor_climatology_map-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p_section_climatology_regular(
+  df = predictors_surface,
+  var = &quot;rev_fac&quot;)</code></pre>
+<p><img src="figure/mapping_cant.Rmd/revelle_factor_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cant" class="section level3">
+<h3><span class="header-section-number">5.3.3</span> C<sub>ant</sub></h3>
+<pre class="r"><code># calculate increase in atm pCO2 between eras
+co2_atm_tref &lt;- co2_atm_tref %&gt;% 
+  arrange(pCO2_tref) %&gt;% 
+  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref),
+         eras = paste(lag(era), era, sep = &quot; --&gt; &quot;)) %&gt;% 
+  drop_na() %&gt;% 
+  select(eras, d_pCO2_tref)
+
+cant_surface &lt;- full_join(predictors_surface, co2_atm_tref,
+                          by = character())
+
+# calculate cant
+cant_surface &lt;- cant_surface %&gt;% 
+  mutate(cant = (1 / rev_fac) * (TCO2 / pCO2) * d_pCO2_tref)
+
+# calculate positive cant
+cant_surface &lt;- cant_surface %&gt;%
+  mutate(cant_pos = if_else(cant &lt; 0, 0, cant))</code></pre>
+<pre class="r"><code># i_eras &lt;- unique(cant_average$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+  print(
+    p_map_climatology(df = cant_surface %&gt;% filter(eras == i_eras),
+                      var = &quot;cant&quot;)  +
+      labs(subtitle = paste(&quot;era:&quot;, i_eras))
+  )
+  
+}</code></pre>
+<p><img src="figure/mapping_cant.Rmd/cant_surface_climatology_map-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/mapping_cant.Rmd/cant_surface_climatology_map-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># i_eras &lt;- unique(cant_surface$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+  print(
+    p_section_climatology_regular(df = cant_surface %&gt;% filter(eras == i_eras),
+                                  var = &quot;cant&quot;) +
+      labs(subtitle = paste(&quot;era:&quot;, i_eras))
+  )
+  
+}</code></pre>
+<p><img src="figure/mapping_cant.Rmd/cant_surface_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/mapping_cant.Rmd/cant_surface_climatology_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="mean-cant-fields" class="section level2">
+<h2><span class="header-section-number">5.4</span> Mean Cant fields</h2>
+<p>Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only. This averaging step summarizes the information derived from ten best fitting MLRs.</p>
+<div id="deep-water-averaging" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Deep water averaging</h3>
+<pre class="r"><code>cant_average &lt;- m_cant_model_average(cant)
+cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)
+
+# split data set for individual predictor contributions and total cant
+cant_predictor_average &lt;- cant_average %&gt;% 
+  select(-c(&quot;cant&quot;, &quot;cant_pos&quot;, ends_with(&quot;_sd&quot;)))
+
+cant_average &lt;- cant_average %&gt;% 
+  select(lon, lat, depth, eras, basin, basin_AIP,
+            cant, cant_pos, cant_sd, cant_pos_sd,
+            gamma, gamma_sd, gamma_slab)</code></pre>
+<pre class="r"><code># i_eras &lt;- unique(cant_average$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+  print(
+    p_map_climatology(
+      df = cant_average %&gt;% filter(eras == i_eras),
+      var = &quot;cant_pos&quot;,
+      subtitle_text = paste(&quot;era:&quot;, i_eras)
+    )
+  )
+  
+}</code></pre>
+<p><img src="figure/mapping_cant.Rmd/cant_deep_climatology_map-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/mapping_cant.Rmd/cant_deep_climatology_map-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># i_eras &lt;- unique(cant_surface$eras)[2]
+
+for (i_eras in unique(cant_surface$eras)) {
+  print(
+    p_section_climatology_regular(
+      df = cant_average %&gt;% filter(eras == i_eras),
+      var = &quot;cant_pos&quot;,
+      subtitle_text = paste(&quot;era:&quot;, i_eras)
+    )
+  )
+}</code></pre>
+<p><img src="figure/mapping_cant.Rmd/cant_deep_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/mapping_cant.Rmd/cant_deep_climatology_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="surface-water-averaging" class="section level3">
+<h3><span class="header-section-number">5.4.2</span> Surface water averaging</h3>
+<pre class="r"><code>cant_surface_average &lt;- m_cant_model_average(cant_surface)
+cant_surface_average &lt;- m_cut_gamma(cant_surface_average, &quot;gamma&quot;)
+rm(cant_surface)</code></pre>
+</div>
+<div id="join-surface-and-deep-water" class="section level3">
+<h3><span class="header-section-number">5.4.3</span> Join surface and deep water</h3>
+<pre class="r"><code>cant_average &lt;- full_join(cant_average, cant_surface_average)
+rm(cant_surface_average)</code></pre>
+</div>
+</div>
+<div id="mean-cant-sections" class="section level2">
+<h2><span class="header-section-number">5.5</span> Mean cant sections</h2>
+<p>For each basin and era combination, the zonal mean cant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
+<pre class="r"><code>cant_average_zonal &lt;- m_cant_zonal_mean(cant_average)
+cant_average_zonal &lt;- m_cut_gamma(cant_average_zonal, &quot;gamma_mean&quot;)</code></pre>
+</div>
+<div id="mean-cant-sections-by-coefficient" class="section level2">
+<h2><span class="header-section-number">5.6</span> Mean cant sections by coefficient</h2>
+<p>For each basin and era combination, the zonal mean cant is calculated by model coefficient.</p>
+<pre class="r"><code>cant_predictor_average_zonal &lt;-
+  m_cant_predictor_zonal_mean(cant_predictor_average)
+
+cant_predictor_average_zonal &lt;-
+  m_cut_gamma(cant_predictor_average_zonal, &quot;gamma&quot;)</code></pre>
+</div>
+<div id="inventory-calculation" class="section level2">
+<h2><span class="header-section-number">5.7</span> Inventory calculation</h2>
+<p>To calculate cant column inventories, we:</p>
+<ol style="list-style-type: decimal">
+<li>Multiple layer thickness with cant concentration to get a layer inventory</li>
+<li>For each horizontal grid cell and era, sum cant layer inventories from 150 - 3000 m</li>
+</ol>
+<p>Step 2 is performed again for all cant and positive cant values only</p>
+<pre class="r"><code>cant_inv &lt;- m_cant_inv(cant_average)
+
+p_map_cant_inv(
+  df = cant_inv,
+  var = &quot;cant_pos_inv&quot;,
+  subtitle_text = &quot;for predefined integration depths&quot;
+) +
+  facet_grid(inv_depth ~ eras)</code></pre>
+<p><img src="figure/mapping_cant.Rmd/cant_inventories-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="write-csv" class="section level1">
+<h1><span class="header-section-number">6</span> Write csv</h1>
+<pre class="r"><code>cant_average %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_3d.csv&quot;, sep = &quot;&quot;))
+
+cant_predictor_average %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_predictor_3d.csv&quot;, sep = &quot;&quot;))
+
+cant_average_zonal %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_zonal.csv&quot;, sep = &quot;&quot;))
+
+cant_predictor_average_zonal %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_predictor_zonal.csv&quot;, sep = &quot;&quot;))
+
+cant_inv %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_inv.csv&quot;, sep = &quot;&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1147,17 +1021,36 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] workflowr_1.6.2
+ [1] seacarb_3.2.14  oce_1.2-0       gsw_1.0-5       testthat_3.0.0 
+ [5] metR_0.9.0      scico_1.2.0     patchwork_1.1.0 collapse_1.4.2 
+ [9] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.2     purrr_0.3.4    
+[13] readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.2  
+[17] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5      rstudioapi_0.13 whisker_0.4     knitr_1.30     
- [5] magrittr_2.0.1  R6_2.5.0        rlang_0.4.9     stringr_1.4.0  
- [9] tools_4.0.3     xfun_0.18       git2r_0.27.1    htmltools_0.5.0
-[13] ellipsis_0.3.1  rprojroot_2.0.2 yaml_2.2.1      digest_0.6.27  
-[17] tibble_3.0.4    lifecycle_0.2.0 crayon_1.3.4    later_1.1.0.1  
-[21] vctrs_0.3.5     promises_1.1.1  fs_1.5.0        glue_1.4.2     
-[25] evaluate_0.14   rmarkdown_2.5   stringi_1.5.3   compiler_4.0.3 
-[29] pillar_1.4.7    httpuv_1.5.4    pkgconfig_2.0.3</code></pre>
+ [1] httr_1.4.2               jsonlite_1.7.1           viridisLite_0.3.0       
+ [4] here_0.1                 modelr_0.1.8             assertthat_0.2.1        
+ [7] blob_1.2.1               cellranger_1.1.0         yaml_2.2.1              
+[10] pillar_1.4.7             backports_1.1.10         lattice_0.20-41         
+[13] glue_1.4.2               RcppEigen_0.3.3.7.0      digest_0.6.27           
+[16] promises_1.1.1           checkmate_2.0.0          rvest_0.3.6             
+[19] colorspace_2.0-0         htmltools_0.5.0          httpuv_1.5.4            
+[22] Matrix_1.2-18            pkgconfig_2.0.3          broom_0.7.2             
+[25] haven_2.3.1              scales_1.1.1             whisker_0.4             
+[28] later_1.1.0.1            git2r_0.27.1             farver_2.0.3            
+[31] generics_0.0.2           ellipsis_0.3.1           withr_2.3.0             
+[34] cli_2.2.0                magrittr_2.0.1           crayon_1.3.4            
+[37] readxl_1.3.1             evaluate_0.14            fs_1.5.0                
+[40] fansi_0.4.1              xml2_1.3.2               RcppArmadillo_0.10.1.2.0
+[43] tools_4.0.3              data.table_1.13.2        hms_0.5.3               
+[46] lifecycle_0.2.0          munsell_0.5.0            reprex_0.3.0            
+[49] isoband_0.2.2            compiler_4.0.3           rlang_0.4.9             
+[52] grid_4.0.3               rstudioapi_0.13          labeling_0.4.2          
+[55] rmarkdown_2.5            gtable_0.3.0             DBI_1.1.0               
+[58] R6_2.5.0                 lubridate_1.7.9          knitr_1.30              
+[61] rprojroot_2.0.2          stringi_1.5.3            parallel_4.0.3          
+[64] Rcpp_1.0.5               vctrs_0.3.5              dbplyr_1.4.4            
+[67] tidyselect_1.1.0         xfun_0.18               </code></pre>
 </div>
 </div>
 
@@ -1175,6 +1068,8 @@ footer is added to webpages before the MathJax javascript. -->
 </script>
 
 
+</div>
+</div>
 
 </div>
 
@@ -1212,6 +1107,32 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -426,10 +426,10 @@ div.tocify {
       <a href="mapping_predictor_preparation.html">Predictor preparation</a>
     </li>
     <li>
-      <a href="mapping_cant_calculation.html">Cant calculation</a>
+      <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cstar_calculation.html">Cstar calculation</a>
+      <a href="mapping_target_variable.html">Cstar calculation</a>
     </li>
   </ul>
 </li>
@@ -483,7 +483,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">14 December, 2020</h4>
+<h4 class="date">15 December, 2020</h4>
 
 </div>
 
@@ -508,7 +508,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-14
+<strong>Last updated:</strong> 2020-12-15
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee7e5ff13551764418ca9e31dc07405c77598f6f9targetblanke7e5ff1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e7e5ff13551764418ca9e31dc07405c77598f6f9" target="_blank">e7e5ff1</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree97dd0d601688e4f11638546571b2f6b1b1e0bb72targetblank97dd0d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee7e5ff13551764418ca9e31dc07405c77598f6f9targetblanke7e5ff1a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/97dd0d601688e4f11638546571b2f6b1b1e0bb72" target="_blank">97dd0d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e7e5ff13551764418ca9e31dc07405c77598f6f9" target="_blank">e7e5ff1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,7 +619,12 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/analysis_this_study.Rmd
+    Deleted:    analysis/mapping_cant_calculation.Rmd
+    Deleted:    analysis/mapping_cstar_calculation.Rmd
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -658,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7e5ff13551764418ca9e31dc07405c77598f6f9/analysis/config_parameterization_local.Rmd" target="_blank">e7e5ff1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+rebuild with eMLR target variable selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/953caf387bb0c413ef0d7b3946a2c756b0c227ed/docs/config_parameterization_local.html" target="_blank">953caf3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1633,6 +1672,8 @@ params_local &lt;-
     era_breaks = c(1981, 1999, 2012, Inf),
     # ID for basins for MLR fits
     MLR_basins = &quot;AIP&quot;,
+    # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
+    MLR_target = &quot;cstar_tref&quot;,
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
@@ -1656,7 +1697,7 @@ params_local &lt;-
     # Preindustrial atmospheric pCO2
     preind_atm_pCO2 = 280,
     # generate a high number of diagnostic plots while running the analysis (y/n)
-    plot_all_figures = &quot;y&quot;
+    plot_all_figures = &quot;n&quot;
   )</code></pre>
 </div>
 <div id="write-file" class="section level1">
