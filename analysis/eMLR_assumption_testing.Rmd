@@ -99,14 +99,8 @@ print(
 GLODAP %>% 
   filter(basin == i_basin) %>% 
   sample_frac(0.05) %>% 
-  ggpairs(columns = c("cstar",
-                      "sal",
-                      "temp",
-                      "aou",
-                      "oxygen",
-                      "silicate",
-                      "phosphate",
-                      "phosphate_star"),
+  ggpairs(columns = c(params_local$MLR_target,
+                      params_local$MLR_predictors),
           upper = "blank",
           ggplot2::aes(col = gamma_slab, fill = gamma_slab, alpha = 0.01)) +
       scale_fill_viridis_d(direction = -1) +
@@ -147,16 +141,8 @@ for (i_basin in unique(GLODAP$basin)) {
       
       p <- GLODAP_highlight %>%
         ggpairs(
-          columns = c(
-            "cstar",
-            "sal",
-            "temp",
-            "aou",
-            "oxygen",
-            "silicate",
-            "phosphate",
-            "phosphate_star"
-          ),
+          columns = c(params_local$MLR_target,
+                      params_local$MLR_predictors),
           ggplot2::aes(
             col = gamma_highlight,
             fill = gamma_highlight,
@@ -227,20 +213,14 @@ for (i_basin in unique(GLODAP$basin)) {
 print(i_basin)
 print(i_era)
 
-GLODAP_basin_era <- GLODAP %>% 
+GLODAP_basin_era <- GLODAP %>%
   filter(basin == i_basin,
-         era == i_era) %>% 
+         era == i_era) %>%
   select(basin,
          era,
          gamma_slab,
-         cstar,
-         sal,
-         temp,
-         aou,
-         oxygen,
-         silicate,
-         phosphate,
-         phosphate_star)
+         params_local$MLR_target,
+         params_local$MLR_predictors)
 
 for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   
@@ -250,20 +230,20 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   GLODAP_basin_era_slab <- GLODAP_basin_era %>%
     filter(gamma_slab == i_gamma_slab)
 
-  cor_cstar_predictor_temp <- GLODAP_basin_era_slab %>% 
+  cor_target_predictor_temp <- GLODAP_basin_era_slab %>% 
     select(-c(basin, era, gamma_slab)) %>% 
     correlate() %>% 
-    focus(cstar) %>% 
+    focus(params_local$MLR_target) %>% 
     mutate(basin = i_basin,
        era = i_era,
        gamma_slab = i_gamma_slab)
   
-  if (exists("cor_cstar_predictor")) {
-        cor_cstar_predictor <- bind_rows(cor_cstar_predictor, cor_cstar_predictor_temp)
+  if (exists("cor_target_predictor")) {
+        cor_target_predictor <- bind_rows(cor_target_predictor, cor_target_predictor_temp)
       }
       
-    if (!exists("cor_cstar_predictor")) {
-        cor_cstar_predictor <- cor_cstar_predictor_temp
+    if (!exists("cor_target_predictor")) {
+        cor_target_predictor <- cor_target_predictor_temp
     }
   
   
@@ -273,8 +253,8 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
     shave %>% 
     stretch() %>% 
     filter(!is.na(r),
-           x != "cstar",
-           y != "cstar") %>% 
+           x != params_local$MLR_target,
+           y != params_local$MLR_target) %>% 
     mutate(pair = paste(x, y, sep = " + ")) %>% 
     select(-c(x, y)) %>% 
     mutate(basin = i_basin,
@@ -295,7 +275,7 @@ for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
   }
 }
 
-rm(cor_predictors_temp, cor_cstar_predictor_temp,
+rm(cor_predictors_temp, cor_target_predictor_temp,
    i_gamma_slab, i_era, i_basin,
    GLODAP_basin_era, GLODAP_basin_era_slab)
 
@@ -343,17 +323,16 @@ Below, the range of correlations coefficients for C* with each predictor is plot
 
 ```{r correlation_predictors, fig.asp=1.5}
 
-cor_cstar_predictor <- cor_cstar_predictor %>% 
+cor_target_predictor <- cor_target_predictor %>% 
   rename(predictor = term)
 
-cor_cstar_predictor_stats <- cor_cstar_predictor %>% 
+cor_target_predictor_stats <- cor_target_predictor %>%
+  select(-era) %>% 
   group_by(predictor, basin, gamma_slab) %>% 
-  summarise(mean_r = mean(cstar),
-            min_r = min(cstar),
-            max_r = max(cstar)) %>% 
+  summarise_all(list(mean_r = mean, min_r = min, max_r = max)) %>% 
   ungroup()
 
-cor_cstar_predictor_stats %>% 
+cor_target_predictor_stats %>% 
   mutate(predictor = reorder(predictor, mean_r)) %>%
   ggplot() +
   geom_vline(xintercept = c(-0.9, 0.9), col = "red") +
@@ -366,12 +345,12 @@ cor_cstar_predictor_stats %>%
   labs(x = "correlation coefficient", y = "C* correlation with...") +
   theme(legend.position = "top")
 
-kable(cor_cstar_predictor_stats) %>%
+kable(cor_target_predictor_stats) %>%
   add_header_above() %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "400px")
 
-rm(cor_cstar_predictor, cor_cstar_predictor_stats)
+rm(cor_target_predictor, cor_target_predictor_stats)
 
 ```
 

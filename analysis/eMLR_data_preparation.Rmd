@@ -367,10 +367,6 @@ for (i_var in c("tco2",
 
 rm(lat_section, GLODAP_cruise)
 
-# remove columns not required for further analysis
-GLODAP <- GLODAP %>% 
-  select(-c(rCP_phosphate:cstar, cant_pos:cstar_tref_delta))
-
 ```
 
 
@@ -699,17 +695,31 @@ rm(map_plot,
 
 ```{r write_csv_GLODAP_used_for_fitting}
 
-# rename the cstar variable,
-# in scripts downstrea from here, we refer to cstar as the value adjusted to the reference year
-GLODAP <- GLODAP %>% 
-  rename(cstar = cstar_tref)
+# select relevant columns
+GLODAP <- GLODAP %>%
+  select(
+    year,
+    date,
+    era,
+    basin,
+    basin_AIP,
+    lat,
+    lon,
+    depth,
+    gamma,
+    gamma_slab,
+    params_local$MLR_predictors,
+    params_local$MLR_target
+  )
 
-GLODAP %>% write_csv(paste(path_version_data,
-                             "GLODAPv2.2020_MLR_fitting_ready.csv",
-                             sep = ""))
+GLODAP %>% write_csv(paste(
+  path_version_data,
+  "GLODAPv2.2020_MLR_fitting_ready.csv",
+  sep = ""
+))
 
 co2_atm_tref %>%  write_csv(paste(path_version_data,
-                             "co2_atm_tref.csv",
-                             sep = ""))
+                                  "co2_atm_tref.csv",
+                                  sep = ""))
 
 ```
