@@ -92,16 +92,16 @@ C* estimates from this study:
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 
-```{r read_cstar_files}
+```{r read_target_files}
 
-cstar_3d <-
+target_3d <-
   read_csv(paste(path_version_data,
-                 "cstar_3d.csv",
+                 "target_3d.csv",
                  sep = ""))
 
-cstar_zonal <-
+target_zonal <-
   read_csv(paste(path_version_data,
-                 "cstar_zonal.csv",
+                 "target_zonal.csv",
                  sep = ""))
 
 
@@ -579,21 +579,21 @@ rm(GLODAP_obs_coverage)
 
 ```
 
-# C*
+# Target variable
+
+The predicted target variable (either tco2, cstar or cstar_tref) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.
 
 ## Zonal mean sections
 
-```{r cstar_zonal_mean_era}
-
-# cstar_zonal <- cstar_zonal %>% 
-#     mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era"))) 
+```{r target_zonal_mean_era}
 
 slab_breaks <- c(params_local$slabs_Atl[1:12],Inf)
 
-cstar_zonal %>% 
-    ggplot(aes(lat, depth, z = cstar_mean)) +
+target_zonal %>% 
+    ggplot(aes(lat, depth,
+               z = !!sym(paste(params_local$MLR_target, "mean", sep = "_")))) +
     geom_contour_filled(bins = 11) +
-    scale_fill_viridis_d(name = "cstar") +
+    scale_fill_viridis_d(name = params_local$MLR_target) +
     geom_contour(aes(lat, depth, z = gamma_mean),
                  breaks = slab_breaks,
                  col = "white") +
