@@ -111,7 +111,7 @@ for (i_basin in unique(GLODAP$basin)) {
 
       # fit the full linear model, i.e. all predictor combinations
       lm_full <- lm(
-        paste("cstar",
+        paste(params_local$MLR_target,
               paste(params_local$MLR_predictors, collapse = " + "),
               sep = " ~ "),
         data = GLODAP_basin_era_slab)
@@ -308,7 +308,7 @@ After selecting `r params_local$MLR_number` linear regression models with lowest
 # format model formula
 lm_best <- lm_best %>% 
   mutate(lm_coeff = str_replace_all(predictors, " ", " + "),
-         lm_coeff = paste("cstar ~", lm_coeff))
+         lm_coeff = paste(params_local$MLR_target, "~", lm_coeff))
 
 
 # create table with two era belonging to one eras
@@ -403,7 +403,7 @@ for (i_basin in unique(GLODAP$basin)) {
           
           p_model <- ggnostic(
             lm_fit_single,
-            columnsY = c("cstar", ".fitted", ".resid"),
+            columnsY = c(params_local$MLR_target, ".fitted", ".resid"),
             title = paste("eras:", i_eras,
                           "| era:", i_era,
                           "| basin:", i_basin,
@@ -501,7 +501,7 @@ lm_all_stats %>%
 
 ## Prepare coeffcients
 
-Coefficients are prepared for the mapping of cstar and cant.
+Coefficients are prepared for the mapping of Cant and the target variable.
 
 ```{r prepare_model_coefficients_for_mapping}
 
@@ -515,8 +515,8 @@ lm_all <- lm_all %>%
   mutate(estimate = if_else(is.na(estimate), 0, estimate))
 
 
-# Prepare model coefficients for mapping of cstar
-lm_all_cstar <- lm_all %>% 
+# Prepare model coefficients for mapping of target variable
+lm_all_target <- lm_all %>% 
   pivot_wider(values_from = estimate,
               names_from = term,
               names_prefix = "coeff_",
@@ -548,8 +548,8 @@ lm_all_cant <- lm_all_long %>%
 
 ```{r write_model_coefficients_files}
 
-lm_all_cstar %>% write_csv(paste(path_version_data,
-                                      "lm_all_cstar.csv",
+lm_all_target %>% write_csv(paste(path_version_data,
+                                      "lm_all_target.csv",
                                       sep = ""))
 
 lm_all_cant %>% write_csv(paste(path_version_data,
