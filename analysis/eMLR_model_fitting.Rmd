@@ -82,113 +82,210 @@ GLODAP <-
 
 Individual linear regression models were fitted for C* as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. The root mean squared error (RMSE) was calculated for each fitted model.
 
-```{r eMLR_fitting_all_predictor_combinations, results='hide'}
+```{r eMLR_find_all_predictor_combinations, results='hide'}
 
+i_basin <- unique(GLODAP$basin)[1]
+i_era   <- unique(GLODAP$era)[1]
 
-# loops across all basins and eras
-for (i_basin in unique(GLODAP$basin)) {
-  for (i_era in unique(GLODAP$era)) {
-    
-    # i_basin <- unique(GLODAP$basin)[1]
-    # i_era   <- unique(GLODAP$era)[1]
-    
-    print(i_basin) 
-    print(i_era  )
-    
-    # subset one basin and era for fitting
-    GLODAP_basin_era <- GLODAP %>%
-      filter(basin == i_basin, era == i_era)
-    
-    # loop across all gamma slabs in the current basin and era
-    for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
+# subset one basin and era for fitting
+GLODAP_basin_era <- GLODAP %>%
+  filter(basin == i_basin, era == i_era)
 
-      # i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
-      print(i_gamma_slab)
-      
-      # subset one gamma slab
-      GLODAP_basin_era_slab <- GLODAP_basin_era %>% 
-        filter(gamma_slab == i_gamma_slab)
+i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
+print(i_gamma_slab)
 
-      # fit the full linear model, i.e. all predictor combinations
-      lm_full <- lm(
-        paste(params_local$MLR_target,
-              paste(params_local$MLR_predictors, collapse = " + "),
-              sep = " ~ "),
-        data = GLODAP_basin_era_slab)
+# subset one gamma slab
+GLODAP_basin_era_slab <- GLODAP_basin_era %>%
+  filter(gamma_slab == i_gamma_slab)
 
-      # fit linear models for all possible predictor combinations
-      # unfortunately, this functions does not provide model coefficients (yet)
-      lm_all <- ols_step_all_possible(lm_full)
-      
-      # extract diagnostics of each linear model
-      lm_all <- as_tibble(lm_all$result)
-      
-      # add currect basin, era, and gamma values
-      lm_all <- lm_all %>% 
-        mutate(basin = i_basin,
-               era = i_era,
-               gamma_slab = i_gamma_slab)
-      
-      # expanding table with model diagnostics for all eras, basins, slabs
-      if (exists("lm_all_stats")) {
-        lm_all_stats <- bind_rows(lm_all_stats, lm_all)
-      }
-      
-      if (!exists("lm_all_stats")) {
-        lm_all_stats <- lm_all
-      }
-      
-      rm(lm_full, lm_all)
-      
-    }
-    
-  }
-  
-}
+# fit the full linear model, i.e. all predictor combinations
+lm_full <- lm(paste(
+  params_local$MLR_target,
+  paste(params_local$MLR_predictors, collapse = " + "),
+  sep = " ~ "
+),
+data = GLODAP_basin_era_slab)
 
-# write model diagnostics to file
+# fit linear models for all possible predictor combinations
+# unfortunately, this functions does not provide model coefficients (yet)
+lm_all <- ols_step_all_possible(lm_full)
 
-lm_all_stats %>% write_csv(paste(path_version_data,
-                             "lm_all_stats.csv",
-                             sep = ""))
+# extract diagnostics of each linear model
+lm_all <- as_tibble(lm_all$result)
 
-rm(i_gamma_slab, i_era, i_basin,
-   GLODAP_basin_era, GLODAP_basin_era_slab)
+rm(i_gamma_slab,
+   i_era,
+   i_basin,
+   GLODAP_basin_era,
+   GLODAP_basin_era_slab,
+   lm_full)
 
 ```
 
 RMSE was plotted against the number of predictors (limited to `r params_local$predictors_min` - `r params_local$predictors_max`).
 
-```{r eMLR_predictor_model_quality, fig.asp=2}
+```{r apply_MLR_predictor_threshold}
 
-# lm_all_stats <- read_csv(paste(path_version_data,
-#                                "lm_all_stats.csv",
-#                                sep = ""))
-
-
-lm_all_stats <- lm_all_stats %>% 
+lm_all <- lm_all %>% 
   filter(n >= params_local$predictors_min,
          n <= params_local$predictors_max)
 
-lm_all_stats %>% 
-  ggplot(aes(n, rmse, col = basin)) +
-  geom_hline(yintercept = 10) + 
-  geom_point(shape = 21) +
-  facet_grid(gamma_slab~era) +
-  scale_color_brewer(palette = "Set1")
+```
+
+# Fitting best models
+
+After selecting `r params_local$MLR_number` linear regression models with lowest summed RMSE across all eras, models are fitted again and model coefficients are saved to file.
+
+```{r prepare_models}
+
+# format model formula
+lm_all <- lm_all %>% 
+  select(predictors) %>% 
+  mutate(lm_coeff = str_replace_all(predictors, " ", " + "),
+         lm_coeff = paste(params_local$MLR_target, "~", lm_coeff))
+
 
 ```
 
-## RMSE alternatives
 
-AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
+```{r fit_all_models, results='hide'}
 
-```{r AIC_RMSE, fig.asp=1}
-lm_all_stats %>% 
-  ggplot(aes(rmse, aic, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(era~basin)
+
+# run similar loop as for rmse calculation
+# to get model coefficients for 10 best models
+for (i_basin in unique(GLODAP$basin)) {
+  for (i_era in unique(GLODAP$era)) {
+    # i_basin <- unique(GLODAP$basin)[1]
+    # i_era   <- unique(GLODAP$era)[1]
+    print(i_basin)
+    print(i_era)
+    
+    GLODAP_basin_era <- GLODAP %>%
+      filter(basin == i_basin, era == i_era)
+    
+    for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
+      # i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
+      print(i_gamma_slab)
+      
+      GLODAP_basin_era_slab <- GLODAP_basin_era %>%
+        filter(gamma_slab == i_gamma_slab)
+      
+      for (i_predictors in unique(lm_all$predictors)) {
+        # i_predictors <- unique(lm_all$predictors)[2]
+        print(i_predictors)
+        
+        lm_single <- lm_all %>%
+          filter(predictors == i_predictors) %>%
+          select(lm_coeff) %>%
+          pull()
+        
+        lm_single_formula <- as.formula(lm_single)
+        
+        lm_fit_single <- lm(lm_single_formula,
+                            data = GLODAP_basin_era_slab)
+        
+        # plotting model diagnostics
+        if (params_local$plot_all_figures == "y") {
+          p_model <- ggnostic(
+            lm_fit_single,
+            columnsY = c(params_local$MLR_target, ".fitted", ".resid"),
+            title = paste(
+              "eras:",
+              i_eras,
+              "| era:",
+              i_era,
+              "| basin:",
+              i_basin,
+              "| gamma slab:",
+              i_gamma_slab,
+              "| predictors:",
+              i_predictors
+            )
+          )
+          
+          ggsave(
+            plot = p_model,
+            path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
+            filename = paste(
+              "MLR_residuals",
+              i_eras,
+              i_era,
+              i_basin,
+              i_gamma_slab,
+              i_predictors,
+              "predictors.png",
+              sep = "_"
+            ),
+            width = 14,
+            height = 8
+          )
+          
+          rm(p_model)
+          
+        }
+        
+        i_rmse <-
+          c(crossprod(lm_fit_single$residuals)) / length(lm_fit_single$residuals)
+        
+        # collect model coefficients in data frame
+        coefficients <- tidy(lm_fit_single)
+        coefficients <- coefficients %>%
+          mutate(
+            basin = i_basin,
+            era = i_era,
+            gamma_slab = i_gamma_slab,
+            model = lm_single,
+            rmse = i_rmse
+          )
+        
+        if (exists("lm_all_fitted")) {
+          lm_all_fitted <- bind_rows(lm_all_fitted, coefficients)
+        }
+        
+        if (!exists("lm_all_fitted")) {
+          lm_all_fitted <- coefficients
+        }
+        
+      }
+      
+      
+    }
+  }
+  
+}
+
+rm(lm_fit_single, coefficients, i_rmse,
+   GLODAP_basin_era, GLODAP_basin_era_slab,
+   lm_single, lm_single_formula,
+   i_basin, i_era, i_gamma_slab, i_predictors, lm_all)
+
+
+```
+
+
+
+
+## Prepare coeffcients
+
+Coefficients are prepared for the mapping of Cant and the target variable.
+
+```{r prepare_model_coefficients_for_mapping}
+
+
+# select relevant columns
+lm_all_fitted <- lm_all_fitted %>% 
+  select(basin, gamma_slab, era, model, term, estimate, rmse)
+
+# set coefficient to zero if not fitted (=NA)
+lm_all_fitted <- lm_all_fitted %>% 
+  mutate(estimate = if_else(is.na(estimate), 0, estimate))
+
+# Prepare model coefficients for mapping of target variable
+lm_all_fitted_wide <- lm_all_fitted %>% 
+  pivot_wider(values_from = estimate,
+              names_from = term,
+              names_prefix = "coeff_",
+              values_fill = 0)
 
 ```
 
@@ -199,48 +296,140 @@ Within each basin and slab, the `r params_local$MLR_number` linear regression mo
 
 ```{r predictor_selection}
 
-# select relevant columns
-lm_all_stats <- lm_all_stats %>%
-  select(basin, era, gamma_slab, predictors, rmse)
-
 # calculate RMSE sum for adjacent eras
-lm_all_stats_eras <- lm_all_stats %>%
+lm_all_fitted_wide_eras <- lm_all_fitted_wide  %>%
   arrange(era) %>% 
-  group_by(basin, gamma_slab, predictors) %>% 
+  group_by(basin, gamma_slab, model) %>% 
   mutate(rmse_sum = rmse + lag(rmse),
          eras = paste(lag(era), era, sep = " --> ")) %>% 
   ungroup() %>% 
-  arrange(basin, gamma_slab, predictors, era) %>% 
+  arrange(basin, gamma_slab, model, era) %>% 
   drop_na()
 
 # subset models with lowest RMSE sum
-lm_best <- lm_all_stats_eras %>%
+lm_best <- lm_all_fitted_wide_eras %>%
   group_by(basin, gamma_slab, eras) %>%
   slice_min(order_by = rmse_sum,
             with_ties = FALSE,
             n = params_local$MLR_number) %>%
   ungroup() %>% 
-  arrange(basin, gamma_slab, eras, predictors, era)
+  arrange(basin, gamma_slab, eras, model, era)
 
 # plot table for website
-kable(lm_best) %>%
+lm_best %>% 
+  select(basin, gamma_slab, era, eras, model, rmse, rmse_sum) %>% 
+  kable() %>%
   add_header_above() %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "400px")
 
 ```
 
+
+```{r prepare_model_table}
+
+# create table with two era belonging to one eras
+eras_forward <- lm_all_fitted_wide %>%
+  arrange(era) %>% 
+  group_by(basin, gamma_slab, model) %>% 
+  mutate(eras = paste(era, lead(era), sep = " --> ")) %>% 
+  ungroup() %>% 
+  select(era, eras) %>% 
+  unique()
+
+eras_backward <- lm_all_fitted_wide %>%
+  arrange(era) %>% 
+  group_by(basin, gamma_slab, model) %>% 
+  mutate(eras = paste(lag(era), era, sep = " --> ")) %>% 
+  ungroup() %>% 
+  select(era, eras) %>% 
+  unique()
+
+eras_era <- full_join(eras_backward, eras_forward) %>% 
+  filter(str_detect(eras, "NA") == FALSE)
+
+# extend best model selection from eras to era
+lm_best <- lm_best %>% 
+  select(basin, gamma_slab, model, eras)
+
+lm_best <- full_join(lm_best, eras_era)
+lm_all_target <- left_join(lm_best, lm_all_fitted_wide)
+
+rm(eras_era, eras_forward, eras_backward,
+   lm_all_fitted, lm_all_fitted_wide, lm_all_fitted_wide_eras)
+
+
+```
+
+```{r prepare_delta_coefficients_for_cant_mapping}
+
+
+# Prepare model coefficients differences for mapping of cant
+# this requires to subtract coefficients of adjacent era
+
+
+lm_best_long <- lm_all_target %>%
+  pivot_longer(`coeff_(Intercept)`:coeff_oxygen,
+               names_to = "term",
+               values_to = "estimate",
+               names_prefix = "coeff_")
+
+  
+lm_best_long <- lm_best_long %>%
+  arrange(era) %>%
+  group_by(basin, gamma_slab, eras, model, term) %>%
+  mutate(delta_coeff = estimate - lag(estimate)) %>%
+  ungroup() %>%
+  arrange(basin, gamma_slab, model, term, eras) %>%
+  drop_na() %>%
+  select(-c(era,estimate))
+
+
+lm_all_cant <- lm_best_long %>%
+  pivot_wider(values_from = delta_coeff,
+              names_from = term,
+              names_prefix = "delta_coeff_",
+              values_fill = 0)
+
+```
+
+
+## Write files
+
+```{r write_model_coefficients_files}
+
+lm_all_target %>%
+  select(-rmse) %>%
+  write_csv(paste(path_version_data,
+                  "lm_all_target.csv",
+                  sep = ""))
+
+lm_all_cant %>%
+  select(-rmse) %>%
+  write_csv(paste(path_version_data,
+                  "lm_all_cant.csv",
+                  sep = ""))
+
+
+```
+
+
+
+
+
+
+
 ## Correlations RMSE between eras
 
 ### All models
 
-```{r rmse_correlation_across_eras_all_models}
+```{r rmse_correlation_across_eras_all_models, eval=FALSE}
 
 max_rmse <-
-  max(c(lm_all_stats_eras$rmse,
-        lm_all_stats_eras$rmse_sum - lm_all_stats_eras$rmse))
+  max(c(lm_all_fitted_wide_eras$rmse,
+        lm_all_fitted_wide_eras$rmse_sum - lm_all_fitted_wide_eras$rmse))
 
-lm_all_stats_eras %>%
+lm_all_fitted_wide_eras %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -255,7 +444,7 @@ rm(max_rmse)
 
 ### Best models
 
-```{r rmse_correlation_across_eras_10_models}
+```{r rmse_correlation_across_eras_10_models, eval=FALSE}
 
 max_rmse <-
   max(c(lm_best$rmse,
@@ -272,6 +461,69 @@ lm_best %>%
 rm(max_rmse)
 ```
 
+
+
+
+
+```{r eMLR_predictor_model_quality, fig.asp=2, eval=FALSE}
+
+lm_all_stats <- lm_all %>% 
+  group_by(basin, gamma_slab, era, model) %>% 
+  summarise(n = n(),
+            rmse = mean(rmse)) %>% 
+  ungroup()
+
+lm_all_stats %>%
+  ggplot(aes(n, rmse, col = basin)) +
+  geom_hline(yintercept = 10) +
+  geom_point(shape = 21) +
+  facet_grid(gamma_slab~era) +
+  scale_color_brewer(palette = "Set1")
+
+```
+
+
+
+
+## Predictor counts
+
+The number of models where a particular predictor was included were counted for each basin, density slab and compared eras
+
+```{r predictor_counts, eval=FALSE}
+
+lm_all_stats <- lm_all %>% 
+  filter(term != "(Intercept)") %>% 
+  group_by(basin, eras, gamma_slab) %>% 
+  count(term) %>% 
+  ungroup() %>% 
+  pivot_wider(values_from = n, names_from = term)
+
+
+lm_all_stats %>%
+  gt(rowname_col = "gamma_slab",
+     groupname_col = c("basin")) %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+```
+
+
+
+
+## RMSE alternatives
+
+AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
+
+```{r AIC_RMSE, eval=FALSE ,fig.asp=1}
+lm_all_stats %>% 
+  ggplot(aes(rmse, aic, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(era~basin)
+
+```
 
 
 ```{r test_rmse_output, eval=FALSE}
@@ -296,268 +548,5 @@ sqrt(mean(lm_1$residuals^2))
 sqrt(mean(lm_2$residuals^2))
 
 ```
-
-
-
-# Fitting best models
-
-After selecting `r params_local$MLR_number` linear regression models with lowest summed RMSE across all eras, models are fitted again and model coefficients are saved to file.
-
-```{r prepare_model_table}
-
-# format model formula
-lm_best <- lm_best %>% 
-  mutate(lm_coeff = str_replace_all(predictors, " ", " + "),
-         lm_coeff = paste(params_local$MLR_target, "~", lm_coeff))
-
-
-# create table with two era belonging to one eras
-eras_forward <- lm_all_stats %>%
-  arrange(era) %>% 
-  group_by(basin, gamma_slab, predictors) %>% 
-  mutate(eras = paste(era, lead(era), sep = " --> ")) %>% 
-  ungroup() %>% 
-  select(era, eras) %>% 
-  unique()
-
-eras_backward <- lm_all_stats %>%
-  arrange(era) %>% 
-  group_by(basin, gamma_slab, predictors) %>% 
-  mutate(eras = paste(lag(era), era, sep = " --> ")) %>% 
-  ungroup() %>% 
-  select(era, eras) %>% 
-  unique()
-
-eras_era <- full_join(eras_backward, eras_forward) %>% 
-  filter(str_detect(eras, "NA") == FALSE)
-
-# extend best model selection from eras to era
-lm_best <- lm_best %>% 
-  select(-era)
-
-lm_best <- full_join(lm_best, eras_era)
-rm(eras_era, eras_forward, eras_backward, lm_all_stats, lm_all_stats_eras)
-
-```
-
-
-```{r fit_best_models, results='hide'}
-
-# select required columns
-lm_best <- lm_best %>% 
-  select(basin, gamma_slab, era, eras, predictors, lm_coeff, rmse_sum)
-
-# run similar loop as for rmse calculation
-# to get model coefficients for 10 best models
-for (i_basin in unique(GLODAP$basin)) {
-  for (i_era in unique(GLODAP$era)) {
-    # i_basin <- unique(GLODAP$basin)[1]
-    # i_era   <- unique(GLODAP$era)[1]
-    
-    print(i_basin)
-    print(i_era)
-    
-    GLODAP_basin_era <- GLODAP %>%
-      filter(basin == i_basin, era == i_era)
-    
-    lm_best_basin_era <- lm_best %>%
-      filter(basin == i_basin, era == i_era)
-    
-    for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
-      # i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
-      print(i_gamma_slab)
-      
-      GLODAP_basin_era_slab <- GLODAP_basin_era %>%
-        filter(gamma_slab == i_gamma_slab)
-      
-      lm_best_basin_era_slab <- lm_best_basin_era %>%
-        filter(gamma_slab == i_gamma_slab)
-      
-      for (i_eras in unique(lm_best_basin_era_slab$eras)) {
-        # i_eras <- unique(lm_best_basin_era_slab$eras)[1]
-        lm_best_basin_era_slab_eras <- lm_best_basin_era_slab %>%
-          filter(eras == i_eras)
-        
-        for (i_predictors in unique(lm_best_basin_era_slab_eras$predictors)) {
-          # i_predictors <- unique(lm_best_basin_era_slab_eras$predictors)[2]
-          print(i_predictors)
-          
-          lm_best_single <- lm_best_basin_era_slab_eras %>%
-            filter(predictors == i_predictors) %>%
-            select(lm_coeff) %>%
-            pull()
-          
-          i_rmse_sum <- lm_best_basin_era_slab_eras %>%
-            filter(predictors == i_predictors) %>%
-            select(rmse_sum) %>%
-            pull()
-          
-          lm_best_single_formula <- as.formula(lm_best_single)
-          
-          lm_fit_single <- lm(lm_best_single_formula,
-                              data = GLODAP_basin_era_slab)
-          
-
-          # plotting model diagnostics
-          if (params_local$plot_all_figures == "y") {
-          
-          p_model <- ggnostic(
-            lm_fit_single,
-            columnsY = c(params_local$MLR_target, ".fitted", ".resid"),
-            title = paste("eras:", i_eras,
-                          "| era:", i_era,
-                          "| basin:", i_basin,
-                          "| gamma slab:", i_gamma_slab,
-                          "| predictors:", i_predictors)
-          )
-
-          ggsave(
-            plot = p_model,
-            path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
-            filename = paste(
-              "MLR_residuals",
-              i_eras,
-              i_era,
-              i_basin,
-              i_gamma_slab,
-              i_predictors,
-              "predictors.png",
-              sep = "_"
-          ),
-          width = 14,
-          height = 8
-          )
-          
-          rm(p_model)
-          
-          }
-
-          # collect model coefficients in data frame
-          coefficients <- tidy(lm_fit_single)
-          coefficients <- coefficients %>%
-            mutate(
-              basin = i_basin,
-              era = i_era,
-              eras = i_eras,
-              gamma_slab = i_gamma_slab,
-              model = lm_best_single,
-              rmse = i_rmse_sum
-            )
-          
-          if (exists("lm_all")) {
-            lm_all <- bind_rows(lm_all, coefficients)
-          }
-          
-          if (!exists("lm_all")) {
-            lm_all <- coefficients
-          }
-          
-        }
-        
-        
-      }
-    }
-    
-  }
-  
-}
-
-
-rm(lm_fit_single, coefficients, i_rmse_sum,
-   GLODAP_basin_era, GLODAP_basin_era_slab,
-   lm_best, lm_best_basin_era, lm_best_basin_era_slab, lm_best_basin_era_slab_eras,
-   lm_best_single, lm_best_single_formula,
-   i_basin, i_era, i_gamma_slab, i_predictors)
-
-
-```
-
-## Predictor counts
-
-The number of models where a particular predictor was included were counted for each basin, density slab and compared eras
-
-```{r predictor_counts}
-
-lm_all_stats <- lm_all %>% 
-  filter(term != "(Intercept)") %>% 
-  group_by(basin, eras, gamma_slab) %>% 
-  count(term) %>% 
-  ungroup() %>% 
-  pivot_wider(values_from = n, names_from = term)
-
-
-lm_all_stats %>%
-  gt(rowname_col = "gamma_slab",
-     groupname_col = c("basin", "eras")) %>% 
-  summary_rows(
-    groups = TRUE,
-    fns = list(total = "sum")
-  )
-
-```
-
-
-
-
-## Prepare coeffcients
-
-Coefficients are prepared for the mapping of Cant and the target variable.
-
-```{r prepare_model_coefficients_for_mapping}
-
-
-# select relevant columns
-lm_all <- lm_all %>% 
-  select(basin, gamma_slab, era, eras, model, term, estimate)
-
-# set coefficient to zero if not fitted (=NA)
-lm_all <- lm_all %>% 
-  mutate(estimate = if_else(is.na(estimate), 0, estimate))
-
-
-# Prepare model coefficients for mapping of target variable
-lm_all_target <- lm_all %>% 
-  pivot_wider(values_from = estimate,
-              names_from = term,
-              names_prefix = "coeff_",
-              values_fill = 0)
-
-
-# Prepare model coefficients differences for mapping of cant
-# this requires to subtract coefficients of adjacent era
-lm_all_long <- lm_all %>% 
-  arrange(era) %>% 
-  group_by(basin, gamma_slab, eras, model, term) %>% 
-  mutate(delta_coeff = estimate - lag(estimate)) %>% 
-  ungroup() %>% 
-  arrange(basin, gamma_slab, model, term, eras) %>% 
-  drop_na() %>% 
-  select(-c(era,estimate))
-
-
-lm_all_cant <- lm_all_long %>%
-  pivot_wider(values_from = delta_coeff,
-              names_from = term,
-              names_prefix = "delta_coeff_",
-              values_fill = 0)
-
-```
-
-
-## Write files
-
-```{r write_model_coefficients_files}
-
-lm_all_target %>% write_csv(paste(path_version_data,
-                                      "lm_all_target.csv",
-                                      sep = ""))
-
-lm_all_cant %>% write_csv(paste(path_version_data,
-                                      "lm_all_cant.csv",
-                                      sep = ""))
-
-
-```
-
 
 
