@@ -76,9 +76,9 @@ GLODAP <-
 
 # Predictor combinations
 
-Find all possible combinations of following cosidered predictor variables:
+Find all possible combinations of following cosidered predictor variables:  
 
-`r params_local$MLR_predictors`
+- `r params_local$MLR_predictors`
 
 ```{r eMLR_find_all_predictor_combinations, results='hide'}
 
@@ -144,7 +144,7 @@ lm_all <- lm_all %>%
 
 This results in a total number of MLR models of:  
 
-`r nrow(lm_all)`
+- `r nrow(lm_all)`
 
 # Fitting all models
 
@@ -312,9 +312,15 @@ lm_all_fitted_wide <- lm_all_fitted %>%
 
 ## Predictor selection
 
-Within each basin and slab, linear regression models with lowest summed RMSE across two adjacent (ie compared) eras were selected. The number of selected models is:  
+Within each basin and slab, the following number of best linear regression models was selected:  
 
 - `r params_local$MLR_number`
+
+The criterion used to select the best models was:
+
+- `r params_local$MLR_criterion`
+
+The criterion was summed up for two adjecent eras, and the models with lowest summed values were selected.
 
 Please note, that currently the `lm()` function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Regardless, models with the lowest summed rmse are selected, which means that identical models are included in the seletion.
 
@@ -322,24 +328,38 @@ Please note, that currently the `lm()` function produces NAs for some predictors
 
 # calculate RMSE sum for adjacent eras
 lm_all_fitted_wide_eras <- lm_all_fitted_wide  %>%
-  select(basin, gamma_slab, model, era, rmse, aic) %>% 
+  select(basin, gamma_slab, model, era, rmse, aic, resid_max) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
          rmse_sum = rmse + lag(rmse),
+         aic_sum = aic + lag(aic)
          ) %>% 
   ungroup() %>% 
   select(-c(era)) %>% 
   drop_na()
 
-# subset models with lowest RMSE sum
-lm_best <- lm_all_fitted_wide_eras %>%
-  group_by(basin, gamma_slab, eras) %>%
-  slice_min(order_by = rmse_sum,
-            with_ties = FALSE,
-            n = params_local$MLR_number) %>%
-  ungroup() %>% 
-  arrange(basin, gamma_slab, eras, model)
+# subset models with lowest summed criterion
+
+
+if (params_local$MLR_criterion == "aic") {
+  lm_best <- lm_all_fitted_wide_eras %>%
+    group_by(basin, gamma_slab, eras) %>%
+    slice_min(order_by = aic_sum,
+              with_ties = FALSE,
+              n = params_local$MLR_number) %>%
+    ungroup() %>%
+    arrange(basin, gamma_slab, eras, model)
+} else {
+  lm_best <- lm_all_fitted_wide_eras %>%
+    group_by(basin, gamma_slab, eras) %>%
+    slice_min(order_by = rmse_sum,
+              with_ties = FALSE,
+              n = params_local$MLR_number) %>%
+    ungroup() %>%
+    arrange(basin, gamma_slab, eras, model)
+}
+
 
 # plot table for website
 lm_best %>% 
@@ -454,16 +474,18 @@ lm_best_cant %>%
 ```
 
 
-## RMSE vs predictors
+## Selction criterion vs predictors
 
-RMSE was plotted against the number of predictors (limited to `r params_local$predictors_min` - `r params_local$predictors_max`).
+The selection criterion (`r params_local$MLR_criterion`) was plotted against the number of predictors (limited to `r params_local$predictors_min` - `r params_local$predictors_max`).
 
 ### All models
 
 ```{r eMLR_predictor_model_quality_all, fig.asp=2}
 
 lm_all_fitted_wide %>%
-  ggplot(aes(as.factor(n_predictors), rmse, col = basin)) +
+  ggplot(aes(as.factor(n_predictors),
+             !!sym(params_local$MLR_criterion),
+             col = basin)) +
   geom_hline(yintercept = 10) +
   geom_boxplot() +
   facet_grid(gamma_slab~era) +
@@ -477,7 +499,9 @@ lm_all_fitted_wide %>%
 ```{r eMLR_predictor_model_quality_best, fig.asp=2}
 
 lm_best_target %>%
-  ggplot(aes("", rmse, col = basin)) +
+  ggplot(aes("",
+             !!sym(params_local$MLR_criterion),
+             col = basin)) +
   geom_hline(yintercept = 10) +
   geom_boxplot() +
   facet_grid(gamma_slab~era) +
@@ -512,7 +536,7 @@ rm(max_rmse)
 
 ### Best models
 
-```{r rmse_correlation_across_eras_10_models, eval=FALSE}
+```{r rmse_correlation_across_eras_best_models}
 
 max_rmse <-
   max(c(lm_best$rmse,
