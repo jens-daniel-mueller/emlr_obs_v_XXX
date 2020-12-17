@@ -76,6 +76,10 @@ GLODAP <-
 
 # Predictor combinations
 
+Find all possible combinations of following cosidered predictor variables:
+
+`r params_local$MLR_predictors`
+
 ```{r eMLR_find_all_predictor_combinations, results='hide'}
 
 i_basin <- unique(GLODAP$basin)[1]
@@ -107,6 +111,13 @@ lm_all <- ols_step_all_possible(lm_full)
 # extract diagnostics of each linear model
 lm_all <- as_tibble(lm_all$result)
 
+# format model formula
+lm_all <- lm_all %>% 
+  select(n, predictors) %>% 
+  mutate(lm_coeff = str_replace_all(predictors, " ", " + "),
+         lm_coeff = paste(params_local$MLR_target, "~", lm_coeff))
+
+# remove helper objects
 rm(i_gamma_slab,
    i_era,
    i_basin,
@@ -118,6 +129,11 @@ rm(i_gamma_slab,
 
 # Apply predictor threshold
 
+Select combinations with a total number of predictors in the range:  
+
+- Minimum: `r params_local$predictors_min`  
+- Maximum: `r params_local$predictors_max`
+
 ```{r apply_MLR_predictor_threshold}
 
 lm_all <- lm_all %>% 
@@ -126,20 +142,15 @@ lm_all <- lm_all %>%
 
 ```
 
+This results in a total number of MLR models of:  
+
+`r nrow(lm_all)`
 
 # Fitting all models
 
-Individual linear regression models were fitted for C* as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. The root mean squared error (RMSE) was calculated for each fitted model.
-
-
+Individual linear regression models were fitted for the chosen target variable `r params_local$MLR_target` as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE) was calculated for each fitted model.
 
 ```{r fit_all_models, results='hide'}
-
-# format model formula
-lm_all <- lm_all %>% 
-  select(n, predictors) %>% 
-  mutate(lm_coeff = str_replace_all(predictors, " ", " + "),
-         lm_coeff = paste(params_local$MLR_target, "~", lm_coeff))
 
 # loop across all basins, era, gamma slabs, and MLRs
 # fit all MLR models
@@ -263,7 +274,9 @@ for (i_basin in unique(GLODAP$basin)) {
 rm(i_lm_fit, coefficients, i_rmse,
    GLODAP_basin_era, GLODAP_basin_era_slab,
    i_lm,
-   i_basin, i_era, i_gamma_slab, i_predictors, lm_all)
+   i_basin, i_era, i_gamma_slab, i_predictors,
+   lm_all,
+   i_aic, i_n_predictors, i_resid_max)
 
 
 ```
@@ -271,7 +284,7 @@ rm(i_lm_fit, coefficients, i_rmse,
 
 # Prepare coeffcients
 
-Coefficients are prepared for the mapping of Cant and the target variable.
+Coefficients are prepared for the mapping of Cant and the chosen target variable.
 
 ## Formatting
 
@@ -299,18 +312,24 @@ lm_all_fitted_wide <- lm_all_fitted %>%
 
 ## Predictor selection
 
-Within each basin and slab, the `r params_local$MLR_number` linear regression models with lowest summed RMSE across two adjacent (ie compared) eras were selected.
+Within each basin and slab, linear regression models with lowest summed RMSE across two adjacent (ie compared) eras were selected. The number of selected models is:  
+
+- `r params_local$MLR_number`
+
+Please note, that currently the `lm()` function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Regardless, models with the lowest summed rmse are selected, which means that identical models are included in the seletion.
 
 ```{r predictor_selection}
 
 # calculate RMSE sum for adjacent eras
 lm_all_fitted_wide_eras <- lm_all_fitted_wide  %>%
+  select(basin, gamma_slab, model, era, rmse, aic) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
-  mutate(rmse_sum = rmse + lag(rmse),
-         eras = paste(lag(era), era, sep = " --> ")) %>% 
+  mutate(eras = paste(lag(era), era, sep = " --> "),
+         rmse_sum = rmse + lag(rmse),
+         ) %>% 
   ungroup() %>% 
-  arrange(basin, gamma_slab, model, era) %>% 
+  select(-c(era)) %>% 
   drop_na()
 
 # subset models with lowest RMSE sum
@@ -320,18 +339,16 @@ lm_best <- lm_all_fitted_wide_eras %>%
             with_ties = FALSE,
             n = params_local$MLR_number) %>%
   ungroup() %>% 
-  arrange(basin, gamma_slab, eras, model, era)
+  arrange(basin, gamma_slab, eras, model)
 
 # plot table for website
 lm_best %>% 
-  select(basin, gamma_slab, era, eras, model, rmse, rmse_sum) %>% 
   kable() %>%
   add_header_above() %>%
   kable_styling() %>%
   scroll_box(width = "100%", height = "400px")
 
 ```
-
 
 ## Target variable coefficients
 
@@ -358,33 +375,31 @@ eras_era <- full_join(eras_backward, eras_forward) %>%
   filter(str_detect(eras, "NA") == FALSE)
 
 # extend best model selection from eras to era
-lm_best <- lm_best %>% 
-  select(basin, gamma_slab, model, eras)
+lm_best_target <- full_join(
+  lm_best %>% select(basin, gamma_slab, model, eras),
+  eras_era)
 
-lm_best <- full_join(lm_best, eras_era)
-lm_best_target <- left_join(lm_best, lm_all_fitted_wide)
+lm_best_target <- left_join(lm_best_target, lm_all_fitted_wide)
 
 rm(eras_era, eras_forward, eras_backward,
-   lm_all_fitted, lm_all_fitted_wide_eras)
-
+   lm_all_fitted)
 
 ```
 
 ## Cant coeffcients
 
+Coefficient offsets are calculated to facilitate the direct mapping of Cant.
+
 ```{r prepare_delta_coefficients_for_cant_mapping}
 
-
-# Prepare model coefficients differences for mapping of cant
-# this requires to subtract coefficients of adjacent era
-
+# pivot long format
 lm_best_long <- lm_best_target %>%
   pivot_longer(`coeff_(Intercept)`:coeff_oxygen,
                names_to = "term",
                values_to = "estimate",
                names_prefix = "coeff_")
 
-  
+# subtract coefficients of adjacent era  
 lm_best_long <- lm_best_long %>%
   arrange(era) %>%
   group_by(basin, gamma_slab, eras, model, term) %>%
@@ -394,7 +409,7 @@ lm_best_long <- lm_best_long %>%
   drop_na() %>%
   select(-c(era,estimate))
 
-
+# pivot back to wide format
 lm_best_cant <- lm_best_long %>%
   pivot_wider(values_from = delta_coeff,
               names_from = term,
@@ -409,13 +424,28 @@ lm_best_cant <- lm_best_long %>%
 ```{r write_model_coefficients_files}
 
 lm_best_target %>%
-  select(-rmse) %>%
+  select(
+    basin,
+    gamma_slab,
+    model,
+    eras,
+    era,
+    `coeff_(Intercept)`,
+    paste("coeff", params_local$MLR_predictors, sep = "_")
+  ) %>%
   write_csv(paste(path_version_data,
                   "lm_best_target.csv",
                   sep = ""))
 
 lm_best_cant %>%
-  select(-rmse) %>%
+  select(
+    basin,
+    gamma_slab,
+    model,
+    eras,
+    `delta_coeff_(Intercept)`,
+    paste("delta_coeff", params_local$MLR_predictors, sep = "_")
+  ) %>%
   write_csv(paste(path_version_data,
                   "lm_best_cant.csv",
                   sep = ""))
@@ -433,9 +463,9 @@ RMSE was plotted against the number of predictors (limited to `r params_local$pr
 ```{r eMLR_predictor_model_quality_all, fig.asp=2}
 
 lm_all_fitted_wide %>%
-  ggplot(aes(n_predictors, rmse, col = basin)) +
+  ggplot(aes(as.factor(n_predictors), rmse, col = basin)) +
   geom_hline(yintercept = 10) +
-  geom_point(shape = 21) +
+  geom_boxplot() +
   facet_grid(gamma_slab~era) +
   scale_color_brewer(palette = "Set1")
 
@@ -447,25 +477,21 @@ lm_all_fitted_wide %>%
 ```{r eMLR_predictor_model_quality_best, fig.asp=2}
 
 lm_best_target %>%
-  ggplot(aes(n_predictors, rmse, col = basin)) +
+  ggplot(aes("", rmse, col = basin)) +
   geom_hline(yintercept = 10) +
-  geom_point(shape = 21) +
+  geom_boxplot() +
   facet_grid(gamma_slab~era) +
-  scale_color_brewer(palette = "Set1")
+  scale_color_brewer(palette = "Set1")+
+  labs(x="Number of predictors pooled")
 
 ```
-
-
-
-
-
 
 
 ## RMSE correlation between eras
 
 ### All models
 
-```{r rmse_correlation_across_eras_all_models, eval=FALSE}
+```{r rmse_correlation_across_eras_all_models}
 
 max_rmse <-
   max(c(lm_all_fitted_wide_eras$rmse,
@@ -503,15 +529,15 @@ lm_best %>%
 rm(max_rmse)
 ```
 
-
 ## Predictor counts
 
 The number of models where a particular predictor was included were counted for each basin, density slab and compared eras
 
-```{r predictor_counts, eval=FALSE}
+```{r predictor_counts}
 
-lm_all_stats <- lm_all %>% 
-  filter(term != "(Intercept)") %>% 
+lm_all_stats <- lm_best_long %>% 
+  filter(term != "(Intercept)",
+         delta_coeff != 0) %>% 
   group_by(basin, eras, gamma_slab) %>% 
   count(term) %>% 
   ungroup() %>% 
@@ -520,7 +546,7 @@ lm_all_stats <- lm_all %>%
 
 lm_all_stats %>%
   gt(rowname_col = "gamma_slab",
-     groupname_col = c("basin")) %>% 
+     groupname_col = c("basin", "eras")) %>% 
   summary_rows(
     groups = TRUE,
     fns = list(total = "sum")
@@ -529,18 +555,26 @@ lm_all_stats %>%
 ```
 
 
-
-
 ## RMSE alternatives
 
 AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
-```{r AIC_RMSE, eval=FALSE ,fig.asp=1}
-lm_all_stats %>% 
+```{r aic_vs_rmse_all_models}
+lm_all_fitted_wide_eras %>% 
   ggplot(aes(rmse, aic, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(era~basin)
+  facet_grid(eras~basin)
+
+```
+
+
+```{r aic_vs_rmse_selected_models}
+lm_best %>% 
+  ggplot(aes(rmse, aic, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(eras~basin)
 
 ```
 
