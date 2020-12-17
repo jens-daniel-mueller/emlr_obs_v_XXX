@@ -172,9 +172,8 @@ for (i_basin in unique(GLODAP$basin)) {
         filter(gamma_slab == i_gamma_slab)
       
       for (i_predictors in unique(lm_all$predictors)) {
-        # i_predictors <- unique(lm_all$predictors)[2]
-        # print(i_predictors)
-        
+        # i_predictors <- unique(lm_all$predictors)[110]
+
         # extract one model definition
         i_lm <- lm_all %>%
           filter(predictors == i_predictors) %>%
@@ -206,6 +205,7 @@ for (i_basin in unique(GLODAP$basin)) {
         
         # collect model coefficients and diagnostics
         coefficients <- tidy(i_lm_fit)
+        
         coefficients <- coefficients %>%
           mutate(
             basin = i_basin,
@@ -215,7 +215,8 @@ for (i_basin in unique(GLODAP$basin)) {
             rmse = i_rmse,
             aic = i_aic,
             resid_max = i_resid_max,
-            n_predictors = i_n_predictors
+            n_predictors = i_n_predictors,
+            na_predictor = anyNA(coefficients$estimate)
           )
         
         if (exists("lm_all_fitted")) {
@@ -270,6 +271,9 @@ for (i_basin in unique(GLODAP$basin)) {
   }
   
 }
+
+lm_all_fitted <- lm_all_fitted %>% 
+  filter(na_predictor == FALSE)
 
 rm(i_lm_fit, coefficients, i_rmse,
    GLODAP_basin_era, GLODAP_basin_era_slab,
