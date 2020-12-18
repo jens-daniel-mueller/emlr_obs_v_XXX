@@ -10,18 +10,20 @@ The code in this repository is intended to prepare data sets (either observation
 
 This code was written to be executed within RStudio.
 
-1. Copy the template repository on Github.
-2. Name it according to version.
-3. Activate github pages under settings.
-4. Copy URL in repository description.
-5. Open as new version controlled project in RStudio.
-6. Change the `Version_ID` in:
-  a. config_parameterization_local.Rmd
-  b. _site.yml title
-7. Change others parameters in `config_parameterization_local.Rmd.`
-8. Change link to github repo in _site.yml.
-9. Run the code / build the website. All necessary folders will be created automatically.
-10. Push to github.
+To initiate another sensitivity case, do:
+
+1. Copy the template repository on Github
+2. Name it according to version
+3. Activate github pages under settings
+4. Copy URL in repository description
+5. Open as new version controlled project in RStudio
+6. Change the `Version_ID` in:  
+  - `config_parameterization_local.Rmd`  
+  - `_site.yml` title  
+7. Change others parameters in `config_parameterization_local.Rmd`
+8. Change link to github repo in `_site.yml`
+9. Run the code / build the website. All necessary folders will be created automatically
+10. Push to github
 
 Workflowr comments for steps 9. and 10. can be found under `/code/workflowr_project_managment.R`
 
@@ -30,9 +32,9 @@ Workflowr comments for steps 9. and 10. can be found under `/code/workflowr_proj
 
 The analysis runs with a set of apriori local and global parametrizations.
 
-Global parametrizations (such as plotting options) are shared across all sensitivity cases and are loaded in the setup.Rmd file (see below).
+Global parametrizations (such as plotting options) are shared across all sensitivity cases and are loaded in the `setup.Rmd` file (see below).
 
-Local parametrizations (such as eras, density layers, etc) are valid for one sensitivity case and are defined in the config_parametrization_local.Rmd file.
+Local parametrizations (such as eras, density layers, etc) are valid for one sensitivity case and are defined in the `config_parametrization_local.Rmd` file.
 
 
 ## Sharing code across analysis
