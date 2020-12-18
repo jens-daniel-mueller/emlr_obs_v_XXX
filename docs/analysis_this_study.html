@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9b32a96c6be11d8e09ef6452870d2a9a5fc9b81targetblankc9b32a9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9b32a96c6be11d8e09ef6452870d2a9a5fc9b81" target="_blank">c9b32a9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9b32a96c6be11d8e09ef6452870d2a9a5fc9b81targetblankc9b32a9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9b32a96c6be11d8e09ef6452870d2a9a5fc9b81" target="_blank">c9b32a9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -664,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9b32a96c6be11d8e09ef6452870d2a9a5fc9b81/analysis/analysis_this_study.Rmd" target="_blank">c9b32a9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild after final cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/4d3e354a6eec14c2c0fa9344ded0694bdd3afbb2/docs/analysis_this_study.html" target="_blank">4d3e354</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1455,7 +1489,7 @@ Initial commit
 </div>
 <div id="data-sources" class="section level1">
 <h1><span class="header-section-number">1</span> Data sources</h1>
-<p>Cant estimates from this study:</p>
+<p>Cant estimates from this sensitivity case:</p>
 <ul>
 <li>Mean and SD per grid cell (lat, lon, depth)</li>
 <li>Zonal mean and SD (basin, lat, depth)</li>
@@ -1480,7 +1514,7 @@ cant_inv &lt;-
   read_csv(paste(path_version_data,
                  &quot;cant_inv.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
-<p>C* estimates from this study:</p>
+<p>Target variable (cstar_tref) estimates from this sensitivity case:</p>
 <ul>
 <li>Mean and SD per grid cell (lat, lon, depth)</li>
 <li>Zonal mean and SD (basin, lat, depth)</li>
@@ -1494,7 +1528,7 @@ target_zonal &lt;-
   read_csv(paste(path_version_data,
                  &quot;target_zonal.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
-<p>Cleaned GLODAPv2_2020 file as used in this study</p>
+<p>Cleaned GLODAPv2_2020 file as used in this sensitivity case</p>
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(
     path_version_data,
@@ -1504,7 +1538,7 @@ target_zonal &lt;-
 </div>
 <div id="cant-budgets" class="section level1">
 <h1><span class="header-section-number">2</span> Cant budgets</h1>
-<p>Global Cant inventories were estimated in units of Pg C. Please note that here we only added positive Cant values in the upper m and do not apply additional corrections for areas not covered.</p>
+<p>Global Cant inventories were estimated in units of Pg C. Please note that here we added Cant (all vs postitive only) values and do not apply additional corrections for areas not covered.</p>
 <pre class="r"><code>cant_inv_budget &lt;- cant_inv %&gt;% 
   mutate(surface_area = earth_surf(lat, lon),
          cant_inv_grid = cant_inv*surface_area,
@@ -1517,6 +1551,7 @@ target_zonal &lt;-
   ungroup()</code></pre>
 <div id="standard-depth" class="section level2">
 <h2><span class="header-section-number">2.1</span> Standard depth</h2>
+<p>Results integrated over the upper 3000 m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
   gt(rowname_col = &quot;basin_AIP&quot;,
@@ -1925,6 +1960,7 @@ target_zonal &lt;-
 </div>
 <div id="other-depths" class="section level2">
 <h2><span class="header-section-number">2.2</span> Other depths</h2>
+<p>Results integrated over the upper 100, 500, 1000, 3000, 10^{4} m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth != params_global$inventory_depth_standard) %&gt;% 
   gt(rowname_col = &quot;basin_AIP&quot;,
@@ -2476,7 +2512,7 @@ target_zonal &lt;-
 </div>
 <div id="cant---positive" class="section level1">
 <h1><span class="header-section-number">3</span> Cant - positive</h1>
-<p>In a first series of plots we explore the distribution of cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
+<p>In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
 <div id="zonal-mean-sections" class="section level2">
 <h2><span class="header-section-number">3.1</span> Zonal mean sections</h2>
 <pre class="r"><code># i_basin_AIP &lt;- unique(cant_zonal$basin_AIP)[2]
@@ -12089,7 +12125,7 @@ Jens Müller
 </div>
 <div id="cant---all" class="section level1">
 <h1><span class="header-section-number">4</span> Cant - all</h1>
-<p>In a second series of plots we explore the distribution of cant, taking positive and negative estimates into account.</p>
+<p>In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.</p>
 <div id="zonal-mean-sections-1" class="section level2">
 <h2><span class="header-section-number">4.1</span> Zonal mean sections</h2>
 <pre class="r"><code># i_eras &lt;- unique(cant_zonal$eras)[1]
@@ -13707,7 +13743,7 @@ Jens Müller
 </div>
 <div id="isoneutral-slab-distribution-1" class="section level2">
 <h2><span class="header-section-number">4.2</span> Isoneutral slab distribution</h2>
-<p>Mean of cant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
+<p>Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
 <p>Please note that:</p>
 <ul>
 <li>density slabs covering values &gt;28.1 occur by definition only either in the Atlantic or Indo-Pacific basin</li>
@@ -20661,7 +20697,7 @@ Jens Müller
 </div>
 <div id="inventory-map-1" class="section level2">
 <h2><span class="header-section-number">4.3</span> Inventory map</h2>
-<p>Column inventory of positive cant between the surface and m water depth per horizontal grid cell (lat x lon).</p>
+<p>Column inventory of all Cant between the surface and 3000m water depth per horizontal grid cell (lat x lon).</p>
 <pre class="r"><code># i_eras &lt;- unique(cant_inv$eras)[1]
 
 for (i_eras in unique(cant_inv$eras)) {
@@ -21193,8 +21229,8 @@ Jens Müller
 </div>
 </div>
 </div>
-<div id="cant---standard-deviation" class="section level1">
-<h1><span class="header-section-number">5</span> Cant - standard deviation</h1>
+<div id="cant-variability" class="section level1">
+<h1><span class="header-section-number">5</span> Cant variability</h1>
 <div id="across-models" class="section level2">
 <h2><span class="header-section-number">5.1</span> Across models</h2>
 <p>Standard deviation across Cant from all MLR models was calculate for each grid cell (XYZ). The zonal mean of this standard deviation should reflect the uncertainty associated to the predictor selection within each slab and era.</p>
@@ -21211,7 +21247,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
         var = &quot;cant_sd_mean&quot;,
         gamma = &quot;gamma_mean&quot;,
         legend_title = &quot;sd&quot;,
-        title_text = &quot;Zonal mean section of Cant sd between models&quot;,
+        title_text = &quot;Zonal mean section of SD across models&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| eras:&quot;, i_eras))
     )
@@ -22827,7 +22863,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
         var = &quot;cant_sd&quot;,
         gamma = &quot;gamma_mean&quot;,
         legend_title = &quot;sd&quot;,
-        title_text = &quot;Zonal mean section of sd between model mean Cant&quot;,
+        title_text = &quot;Zonal mean section of Cant SD&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| eras:&quot;, i_eras))
     )
@@ -24431,10 +24467,9 @@ Jens Müller
 <h2><span class="header-section-number">5.3</span> Correlation</h2>
 <div id="cant-vs-model-sd" class="section level3">
 <h3><span class="header-section-number">5.3.1</span> Cant vs model SD</h3>
-<pre class="r"><code># cant_3d &lt;- cant_3d  %&gt;% 
-#   mutate(eras = factor(eras, c(&quot;JGOFS_GO&quot;, &quot;GO_new&quot;)))
-
-cant_3d %&gt;% 
+<div id="era-vs-basin" class="section level4">
+<h4><span class="header-section-number">5.3.1.1</span> Era vs basin</h4>
+<pre class="r"><code>cant_3d %&gt;% 
   ggplot(aes(cant, cant_sd)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 10) +
@@ -24691,6 +24726,9 @@ Jens Müller
 </table>
 </div>
 </div>
+</div>
+<div id="basin-vs-gamma" class="section level4">
+<h4><span class="header-section-number">5.3.1.2</span> Basin vs gamma</h4>
 <pre class="r"><code>cant_3d %&gt;% 
   ggplot(aes(cant, cant_sd)) +
   geom_vline(xintercept = 0) +
@@ -24938,8 +24976,11 @@ Jens Müller
 </div>
 </div>
 </div>
+</div>
 <div id="cant-vs-regional-sd" class="section level3">
 <h3><span class="header-section-number">5.3.2</span> Cant vs regional SD</h3>
+<div id="era-vs-basin-1" class="section level4">
+<h4><span class="header-section-number">5.3.2.1</span> Era vs basin</h4>
 <pre class="r"><code>cant_zonal %&gt;% 
   ggplot(aes(cant_mean, cant_sd)) +
   geom_vline(xintercept = 0) +
@@ -25197,6 +25238,9 @@ Jens Müller
 </table>
 </div>
 </div>
+</div>
+<div id="era-vs-basin-2" class="section level4">
+<h4><span class="header-section-number">5.3.2.2</span> Era vs basin</h4>
 <pre class="r"><code>cant_zonal %&gt;% 
   ggplot(aes(cant_mean, cant_sd)) +
   geom_vline(xintercept = 0) +
@@ -25446,48 +25490,1482 @@ Jens Müller
 </div>
 </div>
 </div>
+</div>
 <div id="cant---predictor-contribution" class="section level1">
 <h1><span class="header-section-number">6</span> Cant - predictor contribution</h1>
-<pre class="r"><code># variable &lt;- &quot;cant_aou&quot;
-df &lt;- cant_predictor_zonal
-var &lt;- &quot;cant_aou&quot;
+<pre class="r"><code>for (i_var in paste(&quot;cant&quot;,
+                    c(&quot;intercept&quot;, params_local$MLR_predictors),
+                    sep = &quot;_&quot;)) {
 
-for (variable in c(
-  &quot;cant_intercept&quot;,
-  &quot;cant_aou&quot;,
-  &quot;cant_oxygen&quot;,
-  &quot;cant_phosphate&quot;,
-  &quot;cant_phosphate_star&quot;,
-  &quot;cant_silicate&quot;,
-  &quot;cant_tem&quot;,
-  &quot;cant_sal&quot;)) {
-
-print(
-p_section_zonal_divergent_gamma_eras_basin(
-  df = cant_predictor_zonal,
-  var = variable,
-  gamma = &quot;gamma&quot;)
-)
-    
-}
-
-
-rm(variable)</code></pre>
+  print(
+    p_section_zonal_divergent_gamma_eras_basin(df = cant_predictor_zonal,
+                                               var = i_var,
+                                               gamma = &quot;gamma&quot;)
+  )
+  
+}</code></pre>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-1">
+Past versions of cant_section_predictor_contribution-1.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-1.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-2">
+Past versions of cant_section_predictor_contribution-2.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-2.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-3">
+Past versions of cant_section_predictor_contribution-3.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-3.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-4">
+Past versions of cant_section_predictor_contribution-4.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-4.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-5">
+Past versions of cant_section_predictor_contribution-5.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-5.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-6">
+Past versions of cant_section_predictor_contribution-6.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-6.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-7">
+Past versions of cant_section_predictor_contribution-7.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-7.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_section_predictor_contribution-8">
+Past versions of cant_section_predictor_contribution-8.png
+</button>
+</p>
+<div id="fig-cant_section_predictor_contribution-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/24a632fdf0071851b000dac2ee9b25bec501b691/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">24a632f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6a8004b17dc721099696be1f578df0043169555d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">6a8004b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/70bf1a50baa34dd90c61665f0ff25d9d17850d40/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">70bf1a5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c25f7aeea734be402bf77fd80ba8f8d03e88599/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">7c25f7a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/902f65aeaf91b9f8df9cd02959681de4dc306d9f/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">902f65a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee9bf6d0c32149e68f4b1b882ad3ba1ee91ebe6d/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">ee9bf6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0ff728bcd8b7b68083182314bccbc6234277b9c4/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">0ff728b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/92edddb2a42b768057973ddaf6557253cd1b551a/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">92edddb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/analysis_this_study.Rmd/cant_section_predictor_contribution-8.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(i_var)</code></pre>
 </div>
 <div id="neutral-density" class="section level1">
 <h1><span class="header-section-number">7</span> Neutral density</h1>
 <div id="slab-depth" class="section level2">
 <h2><span class="header-section-number">7.1</span> Slab depth</h2>
+<p>The plot below shows the depths of individual gamma slabs (color) together with the observations available in the respective slab.</p>
 <p>Please note that:</p>
 <ul>
 <li>density slabs covering values &gt;28.1 occur by definition only either in the Atlantic or Indo-Pacific basin</li>
-<li>predictor density slabs are only shown for the upper m as used for the mapping, whereas GLODAP observations are displayed for the entire water column as used for fitting eMLRs (in both cases shallow waters are excluded at low density)</li>
 </ul>
 <pre class="r"><code>GLODAP_obs_coverage &lt;- GLODAP %&gt;% 
   count(lat, lon, gamma_slab, era)
-# %&gt;% 
-#   mutate(era = factor(era, c(&quot;JGOFS_WOCE&quot;, &quot;GO_SHIP&quot;, &quot;new_era&quot;)))
-  
+
 map +
   geom_raster(data = cant_gamma_maps,
               aes(lon, lat, fill = depth_max)) +
@@ -25673,30 +27151,33 @@ Jens Müller
 </div>
 <div id="target-variable" class="section level1">
 <h1><span class="header-section-number">8</span> Target variable</h1>
-<p>The predicted target variable (either tco2, cstar or cstar_tref) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.</p>
+<p>The predicted target variable (cstar_tref in this sensitivity case) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.</p>
 <div id="zonal-mean-sections-2" class="section level2">
 <h2><span class="header-section-number">8.1</span> Zonal mean sections</h2>
-<pre class="r"><code>slab_breaks &lt;- c(params_local$slabs_Atl[1:12],Inf)
+<pre class="r"><code>slab_breaks &lt;- c(params_local$slabs_Atl[1:12], Inf)
 
-target_zonal %&gt;% 
-    ggplot(aes(lat, depth,
-               z = !!sym(paste(params_local$MLR_target, &quot;mean&quot;, sep = &quot;_&quot;)))) +
-    geom_contour_filled(bins = 11) +
-    scale_fill_viridis_d(name = params_local$MLR_target) +
-    geom_contour(aes(lat, depth, z = gamma_mean),
-                 breaks = slab_breaks,
-                 col = &quot;white&quot;) +
-    geom_text_contour(
-      aes(lat, depth, z = gamma_mean),
-      breaks = slab_breaks,
-      col = &quot;white&quot;,
-      skip = 1
-    ) +
-    scale_y_reverse() +
-    scale_x_continuous(breaks = seq(-100,100,20)) +
-    coord_cartesian(expand = 0) +
-    guides(fill = guide_colorsteps(barheight = unit(10, &quot;cm&quot;))) +
-    facet_grid(basin_AIP ~ era)</code></pre>
+target_zonal %&gt;%
+  ggplot(aes(lat, depth,
+             z = !!sym(
+               paste(params_local$MLR_target, &quot;mean&quot;, sep = &quot;_&quot;)
+             ))) +
+  geom_contour_filled(bins = 11) +
+  scale_fill_viridis_d(name = params_local$MLR_target) +
+  geom_contour(aes(lat, depth, z = gamma_mean),
+               breaks = slab_breaks,
+               col = &quot;white&quot;) +
+  geom_text_contour(
+    aes(lat, depth, z = gamma_mean),
+    breaks = slab_breaks,
+    col = &quot;white&quot;,
+    skip = 1
+  ) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0,
+                  ylim = c(params_global$plotting_depth, 0)) +
+  scale_x_continuous(breaks = seq(-100, 100, 20)) +
+  guides(fill = guide_colorsteps(barheight = unit(10, &quot;cm&quot;))) +
+  facet_grid(basin_AIP ~ era)</code></pre>
 <p><img src="figure/analysis_this_study.Rmd/target_zonal_mean_era-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-target_zonal_mean_era-1">
@@ -25802,27 +27283,6 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>rm(slab_breaks)</code></pre>
-</div>
-</div>
-<div id="sections-by-model" class="section level1">
-<h1><span class="header-section-number">9</span> Sections by model</h1>
-<p>Zonal sections plots are produced for every 20° longitude, each era and for all models individually and can be downloaded <a href="https://github.com/jens-daniel-mueller/cant_eMLR/tree/master/output/figure/mapping" target="_blank">here</a>.</p>
-</div>
-<div id="known-issues" class="section level1">
-<h1><span class="header-section-number">10</span> Known issues</h1>
-<p>Deviations between this study and the results by Gruber et al (2019), short G19, for the same period, might be attributable to following known differences in the implementation of the eMLR(C*) method:</p>
-<ul>
-<li>GLODAPv2_2020 here vs an extended version of GLODAPv2 in G19</li>
-<li>flagging: Here, we accept f flags 0 and 2 (except for tco2, where only 0 is accepted). G19 claim to use 0 throughout, yet have a high coverage of talk observations in the SE Pacific<br />
-</li>
-<li>Neutral density calculation: Here and in GLODAPv2_2020 a polynomial approximation is used, whereas G19 uses the original Matlab code<br />
-</li>
-<li>Predictor climatology: Here we used WOA18, whereas G19 used WOA13</li>
-<li>Missing data in the GLODAP mapped climatology, eg NO3 at surface, where not filled in this study</li>
-<li>cant on neutral density levels calculate as slab mean, rather than on one surface</li>
-<li>Here, surface delta cant were calculated based on Luecker constants, rather than Mehrbach as in G19</li>
-<li>Here, pCO2 was calculated from DIC/TA Climatology</li>
-</ul>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -25883,6 +27343,7 @@ loaded via a namespace (and not attached):
 [67] assertthat_0.2.1         xfun_0.18                broom_0.7.2             
 [70] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
 [73] memoise_1.1.0            ellipsis_0.3.1           here_0.1                </code></pre>
+</div>
 </div>
 </div>
 
