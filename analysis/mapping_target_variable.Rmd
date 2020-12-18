@@ -49,11 +49,13 @@ path_version_figures  <-
 
 # Scope
 
-Map 3d fields of the predicted target variable (either tco2, cstar or cstar_tref) based on fitted MLRs and climatological fields of predictor variables, for each era.
+Map 3d fields of the predicted target variable (either tco2, cstar or cstar_tref) based on fitted MLRs and climatological fields of predictor variables. In contrast to the direct Cant calculation based on coefficient differences, we apply here the fitted coefficients directly. Cant could also be estimates as the differences between the target variable fields mapped here.
 
-# Predictor fields
+# Required data
 
-Currently, we use combined predictor fields:
+## Predictor fields
+
+Currently, we use following combined predictor fields:
 
 - WOA18: S, T, and derived variables
 - GLODAP16: Oxygen, PO4, NO3, Silicate, and derived variables
@@ -68,7 +70,7 @@ predictors <-
 ```
 
 
-# Load MLR models
+## MLR models
 
 ```{r load_eMLR_models}
 
@@ -79,13 +81,15 @@ lm_best_target <-
 
 ```
 
-# Merge MLRs + climatologies
+# Join MLR + climatologies
 
 ```{r merge_model_coeff_predictor_climatology}
 
+# remove predictor variable from model
 lm_best_target <- lm_best_target %>%
   mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
 
+# join predictors and MLR
 target <- full_join(predictors, lm_best_target)
 
 rm(predictors, lm_best_target)
@@ -97,34 +101,40 @@ rm(predictors, lm_best_target)
 
 ## Apply MLRs to predictor
 
-```{r calculate_target}
+```{r calc_target_variable}
 
 target <- b_target_model(target)
 
-target <- target %>% 
-  select(lon, lat, depth, era, basin, basin_AIP, gamma,
+target <- target %>%
+  select(lon,
+         lat,
+         depth,
+         era,
+         basin,
+         basin_AIP,
+         gamma,
          params_local$MLR_target)
 
 ```
 
-```{r target_average}
+## Average model target variable
+
+```{r calc_target_variable_mean}
 
 target_average <- m_target_model_average(target)
+target_average <- m_cut_gamma(target_average, "gamma")
 
 rm(target)
 
-target_average <- m_cut_gamma(target_average, "gamma")
-
 ```
 
-## Mean target variable sections
+## Zonal mean sections
 
 For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
 
 ```{r Calculate_target_mean_sections}
 
 target_average_zonal <- m_target_zonal_mean(target_average)
-
 target_average_zonal <- m_cut_gamma(target_average_zonal, "gamma_mean")
 
 ```

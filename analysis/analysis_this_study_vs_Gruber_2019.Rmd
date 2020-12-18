@@ -55,13 +55,14 @@ library(gt)
 
 # Data sources
 
-Following Cant estimates from this study (JDM) and Gruber 2019 (G19) are used:
+Following Cant estimates are used:
 
 - Zonal mean (basin, lat, depth)
 - Inventories (lat, lon)
 
 ## This study
 
+Results from this study are referred to as JDM.
 
 ```{r read_JDM_cant_files}
 
@@ -94,6 +95,8 @@ cant_inv_JDM <- cant_inv_JDM %>%
 ```
 
 ## Gruber 2019
+
+Results from Gruber et al 2019 are referred to as G19.
 
 ```{r read_Gruber_cant_file}
 
@@ -129,15 +132,18 @@ Inventories and zonal sections are merged, and differences calculate per grid ce
 
 ```{r join_G19_and_JDM_inventories}
 
+# add estimate label
 cant_inv_long <- bind_rows(
   cant_inv_JDM %>%  mutate(estimate = "JDM"),
   cant_inv_G19 %>%  mutate(estimate = "G19")
   )
 
+# pivot to wide format
 cant_inv_wide <- cant_inv_long %>% 
   pivot_wider(names_from = estimate, values_from = cant_pos_inv:cant_inv) %>% 
   drop_na()
 
+# calculate offset
 cant_inv_wide <- cant_inv_wide %>% 
   mutate(cant_pos_inv_offset = cant_pos_inv_JDM - cant_pos_inv_G19,
          cant_inv_offset = cant_inv_JDM - cant_inv_G19,
@@ -145,18 +151,20 @@ cant_inv_wide <- cant_inv_wide %>%
 
 ```
 
-
 ```{r join_G19_and_JDM_zonal_sections}
 
+# add estimate label
 cant_zonal_long <- bind_rows(
   cant_zonal_JDM %>%  mutate(estimate = "JDM"),
   cant_zonal_G19 %>%  mutate(estimate = "G19")
   )
 
+# pivot to wide format
 cant_zonal_wide <- cant_zonal_long %>% 
   pivot_wider(names_from = estimate, values_from = cant_mean:cant_pos_sd) %>% 
   drop_na()
 
+# calculate offset
 cant_zonal_wide <- cant_zonal_wide %>% 
   mutate(cant_pos_mean_offset = cant_pos_mean_JDM - cant_pos_mean_G19,
          cant_mean_offset = cant_mean_JDM - cant_mean_G19,
@@ -167,10 +175,11 @@ cant_zonal_wide <- cant_zonal_wide %>%
 
 # Cant budgets
 
-Global Cant inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global Cant inventories budget were estimated for different ocean basins in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added Cant values for the standard inventory depth (`r params_global$inventory_depth_standard` m) and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
+# calculate budgets
 cant_inv_budget <- cant_inv_long %>% 
   mutate(surface_area = earth_surf(lat, lon),
          cant_inv_grid = cant_inv*surface_area,
@@ -183,6 +192,7 @@ cant_inv_budget <- cant_inv_long %>%
   ungroup()
 
 
+# print budget table
 cant_inv_budget %>%
   gt(rowname_col = "basin_AIP",
      groupname_col = c("estimate")) %>% 
@@ -199,14 +209,14 @@ rm(cant_inv_budget)
 
 # Cant - positive only
 
-In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across the MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 
 
-## Inventory map
+## Inventory maps
 
 ### Absolute values
 
-Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive Cant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_pos_inventory_map, fig.asp=0.5}
 
@@ -227,13 +237,13 @@ for (i_estimate in unique(cant_inv_long$estimate)) {
 
 ### Offset
 
-Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive cant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_pos_offset_inventory_map, fig.asp=0.5}
 
 p_map_cant_inv_offset(cant_inv_wide,
                       "cant_pos_inv_offset",
-                      subtitle_text = "JDM - G19")
+                      subtitle_text = "Estimate JDM - G19")
 
 ```
 
@@ -249,8 +259,7 @@ p_map_cant_inv_offset(cant_inv_wide,
 
 for (i_basin_AIP in unique(cant_zonal_long$basin_AIP)) {
   for (i_estimate in unique(cant_zonal_long$estimate)) {
-   
-     print(
+    print(
       p_section_zonal(
         df = cant_zonal_long %>%
           filter(basin_AIP == i_basin_AIP,
@@ -266,16 +275,13 @@ for (i_basin_AIP in unique(cant_zonal_long$basin_AIP)) {
   }
 }
 
-
 ```
-
 
 ### Offset
 
 ```{r cant_pos_offset_zonal_section, fig.asp=0.6}
 
 # i_basin_AIP <- unique(cant_zonal_wide$basin_AIP)[1]
-# i_estimate <- unique(cant_zonal_wide$estimate)[1]
 
 for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
     print(
@@ -287,7 +293,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         plot_slabs = "n",
         col = "divergent",
         subtitle_text =
-          paste("Basin:", i_basin_AIP)
+          paste("Basin:", i_basin_AIP, "| estimate: JDM-G19")
       )
     )
   }
@@ -299,13 +305,13 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
 
 # Cant - all
 
-In a first series of plots we explore the distribution of cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a second series of plots we explore the distribution of Cant, taking positive and negative estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell).
 
-## Inventory map
+## Inventory maps
 
 ### Absolute values
 
-Column inventory of Cant (including positive and negative values) between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of Cant (including positive and negative values) between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
 
 ```{r cant_inventory_map, fig.asp=0.5}
@@ -326,7 +332,6 @@ for (i_estimate in unique(cant_inv_long$estimate)) {
 ```
 
 
-
 ### Offset
 
 ```{r cant_offset_inventory_map, fig.asp = 0.5}
@@ -334,12 +339,11 @@ for (i_estimate in unique(cant_inv_long$estimate)) {
 p_map_cant_inv_offset(
   df = cant_inv_wide,
   var = "cant_inv_offset",
-  subtitle_text = "JDM - G19")
+  subtitle_text = "Estimate: JDM - G19")
 
 ```
 
 ## Zonal mean sections
-
 
 ### Absolute values
 
@@ -375,14 +379,11 @@ for (i_basin_AIP in unique(cant_zonal_long$basin_AIP)) {
 
 ```
 
-
 ### Offset
-
 
 ```{r cant_offset_zonal_mean_section, fig.asp=0.6}
 
 # i_basin_AIP <- unique(cant_zonal_wide$basin_AIP)[1]
-# i_estimate <- unique(cant_zonal_wide$estimate)[1]
 
 for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
 
@@ -395,7 +396,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         col = "divergent",
         breaks = params_global$breaks_cant_offset,
         subtitle_text =
-          paste("Basin:", i_basin_AIP, "| estimate:", i_estimate)
+          paste("Basin:", i_basin_AIP, "| estimate: JDM - G19")
       )
       
     )
@@ -404,16 +405,3 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
 
 ```
 
-
-# Known issues
-
-Deviations between this study and the results by Gruber et al (2019), short G19, for the same period, might be attributable to following known differences in the implementation of the eMLR(C*) method:
-
-- GLODAPv2_2020 here vs an extended version of GLODAPv2 in G19
-- flagging: Here, we accept f flags 0 and 2 (except for tco2, where only 0 is accepted). G19 claim to use 0 throughout, yet have a high coverage of talk observations in the SE Pacific  
-- Neutral density calculation: Here and in GLODAPv2_2020 a polynomial approximation is used, whereas G19 uses the original Matlab code  
-- Predictor climatology: Here we used WOA18, whereas G19 used WOA13
-- Missing data in the GLODAP mapped climatology, eg NO3 at surface, where not filled in this study
-- cant on neutral density levels calculate as slab mean, rather than on one surface
-- Here, surface delta cant were calculated based on Luecker constants, rather than Mehrbach as in G19
-- Here, pCO2 was calculated from DIC/TA Climatology
