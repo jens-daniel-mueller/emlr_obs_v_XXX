@@ -72,9 +72,9 @@ predictors <-
 
 ```{r load_eMLR_models}
 
-lm_all_wide_target <-
+lm_best_target <-
   read_csv(paste(path_version_data,
-                 "lm_all_target.csv",
+                 "lm_best_target.csv",
                  sep = ""))
 
 ```
@@ -83,12 +83,12 @@ lm_all_wide_target <-
 
 ```{r merge_model_coeff_predictor_climatology}
 
-lm_all_wide_target <- lm_all_wide_target %>%
+lm_best_target <- lm_best_target %>%
   mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
 
-target <- full_join(predictors, lm_all_wide_target)
+target <- full_join(predictors, lm_best_target)
 
-rm(predictors, lm_all_wide_target)
+rm(predictors, lm_best_target)
 
 ```
 

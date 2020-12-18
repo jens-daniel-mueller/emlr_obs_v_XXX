@@ -87,9 +87,9 @@ co2_atm_tref <-
 
 ```{r load_eMLR_models}
 
-lm_all_wide <-
+lm_best_cant <-
   read_csv(paste(path_version_data,
-                 "lm_all_cant.csv",
+                 "lm_best_cant.csv",
                  sep = ""))
 ```
 
@@ -97,12 +97,12 @@ lm_all_wide <-
 
 ```{r merge_model_coeff_predictor_climatology}
 
-lm_all_wide <- lm_all_wide %>% 
+lm_best_cant <- lm_best_cant %>% 
   mutate(model = str_remove(model, "Cstar ~ "))
    
-cant <- full_join(predictors, lm_all_wide)
+cant <- full_join(predictors, lm_best_cant)
 
-rm(predictors, lm_all_wide)
+rm(predictors, lm_best_cant)
 
 ```
 

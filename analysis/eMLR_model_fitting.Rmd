@@ -190,6 +190,14 @@ for (i_basin in unique(GLODAP$basin)) {
         i_lm_fit <- lm(as.formula(i_lm),
                        data = GLODAP_basin_era_slab)
         
+        # find max predictor correlation
+        i_cor_max <- GLODAP_basin_era_slab %>%
+          select(!!!syms(str_split(i_predictors, " ",
+                                         simplify = TRUE))) %>%
+          correlate(quiet = TRUE) %>% 
+          select(-term) %>% 
+          abs() %>% 
+          max(na.rm = TRUE)
         
         # calculate root mean squared error
         i_rmse <- sqrt(
@@ -216,7 +224,8 @@ for (i_basin in unique(GLODAP$basin)) {
             aic = i_aic,
             resid_max = i_resid_max,
             n_predictors = i_n_predictors,
-            na_predictor = anyNA(coefficients$estimate)
+            na_predictor = anyNA(coefficients$estimate),
+            cor_max = i_cor_max
           )
         
         if (exists("lm_all_fitted")) {
@@ -272,8 +281,6 @@ for (i_basin in unique(GLODAP$basin)) {
   
 }
 
-lm_all_fitted <- lm_all_fitted %>% 
-  filter(na_predictor == FALSE)
 
 rm(i_lm_fit, coefficients, i_rmse,
    GLODAP_basin_era, GLODAP_basin_era_slab,
@@ -290,6 +297,7 @@ rm(i_lm_fit, coefficients, i_rmse,
 
 Coefficients are prepared for the mapping of Cant and the chosen target variable.
 
+
 ## Formatting
 
 ```{r prepare_model_coefficients_table}
@@ -298,7 +306,7 @@ Coefficients are prepared for the mapping of Cant and the chosen target variable
 lm_all_fitted <- lm_all_fitted %>% 
   select(basin, gamma_slab, era, model, n_predictors, 
          term, estimate, 
-         rmse, aic, resid_max)
+         rmse, aic, resid_max, na_predictor, cor_max)
 
 # set coefficient to zero if not fitted (=NA)
 lm_all_fitted <- lm_all_fitted %>% 
@@ -326,7 +334,23 @@ The criterion used to select the best models was:
 
 The criterion was summed up for two adjecent eras, and the models with lowest summed values were selected.
 
-Please note, that currently the `lm()` function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Regardless, models with the lowest summed rmse are selected, which means that identical models are included in the seletion.
+Please note, that currently the `lm()` function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Models with fitted NA predictors were not included.
+
+
+```{r Predictor_correlation_NA}
+
+lm_all_fitted_wide %>% 
+  ggplot(aes(n_predictors, cor_max)) +
+  geom_point() +
+  facet_wrap(~ na_predictor)
+
+# remove models with predictors fitted as NA
+
+lm_all_fitted_wide <- lm_all_fitted_wide %>%
+  filter(na_predictor == FALSE)
+
+```
+
 
 ```{r predictor_selection}
 
