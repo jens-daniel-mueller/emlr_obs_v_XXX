@@ -59,7 +59,8 @@ Required are:
 - GLODAPv2.2020
   - cleaned data file
   - horizontal grid of sampling coordinates
-- Cant from Sabine 2004
+- Cant from Sabine 2004 (S04)
+- Cant from Gruber 2019 (G19)
 - annual mean atmospheric pCO~2~ 
 
 ```{r read_required_data_sets}
@@ -79,6 +80,11 @@ S04_cant_3d <-
                  "S04_cant_3d.csv",
                  sep = ""))
 
+G19_cant_3d <-
+  read_csv(paste(path_preprocessing,
+                 "G19_cant_3d.csv",
+                 sep = ""))
+
 co2_atm <-
   read_csv(paste(path_preprocessing,
                  "co2_atm.csv",
@@ -86,7 +92,6 @@ co2_atm <-
 
 
 ```
-
 
 # PO~4~*
 
@@ -141,41 +146,92 @@ GLODAP <- GLODAP %>%
 
 ## Reference year adjustment
 
-The reference year adjustment relies on an apriori estimate of Cant at a given location and depth, which is used as a scaling factor for the concurrent change in atmospheric CO~2~. The underlying assumption is a transient steady state for the oceanic Cant uptake. Here, Cant from the GLODAP mapped Climatology was used.  
+To adjust C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
 
-Note that eq. 6 in Clement and Gruber (2018) misses pCO~2~ pre-industrial in the denominator. Here we use the equation published in Gruber et al. (2019).
+Cant(tref) = S04 + (tref-1994)/13 * G19
+
+This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.
+
+
+### Join Cant fields
+
+Join Cant fields of G19 and S04
+
+```{r join_cant_estimates}
+
+G19_cant_3d <- G19_cant_3d %>% 
+  select(lon, lat, depth, cant_pos_G19 = cant_pos)
+
+S04_cant_3d <- S04_cant_3d %>% 
+  select(lon, lat, depth, cant_pos_S04 = cant_pos)
+
+cant_3d <- inner_join(S04_cant_3d, G19_cant_3d)
+
+```
+
+### Cant at tref
+
+Calculate Cant at tref by adding G19, scaled for the time since 1994.
+
+```{r calculate_cant_tref}
+
+# calculate reference year
+tref <- GLODAP %>%
+  group_by(era) %>%
+  summarise(year = median(year)) %>%
+  ungroup()
+
+# join cant with tref
+cant_3d <- expand_grid(cant_3d, tref)
+
+# calculate cant fields for all tref
+cant_3d <- cant_3d %>%
+  mutate(cant_pos =
+           cant_pos_S04 +
+           ((year - 1994) / 13 * cant_pos_G19))
+
+# remove columns
+cant_3d <- cant_3d %>% 
+  select(lon, lat, depth, era, cant_pos)
+
+```
+
 
 ### Combine GLODAP + Cant
 
-
 ```{r merge_cstar_cant}
 
-S04_cant_3d_obs <- left_join(
-  GLODAP_obs_grid,
-  S04_cant_3d %>% select(-c(cant, eras))
-  )
+# observations grid per era
+GLODAP_obs_grid_era <- GLODAP %>% 
+  distinct(lat, lon, era)
+
+# cant data at observations grid
+cant_3d_obs <- left_join(
+  GLODAP_obs_grid_era,
+  cant_3d)
 
 # calculate number of cant data points per grid cell
-S04_cant_3d_obs <- S04_cant_3d_obs %>%
-  group_by(lon, lat) %>% 
+cant_3d_obs <- cant_3d_obs %>%
+  group_by(lon, lat, era) %>% 
   mutate(n = n()) %>% 
   ungroup()
 
-# S04_cant_3d_obs %>%
-#   filter(n <= 1) %>%
-#   ggplot(aes(lon,lat)) +
-#   geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
-#   geom_point(col = "red")
+cant_3d_obs %>%
+  filter(n <= 1) %>%
+  ggplot(aes(lon,lat)) +
+  geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
+  geom_point(col = "red") +
+  facet_wrap(~era)
 
-rm(S04_cant_3d, GLODAP_obs_grid)
+rm(cant_3d, GLODAP_obs_grid)
 
-GLODAP_cant_obs <- full_join(GLODAP, S04_cant_3d_obs)
+GLODAP_cant_obs <- full_join(GLODAP, cant_3d_obs)
 
-rm(GLODAP, S04_cant_3d_obs)
+rm(GLODAP, cant_3d_obs)
 
 # fill number of cant data points per grid cell to all observations
 GLODAP_cant_obs <- GLODAP_cant_obs %>%
-  group_by(lon, lat) %>% 
+  group_by(lon, lat, era) %>% 
   fill(n, .direction = "updown") %>% 
   ungroup()
 
@@ -192,7 +248,7 @@ The mapped Cant product was merged with GLODAP observation by:
 # interpolate cant to observation depth
 GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
   filter(n > 1) %>% 
-  group_by(lat, lon) %>%
+  group_by(lat, lon, era) %>%
   arrange(depth) %>%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %>%
   ungroup()
@@ -200,7 +256,7 @@ GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
 # set cant for observation depth if only one cant available
 GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
   filter(n == 1) %>%
-  group_by(lat, lon) %>%
+  group_by(lat, lon, era) %>%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %>%
   ungroup()
 
@@ -228,6 +284,7 @@ ggplot() +
     aes(cant_pos_int, depth, col = "interpolated")
   ) +
   scale_y_reverse() +
+  facet_wrap(~era) +
   scale_color_brewer(palette = "Dark2", name = "") +
   labs(title = "Cant interpolation to sampling depth - example profile")
 
@@ -241,6 +298,7 @@ rm(GLODAP_cant_obs)
 
 ```
 
+
 ### Merge GLODAP + atm. pCO~2~
 
 GLODAP observations were merged with mean annual atmospheric pCO~2~ levels by year.
@@ -253,20 +311,12 @@ GLODAP <- left_join(GLODAP, co2_atm)
 
 ### Calculation
 
-C~ant~ for median year of each era was calculated by applying alpha = 0.28/13 * (median year - 1994) to the estimate of Sabine et al. (2004).
-
 ```{r adjust_reference_year}
 
 # assign reference year
 GLODAP <- GLODAP %>% 
   group_by(era) %>% 
   mutate(tref = median(year)) %>% 
-  ungroup()
-
-# calculate reference year
-tref <- GLODAP %>% 
-  group_by(era) %>% 
-  summarise(year = median(year)) %>% 
   ungroup()
 
 # extract atm pCO2 at reference year
@@ -278,11 +328,6 @@ co2_atm_tref <- right_join(co2_atm, tref) %>%
 GLODAP <- full_join(GLODAP, co2_atm_tref)
 rm(co2_atm, tref)
 
-# scale cant to reference year
-GLODAP <- GLODAP %>%
-  mutate(alpha = (tref - 1994) * (0.28 / 13),
-         cant_pos = cant_pos * (1 + alpha))
-
 # calculate cstar for reference year
 GLODAP <- GLODAP %>%
   mutate(
@@ -291,6 +336,7 @@ GLODAP <- GLODAP %>%
     cstar_tref = cstar - cstar_tref_delta)
 
 ```
+
 
 ## Control plots
 
