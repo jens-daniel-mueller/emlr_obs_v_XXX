@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree05ef1520c871ca03bab287fba5f60a7910142dbdtargetblank05ef152a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/05ef1520c871ca03bab287fba5f60a7910142dbd" target="_blank">05ef152</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree05ef1520c871ca03bab287fba5f60a7910142dbdtargetblank05ef152a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/05ef1520c871ca03bab287fba5f60a7910142dbd" target="_blank">05ef152</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -664,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/05ef1520c871ca03bab287fba5f60a7910142dbd/analysis/analysis_this_study_vs_Gruber_2019.Rmd" target="_blank">05ef152</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild after final cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/4d3e354a6eec14c2c0fa9344ded0694bdd3afbb2/docs/analysis_this_study_vs_Gruber_2019.html" target="_blank">4d3e354</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1387,13 +1421,14 @@ Initial commit
 </div>
 <div id="data-sources" class="section level1">
 <h1><span class="header-section-number">1</span> Data sources</h1>
-<p>Following Cant estimates from this study (JDM) and Gruber 2019 (G19) are used:</p>
+<p>Following Cant estimates are used:</p>
 <ul>
 <li>Zonal mean (basin, lat, depth)</li>
 <li>Inventories (lat, lon)</li>
 </ul>
 <div id="this-study" class="section level2">
 <h2><span class="header-section-number">1.1</span> This study</h2>
+<p>Results from this study are referred to as JDM.</p>
 <pre class="r"><code>cant_zonal_JDM &lt;-
   read_csv(paste(path_version_data,
                  &quot;cant_zonal.csv&quot;,
@@ -1422,6 +1457,7 @@ cant_inv_JDM &lt;- cant_inv_JDM %&gt;%
 </div>
 <div id="gruber-2019" class="section level2">
 <h2><span class="header-section-number">1.2</span> Gruber 2019</h2>
+<p>Results from Gruber et al 2019 are referred to as G19.</p>
 <pre class="r"><code>cant_inv_G19 &lt;-
   read_csv(paste(path_preprocessing,
                  &quot;G19_cant_inv.csv&quot;,
@@ -1448,28 +1484,34 @@ cant_zonal_G19 &lt;- cant_zonal_G19 %&gt;%
 <div id="join-data-sets" class="section level2">
 <h2><span class="header-section-number">1.3</span> Join data sets</h2>
 <p>Inventories and zonal sections are merged, and differences calculate per grid cell.</p>
-<pre class="r"><code>cant_inv_long &lt;- bind_rows(
+<pre class="r"><code># add estimate label
+cant_inv_long &lt;- bind_rows(
   cant_inv_JDM %&gt;%  mutate(estimate = &quot;JDM&quot;),
   cant_inv_G19 %&gt;%  mutate(estimate = &quot;G19&quot;)
   )
 
+# pivot to wide format
 cant_inv_wide &lt;- cant_inv_long %&gt;% 
   pivot_wider(names_from = estimate, values_from = cant_pos_inv:cant_inv) %&gt;% 
   drop_na()
 
+# calculate offset
 cant_inv_wide &lt;- cant_inv_wide %&gt;% 
   mutate(cant_pos_inv_offset = cant_pos_inv_JDM - cant_pos_inv_G19,
          cant_inv_offset = cant_inv_JDM - cant_inv_G19,
          estimate = &quot;JDM - G19&quot;)</code></pre>
-<pre class="r"><code>cant_zonal_long &lt;- bind_rows(
+<pre class="r"><code># add estimate label
+cant_zonal_long &lt;- bind_rows(
   cant_zonal_JDM %&gt;%  mutate(estimate = &quot;JDM&quot;),
   cant_zonal_G19 %&gt;%  mutate(estimate = &quot;G19&quot;)
   )
 
+# pivot to wide format
 cant_zonal_wide &lt;- cant_zonal_long %&gt;% 
   pivot_wider(names_from = estimate, values_from = cant_mean:cant_pos_sd) %&gt;% 
   drop_na()
 
+# calculate offset
 cant_zonal_wide &lt;- cant_zonal_wide %&gt;% 
   mutate(cant_pos_mean_offset = cant_pos_mean_JDM - cant_pos_mean_G19,
          cant_mean_offset = cant_mean_JDM - cant_mean_G19,
@@ -1478,8 +1520,9 @@ cant_zonal_wide &lt;- cant_zonal_wide %&gt;%
 </div>
 <div id="cant-budgets" class="section level1">
 <h1><span class="header-section-number">2</span> Cant budgets</h1>
-<p>Global Cant inventories were estimated in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added cant values in the upper m and do not apply additional corrections for areas not covered.</p>
-<pre class="r"><code>cant_inv_budget &lt;- cant_inv_long %&gt;% 
+<p>Global Cant inventories budget were estimated for different ocean basins in units of Pg C, based on all vs positive only Cant estimates. Please note that here we only added Cant values for the standard inventory depth (3000 m) and do not apply additional corrections for areas not covered.</p>
+<pre class="r"><code># calculate budgets
+cant_inv_budget &lt;- cant_inv_long %&gt;% 
   mutate(surface_area = earth_surf(lat, lon),
          cant_inv_grid = cant_inv*surface_area,
          cant_pos_inv_grid = cant_pos_inv*surface_area) %&gt;% 
@@ -1491,6 +1534,7 @@ cant_zonal_wide &lt;- cant_zonal_wide %&gt;%
   ungroup()
 
 
+# print budget table
 cant_inv_budget %&gt;%
   gt(rowname_col = &quot;basin_AIP&quot;,
      groupname_col = c(&quot;estimate&quot;)) %&gt;% 
@@ -1898,12 +1942,12 @@ cant_inv_budget %&gt;%
 </div>
 <div id="cant---positive-only" class="section level1">
 <h1><span class="header-section-number">3</span> Cant - positive only</h1>
-<p>In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
-<div id="inventory-map" class="section level2">
-<h2><span class="header-section-number">3.1</span> Inventory map</h2>
+<p>In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across the MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
+<div id="inventory-maps" class="section level2">
+<h2><span class="header-section-number">3.1</span> Inventory maps</h2>
 <div id="absolute-values" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Absolute values</h3>
-<p>Column inventory of positive cant between the surface and m water depth per horizontal grid cell (lat x lon).</p>
+<p>Column inventory of positive Cant between the surface and 3000m water depth per horizontal grid cell (lat x lon).</p>
 <pre class="r"><code># i_estimate &lt;- unique(cant_inv_long$estimate)[1]
 
 for (i_estimate in unique(cant_inv_long$estimate)) {
@@ -2225,10 +2269,10 @@ Jens Müller
 </div>
 <div id="offset" class="section level3">
 <h3><span class="header-section-number">3.1.2</span> Offset</h3>
-<p>Column inventory of positive cant between the surface and m water depth per horizontal grid cell (lat x lon).</p>
+<p>Column inventory of positive cant between the surface and 3000m water depth per horizontal grid cell (lat x lon).</p>
 <pre class="r"><code>p_map_cant_inv_offset(cant_inv_wide,
                       &quot;cant_pos_inv_offset&quot;,
-                      subtitle_text = &quot;JDM - G19&quot;)</code></pre>
+                      subtitle_text = &quot;Estimate JDM - G19&quot;)</code></pre>
 <p><img src="figure/analysis_this_study_vs_Gruber_2019.Rmd/cant_pos_offset_inventory_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_pos_offset_inventory_map-1">
@@ -2498,8 +2542,7 @@ Jens Müller
 
 for (i_basin_AIP in unique(cant_zonal_long$basin_AIP)) {
   for (i_estimate in unique(cant_zonal_long$estimate)) {
-   
-     print(
+    print(
       p_section_zonal(
         df = cant_zonal_long %&gt;%
           filter(basin_AIP == i_basin_AIP,
@@ -3395,7 +3438,6 @@ Jens Müller
 <div id="offset-1" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Offset</h3>
 <pre class="r"><code># i_basin_AIP &lt;- unique(cant_zonal_wide$basin_AIP)[1]
-# i_estimate &lt;- unique(cant_zonal_wide$estimate)[1]
 
 for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
     print(
@@ -3407,7 +3449,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         plot_slabs = &quot;n&quot;,
         col = &quot;divergent&quot;,
         subtitle_text =
-          paste(&quot;Basin:&quot;, i_basin_AIP)
+          paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| estimate: JDM-G19&quot;)
       )
     )
   }</code></pre>
@@ -4113,12 +4155,12 @@ Jens Müller
 </div>
 <div id="cant---all" class="section level1">
 <h1><span class="header-section-number">4</span> Cant - all</h1>
-<p>In a first series of plots we explore the distribution of cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
-<div id="inventory-map-1" class="section level2">
-<h2><span class="header-section-number">4.1</span> Inventory map</h2>
+<p>In a second series of plots we explore the distribution of Cant, taking positive and negative estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell).</p>
+<div id="inventory-maps-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Inventory maps</h2>
 <div id="absolute-values-2" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Absolute values</h3>
-<p>Column inventory of Cant (including positive and negative values) between the surface and m water depth per horizontal grid cell (lat x lon).</p>
+<p>Column inventory of Cant (including positive and negative values) between the surface and 3000m water depth per horizontal grid cell (lat x lon).</p>
 <pre class="r"><code># i_estimate &lt;- unique(cant_inv_long$estimate)[1] 
 
 for (i_estimate in unique(cant_inv_long$estimate)) {
@@ -4444,7 +4486,7 @@ Jens Müller
 <pre class="r"><code>p_map_cant_inv_offset(
   df = cant_inv_wide,
   var = &quot;cant_inv_offset&quot;,
-  subtitle_text = &quot;JDM - G19&quot;)</code></pre>
+  subtitle_text = &quot;Estimate: JDM - G19&quot;)</code></pre>
 <p><img src="figure/analysis_this_study_vs_Gruber_2019.Rmd/cant_offset_inventory_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_offset_inventory_map-1">
@@ -5615,7 +5657,6 @@ Jens Müller
 <div id="offset-3" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Offset</h3>
 <pre class="r"><code># i_basin_AIP &lt;- unique(cant_zonal_wide$basin_AIP)[1]
-# i_estimate &lt;- unique(cant_zonal_wide$estimate)[1]
 
 for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
 
@@ -5628,7 +5669,7 @@ for (i_basin_AIP in unique(cant_zonal_wide$basin_AIP)) {
         col = &quot;divergent&quot;,
         breaks = params_global$breaks_cant_offset,
         subtitle_text =
-          paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| estimate:&quot;, i_estimate)
+          paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| estimate: JDM - G19&quot;)
       )
       
     )
@@ -6330,24 +6371,6 @@ Jens Müller
 </table>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div id="known-issues" class="section level1">
-<h1><span class="header-section-number">5</span> Known issues</h1>
-<p>Deviations between this study and the results by Gruber et al (2019), short G19, for the same period, might be attributable to following known differences in the implementation of the eMLR(C*) method:</p>
-<ul>
-<li>GLODAPv2_2020 here vs an extended version of GLODAPv2 in G19</li>
-<li>flagging: Here, we accept f flags 0 and 2 (except for tco2, where only 0 is accepted). G19 claim to use 0 throughout, yet have a high coverage of talk observations in the SE Pacific<br />
-</li>
-<li>Neutral density calculation: Here and in GLODAPv2_2020 a polynomial approximation is used, whereas G19 uses the original Matlab code<br />
-</li>
-<li>Predictor climatology: Here we used WOA18, whereas G19 used WOA13</li>
-<li>Missing data in the GLODAP mapped climatology, eg NO3 at surface, where not filled in this study</li>
-<li>cant on neutral density levels calculate as slab mean, rather than on one surface</li>
-<li>Here, surface delta cant were calculated based on Luecker constants, rather than Mehrbach as in G19</li>
-<li>Here, pCO2 was calculated from DIC/TA Climatology</li>
-</ul>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -6407,6 +6430,8 @@ loaded via a namespace (and not attached):
 [64] rprojroot_2.0.2          stringi_1.5.3            parallel_4.0.3          
 [67] Rcpp_1.0.5               vctrs_0.3.5              dbplyr_1.4.4            
 [70] tidyselect_1.1.0         xfun_0.18               </code></pre>
+</div>
+</div>
 </div>
 </div>
 

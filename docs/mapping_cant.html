@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree05ef1520c871ca03bab287fba5f60a7910142dbdtargetblank05ef152a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/05ef1520c871ca03bab287fba5f60a7910142dbd" target="_blank">05ef152</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d452fed89762648d4af75a478126279441e3c2etargetblank5d452fea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree05ef1520c871ca03bab287fba5f60a7910142dbdtargetblank05ef152a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d452fed89762648d4af75a478126279441e3c2e" target="_blank">5d452fe</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/05ef1520c871ca03bab287fba5f60a7910142dbd" target="_blank">05ef152</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -664,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/05ef1520c871ca03bab287fba5f60a7910142dbd/analysis/mapping_cant.Rmd" target="_blank">05ef152</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild after final cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/4d3e354a6eec14c2c0fa9344ded0694bdd3afbb2/docs/mapping_cant.html" target="_blank">4d3e354</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -875,9 +909,11 @@ rebuild with eMLR target variable selection
 </div>
 </div>
 </div>
-<div id="predictor-fields" class="section level1">
-<h1><span class="header-section-number">1</span> Predictor fields</h1>
-<p>Currently, we use combined predictor fields:</p>
+<div id="required-data" class="section level1">
+<h1><span class="header-section-number">1</span> Required data</h1>
+<div id="predictor-fields" class="section level2">
+<h2><span class="header-section-number">1.1</span> Predictor fields</h2>
+<p>Currently, we use following combined predictor fields:</p>
 <ul>
 <li>WOA18: S, T, and derived variables</li>
 <li>GLODAP16: Oxygen, PO4, NO3, Silicate, and derived variables</li>
@@ -892,115 +928,130 @@ predictors_surface &lt;-
                  &quot;W18_st_G16_opsn_surface.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="atm.-pco2" class="section level1">
-<h1><span class="header-section-number">2</span> Atm. pCO2</h1>
+<div id="atm.-pco2" class="section level2">
+<h2><span class="header-section-number">1.2</span> Atm. pCO2</h2>
+<p>Required only to estimate the change of Cant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.</p>
 <pre class="r"><code>co2_atm_tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;co2_atm_tref.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="load-mlr-models" class="section level1">
-<h1><span class="header-section-number">3</span> Load MLR models</h1>
+<div id="mlr-models" class="section level2">
+<h2><span class="header-section-number">1.3</span> MLR models</h2>
 <pre class="r"><code>lm_best_cant &lt;-
   read_csv(paste(path_version_data,
                  &quot;lm_best_cant.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="merge-mlrs-climatologies" class="section level1">
-<h1><span class="header-section-number">4</span> Merge MLRs + climatologies</h1>
-<pre class="r"><code>lm_best_cant &lt;- lm_best_cant %&gt;% 
+</div>
+<div id="join-mlrs-climatologies" class="section level1">
+<h1><span class="header-section-number">2</span> Join MLRs + climatologies</h1>
+<pre class="r"><code># remove predictor variable from model
+lm_best_cant &lt;- lm_best_cant %&gt;% 
   mutate(model = str_remove(model, &quot;Cstar ~ &quot;))
-   
+
+# join predictors and MLR
 cant &lt;- full_join(predictors, lm_best_cant)
 
 rm(predictors, lm_best_cant)</code></pre>
 </div>
 <div id="map-cant" class="section level1">
-<h1><span class="header-section-number">5</span> Map cant</h1>
+<h1><span class="header-section-number">3</span> Map Cant</h1>
 <div id="deep-water" class="section level2">
-<h2><span class="header-section-number">5.1</span> Deep water</h2>
-</div>
-<div id="apply-mlrs-to-predictor" class="section level2">
-<h2><span class="header-section-number">5.2</span> Apply MLRs to predictor</h2>
+<h2><span class="header-section-number">3.1</span> Deep water</h2>
+<div id="apply-mlrs-to-predictor" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Apply MLRs to predictor</h3>
 <pre class="r"><code>cant &lt;- b_cant(cant)</code></pre>
+</div>
 <div id="sections-by-model" class="section level3">
-<h3><span class="header-section-number">5.2.1</span> Sections by model</h3>
-<p>Zonal sections plots are produced for every 20° longitude, each era and for all models individually and can be downloaded <a href="https://github.com/jens-daniel-mueller/cant_eMLR/tree/master/output/figure/mapping" target="_blank">here</a>.</p>
+<h3><span class="header-section-number">3.1.2</span> Sections by model</h3>
+<p>Zonal section plots are produced for every 20° longitude, each era and for all models individually. Plots can be accessed here:</p>
+<ul>
+<li>/nfs/kryo/work/jenmueller/emlr_cant/observations/v_XXX/figures/Cant_model_sections/</li>
+</ul>
 <pre class="r"><code>if (params_local$plot_all_figures == &quot;y&quot;) {
-
-for (i_eras in unique(cant$eras)) {
-  # i_eras &lt;- unique(cant$eras)[2]
-  cant_eras &lt;- cant %&gt;%
-    filter(eras == i_eras)
-  
-  for (i_lon in params_global$longitude_sections_regular) {
-    # i_lon &lt;- params_global$longitude_sections_regular[7]
-    cant_eras_lon &lt;- cant_eras %&gt;%
-      filter(lon == i_lon)
+  for (i_eras in unique(cant$eras)) {
+    # i_eras &lt;- unique(cant$eras)[2]
+    cant_eras &lt;- cant %&gt;%
+      filter(eras == i_eras)
     
-    limits = max(abs(cant_eras_lon$cant)) * c(-1,1)
-    
-    cant_eras_lon %&gt;%
-      ggplot(aes(lat, depth, z = cant)) +
-      stat_summary_2d(fun = &quot;mean&quot;,
-                      na.rm = TRUE,
-                      bins = 20,
-                      col = &quot;grey&quot;) +
-      scale_fill_scico(
-        name = &quot;Cant&quot;,
-        palette = &quot;vik&quot;,
-        limit = limits
-      ) +
-      scale_y_reverse(limits = c(params_global$plotting_depth,NA)) +
-      scale_x_continuous(limits = c(-85, 85)) +
-      labs(title = paste(&quot;eras:&quot;, i_eras,
-                         &quot;| lon:&quot;, i_lon,
-                         &quot;|&quot;, params_local$Version_ID)) +
-      facet_wrap( ~ model, ncol = 5)
-    
-    ggsave(
-      paste(
-        path_version_figures,
-        &quot;Cant_model_sections/&quot;,
-        paste(&quot;Cant_model&quot;,
-              i_eras,
-              &quot;lon&quot;,
-              i_lon,
-              &quot;section.png&quot;,
-              sep = &quot;_&quot;),
-        sep = &quot;&quot;
-      ),
-      width = 17,
-      height = 9
-    )
-    
+    for (i_lon in params_global$longitude_sections_regular) {
+      # i_lon &lt;- params_global$longitude_sections_regular[7]
+      cant_eras_lon &lt;- cant_eras %&gt;%
+        filter(lon == i_lon)
+      
+      limits = max(abs(cant_eras_lon$cant)) * c(-1, 1)
+      
+      cant_eras_lon %&gt;%
+        ggplot(aes(lat, depth, z = cant)) +
+        stat_summary_2d(
+          fun = &quot;mean&quot;,
+          na.rm = TRUE,
+          bins = 20,
+          col = &quot;grey&quot;
+        ) +
+        scale_fill_scico(name = &quot;Cant&quot;,
+                         palette = &quot;vik&quot;,
+                         limit = limits) +
+        scale_y_reverse(limits = c(params_global$plotting_depth, NA)) +
+        scale_x_continuous(limits = c(-85, 85)) +
+        labs(title = paste(
+          &quot;eras:&quot;,
+          i_eras,
+          &quot;| lon:&quot;,
+          i_lon,
+          &quot;|&quot;,
+          params_local$Version_ID
+        )) +
+        facet_wrap(~ model, ncol = 5)
+      
+      ggsave(
+        paste(
+          path_version_figures,
+          &quot;Cant_model_sections/&quot;,
+          paste(&quot;Cant_model&quot;,
+                i_eras,
+                &quot;lon&quot;,
+                i_lon,
+                &quot;section.png&quot;,
+                sep = &quot;_&quot;),
+          sep = &quot;&quot;
+        ),
+        width = 17,
+        height = 9
+      )
+      
+    }
   }
-}
 }</code></pre>
 </div>
 </div>
 <div id="surface-water" class="section level2">
-<h2><span class="header-section-number">5.3</span> Surface water</h2>
-<p>As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate cant in surface waters, assuming that the CO<sub>2</sub> system in these waters has followed the increase in atmospheric CO<sub>2</sub> closely.</p>
+<h2><span class="header-section-number">3.2</span> Surface water</h2>
+<p>As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate Cant in surface waters, assuming that the CO<sub>2</sub> system in these waters has followed the increase in atmospheric CO<sub>2</sub> closely.</p>
 <p>Using eq 10.2.16 from OBD, the change in anthropogenic CO<sub>2</sub> in the upper ocean was computed as:</p>
-<p><sub>t</sub>C<sub>ant,eq</sub>(t2,ref − t1,ref) = 1∕γ ⋅ DIC/pCO2 ⋅ (pCO2atm (t2ref)− pCO2atm (t1ref))</p>
-<p>, where DIC and pCO<sub>2</sub> are the in situ values, where γ is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Mehrbach constants as refitted by Dickson and Millero using the climatological values for temperature, salinity, DIC and Alk.</p>
+<p><span class="math inline">\(\Delta\)</span><sub>t</sub>C<sub>ant,eq</sub>(t2 − t1) = 1∕<span class="math inline">\(\gamma\)</span> ⋅ DIC/pCO<sub>2</sub> ⋅ (pCO<sub>2,atm</sub> (t2)− pCO<sub>2,atm</sub>(t1))</p>
+<p>, where DIC and pCO<sub>2</sub> are the in situ values, where <span class="math inline">\(\gamma\)</span> is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Luecker constants using the climatological values for temperature, salinity, DIC and Alk.</p>
 <div id="pco2-climatology" class="section level3">
-<h3><span class="header-section-number">5.3.1</span> pCO<sub>2</sub> climatology</h3>
+<h3><span class="header-section-number">3.2.1</span> pCO<sub>2</sub> climatology</h3>
+<p>Plots below show the calculated climatolofical pCO<sub>2</sub> values.</p>
 <pre class="r"><code># calculate pCO2 from talk and tco2 climatology
-predictors_surface &lt;- predictors_surface %&gt;% 
-  mutate(pCO2 = carb(flag = 15,
-                     var1 = TAlk*1e-6,
-                     var2 = TCO2*1e-6,
-                     S = sal,
-                     T = temp,
-                     P = depth/10,
-                     Pt = phosphate*1e-6,
-                     Sit = silicate*1e-6,
-                     k1k2 = &quot;l&quot;)$pCO2)</code></pre>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface,
-  var = &quot;pCO2&quot;)</code></pre>
+predictors_surface &lt;- predictors_surface %&gt;%
+  mutate(
+    pCO2 = carb(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2 * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = &quot;l&quot;
+    )$pCO2
+  )</code></pre>
+<pre class="r"><code>p_map_climatology(df = predictors_surface,
+                  var = &quot;pCO2&quot;)</code></pre>
 <p><img src="figure/mapping_cant.Rmd/pCO2_climatology_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pCO2_climatology_map-1">
@@ -1039,9 +1090,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_section_climatology_regular(
-  df = predictors_surface,
-  var = &quot;pCO2&quot;)</code></pre>
+<pre class="r"><code>p_section_climatology_regular(df = predictors_surface,
+                              var = &quot;pCO2&quot;,
+                              surface = &quot;y&quot;)</code></pre>
 <p><img src="figure/mapping_cant.Rmd/pCO2_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pCO2_climatology_sections-1">
@@ -1093,20 +1144,24 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="revelle-factor" class="section level3">
-<h3><span class="header-section-number">5.3.2</span> Revelle factor</h3>
-<pre class="r"><code>predictors_surface &lt;- predictors_surface %&gt;% 
-  mutate(rev_fac = buffer(flag = 15,
-                     var1 = TAlk*1e-6,
-                     var2 = TCO2*1e-6,
-                     S = sal,
-                     T = temp,
-                     P = depth/10,
-                     Pt = phosphate*1e-6,
-                     Sit = silicate*1e-6,
-                     k1k2 = &quot;l&quot;)$BetaD)</code></pre>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface,
-  var = &quot;rev_fac&quot;)</code></pre>
+<h3><span class="header-section-number">3.2.2</span> Revelle factor</h3>
+<p>Plots below show the calculated climatolofical Revelle factor values.</p>
+<pre class="r"><code>predictors_surface &lt;- predictors_surface %&gt;%
+  mutate(
+    rev_fac = buffer(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2 * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = &quot;l&quot;
+    )$BetaD
+  )</code></pre>
+<pre class="r"><code>p_map_climatology(df = predictors_surface,
+                  var = &quot;rev_fac&quot;)</code></pre>
 <p><img src="figure/mapping_cant.Rmd/revelle_factor_climatology_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-revelle_factor_climatology_map-1">
@@ -1145,9 +1200,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_section_climatology_regular(
-  df = predictors_surface,
-  var = &quot;rev_fac&quot;)</code></pre>
+<pre class="r"><code>p_section_climatology_regular(df = predictors_surface,
+                              var = &quot;rev_fac&quot;,
+                              surface = &quot;y&quot;)</code></pre>
 <p><img src="figure/mapping_cant.Rmd/revelle_factor_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-revelle_factor_climatology_sections-1">
@@ -1198,26 +1253,29 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="cant" class="section level3">
-<h3><span class="header-section-number">5.3.3</span> C<sub>ant</sub></h3>
+<div id="cant-calculation" class="section level3">
+<h3><span class="header-section-number">3.2.3</span> Cant calculation</h3>
 <pre class="r"><code># calculate increase in atm pCO2 between eras
-co2_atm_tref &lt;- co2_atm_tref %&gt;% 
-  arrange(pCO2_tref) %&gt;% 
+co2_atm_tref &lt;- co2_atm_tref %&gt;%
+  arrange(pCO2_tref) %&gt;%
   mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref),
-         eras = paste(lag(era), era, sep = &quot; --&gt; &quot;)) %&gt;% 
-  drop_na() %&gt;% 
+         eras = paste(lag(era), era, sep = &quot; --&gt; &quot;)) %&gt;%
+  drop_na() %&gt;%
   select(eras, d_pCO2_tref)
 
 cant_surface &lt;- full_join(predictors_surface, co2_atm_tref,
                           by = character())
 
 # calculate cant
-cant_surface &lt;- cant_surface %&gt;% 
+cant_surface &lt;- cant_surface %&gt;%
   mutate(cant = (1 / rev_fac) * (TCO2 / pCO2) * d_pCO2_tref)
 
 # calculate positive cant
 cant_surface &lt;- cant_surface %&gt;%
   mutate(cant_pos = if_else(cant &lt; 0, 0, cant))</code></pre>
+</div>
+<div id="control-plots" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Control plots</h3>
 <pre class="r"><code># i_eras &lt;- unique(cant_average$eras)[2]
 
 for (i_eras in unique(cant_surface$eras)) {
@@ -1320,7 +1378,8 @@ jens-daniel-mueller
 for (i_eras in unique(cant_surface$eras)) {
   print(
     p_section_climatology_regular(df = cant_surface %&gt;% filter(eras == i_eras),
-                                  var = &quot;cant&quot;) +
+                                  var = &quot;cant&quot;,
+                                  surface = &quot;y&quot;) +
       labs(subtitle = paste(&quot;era:&quot;, i_eras))
   )
   
@@ -1436,11 +1495,11 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="mean-cant-fields" class="section level2">
-<h2><span class="header-section-number">5.4</span> Mean Cant fields</h2>
-<p>Mean and sd are calculated for cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only. This averaging step summarizes the information derived from ten best fitting MLRs.</p>
+<div id="average-model-cant" class="section level2">
+<h2><span class="header-section-number">3.3</span> Average model Cant</h2>
+<p>Mean and sd are calculated across 10 models for Cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only.</p>
 <div id="deep-water-averaging" class="section level3">
-<h3><span class="header-section-number">5.4.1</span> Deep water averaging</h3>
+<h3><span class="header-section-number">3.3.1</span> Deep water averaging</h3>
 <pre class="r"><code>cant_average &lt;- m_cant_model_average(cant)
 cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)
 
@@ -1893,26 +1952,27 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="surface-water-averaging" class="section level3">
-<h3><span class="header-section-number">5.4.2</span> Surface water averaging</h3>
+<h3><span class="header-section-number">3.3.2</span> Surface water averaging</h3>
+<p>The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.</p>
 <pre class="r"><code>cant_surface_average &lt;- m_cant_model_average(cant_surface)
 cant_surface_average &lt;- m_cut_gamma(cant_surface_average, &quot;gamma&quot;)
 rm(cant_surface)</code></pre>
 </div>
 <div id="join-surface-and-deep-water" class="section level3">
-<h3><span class="header-section-number">5.4.3</span> Join surface and deep water</h3>
+<h3><span class="header-section-number">3.3.3</span> Join surface and deep water</h3>
 <pre class="r"><code>cant_average &lt;- full_join(cant_average, cant_surface_average)
 rm(cant_surface_average)</code></pre>
 </div>
 </div>
-<div id="mean-cant-sections" class="section level2">
-<h2><span class="header-section-number">5.5</span> Mean cant sections</h2>
+<div id="zonal-mean-sections" class="section level2">
+<h2><span class="header-section-number">3.4</span> Zonal mean sections</h2>
 <p>For each basin and era combination, the zonal mean cant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
 <pre class="r"><code>cant_average_zonal &lt;- m_cant_zonal_mean(cant_average)
 cant_average_zonal &lt;- m_cut_gamma(cant_average_zonal, &quot;gamma_mean&quot;)</code></pre>
 </div>
 <div id="mean-cant-sections-by-coefficient" class="section level2">
-<h2><span class="header-section-number">5.6</span> Mean cant sections by coefficient</h2>
-<p>For each basin and era combination, the zonal mean cant is calculated by model coefficient.</p>
+<h2><span class="header-section-number">3.5</span> Mean cant sections by coefficient</h2>
+<p>For each basin and era combination, the zonal mean is calculated for the term of each predictor.</p>
 <pre class="r"><code>cant_predictor_average_zonal &lt;-
   m_cant_predictor_zonal_mean(cant_predictor_average)
 
@@ -1920,20 +1980,19 @@ cant_predictor_average_zonal &lt;-
   m_cut_gamma(cant_predictor_average_zonal, &quot;gamma&quot;)</code></pre>
 </div>
 <div id="inventory-calculation" class="section level2">
-<h2><span class="header-section-number">5.7</span> Inventory calculation</h2>
-<p>To calculate cant column inventories, we:</p>
+<h2><span class="header-section-number">3.6</span> Inventory calculation</h2>
+<p>To calculate Cant column inventories, we:</p>
 <ol style="list-style-type: decimal">
-<li>Multiple layer thickness with cant concentration to get a layer inventory</li>
-<li>For each horizontal grid cell and era, sum cant layer inventories from 150 - 3000 m</li>
+<li>Convert Cant concentrations to volumetric units</li>
+<li>Multiply layer thickness with volumentric Cant concentration to get a layer inventory</li>
+<li>For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (100, 500, 1000, 3000, 10^{4} m)</li>
 </ol>
-<p>Step 2 is performed again for all cant and positive cant values only</p>
+<p>Step 2 is performed separately for all Cant and positive Cant values only.</p>
 <pre class="r"><code>cant_inv &lt;- m_cant_inv(cant_average)
 
-p_map_cant_inv(
-  df = cant_inv,
-  var = &quot;cant_pos_inv&quot;,
-  subtitle_text = &quot;for predefined integration depths&quot;
-) +
+p_map_cant_inv(df = cant_inv,
+               var = &quot;cant_pos_inv&quot;,
+               subtitle_text = &quot;for predefined integration depths&quot;) +
   facet_grid(inv_depth ~ eras)</code></pre>
 <p><img src="figure/mapping_cant.Rmd/cant_inventories-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -2042,7 +2101,7 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="write-csv" class="section level1">
-<h1><span class="header-section-number">6</span> Write csv</h1>
+<h1><span class="header-section-number">4</span> Write csv</h1>
 <pre class="r"><code>cant_average %&gt;%
   write_csv(paste(path_version_data,
                   &quot;cant_3d.csv&quot;, sep = &quot;&quot;))
