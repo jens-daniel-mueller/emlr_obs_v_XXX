@@ -28,9 +28,8 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "new MLR fitting routine, rmse corrected",
+message = "rebuild after final cleaning",
 republish = TRUE)
-
 
 
 # Push latest version to GitHub
