@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7e1b1c0fb4fc99bd6940bea59de1fec893f66acftargetblank7e1b1c0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7e1b1c0fb4fc99bd6940bea59de1fec893f66acf" target="_blank">7e1b1c0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7e1b1c0fb4fc99bd6940bea59de1fec893f66acftargetblank7e1b1c0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7e1b1c0fb4fc99bd6940bea59de1fec893f66acf" target="_blank">7e1b1c0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -619,7 +619,7 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Untracked files:
-    Untracked:  code/dump/
+    Untracked:  code/old_cstar_adjustment.Rmd
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/cd02e630b056af1876ff95de494c556df28a64d9/analysis/eMLR_data_preparation.Rmd" target="_blank">cd02e63</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild with new reference year adjustment
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/d39702858ab7ab085a21903b8c04336ef10d94f9/docs/eMLR_data_preparation.html" target="_blank">d397028</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1545,7 +1579,8 @@ Initial commit
 <li>cleaned data file</li>
 <li>horizontal grid of sampling coordinates</li>
 </ul></li>
-<li>Cant from Sabine 2004</li>
+<li>Cant from Sabine 2004 (S04)</li>
+<li>Cant from Gruber 2019 (G19)</li>
 <li>annual mean atmospheric pCO<sub>2</sub></li>
 </ul>
 <pre class="r"><code>GLODAP &lt;-
@@ -1561,6 +1596,11 @@ GLODAP_obs_grid &lt;-
 S04_cant_3d &lt;-
   read_csv(paste(path_preprocessing,
                  &quot;S04_cant_3d.csv&quot;,
+                 sep = &quot;&quot;))
+
+G19_cant_3d &lt;-
+  read_csv(paste(path_preprocessing,
+                 &quot;G19_cant_3d.csv&quot;,
                  sep = &quot;&quot;))
 
 co2_atm &lt;-
@@ -1619,36 +1659,75 @@ co2_atm &lt;-
 </div>
 <div id="reference-year-adjustment" class="section level2">
 <h2><span class="header-section-number">3.3</span> Reference year adjustment</h2>
-<p>The reference year adjustment relies on an apriori estimate of Cant at a given location and depth, which is used as a scaling factor for the concurrent change in atmospheric CO<sub>2</sub>. The underlying assumption is a transient steady state for the oceanic Cant uptake. Here, Cant from the GLODAP mapped Climatology was used.</p>
-<p>Note that eq. 6 in Clement and Gruber (2018) misses pCO<sub>2</sub> pre-industrial in the denominator. Here we use the equation published in Gruber et al. (2019).</p>
+<p>To adjust C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the “base line” total cant concentration determined for 1994 by Sabine et al (2004):</p>
+<p>Cant(tref) = S04 + (tref-1994)/13 * G19</p>
+<p>This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.</p>
+<div id="join-cant-fields" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Join Cant fields</h3>
+<p>Join Cant fields of G19 and S04</p>
+<pre class="r"><code>G19_cant_3d &lt;- G19_cant_3d %&gt;% 
+  select(lon, lat, depth, cant_pos_G19 = cant_pos)
+
+S04_cant_3d &lt;- S04_cant_3d %&gt;% 
+  select(lon, lat, depth, cant_pos_S04 = cant_pos)
+
+cant_3d &lt;- inner_join(S04_cant_3d, G19_cant_3d)</code></pre>
+</div>
+<div id="cant-at-tref" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Cant at tref</h3>
+<p>Calculate Cant at tref by adding G19, scaled for the time since 1994.</p>
+<pre class="r"><code># calculate reference year
+tref &lt;- GLODAP %&gt;%
+  group_by(era) %&gt;%
+  summarise(year = median(year)) %&gt;%
+  ungroup()
+
+# join cant with tref
+cant_3d &lt;- expand_grid(cant_3d, tref)
+
+# calculate cant fields for all tref
+cant_3d &lt;- cant_3d %&gt;%
+  mutate(cant_pos =
+           cant_pos_S04 +
+           ((year - 1994) / 13 * cant_pos_G19))
+
+# remove columns
+cant_3d &lt;- cant_3d %&gt;% 
+  select(lon, lat, depth, era, cant_pos)</code></pre>
+</div>
 <div id="combine-glodap-cant" class="section level3">
-<h3><span class="header-section-number">3.3.1</span> Combine GLODAP + Cant</h3>
-<pre class="r"><code>S04_cant_3d_obs &lt;- left_join(
-  GLODAP_obs_grid,
-  S04_cant_3d %&gt;% select(-c(cant, eras))
-  )
+<h3><span class="header-section-number">3.3.3</span> Combine GLODAP + Cant</h3>
+<pre class="r"><code># observations grid per era
+GLODAP_obs_grid_era &lt;- GLODAP %&gt;% 
+  distinct(lat, lon, era)
+
+# cant data at observations grid
+cant_3d_obs &lt;- left_join(
+  GLODAP_obs_grid_era,
+  cant_3d)
 
 # calculate number of cant data points per grid cell
-S04_cant_3d_obs &lt;- S04_cant_3d_obs %&gt;%
-  group_by(lon, lat) %&gt;% 
+cant_3d_obs &lt;- cant_3d_obs %&gt;%
+  group_by(lon, lat, era) %&gt;% 
   mutate(n = n()) %&gt;% 
   ungroup()
 
-# S04_cant_3d_obs %&gt;%
-#   filter(n &lt;= 1) %&gt;%
-#   ggplot(aes(lon,lat)) +
-#   geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
-#   geom_point(col = &quot;red&quot;)
+cant_3d_obs %&gt;%
+  filter(n &lt;= 1) %&gt;%
+  ggplot(aes(lon,lat)) +
+  geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
+  geom_point(col = &quot;red&quot;) +
+  facet_wrap(~era)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(cant_3d, GLODAP_obs_grid)
 
-rm(S04_cant_3d, GLODAP_obs_grid)
+GLODAP_cant_obs &lt;- full_join(GLODAP, cant_3d_obs)
 
-GLODAP_cant_obs &lt;- full_join(GLODAP, S04_cant_3d_obs)
-
-rm(GLODAP, S04_cant_3d_obs)
+rm(GLODAP, cant_3d_obs)
 
 # fill number of cant data points per grid cell to all observations
 GLODAP_cant_obs &lt;- GLODAP_cant_obs %&gt;%
-  group_by(lon, lat) %&gt;% 
+  group_by(lon, lat, era) %&gt;% 
   fill(n, .direction = &quot;updown&quot;) %&gt;% 
   ungroup()</code></pre>
 <p>The mapped Cant product was merged with GLODAP observation by:</p>
@@ -1659,7 +1738,7 @@ GLODAP_cant_obs &lt;- GLODAP_cant_obs %&gt;%
 <pre class="r"><code># interpolate cant to observation depth
 GLODAP_cant_obs_int &lt;- GLODAP_cant_obs %&gt;%
   filter(n &gt; 1) %&gt;% 
-  group_by(lat, lon) %&gt;%
+  group_by(lat, lon, era) %&gt;%
   arrange(depth) %&gt;%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %&gt;%
   ungroup()
@@ -1667,7 +1746,7 @@ GLODAP_cant_obs_int &lt;- GLODAP_cant_obs %&gt;%
 # set cant for observation depth if only one cant available
 GLODAP_cant_obs_set &lt;- GLODAP_cant_obs %&gt;%
   filter(n == 1) %&gt;%
-  group_by(lat, lon) %&gt;%
+  group_by(lat, lon, era) %&gt;%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %&gt;%
   ungroup()
 
@@ -1695,6 +1774,7 @@ ggplot() +
     aes(cant_pos_int, depth, col = &quot;interpolated&quot;)
   ) +
   scale_y_reverse() +
+  facet_wrap(~era) +
   scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;&quot;) +
   labs(title = &quot;Cant interpolation to sampling depth - example profile&quot;)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1755,23 +1835,16 @@ GLODAP &lt;- GLODAP_cant_obs %&gt;%
 rm(GLODAP_cant_obs)</code></pre>
 </div>
 <div id="merge-glodap-atm.-pco2" class="section level3">
-<h3><span class="header-section-number">3.3.2</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
+<h3><span class="header-section-number">3.3.4</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
 <p>GLODAP observations were merged with mean annual atmospheric pCO<sub>2</sub> levels by year.</p>
 <pre class="r"><code>GLODAP &lt;- left_join(GLODAP, co2_atm)</code></pre>
 </div>
 <div id="calculation-2" class="section level3">
-<h3><span class="header-section-number">3.3.3</span> Calculation</h3>
-<p>C<sub>ant</sub> for median year of each era was calculated by applying alpha = 0.28/13 * (median year - 1994) to the estimate of Sabine et al. (2004).</p>
+<h3><span class="header-section-number">3.3.5</span> Calculation</h3>
 <pre class="r"><code># assign reference year
 GLODAP &lt;- GLODAP %&gt;% 
   group_by(era) %&gt;% 
   mutate(tref = median(year)) %&gt;% 
-  ungroup()
-
-# calculate reference year
-tref &lt;- GLODAP %&gt;% 
-  group_by(era) %&gt;% 
-  summarise(year = median(year)) %&gt;% 
   ungroup()
 
 # extract atm pCO2 at reference year
@@ -1782,11 +1855,6 @@ co2_atm_tref &lt;- right_join(co2_atm, tref) %&gt;%
 # merge atm pCO2 at tref with GLODAP
 GLODAP &lt;- full_join(GLODAP, co2_atm_tref)
 rm(co2_atm, tref)
-
-# scale cant to reference year
-GLODAP &lt;- GLODAP %&gt;%
-  mutate(alpha = (tref - 1994) * (0.28 / 13),
-         cant_pos = cant_pos * (1 + alpha))
 
 # calculate cstar for reference year
 GLODAP &lt;- GLODAP %&gt;%
