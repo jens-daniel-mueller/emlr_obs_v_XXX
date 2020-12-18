@@ -56,7 +56,7 @@ library(gt)
 
 # Data sources
 
-Cant estimates from this study:
+Cant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
@@ -87,7 +87,7 @@ cant_inv <-
 
 ```
 
-C* estimates from this study:
+Target variable (`r params_local$MLR_target`) estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
@@ -107,7 +107,7 @@ target_zonal <-
 
 ```
 
-Cleaned GLODAPv2_2020 file as used in this study
+Cleaned GLODAPv2_2020 file as used in this sensitivity case
 
 ```{r read_GLODAP_used_for_fitting}
 
@@ -122,7 +122,7 @@ GLODAP <-
 
 # Cant budgets
 
-Global Cant inventories were estimated in units of Pg C. Please note that here we only added positive Cant values in the upper `r params_global$inventory_depth`m and do not apply additional corrections for areas not covered.
+Global Cant inventories were estimated in units of Pg C. Please note that here we added Cant (all vs postitive only) values and do not apply additional corrections for areas not covered.
 
 ```{r calculate_global_inventory}
 
@@ -142,6 +142,8 @@ cant_inv_budget <- cant_inv %>%
 
 ## Standard depth
 
+Results integrated over the upper `r params_global$inventory_depth_standard` m
+
 ```{r cant_budget_standard_depth}
 
 cant_inv_budget %>%
@@ -158,6 +160,8 @@ cant_inv_budget %>%
 ```
 
 ## Other depths
+
+Results integrated over the upper `r params_global$inventory_depths` m
 
 ```{r cant_budget_other_depth}
 
@@ -187,7 +191,7 @@ cant_inv <- cant_inv %>%
 
 # Cant - positive
 
-In a first series of plots we explore the distribution of cant, taking only positive estimates into account (positive here refers to the mean cant estimate across 10 eMLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 
 ## Zonal mean sections
 
@@ -300,7 +304,7 @@ for (i_eras in unique(cant_3d$eras)) {
 
 # Cant - all
 
-In a second series of plots we explore the distribution of cant, taking positive and negative estimates into account.
+In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
 
 ## Zonal mean sections
 
@@ -331,7 +335,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
 
 ## Isoneutral slab distribution
 
-Mean of cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.
 
 Please note that:
 
@@ -366,7 +370,7 @@ for (i_eras in unique(cant_gamma_maps$eras)) {
 
 ## Inventory map
 
-Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of all Cant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_all_inventory_map, fig.asp=0.5}
 
@@ -386,7 +390,7 @@ for (i_eras in unique(cant_inv$eras)) {
 
 ```
 
-# Cant - standard deviation 
+# Cant variability
 
 ## Across models
 
@@ -407,7 +411,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
         var = "cant_sd_mean",
         gamma = "gamma_mean",
         legend_title = "sd",
-        title_text = "Zonal mean section of Cant sd between models",
+        title_text = "Zonal mean section of SD across models",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| eras:", i_eras))
     )
@@ -437,7 +441,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
         var = "cant_sd",
         gamma = "gamma_mean",
         legend_title = "sd",
-        title_text = "Zonal mean section of sd between model mean Cant",
+        title_text = "Zonal mean section of Cant SD",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| eras:", i_eras))
     )
@@ -451,10 +455,9 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
 
 ### Cant vs model SD
 
-```{r cant_vs_sd_by_basin_era}
+#### Era vs basin
 
-# cant_3d <- cant_3d  %>% 
-#   mutate(eras = factor(eras, c("JGOFS_GO", "GO_new")))
+```{r cant_vs_sd_by_basin_era}
 
 cant_3d %>% 
   ggplot(aes(cant, cant_sd)) +
@@ -468,6 +471,8 @@ cant_3d %>%
   facet_grid(basin_AIP ~ eras)
 
 ```
+
+#### Basin vs gamma
 
 ```{r cant_vs_sd_by_basin_gamma, fig.asp=2}
 
@@ -486,6 +491,8 @@ cant_3d %>%
 
 ### Cant vs regional SD
 
+#### Era vs basin
+
 ```{r cant_vs_sd_by_basin_era_zonal}
 
 cant_zonal %>% 
@@ -500,6 +507,8 @@ cant_zonal %>%
   facet_grid(basin_AIP ~ eras)
 
 ```
+
+#### Era vs basin
 
 ```{r cant_vs_sd_by_basin_gamma_zonal, fig.asp=2}
 
@@ -518,33 +527,21 @@ cant_zonal %>%
 
 # Cant - predictor contribution
 
-```{r cant_section_predictor_contribution, eval=FALSE}
+```{r cant_section_predictor_contribution, fig.asp=1}
 
-# variable <- "cant_aou"
-df <- cant_predictor_zonal
-var <- "cant_aou"
+for (i_var in paste("cant",
+                    c("intercept", params_local$MLR_predictors),
+                    sep = "_")) {
 
-for (variable in c(
-  "cant_intercept",
-  "cant_aou",
-  "cant_oxygen",
-  "cant_phosphate",
-  "cant_phosphate_star",
-  "cant_silicate",
-  "cant_tem",
-  "cant_sal")) {
-
-print(
-p_section_zonal_divergent_gamma_eras_basin(
-  df = cant_predictor_zonal,
-  var = variable,
-  gamma = "gamma")
-)
-    
+  print(
+    p_section_zonal_divergent_gamma_eras_basin(df = cant_predictor_zonal,
+                                               var = i_var,
+                                               gamma = "gamma")
+  )
+  
 }
 
-
-rm(variable)
+rm(i_var)
 ```
 
 
@@ -552,18 +549,17 @@ rm(variable)
 
 ## Slab depth
 
+The plot below shows the depths of individual gamma slabs (color) together with the observations available in the respective slab.
+
 Please note that:
 
 - density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
-- predictor density slabs are only shown for the upper `r params_global$inventory_depth`m as used for the mapping, whereas GLODAP observations are displayed for the entire water column as used for fitting eMLRs (in both cases shallow waters are excluded at low density)
 
 ```{r gamma_maps, fig.asp=2.5}
 
 GLODAP_obs_coverage <- GLODAP %>% 
   count(lat, lon, gamma_slab, era)
-# %>% 
-#   mutate(era = factor(era, c("JGOFS_WOCE", "GO_SHIP", "new_era")))
-  
+
 map +
   geom_raster(data = cant_gamma_maps,
               aes(lon, lat, fill = depth_max)) +
@@ -581,52 +577,37 @@ rm(GLODAP_obs_coverage)
 
 # Target variable
 
-The predicted target variable (either tco2, cstar or cstar_tref) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.
+The predicted target variable (`r params_local$MLR_target` in this sensitivity case) is based on fitted MLRs and climatological fields of predictor variables, and calculated for each era.
 
 ## Zonal mean sections
 
 ```{r target_zonal_mean_era}
 
-slab_breaks <- c(params_local$slabs_Atl[1:12],Inf)
+slab_breaks <- c(params_local$slabs_Atl[1:12], Inf)
 
-target_zonal %>% 
-    ggplot(aes(lat, depth,
-               z = !!sym(paste(params_local$MLR_target, "mean", sep = "_")))) +
-    geom_contour_filled(bins = 11) +
-    scale_fill_viridis_d(name = params_local$MLR_target) +
-    geom_contour(aes(lat, depth, z = gamma_mean),
-                 breaks = slab_breaks,
-                 col = "white") +
-    geom_text_contour(
-      aes(lat, depth, z = gamma_mean),
-      breaks = slab_breaks,
-      col = "white",
-      skip = 1
-    ) +
-    scale_y_reverse() +
-    scale_x_continuous(breaks = seq(-100,100,20)) +
-    coord_cartesian(expand = 0) +
-    guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
-    facet_grid(basin_AIP ~ era)
+target_zonal %>%
+  ggplot(aes(lat, depth,
+             z = !!sym(
+               paste(params_local$MLR_target, "mean", sep = "_")
+             ))) +
+  geom_contour_filled(bins = 11) +
+  scale_fill_viridis_d(name = params_local$MLR_target) +
+  geom_contour(aes(lat, depth, z = gamma_mean),
+               breaks = slab_breaks,
+               col = "white") +
+  geom_text_contour(
+    aes(lat, depth, z = gamma_mean),
+    breaks = slab_breaks,
+    col = "white",
+    skip = 1
+  ) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0,
+                  ylim = c(params_global$plotting_depth, 0)) +
+  scale_x_continuous(breaks = seq(-100, 100, 20)) +
+  guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
+  facet_grid(basin_AIP ~ era)
 
 rm(slab_breaks)
 
 ```
-
-# Sections by model
-
-Zonal sections plots are produced for every 20° longitude, each era and for all models individually and can be downloaded [here](https://github.com/jens-daniel-mueller/cant_eMLR/tree/master/output/figure/mapping){target="_blank"}.
-
-
-# Known issues
-
-Deviations between this study and the results by Gruber et al (2019), short G19, for the same period, might be attributable to following known differences in the implementation of the eMLR(C*) method:
-
-- GLODAPv2_2020 here vs an extended version of GLODAPv2 in G19
-- flagging: Here, we accept f flags 0 and 2 (except for tco2, where only 0 is accepted). G19 claim to use 0 throughout, yet have a high coverage of talk observations in the SE Pacific  
-- Neutral density calculation: Here and in GLODAPv2_2020 a polynomial approximation is used, whereas G19 uses the original Matlab code  
-- Predictor climatology: Here we used WOA18, whereas G19 used WOA13
-- Missing data in the GLODAP mapped climatology, eg NO3 at surface, where not filled in this study
-- cant on neutral density levels calculate as slab mean, rather than on one surface
-- Here, surface delta cant were calculated based on Luecker constants, rather than Mehrbach as in G19
-- Here, pCO2 was calculated from DIC/TA Climatology
