@@ -12,7 +12,7 @@
 <meta name="author" content="Jens Daniel Müller" />
 
 
-<title>eMLR - data preparation</title>
+<title>eMLR data preparation</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -375,7 +375,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">eMLR v_XXX</a>
+      <a class="navbar-brand" href="index.html">eMLR obs v_XXX</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -481,7 +481,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">eMLR - data preparation</h1>
+<h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
 <h4 class="date">18 December, 2020</h4>
 
@@ -599,16 +599,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeca65bf5e5878986d994a1a9998c3537ab6fa1af1targetblankca65bf5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ca65bf5e5878986d994a1a9998c3537ab6fa1af1" target="_blank">ca65bf5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeca65bf5e5878986d994a1a9998c3537ab6fa1af1targetblankca65bf5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ca65bf5e5878986d994a1a9998c3537ab6fa1af1" target="_blank">ca65bf5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -622,6 +622,8 @@ Untracked files:
     Untracked:  code/old_cstar_adjustment.Rmd
 
 Unstaged changes:
+    Modified:   README.md
+    Modified:   analysis/_site.yml
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -662,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ca65bf5e5878986d994a1a9998c3537ab6fa1af1/analysis/eMLR_data_preparation.Rmd" target="_blank">ca65bf5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild after final cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/eMLR_data_preparation.html" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1577,7 +1613,6 @@ Initial commit
 <li>GLODAPv2.2020
 <ul>
 <li>cleaned data file</li>
-<li>horizontal grid of sampling coordinates</li>
 </ul></li>
 <li>Cant from Sabine 2004 (S04)</li>
 <li>Cant from Gruber 2019 (G19)</li>
@@ -1586,11 +1621,6 @@ Initial commit
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(path_version_data,
                  &quot;GLODAPv2.2020_clean.csv&quot;,
-                 sep = &quot;&quot;))
-
-GLODAP_obs_grid &lt;-
-  read_csv(paste(path_version_data,
-                 &quot;GLODAPv2.2020_clean_obs_grid.csv&quot;,
                  sep = &quot;&quot;))
 
 S04_cant_3d &lt;-
@@ -1715,11 +1745,48 @@ cant_3d_obs &lt;- cant_3d_obs %&gt;%
 cant_3d_obs %&gt;%
   filter(n &lt;= 1) %&gt;%
   ggplot(aes(lon,lat)) +
-  geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
+  geom_point(data = GLODAP_obs_grid_era, aes(lon, lat)) +
   geom_point(col = &quot;red&quot;) +
   facet_wrap(~era)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>rm(cant_3d, GLODAP_obs_grid)
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-merge_cstar_cant-1">
+Past versions of merge_cstar_cant-1.png
+</button>
+</p>
+<div id="fig-merge_cstar_cant-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(cant_3d, GLODAP_obs_grid_era)
 
 GLODAP_cant_obs &lt;- full_join(GLODAP, cant_3d_obs)
 
@@ -1800,6 +1867,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">196be51</a>
@@ -1893,6 +1971,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">158fe26</a>
@@ -2082,6 +2171,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">158fe26</a>
 </td>
 <td>
@@ -2266,6 +2366,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">158fe26</a>
@@ -3207,6 +3318,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">158fe26</a>
 </td>
 <td>
@@ -3807,6 +3929,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">158fe26</a>
 </td>
 <td>
@@ -3858,7 +3991,8 @@ jens-daniel-mueller
 </div>
 <div id="individual-cruise-sections" class="section level1">
 <h1><span class="header-section-number">7</span> Individual cruise sections</h1>
-<p>Zonal and meridional section plots are produce for each cruise individually and can be downloaded <a href="https://github.com/jens-daniel-mueller/Cant_eMLR/tree/master/output/figure/eMLR/data_preparation/all_cruises_clean" target="_blank">here</a>.</p>
+<p>Zonal and meridional section plots are produce for each cruise individually and are available under:</p>
+<p>/nfs/kryo/work/jenmueller/emlr_cant/observations/v_XXX/figures/Cruise_sections_histograms/</p>
 <pre class="r"><code>if (params_local$plot_all_figures == &quot;y&quot;) {
 
 cruises &lt;- GLODAP %&gt;% 

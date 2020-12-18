@@ -377,7 +377,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">eMLR v_XXX</a>
+      <a class="navbar-brand" href="index.html">eMLR obs v_XXX</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -601,16 +601,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeca65bf5e5878986d994a1a9998c3537ab6fa1af1targetblankca65bf5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ca65bf5e5878986d994a1a9998c3537ab6fa1af1" target="_blank">ca65bf5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecd02e630b056af1876ff95de494c556df28a64d9targetblankcd02e63a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeca65bf5e5878986d994a1a9998c3537ab6fa1af1targetblankca65bf5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cd02e630b056af1876ff95de494c556df28a64d9" target="_blank">cd02e63</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ca65bf5e5878986d994a1a9998c3537ab6fa1af1" target="_blank">ca65bf5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -624,6 +624,8 @@ Untracked files:
     Untracked:  code/old_cstar_adjustment.Rmd
 
 Unstaged changes:
+    Modified:   README.md
+    Modified:   analysis/_site.yml
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -664,6 +666,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ca65bf5e5878986d994a1a9998c3537ab6fa1af1/analysis/eMLR_model_fitting.Rmd" target="_blank">ca65bf5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+rebuild after final cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/eMLR_model_fitting.html" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1619,11 +1655,14 @@ Initial commit
 </div>
 <div id="predictor-combinations" class="section level1">
 <h1><span class="header-section-number">2</span> Predictor combinations</h1>
-<p>Find all possible combinations of following cosidered predictor variables:</p>
+<p>Find all possible combinations of following considered predictor variables:</p>
 <ul>
 <li>sal, temp, aou, oxygen, silicate, phosphate, phosphate_star</li>
 </ul>
-<pre class="r"><code>i_basin &lt;- unique(GLODAP$basin)[1]
+<pre class="r"><code># the following code is a workaround to find all predictor combinations
+# using the olsrr package and fit all models for one era, slab, and basin
+
+i_basin &lt;- unique(GLODAP$basin)[1]
 i_era   &lt;- unique(GLODAP$era)[1]
 
 # subset one basin and era for fitting
@@ -1675,16 +1714,20 @@ rm(i_gamma_slab,
 <li>Maximum: 5</li>
 </ul>
 <pre class="r"><code>lm_all &lt;- lm_all %&gt;% 
-  filter(n &gt;= params_local$predictors_min,
-         n &lt;= params_local$predictors_max)</code></pre>
+  filter(n &gt;= params_local$MLR_predictors_min,
+         n &lt;= params_local$MLR_predictors_max)</code></pre>
 <p>This results in a total number of MLR models of:</p>
 <ul>
 <li>112</li>
 </ul>
 </div>
-<div id="fitting-all-models" class="section level1">
-<h1><span class="header-section-number">4</span> Fitting all models</h1>
-<p>Individual linear regression models were fitted for the chosen target variable cstar_tref as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE) was calculated for each fitted model.</p>
+<div id="fit-all-models" class="section level1">
+<h1><span class="header-section-number">4</span> Fit all models</h1>
+<p>Individual linear regression models were fitted for the chosen target variable:</p>
+<ul>
+<li>cstar_tref</li>
+</ul>
+<p>as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE), were calculated for each fitted model.</p>
 <pre class="r"><code># loop across all basins, era, gamma slabs, and MLRs
 # fit all MLR models
 for (i_basin in unique(GLODAP$basin)) {
@@ -1855,49 +1898,7 @@ lm_all_fitted_wide &lt;- lm_all_fitted %&gt;%
 <li>rmse</li>
 </ul>
 <p>The criterion was summed up for two adjecent eras, and the models with lowest summed values were selected.</p>
-<p>Please note, that currently the <code>lm()</code> function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Models with fitted NA predictors were not included.</p>
-<pre class="r"><code>lm_all_fitted_wide %&gt;% 
-  ggplot(aes(n_predictors, cor_max)) +
-  geom_point() +
-  facet_wrap(~ na_predictor)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/Predictor_correlation_NA-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Predictor_correlation_NA-1">
-Past versions of Predictor_correlation_NA-1.png
-</button>
-</p>
-<div id="fig-Predictor_correlation_NA-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d39702858ab7ab085a21903b8c04336ef10d94f9/docs/figure/eMLR_model_fitting.Rmd/Predictor_correlation_NA-1.png" target="_blank">d397028</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-18
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p>Please note, that currently the <code>lm()</code> function produces NAs for some predictors. It is not yet entirely clear when this happens, but presumably it is caused by some form of collinearity between predictors, such that including another predictor does not help to explain the target variable any better. The issues also expresses as exactly identical rmse values of different models. As an interim solution, models with fitted NA predictors were not included.</p>
 <pre class="r"><code># remove models with predictors fitted as NA
 
 lm_all_fitted_wide &lt;- lm_all_fitted_wide %&gt;%
@@ -1916,7 +1917,7 @@ lm_all_fitted_wide_eras &lt;- lm_all_fitted_wide  %&gt;%
   drop_na()
 
 # subset models with lowest summed criterion
-
+# chose which criterion is applied
 
 if (params_local$MLR_criterion == &quot;aic&quot;) {
   lm_best &lt;- lm_all_fitted_wide_eras %&gt;%
@@ -1937,7 +1938,7 @@ if (params_local$MLR_criterion == &quot;aic&quot;) {
 }
 
 
-# plot table for website
+# print table
 lm_best %&gt;% 
   kable() %&gt;%
   add_header_above() %&gt;%
@@ -24023,6 +24024,7 @@ cstar_tref ~ sal + temp + aou + silicate + phosphate
 </div>
 <div id="target-variable-coefficients" class="section level2">
 <h2><span class="header-section-number">5.3</span> Target variable coefficients</h2>
+<p>A data frame to map the target variable is prepared.</p>
 <pre class="r"><code># create table with two era belonging to one eras
 eras_forward &lt;- lm_all_fitted_wide %&gt;%
   arrange(era) %&gt;% 
@@ -24055,7 +24057,7 @@ rm(eras_era, eras_forward, eras_backward,
 </div>
 <div id="cant-coeffcients" class="section level2">
 <h2><span class="header-section-number">5.4</span> Cant coeffcients</h2>
-<p>Coefficient offsets are calculated to facilitate the direct mapping of Cant.</p>
+<p>A data frame of coefficient offsets is prepared to facilitate the direct mapping of Cant.</p>
 <pre class="r"><code># pivot long format
 lm_best_long &lt;- lm_best_target %&gt;%
   pivot_longer(`coeff_(Intercept)`:coeff_oxygen,
@@ -24109,11 +24111,14 @@ lm_best_cant %&gt;%
                   &quot;lm_best_cant.csv&quot;,
                   sep = &quot;&quot;))</code></pre>
 </div>
-<div id="selction-criterion-vs-predictors" class="section level2">
-<h2><span class="header-section-number">5.6</span> Selction criterion vs predictors</h2>
+</div>
+<div id="model-diagnotics" class="section level1">
+<h1><span class="header-section-number">6</span> Model diagnotics</h1>
+<div id="selection-criterion-vs-predictors" class="section level2">
+<h2><span class="header-section-number">6.1</span> Selection criterion vs predictors</h2>
 <p>The selection criterion (rmse) was plotted against the number of predictors (limited to 2 - 5).</p>
 <div id="all-models" class="section level3">
-<h3><span class="header-section-number">5.6.1</span> All models</h3>
+<h3><span class="header-section-number">6.1.1</span> All models</h3>
 <pre class="r"><code>lm_all_fitted_wide %&gt;%
   ggplot(aes(as.factor(n_predictors),
              !!sym(params_local$MLR_criterion),
@@ -24145,6 +24150,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">7131186</a>
@@ -24184,7 +24200,7 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="best-models" class="section level3">
-<h3><span class="header-section-number">5.6.2</span> Best models</h3>
+<h3><span class="header-section-number">6.1.2</span> Best models</h3>
 <pre class="r"><code>lm_best_target %&gt;%
   ggplot(aes(&quot;&quot;,
              !!sym(params_local$MLR_criterion),
@@ -24217,6 +24233,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">7131186</a>
@@ -24257,10 +24284,12 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="rmse-correlation-between-eras" class="section level2">
-<h2><span class="header-section-number">5.7</span> RMSE correlation between eras</h2>
+<h2><span class="header-section-number">6.2</span> RMSE correlation between eras</h2>
+<p>RMSE was plotted to compare the agreement for one model applied to two adjecent eras (ie check whether the same predictor combination performs equal in both eras).</p>
 <div id="all-models-1" class="section level3">
-<h3><span class="header-section-number">5.7.1</span> All models</h3>
-<pre class="r"><code>max_rmse &lt;-
+<h3><span class="header-section-number">6.2.1</span> All models</h3>
+<pre class="r"><code># find max rmse to scale axis
+max_rmse &lt;-
   max(c(lm_all_fitted_wide_eras$rmse,
         lm_all_fitted_wide_eras$rmse_sum - lm_all_fitted_wide_eras$rmse))
 
@@ -24294,6 +24323,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">7131186</a>
@@ -24510,8 +24550,9 @@ jens-daniel-mueller
 <pre class="r"><code>rm(max_rmse)</code></pre>
 </div>
 <div id="best-models-1" class="section level3">
-<h3><span class="header-section-number">5.7.2</span> Best models</h3>
-<pre class="r"><code>max_rmse &lt;-
+<h3><span class="header-section-number">6.2.2</span> Best models</h3>
+<pre class="r"><code># find max rmse to scale axis
+max_rmse &lt;-
   max(c(lm_best$rmse,
         lm_best$rmse_sum - lm_best$rmse))
 
@@ -24547,6 +24588,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">7131186</a>
 </td>
 <td>
@@ -24575,9 +24627,10 @@ jens-daniel-mueller
 </div>
 </div>
 <div id="predictor-counts" class="section level2">
-<h2><span class="header-section-number">5.8</span> Predictor counts</h2>
+<h2><span class="header-section-number">6.3</span> Predictor counts</h2>
 <p>The number of models where a particular predictor was included were counted for each basin, density slab and compared eras</p>
-<pre class="r"><code>lm_all_stats &lt;- lm_best_long %&gt;% 
+<pre class="r"><code># calculate cases of predictor used
+lm_all_stats &lt;- lm_best_long %&gt;% 
   filter(term != &quot;(Intercept)&quot;,
          delta_coeff != 0) %&gt;% 
   group_by(basin, eras, gamma_slab) %&gt;% 
@@ -24585,7 +24638,7 @@ jens-daniel-mueller
   ungroup() %&gt;% 
   pivot_wider(values_from = n, names_from = term)
 
-
+# print table
 lm_all_stats %&gt;%
   gt(rowname_col = &quot;gamma_slab&quot;,
      groupname_col = c(&quot;basin&quot;, &quot;eras&quot;)) %&gt;% 
@@ -25788,7 +25841,7 @@ lm_all_stats %&gt;%
 </table></div>
 </div>
 <div id="rmse-alternatives" class="section level2">
-<h2><span class="header-section-number">5.9</span> RMSE alternatives</h2>
+<h2><span class="header-section-number">6.4</span> RMSE alternatives</h2>
 <p>AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.</p>
 <pre class="r"><code>lm_all_fitted_wide_eras %&gt;% 
   ggplot(aes(rmse, aic, col = gamma_slab)) +
@@ -25818,6 +25871,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">7131186</a>
@@ -25872,6 +25936,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">7bcb4eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7131186034b519a316c4581243f82eb240beab50/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">7131186</a>
