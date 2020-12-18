@@ -1,5 +1,5 @@
 ---
-title: "GLODAPv2_2020"
+title: "GLODAPv2_2020 subsetting"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -64,6 +64,8 @@ basinmask <- basinmask %>%
 # Read files
 
 Main data source for this project is the preprocessed version of the `GLODAPv2.2020_Merged_Master_File.csv` downloaded from [glodap.info](https://www.glodap.info/){target="_blank"} in June 2020.
+
+**CAVEAT:** This file still contains neutral densities `gamma` calculated with a preliminary method. However, this is consistent with the way gamma is currently calculated in this script and should therefore be maintained until changed on all levels.
 
 ```{r read_GLODAPv2_2020_merged_master_file}
 
@@ -157,7 +159,7 @@ GLODAP <- GLODAP %>%
 
 ### Neutral density threshold
 
-Observations collected in an area with a:
+Observations collected in an area with:
 
 - neutral density below:  `r params_local$bottomdepth_min`m
 
@@ -184,7 +186,7 @@ According to Olsen et al (2020), flags within the merged master file identify:
 - f:  
 
   - 2: Acceptable
-  - 0: Interpolated (nutrients/oxygen) or calculated (CO[2] params_local) value
+  - 0: Interpolated (nutrients/oxygen) or calculated (CO[2] variables)
   - 9: Data not used (so, only NA data should have this flag)
   
   
@@ -199,13 +201,15 @@ Following flagging criteria were taken into account:
 - flag_f:     `r params_local$flag_f`
 - flag_qc:    `r params_local$flag_qc`
 
+The cleaning process was performed successively and the maps below represent the data coverage at various cleaning levels. 
+
 Summary statistics were calculated during cleaning process.
 
 ### tco2
 
 #### NA
 
-Rows with missing tco2 observations were already removed in the preprocessing.
+Rows with missing tco2 observations were already removed in the preprocessing. The map below shows the coverage of preprocessed GLODAP data.
 
 ```{r tco2_na_subset}
 
@@ -728,7 +732,6 @@ GLODAP_stats_long %>%
   ggplot(aes(parameter, n/1000)) +
   geom_col() +
   coord_flip() +
-  labs(y = "n (1000)") +
   theme(axis.title.y = element_blank())
 
 rm(GLODAP_stats_long)
@@ -771,6 +774,22 @@ rm(GLODAP_histogram_lat)
 
 ```
 
+## Median years (tref)
+
+Median years of each era (tref) were determined as:
+
+```{r calculate_median_years}
+era_median_year <- GLODAP %>%
+  group_by(era) %>%
+  summarise(t_ref = median(year)) %>%
+  ungroup()
+
+era_median_year
+
+```
+
+
+
 ## Histogram temporal coverage
 
 ```{r coverage_histogram_temporal}
@@ -779,13 +798,6 @@ GLODAP_histogram_year <- GLODAP %>%
   group_by(year, basin) %>%
   tally() %>%
   ungroup()
-
-era_median_year <- GLODAP %>%
-  group_by(era) %>%
-  summarise(t_ref = median(year)) %>%
-  ungroup()
-
-era_median_year
 
 GLODAP_histogram_year %>%
   ggplot() +
@@ -843,7 +855,7 @@ rm(GLODAP_hovmoeller_year)
 
 ### Subsetting process
 
-The following plots show the remaining data after several cleaning steps, separately for each era.
+The following plots show the remaining data after **individual cleaning steps**, separately for each era.
 
 ```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.1}
 
@@ -870,7 +882,7 @@ map +
 
 ### Final input data
 
-The following plots show the remaining data density in each grid cell after all cleaning steps, separately for each era.
+The following plots show the remaining data density in each grid cell **after all cleaning steps**, separately for each era.
 
 ```{r coverage_maps_era_clean, fig.asp=1.3}
 

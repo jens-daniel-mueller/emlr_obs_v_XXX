@@ -96,9 +96,9 @@ params_local <-
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
-    predictors_max = 5,
+    MLR_predictors_max = 5,
     # Minimum number of MLR predictors
-    predictors_min = 2,
+    MLR_predictors_min = 2,
     # Total number of MLR fits taken into account
     MLR_number = 10,
     # Criterion to select best MLR fits, either "rmse" or "aic"
@@ -126,6 +126,8 @@ params_local <-
 
 # Write file
 
+Parameterization criteria are locally stored and used throughout this sensitivty case.
+
 ```{r write_params_local}
 
 params_local %>%
@@ -136,6 +138,8 @@ params_local %>%
 ```
 
 # Create folders
+
+Folders for each new sensitivity run are automatically created.
 
 ```{r create_folder_structure, include=FALSE}
 

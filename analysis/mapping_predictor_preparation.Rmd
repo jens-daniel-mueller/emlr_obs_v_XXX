@@ -63,21 +63,17 @@ library(gsw)
 
 # Required data
 
-All required data sets were subsetted spatially in the read-in section *Data base*.
 Currently, following data sets are used for mapping:
 
-## GLODAPv2_2016b_MappedClimatologies
-
-Following variables are currently used:  
-
-- Phosphate (+Phosphate*)
-- Silicate
-- Oxygen (+AOU)
-- TAlk (surface only)
-- TCO2 (surface only)
+- GLODAPv2_2016b_MappedClimatologies, with variables  
+  - Phosphate (-> phosphate_star)
+  - Silicate
+  - Oxygen (-> AOU)
+  - TAlk (surface only)
+  - TCO2 (surface only)
 
 
-```{r load_GLODAPv2_2016b_MappedClimatologies}
+```{r load_GLODAPv2_2016b_MappedClimatologies_interior_mapping}
 
 variables <-
   c("oxygen", "PO4", "silicate")
@@ -112,7 +108,7 @@ GLODAP_predictors <- GLODAP_predictors %>%
 ```
 
 
-```{r load_GLODAPv2_2016b_MappedClimatologies_surface}
+```{r load_GLODAPv2_2016b_MappedClimatologies_surface_mapping}
 
 variables <-
   c("PO4", "silicate", "TAlk", "TCO2")
@@ -145,12 +141,10 @@ GLODAP_predictors_CO2 <- GLODAP_predictors_CO2 %>%
 
 ```
 
-
-## World Ocean Atlas 2018
-
-- Salinity
-- Temperature
-- Neutral density
+- World Ocean Atlas 2018  
+  - Salinity
+  - Temperature
+  - Neutral density
 
 ```{r load_WOA18}
 
@@ -165,8 +159,6 @@ WOA18_predictors <-
 
 WOA18 and GLODAP predictor climatologies are merged. Only horizontal grid cells with observations from both predictor fields are kept.
 
-**CAVEAT**: Coverage of GLODAP climatologies differs slightly for parameters (some are NA in some regions)
-
 ```{r join_WOA18_GLODAP_predictors}
 
 # join deep water predictors
@@ -178,7 +170,6 @@ rm(GLODAP_predictors)
 
 predictors <- predictors %>% 
   drop_na()
-
 
 # join surface water predictors
 predictors_surface <- full_join(
@@ -226,9 +217,9 @@ predictors_surface <- inner_join(predictors_surface, basinmask)
 
 ## Control plots
 
-### Maps
+Plots below are generated to control successful merging of data sets.
 
-Three maps are generated to control successful merging of data sets.
+### Maps interior
 
 ```{r joined_climatology_control_PO4, fig.asp=0.6}
 p_map_climatology(
@@ -243,8 +234,6 @@ p_map_climatology(
 ```
 
 ### Maps surface
-
-Three maps are generated to control successful merging of data sets.
 
 ```{r joined_climatology_control_TAlk_surface, fig.asp=0.6}
 p_map_climatology(
@@ -277,14 +266,17 @@ Likewise, predictor profiles for the North Atlantic (`r params_global$lat_Atl_pr
 
 ```{r predictor_profiles_N_Atl, fig.asp=1.5}
 
+# subset data
 N_Atl <- predictors %>% 
   filter(lat == params_global$lat_Atl_profile,
          lon == params_global$lon_Atl_section)
 
+# pivot table to long format
 N_Atl <- N_Atl %>% 
   select(-c(basin, basin_AIP)) %>% 
   pivot_longer(oxygen:gamma, names_to = "parameter", values_to = "value")
 
+# plot profiles
 N_Atl %>% 
   ggplot(aes(value, depth)) +
   geom_path() +
@@ -300,9 +292,11 @@ rm(N_Atl)
 
 # Prepare predictor fields
 
+Additional predictor fields need to calculated from available climatologies
+
 ## PO~4~* calculation 
 
-The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an errornous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
+The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
 
 ```{r calculate_phosphate_star_clement}
 
@@ -322,7 +316,7 @@ p_map_climatology(
 
 ```
 
-### Sections
+### Global section
 
 ```{r PO4_star_climatology_section}
 
@@ -363,7 +357,7 @@ p_map_climatology(
 
 ```
 
-### Sections
+### Global section
 
 ```{r aou_climatology_section}
 
@@ -403,8 +397,8 @@ map +
              binwidth = c(1,1)) +
   geom_vline(xintercept = params_global$longitude_sections_regular,
              col = "white") +
-  scale_fill_viridis_c(direction = -1) +
-  theme(legend.position = "bottom")
+  scale_fill_viridis_c(direction = -1,
+                       name = "")
 
 ```
 
@@ -462,11 +456,14 @@ vars <-
     "TAlk"
   )
 
+# i_var <- vars[1]
+
 for (i_var in vars) {
   print(
     p_section_climatology_regular(
       df = predictors_surface,
-      var = i_var)
+      var = i_var,
+      surface = "y")
     )
 }
 

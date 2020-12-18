@@ -76,11 +76,14 @@ GLODAP <-
 
 # Predictor combinations
 
-Find all possible combinations of following cosidered predictor variables:  
+Find all possible combinations of following considered predictor variables:  
 
 - `r params_local$MLR_predictors`
 
 ```{r eMLR_find_all_predictor_combinations, results='hide'}
+
+# the following code is a workaround to find all predictor combinations
+# using the olsrr package and fit all models for one era, slab, and basin
 
 i_basin <- unique(GLODAP$basin)[1]
 i_era   <- unique(GLODAP$era)[1]
@@ -131,14 +134,14 @@ rm(i_gamma_slab,
 
 Select combinations with a total number of predictors in the range:  
 
-- Minimum: `r params_local$predictors_min`  
-- Maximum: `r params_local$predictors_max`
+- Minimum: `r params_local$MLR_predictors_min`  
+- Maximum: `r params_local$MLR_predictors_max`
 
 ```{r apply_MLR_predictor_threshold}
 
 lm_all <- lm_all %>% 
-  filter(n >= params_local$predictors_min,
-         n <= params_local$predictors_max)
+  filter(n >= params_local$MLR_predictors_min,
+         n <= params_local$MLR_predictors_max)
 
 ```
 
@@ -146,9 +149,13 @@ This results in a total number of MLR models of:
 
 - `r nrow(lm_all)`
 
-# Fitting all models
+# Fit all models
 
-Individual linear regression models were fitted for the chosen target variable `r params_local$MLR_target` as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE) was calculated for each fitted model.
+Individual linear regression models were fitted for the chosen target variable:  
+
+- `r params_local$MLR_target`
+
+as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE), were calculated for each fitted model.
 
 ```{r fit_all_models, results='hide'}
 
@@ -297,7 +304,6 @@ rm(i_lm_fit, coefficients, i_rmse,
 
 Coefficients are prepared for the mapping of Cant and the chosen target variable.
 
-
 ## Formatting
 
 ```{r prepare_model_coefficients_table}
@@ -334,15 +340,10 @@ The criterion used to select the best models was:
 
 The criterion was summed up for two adjecent eras, and the models with lowest summed values were selected.
 
-Please note, that currently the `lm()` function produces NAs for some predictors. Presumably this happens when two included predictors are collinear. It results in identical rmse values. Models with fitted NA predictors were not included.
+Please note, that currently the `lm()` function produces NAs for some predictors. It is not yet entirely clear when this happens, but presumably it is caused by some form of collinearity between predictors, such that including another predictor does not help to explain the target variable any better. The issues also expresses as exactly identical rmse values of different models. As an interim solution, models with fitted NA predictors were not included.
 
 
-```{r Predictor_correlation_NA}
-
-lm_all_fitted_wide %>% 
-  ggplot(aes(n_predictors, cor_max)) +
-  geom_point() +
-  facet_wrap(~ na_predictor)
+```{r remove_predictor_NA}
 
 # remove models with predictors fitted as NA
 
@@ -368,7 +369,7 @@ lm_all_fitted_wide_eras <- lm_all_fitted_wide  %>%
   drop_na()
 
 # subset models with lowest summed criterion
-
+# chose which criterion is applied
 
 if (params_local$MLR_criterion == "aic") {
   lm_best <- lm_all_fitted_wide_eras %>%
@@ -389,7 +390,7 @@ if (params_local$MLR_criterion == "aic") {
 }
 
 
-# plot table for website
+# print table
 lm_best %>% 
   kable() %>%
   add_header_above() %>%
@@ -399,6 +400,8 @@ lm_best %>%
 ```
 
 ## Target variable coefficients
+
+A data frame to map the target variable is prepared.
 
 ```{r prepare_model_coefficients_table_target_variable_mapping}
 
@@ -436,7 +439,7 @@ rm(eras_era, eras_forward, eras_backward,
 
 ## Cant coeffcients
 
-Coefficient offsets are calculated to facilitate the direct mapping of Cant.
+A data frame of coefficient offsets is prepared to facilitate the direct mapping of Cant.
 
 ```{r prepare_delta_coefficients_for_cant_mapping}
 
@@ -501,10 +504,11 @@ lm_best_cant %>%
 
 ```
 
+# Model diagnotics
 
-## Selction criterion vs predictors
+## Selection criterion vs predictors
 
-The selection criterion (`r params_local$MLR_criterion`) was plotted against the number of predictors (limited to `r params_local$predictors_min` - `r params_local$predictors_max`).
+The selection criterion (`r params_local$MLR_criterion`) was plotted against the number of predictors (limited to `r params_local$MLR_predictors_min` - `r params_local$MLR_predictors_max`).
 
 ### All models
 
@@ -541,10 +545,13 @@ lm_best_target %>%
 
 ## RMSE correlation between eras
 
+RMSE was plotted to compare the agreement for one model applied to two adjecent eras (ie check whether the same predictor combination performs equal in both eras).
+
 ### All models
 
 ```{r rmse_correlation_across_eras_all_models}
 
+# find max rmse to scale axis
 max_rmse <-
   max(c(lm_all_fitted_wide_eras$rmse,
         lm_all_fitted_wide_eras$rmse_sum - lm_all_fitted_wide_eras$rmse))
@@ -566,6 +573,7 @@ rm(max_rmse)
 
 ```{r rmse_correlation_across_eras_best_models}
 
+# find max rmse to scale axis
 max_rmse <-
   max(c(lm_best$rmse,
         lm_best$rmse_sum - lm_best$rmse))
@@ -587,6 +595,7 @@ The number of models where a particular predictor was included were counted for 
 
 ```{r predictor_counts}
 
+# calculate cases of predictor used
 lm_all_stats <- lm_best_long %>% 
   filter(term != "(Intercept)",
          delta_coeff != 0) %>% 
@@ -595,7 +604,7 @@ lm_all_stats <- lm_best_long %>%
   ungroup() %>% 
   pivot_wider(values_from = n, names_from = term)
 
-
+# print table
 lm_all_stats %>%
   gt(rowname_col = "gamma_slab",
      groupname_col = c("basin", "eras")) %>% 

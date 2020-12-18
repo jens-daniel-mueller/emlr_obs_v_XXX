@@ -1,5 +1,5 @@
 ---
-title: "eMLR - data preparation"
+title: "eMLR data preparation"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -58,7 +58,6 @@ Required are:
 
 - GLODAPv2.2020
   - cleaned data file
-  - horizontal grid of sampling coordinates
 - Cant from Sabine 2004 (S04)
 - Cant from Gruber 2019 (G19)
 - annual mean atmospheric pCO~2~ 
@@ -68,11 +67,6 @@ Required are:
 GLODAP <-
   read_csv(paste(path_version_data,
                  "GLODAPv2.2020_clean.csv",
-                 sep = ""))
-
-GLODAP_obs_grid <-
-  read_csv(paste(path_version_data,
-                 "GLODAPv2.2020_clean_obs_grid.csv",
                  sep = ""))
 
 S04_cant_3d <-
@@ -219,11 +213,11 @@ cant_3d_obs <- cant_3d_obs %>%
 cant_3d_obs %>%
   filter(n <= 1) %>%
   ggplot(aes(lon,lat)) +
-  geom_point(data = GLODAP_obs_grid, aes(lon, lat)) +
+  geom_point(data = GLODAP_obs_grid_era, aes(lon, lat)) +
   geom_point(col = "red") +
   facet_wrap(~era)
 
-rm(cant_3d, GLODAP_obs_grid)
+rm(cant_3d, GLODAP_obs_grid_era)
 
 GLODAP_cant_obs <- full_join(GLODAP, cant_3d_obs)
 
@@ -578,7 +572,9 @@ rm(GLODAP_vars, GLODAP_vars_long)
 
 # Individual cruise sections
 
-Zonal and meridional section plots are produce for each cruise individually and can be downloaded [here](https://github.com/jens-daniel-mueller/Cant_eMLR/tree/master/output/figure/eMLR/data_preparation/all_cruises_clean){target="_blank"}.
+Zonal and meridional section plots are produce for each cruise individually and are available under:  
+
+`r paste(path_version_figures, "Cruise_sections_histograms/", sep = "")`
 
 ```{r plot_all_individual_cruises_clean}
 
