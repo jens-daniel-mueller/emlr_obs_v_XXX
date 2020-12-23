@@ -10,22 +10,23 @@ The code in this repository is intended to prepare data sets (either observation
 
 This code was written to be executed within RStudio.
 
+Before copying this template on Github, it is recommended to remove the html files from the repository. 
 To initiate another sensitivity case, do:
 
 1. Copy the template repository on Github
-2. Name it according to version
-3. Activate github pages under settings
-4. Copy URL in repository description
-5. Open as new version controlled project in RStudio
+2. Replace XXX in name by version ID
+3. Activate github pages under settings (chose built from the /docs folder in the master branch)
+4. Copy github page URL in repository description
+5. Clone as new, version controlled project in RStudio
 6. Change the `Version_ID` in:  
   - `config_parameterization_local.Rmd`  
   - `_site.yml` title  
+  - `_site.yml` URL to github repo  
 7. Change others parameters in `config_parameterization_local.Rmd`
-8. Change link to github repo in `_site.yml`
-9. Run the code / build the website. All necessary folders will be created automatically
-10. Push to github
+8. Run the code / build the website. All necessary folders will be created automatically
+9. Push to github
 
-Workflowr comments for steps 9. and 10. can be found under `/code/workflowr_project_managment.R`
+Workflowr comments for steps 8. and 9. can be found under `/code/workflowr_project_managment.R`
 
 
 ## Parameterization
