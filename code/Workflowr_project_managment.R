@@ -28,7 +28,7 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "rebuild before sensitivity test",
+message = "run sensitivity test",
 republish = TRUE)
 
 
