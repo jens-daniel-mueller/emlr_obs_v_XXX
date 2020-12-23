@@ -99,8 +99,10 @@ Here we use following equation:
 
 print(b_phosphate_star)
 
+if ("phosphate_star" %in% params_local$MLR_predictors) {
 GLODAP <- GLODAP %>% 
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
+}
 
 ```
 
@@ -548,17 +550,16 @@ for (i_basin in unique(GLODAP$basin)) {
 ```{r histogram_predictor, fig.asp=1}
 
 GLODAP_vars <- GLODAP %>% 
-  select(cstar_tref,
-         sal,
-         temp,
-         oxygen,
-         aou,
-         silicate,
-         phosphate,
-         phosphate_star)
+  select(params_local$MLR_target,
+         params_local$MLR_predictors)
 
-GLODAP_vars_long <- GLODAP_vars %>% 
-  pivot_longer(cstar_tref:phosphate_star, names_to = "variable", values_to = "value")
+GLODAP_vars_long <- GLODAP_vars %>%
+  pivot_longer(
+    cols = c(params_local$MLR_target,
+             params_local$MLR_predictors),
+    names_to = "variable",
+    values_to = "value"
+  )
 
 GLODAP_vars_long %>% 
   ggplot(aes(value)) +
