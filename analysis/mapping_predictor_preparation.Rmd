@@ -76,7 +76,7 @@ Currently, following data sets are used for mapping:
 ```{r load_GLODAPv2_2016b_MappedClimatologies_interior_mapping}
 
 variables <-
-  c("oxygen", "PO4", "silicate")
+  c("oxygen", "PO4", "silicate", "NO3", "TAlk")
 
 # i_variable <- variables[1]
 
@@ -99,7 +99,9 @@ for (i_variable in variables) {
 rm(temp, i_variable, variables)
 
 GLODAP_predictors <- GLODAP_predictors %>%
-  rename(phosphate = PO4)
+  rename(phosphate = PO4,
+         nitrate = NO3,
+         talk = TAlk)
 
 # removed na's attributable to slightly different coverage of predictor fields
 GLODAP_predictors <- GLODAP_predictors %>%
@@ -222,9 +224,12 @@ Plots below are generated to control successful merging of data sets.
 ### Maps interior
 
 ```{r joined_climatology_control_PO4, fig.asp=0.6}
+
 p_map_climatology(
   df = predictors, 
   var = "phosphate")
+
+
 ```
 
 ```{r joined_climatology_control_temp, fig.asp=0.6}
@@ -274,7 +279,8 @@ N_Atl <- predictors %>%
 # pivot table to long format
 N_Atl <- N_Atl %>% 
   select(-c(basin, basin_AIP)) %>% 
-  pivot_longer(oxygen:gamma, names_to = "parameter", values_to = "value")
+  pivot_longer(c(any_of(params_local$MLR_predictors), gamma),
+               names_to = "parameter", values_to = "value")
 
 # plot profiles
 N_Atl %>% 
@@ -300,8 +306,8 @@ The predictor PO~4~* was be calculated according to Clement and Gruber (2018), i
 
 ```{r calculate_phosphate_star_clement}
 
-predictors <- predictors %>% 
-  mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
+  predictors <- predictors %>%
+    mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
 
 ```
 
@@ -343,6 +349,7 @@ predictors <- predictors %>%
     tem = temp,
     depth = depth,
     oxygen = oxygen))
+
 
 ```
 
@@ -404,21 +411,7 @@ map +
 
 ```{r all_predictor_sections, fig.asp=1.2}
 
-vars <-
-  c(
-    "gamma",
-    "sal",
-    "temp",
-    "phosphate",
-    "phosphate_star",
-    "oxygen",
-    "aou",
-    "silicate"
-  )
-
-# i_var <- vars[1]
-
-for (i_var in vars) {
+for (i_var in params_local$MLR_predictors) {
   print(
     p_section_climatology_regular(
       df = predictors,
