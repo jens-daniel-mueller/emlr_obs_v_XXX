@@ -445,7 +445,7 @@ A data frame of coefficient offsets is prepared to facilitate the direct mapping
 
 # pivot long format
 lm_best_long <- lm_best_target %>%
-  pivot_longer(`coeff_(Intercept)`:coeff_oxygen,
+  pivot_longer(starts_with("coeff_"),
                names_to = "term",
                values_to = "estimate",
                names_prefix = "coeff_")
@@ -481,8 +481,7 @@ lm_best_target %>%
     model,
     eras,
     era,
-    `coeff_(Intercept)`,
-    paste("coeff", params_local$MLR_predictors, sep = "_")
+    starts_with("coeff_")
   ) %>%
   write_csv(paste(path_version_data,
                   "lm_best_target.csv",
@@ -494,8 +493,7 @@ lm_best_cant %>%
     gamma_slab,
     model,
     eras,
-    `delta_coeff_(Intercept)`,
-    paste("delta_coeff", params_local$MLR_predictors, sep = "_")
+    starts_with("delta_coeff_")
   ) %>%
   write_csv(paste(path_version_data,
                   "lm_best_cant.csv",
