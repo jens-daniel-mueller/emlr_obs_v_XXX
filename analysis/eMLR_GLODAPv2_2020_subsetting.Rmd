@@ -571,7 +571,8 @@ if ("silicate" %in% params_local$MLR_predictors) {
 
 ##
 
-if ("oxygen" %in% params_local$MLR_predictors) {
+if ("oxygen" %in% params_local$MLR_predictors |
+    "phosphate_star" %in% params_local$MLR_predictors) {
   GLODAP <- GLODAP %>%
     filter(!is.na(oxygen))
   
