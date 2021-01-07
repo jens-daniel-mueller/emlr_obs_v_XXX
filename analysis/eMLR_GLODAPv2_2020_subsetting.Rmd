@@ -157,25 +157,6 @@ GLODAP <- GLODAP %>%
 
 ```
 
-### Neutral density threshold
-
-Observations collected in an area with:
-
-- neutral density below:  `r params_local$bottomdepth_min`m
-
-were excluded from the analysis due to expected high seasonality, except when:
-
-- minimum sampling depth:  `r params_local$depth_min`m
-
-was fulfilled
-
-```{r apply_gamma_min}
-
-GLODAP <- GLODAP %>% 
-  filter(gamma > params_local$gamma_min | depth >= params_local$depth_min)
-
-```
-
 
 ## Flags and missing data
 
