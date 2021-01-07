@@ -103,7 +103,7 @@ lm_best_cant <-
 
 # remove predictor variable from model
 lm_best_cant <- lm_best_cant %>% 
-  mutate(model = str_remove(model, "Cstar ~ "))
+  mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
 
 # join predictors and MLR
 cant <- full_join(predictors, lm_best_cant)
@@ -457,7 +457,7 @@ cant_predictor_average_zonal <-
 To calculate Cant column inventories, we:  
 
 1. Convert Cant concentrations to volumetric units
-2. Multiply layer thickness with volumentric Cant concentration to get a layer inventory
+2. Multiply layer thickness with volumetric Cant concentration to get a layer inventory
 3. For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (`r params_global$inventory_depths` m)
 
 Step 2 is performed separately for all Cant and positive Cant values only.

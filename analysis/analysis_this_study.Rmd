@@ -585,28 +585,37 @@ The predicted target variable (`r params_local$MLR_target` in this sensitivity c
 
 slab_breaks <- c(params_local$slabs_Atl[1:12], Inf)
 
-target_zonal %>%
-  ggplot(aes(lat, depth,
-             z = !!sym(
-               paste(params_local$MLR_target, "mean", sep = "_")
-             ))) +
-  geom_contour_filled(bins = 11) +
-  scale_fill_viridis_d(name = params_local$MLR_target) +
-  geom_contour(aes(lat, depth, z = gamma_mean),
-               breaks = slab_breaks,
-               col = "white") +
-  geom_text_contour(
-    aes(lat, depth, z = gamma_mean),
-    breaks = slab_breaks,
-    col = "white",
-    skip = 1
-  ) +
-  scale_y_reverse() +
-  coord_cartesian(expand = 0,
-                  ylim = c(params_global$plotting_depth, 0)) +
-  scale_x_continuous(breaks = seq(-100, 100, 20)) +
-  guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
-  facet_grid(basin_AIP ~ era)
+for (i_basin_AIP in unique(target_zonal$basin_AIP)) {
+
+  print(
+  target_zonal %>%
+    filter(basin_AIP == i_basin_AIP) %>%
+    ggplot(aes(lat, depth,
+               z = !!sym(
+                 paste(params_local$MLR_target, "mean", sep = "_")
+               ))) +
+    geom_contour_filled(bins = 11) +
+    scale_fill_viridis_d(name = params_local$MLR_target) +
+    geom_contour(aes(lat, depth, z = gamma_mean),
+                 breaks = slab_breaks,
+                 col = "white") +
+    geom_text_contour(
+      aes(lat, depth, z = gamma_mean),
+      breaks = slab_breaks,
+      col = "white",
+      skip = 1
+    ) +
+    scale_y_reverse() +
+    coord_cartesian(expand = 0,
+                    ylim = c(params_global$plotting_depth, 0)) +
+    scale_x_continuous(breaks = seq(-100, 100, 20)) +
+    guides(fill = guide_colorsteps(barheight = unit(10, "cm"))) +
+    facet_grid(era ~ eras,
+               labeller = labeller(.default = label_both)) +
+    labs(title = i_basin_AIP)
+  )
+
+}
 
 rm(slab_breaks)
 
