@@ -50,6 +50,7 @@ path_version_figures  <-
 
 ```{r load_libraries_specific, include = FALSE}
 library(lubridate)
+library(gt)
 ```
 
 ```{r select_basin_mask, include=FALSE}
@@ -698,6 +699,23 @@ GLODAP  %>%  write_csv(paste(path_version_data,
 
 
 # Overview plots
+
+## Number of overservations
+
+```{r counts}
+
+GLODAP %>% 
+  group_by(era, basin_AIP) %>% 
+  count() %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("era")) %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+```
+
 
 ## Cleaning stats
 
