@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "model selection criterion added")
+wflow_publish(all = TRUE, message = "added plots back to after switching to map aproach")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -28,8 +28,9 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "run sensitivity test",
+message = "introduced purrr::map to model fitting, rebuild all",
 republish = TRUE)
+
 
 
 # Push latest version to GitHub

@@ -160,15 +160,15 @@ as a function of each predictor combination. Fitting was performed separately wi
 ```{r fit_all_models_purrr, results='hide'}
 
 GLODAP %>% 
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  filter(basin %in% unique(GLODAP$basin)[1],
+         era %in% unique(GLODAP$era)[c(1,2)],
+         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  filter(basin %in% unique(GLODAP$basin)[1],
+         era %in% unique(GLODAP$era)[c(1,2)],
+         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   drop_na() %>% 
   group_by(gamma_slab, era, basin) %>% 
   nest()
@@ -194,6 +194,9 @@ print(object.size(GLODAP_nested_lm_fit), units = "MB")
 GLODAP_glanced <- GLODAP_nested_lm_fit %>%
   select(-c(data, fit, tidied, augmented)) %>%
   unnest(glanced)
+
+GLODAP_glanced <- GLODAP_glanced %>% 
+  rename(n_predictors = n)
 
 # GLODAP_glanced <- GLODAP_glanced %>% 
 #   mutate(rmse = sqrt ( (sigma * df.residual) / nobs) )
@@ -404,16 +407,17 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 ### All models
 
-```{r eMLR_predictor_model_quality_all, fig.asp=2, eval=FALSE}
+```{r eMLR_predictor_model_quality_all, fig.asp=2}
 
-lm_best %>%
+GLODAP_glanced %>%
   ggplot(aes(as.factor(n_predictors),
              !!sym(params_local$MLR_criterion),
              col = basin)) +
-  geom_hline(yintercept = 10) +
+  geom_hline(yintercept = c(0,10)) +
   geom_boxplot() +
   facet_grid(gamma_slab~era) +
   scale_color_brewer(palette = "Set1") +
+  ylim(c(0,NA)) +
   labs(x="Number of predictors")
 
 ```
@@ -421,17 +425,20 @@ lm_best %>%
 
 ### Best models
 
-```{r eMLR_predictor_model_quality_best, fig.asp=2, eval=FALSE}
+```{r eMLR_predictor_model_quality_best, fig.asp=2}
 
-lm_best %>%
+
+left_join(lm_best_target %>% select(basin, gamma_slab, era, model),
+          GLODAP_glanced) %>%
   ggplot(aes("",
              !!sym(params_local$MLR_criterion),
              col = basin)) +
-  geom_hline(yintercept = 10) +
+  geom_hline(yintercept = c(0, 10)) +
   geom_boxplot() +
-  facet_grid(gamma_slab~era) +
+  facet_grid(gamma_slab ~ era) +
   scale_color_brewer(palette = "Set1") +
-  labs(x="Number of predictors pooled")
+  ylim(c(0, NA)) +
+  labs(x = "Number of predictors pooled")
 
 ```
 
@@ -442,7 +449,7 @@ RMSE was plotted to compare the agreement for one model applied to two adjecent 
 
 ### All models
 
-```{r rmse_correlation_across_eras_all_models, eval=FALSE}
+```{r rmse_correlation_across_eras_all_models}
 
 # find max rmse to scale axis
 max_rmse <-
@@ -453,8 +460,10 @@ lm_all_eras %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  coord_equal(xlim = c(0,max_rmse),
-              ylim = c(0,max_rmse)) +
+  coord_equal(xlim = c(0, max_rmse),
+              ylim = c(0, max_rmse)) +
+  geom_abline(slope = 1,
+              col = 'red') +
   facet_grid(eras ~ basin)
 
 rm(max_rmse)
@@ -464,7 +473,7 @@ rm(max_rmse)
 
 ### Best models
 
-```{r rmse_correlation_across_eras_best_models, eval=FALSE}
+```{r rmse_correlation_across_eras_best_models}
 
 # find max rmse to scale axis
 max_rmse <-
@@ -475,8 +484,10 @@ lm_best_eras %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  coord_equal(xlim = c(0,max_rmse),
-              ylim = c(0,max_rmse)) +
+  coord_equal(xlim = c(0, max_rmse),
+              ylim = c(0, max_rmse)) +
+  geom_abline(slope = 1,
+              col = 'red') +
   facet_grid(eras ~ basin)
 
 rm(max_rmse)
@@ -486,10 +497,14 @@ rm(max_rmse)
 
 The number of models where a particular predictor was included were counted for each basin, density slab and compared eras
 
-```{r predictor_counts, eval=FALSE}
+```{r predictor_counts}
 
 # calculate cases of predictor used
-lm_all_stats <- lm_best_eras_long %>% 
+lm_all_stats <- lm_best_cant %>% 
+  pivot_longer(starts_with("delta_coeff_"),
+               names_to = "term",
+               names_prefix = "delta_coeff_",
+               values_to = "delta_coeff") %>% 
   filter(term != "(Intercept)",
          delta_coeff != 0) %>% 
   group_by(basin, eras, gamma_slab) %>% 
@@ -513,9 +528,9 @@ lm_all_stats %>%
 
 AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
-```{r aic_vs_rmse_all_models, eval=FALSE}
+```{r aic_vs_rmse_all_models}
 lm_all_eras %>% 
-  ggplot(aes(rmse, aic, col = gamma_slab)) +
+  ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
   facet_grid(eras~basin)
@@ -523,9 +538,9 @@ lm_all_eras %>%
 ```
 
 
-```{r aic_vs_rmse_selected_models, eval=FALSE}
+```{r aic_vs_rmse_selected_models}
 lm_best_eras %>% 
-  ggplot(aes(rmse, aic, col = gamma_slab)) +
+  ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
   facet_grid(eras~basin)
