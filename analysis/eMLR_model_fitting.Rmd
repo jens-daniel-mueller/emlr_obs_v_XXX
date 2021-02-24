@@ -162,13 +162,13 @@ as a function of each predictor combination. Fitting was performed separately wi
 GLODAP %>% 
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>% 
+  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>% 
+  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   drop_na() %>% 
   group_by(gamma_slab, era, basin) %>% 
   nest()
@@ -191,9 +191,13 @@ print(object.size(GLODAP_nested), units = "MB")
 print(object.size(GLODAP_nested_lm), units = "MB")
 print(object.size(GLODAP_nested_lm_fit), units = "MB")
 
-# GLODAP_glanced <- GLODAP_nested_lm_fit %>% 
-#   select(-c(data, fit, tidied, augmented)) %>% 
-#   unnest(glanced)
+GLODAP_glanced <- GLODAP_nested_lm_fit %>%
+  select(-c(data, fit, tidied, augmented)) %>%
+  unnest(glanced)
+
+# GLODAP_glanced <- GLODAP_glanced %>% 
+#   mutate(rmse = sqrt ( (sigma * df.residual) / nobs) )
+
 
 GLODAP_tidy <- GLODAP_nested_lm_fit %>%
   select(-c(data, fit, glanced, augmented)) %>%
@@ -205,22 +209,19 @@ GLODAP_augmented <- GLODAP_nested_lm_fit %>%
 
 print(object.size(GLODAP_augmented), units = "MB")
 
-lm_rmse <- GLODAP_augmented %>%
+GLODAP_glanced_rmse <- GLODAP_augmented %>%
   group_by(gamma_slab, era, basin, model) %>%
   summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %>%
   ungroup()
+
+GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_rmse)
+rm(GLODAP_glanced_rmse)
+
 
 # GLODAP_data <- GLODAP_nested_lm_fit %>% 
 #   select(-c(fit, tidied, glanced, augmented)) %>% 
 #   unnest(data) 
 
-# GLODAP_augmented %>% 
-#   ggplot(aes(phosphate, .resid)) +
-#   geom_bin2d(bins = 100) +
-#   geom_hline(yintercept = 0, col = "white") +
-#   scale_fill_viridis_c() +
-#   geom_smooth(col = "red") +
-#   ylim(-30,30)
 
 # # find max predictor correlation
 # i_cor_max <- GLODAP_basin_era_slab %>%
@@ -231,175 +232,12 @@ lm_rmse <- GLODAP_augmented %>%
 #   abs() %>%
 #   max(na.rm = TRUE)
 # 
-# # calculate root mean squared error
-# i_rmse <- sqrt(c(crossprod(i_lm_fit$residuals)) /
-#                  length(i_lm_fit$residuals))
 # 
 # # calculate maximum residual
 # i_resid_max <- max(abs(i_lm_fit$residuals))
 # 
-# # calculate Akaike information criterion aic
-# i_aic <- AIC(i_lm_fit)
-# 
-# # collect model coefficients and diagnostics
-# coefficients <- tidy(i_lm_fit)
-# 
-# coefficients <- coefficients %>%
-#   mutate(
-#     basin = i_basin,
-#     era = i_era,
-#     gamma_slab = i_gamma_slab,
-#     model = i_lm,
-#     rmse = i_rmse,
-#     aic = i_aic,
-#     resid_max = i_resid_max,
-#     n_predictors = i_n_predictors,
-#     na_predictor = anyNA(coefficients$estimate),
-#     cor_max = i_cor_max
-#   )
 
-```
-
-
-```{r fit_all_models, results='hide', eval=FALSE}
-
-# loop across all basins, era, gamma slabs, and MLRs
-# fit all MLR models
-for (i_basin in unique(GLODAP$basin)) {
-  for (i_era in unique(GLODAP$era)) {
-    # i_basin <- unique(GLODAP$basin)[1]
-    # i_era   <- unique(GLODAP$era)[1]
-    print(i_basin)
-    print(i_era)
-    
-    GLODAP_basin_era <- GLODAP %>%
-      filter(basin == i_basin, era == i_era)
-    
-    for (i_gamma_slab in unique(GLODAP_basin_era$gamma_slab)) {
-      # i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
-      print(i_gamma_slab)
-      
-      GLODAP_basin_era_slab <- GLODAP_basin_era %>%
-        filter(gamma_slab == i_gamma_slab)
-      
-      for (i_predictors in unique(lm_all$predictors)) {
-        # i_predictors <- unique(lm_all$predictors)[110]
-
-        # extract one model definition
-        i_lm <- lm_all %>%
-          filter(predictors == i_predictors) %>%
-          select(lm_coeff) %>%
-          pull()
-        
-        # extract number of predictors
-        i_n_predictors <- lm_all %>%
-          filter(predictors == i_predictors) %>%
-          select(n) %>%
-          pull()
-        
-        # fit model
-        i_lm_fit <- lm(as.formula(i_lm),
-                       data = GLODAP_basin_era_slab)
-        
-        # find max predictor correlation
-        i_cor_max <- GLODAP_basin_era_slab %>%
-          select(!!!syms(str_split(i_predictors, " ",
-                                         simplify = TRUE))) %>%
-          correlate(quiet = TRUE) %>% 
-          select(-term) %>% 
-          abs() %>% 
-          max(na.rm = TRUE)
-        
-        # calculate root mean squared error
-        i_rmse <- sqrt(
-          c(crossprod(i_lm_fit$residuals)) / 
-            length(i_lm_fit$residuals)
-        )
-
-        # calculate maximum residual
-        i_resid_max <- max(abs(i_lm_fit$residuals))
-        
-        # calculate Akaike information criterion aic
-        i_aic <- AIC(i_lm_fit)
-        
-        # collect model coefficients and diagnostics
-        coefficients <- tidy(i_lm_fit)
-        
-        coefficients <- coefficients %>%
-          mutate(
-            basin = i_basin,
-            era = i_era,
-            gamma_slab = i_gamma_slab,
-            model = i_lm,
-            rmse = i_rmse,
-            aic = i_aic,
-            resid_max = i_resid_max,
-            n_predictors = i_n_predictors,
-            na_predictor = anyNA(coefficients$estimate),
-            cor_max = i_cor_max
-          )
-        
-        if (exists("lm_all_fitted")) {
-          lm_all_fitted <- bind_rows(lm_all_fitted, coefficients)
-        }
-        
-        if (!exists("lm_all_fitted")) {
-          lm_all_fitted <- coefficients
-        }
-        
-        # plot model diagnostics, if activated
-        if (params_local$plot_all_figures == "y") {
-          p_model <- ggnostic(
-            i_lm_fit,
-            columnsY = c(params_local$MLR_target, ".fitted", ".resid"),
-            title = paste(
-              "| era:",
-              i_era,
-              "| basin:",
-              i_basin,
-              "| gamma slab:",
-              i_gamma_slab,
-              "| predictors:",
-              i_predictors
-            )
-          )
-          
-          ggsave(
-            plot = p_model,
-            path = paste(path_version_figures, "eMLR_diagnostics/", sep = ""),
-            filename = paste(
-              "MLR_residuals",
-              i_era,
-              i_basin,
-              i_gamma_slab,
-              i_predictors,
-              "predictors.png",
-              sep = "_"
-            ),
-            width = 14,
-            height = 8
-          )
-          
-          rm(p_model)
-          
-        }
-        
-      }
-      
-      
-    }
-  }
-  
-}
-
-
-rm(i_lm_fit, coefficients, i_rmse,
-   GLODAP_basin_era, GLODAP_basin_era_slab,
-   i_lm,
-   i_basin, i_era, i_gamma_slab, i_predictors,
-   lm_all,
-   i_aic, i_n_predictors, i_resid_max)
-
+rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all)
 
 ```
 
@@ -407,29 +245,6 @@ rm(i_lm_fit, coefficients, i_rmse,
 # Prepare coeffcients
 
 Coefficients are prepared for the mapping of Cant and the chosen target variable.
-
-## Formatting
-
-```{r prepare_model_coefficients_table, eval=FALSE}
-
-# select relevant columns
-lm_all_fitted <- lm_all_fitted %>% 
-  select(basin, gamma_slab, era, model, n_predictors, 
-         term, estimate, 
-         rmse, aic, resid_max, na_predictor, cor_max)
-
-# set coefficient to zero if not fitted (=NA)
-lm_all_fitted <- lm_all_fitted %>% 
-  mutate(estimate = if_else(is.na(estimate), 0, estimate))
-
-# Prepare model coefficients for mapping of target variable
-lm_all_fitted_wide <- lm_all_fitted %>% 
-  pivot_wider(values_from = estimate,
-              names_from = term,
-              names_prefix = "coeff_",
-              values_fill = 0)
-
-```
 
 
 ## Predictor selection
@@ -442,29 +257,19 @@ The criterion used to select the best models was:
 
 - `r params_local$MLR_criterion`
 
-The criterion was summed up for two adjecent eras, and the models with lowest summed values were selected.
-
-Please note, that currently the `lm()` function produces NAs for some predictors. It is not yet entirely clear when this happens, but presumably it is caused by some form of collinearity between predictors, such that including another predictor does not help to explain the target variable any better. The issues also expresses as exactly identical rmse values of different models. As an interim solution, models with fitted NA predictors were not included.
-
-
-```{r remove_predictor_NA, eval=FALSE}
-
-# remove models with predictors fitted as NA
-
-lm_all_fitted_wide <- lm_all_fitted_wide %>%
-  filter(na_predictor == FALSE)
-
-```
+The criterion was summed up for two adjacent eras, and the models with lowest summed values were selected.
 
 
 ```{r predictor_selection}
 
 # calculate RMSE sum for adjacent eras
-lm_all_fitted_wide_eras <- lm_rmse  %>%
+lm_all_eras <- GLODAP_glanced  %>%
+  select(basin, gamma_slab, model, era, AIC, rmse) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
-         rmse_sum = rmse + lag(rmse)
+         rmse_sum = rmse + lag(rmse),
+         aic_sum = AIC + lag(AIC)
          ) %>% 
   ungroup() %>% 
   select(-c(era)) %>% 
@@ -474,7 +279,7 @@ lm_all_fitted_wide_eras <- lm_rmse  %>%
 # chose which criterion is applied
 
 if (params_local$MLR_criterion == "aic") {
-  lm_best <- lm_all_fitted_wide_eras %>%
+  lm_best_eras <- lm_all_eras %>%
     group_by(basin, gamma_slab, eras) %>%
     slice_min(order_by = aic_sum,
               with_ties = FALSE,
@@ -482,7 +287,7 @@ if (params_local$MLR_criterion == "aic") {
     ungroup() %>%
     arrange(basin, gamma_slab, eras, model)
 } else {
-  lm_best <- lm_all_fitted_wide_eras %>%
+  lm_best_eras <- lm_all_eras %>%
     group_by(basin, gamma_slab, eras) %>%
     slice_min(order_by = rmse_sum,
               with_ties = FALSE,
@@ -493,7 +298,7 @@ if (params_local$MLR_criterion == "aic") {
 
 
 # print table
-lm_best %>% 
+lm_best_eras %>% 
   kable() %>%
   add_header_above() %>%
   kable_styling() %>%
@@ -508,7 +313,7 @@ A data frame to map the target variable is prepared.
 ```{r prepare_model_coefficients_table_target_variable_mapping}
 
 # create table with two era belonging to one eras
-eras_forward <- lm_rmse %>%
+eras_forward <- GLODAP_glanced %>%
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(era, lead(era), sep = " --> ")) %>% 
@@ -516,7 +321,7 @@ eras_forward <- lm_rmse %>%
   select(era, eras) %>% 
   unique()
 
-eras_backward <- lm_rmse %>%
+eras_backward <- GLODAP_glanced %>%
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> ")) %>% 
@@ -528,12 +333,12 @@ eras_era <- full_join(eras_backward, eras_forward) %>%
   filter(str_detect(eras, "NA") == FALSE)
 
 # extend best model selection from eras to era
-lm_best_target <- full_join(
-  lm_best %>% select(basin, gamma_slab, model, eras),
+lm_best <- full_join(
+  lm_best_eras %>% select(basin, gamma_slab, model, eras),
   eras_era)
 
-lm_best_target <- left_join(
-  lm_best_target,
+lm_best <- left_join(
+  lm_best,
   GLODAP_tidy %>% select(basin, gamma_slab, era, model, term, estimate))
 
 rm(eras_era, eras_forward, eras_backward)
@@ -546,15 +351,8 @@ A data frame of coefficient offsets is prepared to facilitate the direct mapping
 
 ```{r prepare_delta_coefficients_for_cant_mapping}
 
-# pivot long format
-# lm_best_long <- lm_best_target %>%
-#   pivot_longer(starts_with("coeff_"),
-#                names_to = "term",
-#                values_to = "estimate",
-#                names_prefix = "coeff_")
-
 # subtract coefficients of adjacent era  
-lm_best_long <- lm_best_target %>%
+lm_best_cant <- lm_best %>%
   arrange(era) %>%
   group_by(basin, gamma_slab, eras, model, term) %>%
   mutate(delta_coeff = estimate - lag(estimate)) %>%
@@ -563,8 +361,8 @@ lm_best_long <- lm_best_target %>%
   drop_na() %>%
   select(-c(era,estimate))
 
-# pivot back to wide format
-lm_best_cant <- lm_best_long %>%
+# pivot to wide format
+lm_best_cant <- lm_best_cant %>%
   pivot_wider(values_from = delta_coeff,
               names_from = term,
               names_prefix = "delta_coeff_",
@@ -577,7 +375,7 @@ lm_best_cant <- lm_best_long %>%
 
 ```{r write_model_coefficients_files}
 
-lm_best_target <- lm_best_target %>% 
+lm_best_target <- lm_best %>% 
   pivot_wider(names_from = "term",
               names_prefix = "coeff_",
               values_from = "estimate",
@@ -591,13 +389,6 @@ lm_best_target %>%
                   sep = ""))
 
 lm_best_cant %>%
-  select(
-    basin,
-    gamma_slab,
-    model,
-    eras,
-    starts_with("delta_coeff_")
-  ) %>%
   write_csv(paste(path_version_data,
                   "lm_best_cant.csv",
                   sep = ""))
@@ -615,7 +406,7 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 ```{r eMLR_predictor_model_quality_all, fig.asp=2, eval=FALSE}
 
-lm_all_fitted_wide %>%
+lm_best %>%
   ggplot(aes(as.factor(n_predictors),
              !!sym(params_local$MLR_criterion),
              col = basin)) +
@@ -632,7 +423,7 @@ lm_all_fitted_wide %>%
 
 ```{r eMLR_predictor_model_quality_best, fig.asp=2, eval=FALSE}
 
-lm_best_target %>%
+lm_best %>%
   ggplot(aes("",
              !!sym(params_local$MLR_criterion),
              col = basin)) +
@@ -655,10 +446,10 @@ RMSE was plotted to compare the agreement for one model applied to two adjecent 
 
 # find max rmse to scale axis
 max_rmse <-
-  max(c(lm_all_fitted_wide_eras$rmse,
-        lm_all_fitted_wide_eras$rmse_sum - lm_all_fitted_wide_eras$rmse))
+  max(c(lm_all_eras$rmse,
+        lm_all_eras$rmse_sum - lm_all_eras$rmse))
 
-lm_all_fitted_wide_eras %>%
+lm_all_eras %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -677,10 +468,10 @@ rm(max_rmse)
 
 # find max rmse to scale axis
 max_rmse <-
-  max(c(lm_best$rmse,
-        lm_best$rmse_sum - lm_best$rmse))
+  max(c(lm_best_eras$rmse,
+        lm_best_eras$rmse_sum - lm_best_eras$rmse))
 
-lm_best %>%
+lm_best_eras %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -698,7 +489,7 @@ The number of models where a particular predictor was included were counted for 
 ```{r predictor_counts, eval=FALSE}
 
 # calculate cases of predictor used
-lm_all_stats <- lm_best_long %>% 
+lm_all_stats <- lm_best_eras_long %>% 
   filter(term != "(Intercept)",
          delta_coeff != 0) %>% 
   group_by(basin, eras, gamma_slab) %>% 
@@ -723,7 +514,7 @@ lm_all_stats %>%
 AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
 ```{r aic_vs_rmse_all_models, eval=FALSE}
-lm_all_fitted_wide_eras %>% 
+lm_all_eras %>% 
   ggplot(aes(rmse, aic, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -733,7 +524,7 @@ lm_all_fitted_wide_eras %>%
 
 
 ```{r aic_vs_rmse_selected_models, eval=FALSE}
-lm_best %>% 
+lm_best_eras %>% 
   ggplot(aes(rmse, aic, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
