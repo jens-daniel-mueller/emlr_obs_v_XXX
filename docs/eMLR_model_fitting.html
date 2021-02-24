@@ -604,16 +604,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5f655e0415d4d1490aac09ef3a08d58931ebd3b1targetblank5f655e0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5f655e0415d4d1490aac09ef3a08d58931ebd3b1" target="_blank">5f655e0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec45672cf9916024c7d44d9a828351bfd61f44a4btargetblankc45672ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c45672cf9916024c7d44d9a828351bfd61f44a4b" target="_blank">c45672c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5f655e0415d4d1490aac09ef3a08d58931ebd3b1targetblank5f655e0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec45672cf9916024c7d44d9a828351bfd61f44a4btargetblankc45672ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5f655e0415d4d1490aac09ef3a08d58931ebd3b1" target="_blank">5f655e0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c45672cf9916024c7d44d9a828351bfd61f44a4b" target="_blank">c45672c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -624,7 +624,7 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Untracked files:
-    Untracked:  analysis/eMLR_model_fitting_for_loop.Rmd
+    Untracked:  code/previous_script_versions/
 
 </code></pre>
 <p>
@@ -663,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c45672cf9916024c7d44d9a828351bfd61f44a4b/analysis/eMLR_model_fitting.Rmd" target="_blank">c45672c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+added residual plots
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/eMLR_model_fitting.html" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2078,18 +2112,16 @@ GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;%
 
 print(object.size(GLODAP_nested), units = &quot;MB&quot;)
 print(object.size(GLODAP_nested_lm), units = &quot;MB&quot;)
-print(object.size(GLODAP_nested_lm_fit), units = &quot;MB&quot;)
-
-GLODAP_glanced &lt;- GLODAP_nested_lm_fit %&gt;%
+print(object.size(GLODAP_nested_lm_fit), units = &quot;MB&quot;)</code></pre>
+</div>
+<div id="tidy-models" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Tidy models</h1>
+<pre class="r"><code>GLODAP_glanced &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(data, fit, tidied, augmented)) %&gt;%
   unnest(glanced)
 
 GLODAP_glanced &lt;- GLODAP_glanced %&gt;% 
   rename(n_predictors = n)
-
-# GLODAP_glanced &lt;- GLODAP_glanced %&gt;% 
-#   mutate(rmse = sqrt ( (sigma * df.residual) / nobs) )
-
 
 GLODAP_tidy &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(data, fit, glanced, augmented)) %&gt;%
@@ -2099,7 +2131,7 @@ GLODAP_augmented &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(data, fit, tidied, glanced)) %&gt;% 
   unnest(augmented) 
 
-print(object.size(GLODAP_augmented), units = &quot;MB&quot;)
+# print(object.size(GLODAP_augmented), units = &quot;MB&quot;)
 
 GLODAP_glanced_rmse &lt;- GLODAP_augmented %&gt;%
   group_by(gamma_slab, era, basin, model) %&gt;%
@@ -2109,11 +2141,15 @@ GLODAP_glanced_rmse &lt;- GLODAP_augmented %&gt;%
 GLODAP_glanced &lt;- full_join(GLODAP_glanced, GLODAP_glanced_rmse)
 rm(GLODAP_glanced_rmse)
 
+GLODAP_data &lt;- GLODAP_nested_lm_fit %&gt;%
+  select(-c(fit, tidied, glanced, augmented)) %&gt;%
+  unnest(data)
 
-# GLODAP_data &lt;- GLODAP_nested_lm_fit %&gt;% 
-#   select(-c(fit, tidied, glanced, augmented)) %&gt;% 
-#   unnest(data) 
 
+GLODAP_augmented &lt;- bind_cols(
+  GLODAP_data,
+  GLODAP_augmented %&gt;% select(.fitted, .resid)
+)
 
 # # find max predictor correlation
 # i_cor_max &lt;- GLODAP_basin_era_slab %&gt;%
@@ -2129,13 +2165,14 @@ rm(GLODAP_glanced_rmse)
 # i_resid_max &lt;- max(abs(i_lm_fit$residuals))
 # 
 
-rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all)</code></pre>
+rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all,
+   GLODAP_data)</code></pre>
 </div>
-<div id="prepare-coeffcients" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Prepare coeffcients</h1>
+<div id="prepare-coeffcients" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Prepare coeffcients</h1>
 <p>Coefficients are prepared for the mapping of Cant and the chosen target variable.</p>
-<div id="predictor-selection" class="section level2" number="5.1">
-<h2 number="5.1"><span class="header-section-number">5.1</span> Predictor selection</h2>
+<div id="predictor-selection" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Predictor selection</h2>
 <p>Within each basin and slab, the following number of best linear regression models was selected:</p>
 <ul>
 <li>10</li>
@@ -15741,8 +15778,8 @@ cstar_tref ~ temp + aou + silicate + phosphate + phosphate_star
 </table>
 </div>
 </div>
-<div id="target-variable-coefficients" class="section level2" number="5.2">
-<h2 number="5.2"><span class="header-section-number">5.2</span> Target variable coefficients</h2>
+<div id="target-variable-coefficients" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> Target variable coefficients</h2>
 <p>A data frame to map the target variable is prepared.</p>
 <pre class="r"><code># create table with two era belonging to one eras
 eras_forward &lt;- GLODAP_glanced %&gt;%
@@ -15775,8 +15812,8 @@ lm_best &lt;- left_join(
 
 rm(eras_era, eras_forward, eras_backward)</code></pre>
 </div>
-<div id="cant-coeffcients" class="section level2" number="5.3">
-<h2 number="5.3"><span class="header-section-number">5.3</span> Cant coeffcients</h2>
+<div id="cant-coeffcients" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> Cant coeffcients</h2>
 <p>A data frame of coefficient offsets is prepared to facilitate the direct mapping of Cant.</p>
 <pre class="r"><code># subtract coefficients of adjacent era  
 lm_best_cant &lt;- lm_best %&gt;%
@@ -15795,8 +15832,8 @@ lm_best_cant &lt;- lm_best_cant %&gt;%
               names_prefix = &quot;delta_coeff_&quot;,
               values_fill = 0)</code></pre>
 </div>
-<div id="write-files" class="section level2" number="5.4">
-<h2 number="5.4"><span class="header-section-number">5.4</span> Write files</h2>
+<div id="write-files" class="section level2" number="6.4">
+<h2 number="6.4"><span class="header-section-number">6.4</span> Write files</h2>
 <pre class="r"><code>lm_best_target &lt;- lm_best %&gt;% 
   pivot_wider(names_from = &quot;term&quot;,
               names_prefix = &quot;coeff_&quot;,
@@ -15816,13 +15853,13 @@ lm_best_cant %&gt;%
                   sep = &quot;&quot;))</code></pre>
 </div>
 </div>
-<div id="model-diagnotics" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> Model diagnotics</h1>
-<div id="selection-criterion-vs-predictors" class="section level2" number="6.1">
-<h2 number="6.1"><span class="header-section-number">6.1</span> Selection criterion vs predictors</h2>
+<div id="model-diagnotics" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Model diagnotics</h1>
+<div id="selection-criterion-vs-predictors" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Selection criterion vs predictors</h2>
 <p>The selection criterion (rmse) was plotted against the number of predictors (limited to 2 - 5).</p>
-<div id="all-models" class="section level3" number="6.1.1">
-<h3 number="6.1.1"><span class="header-section-number">6.1.1</span> All models</h3>
+<div id="all-models" class="section level3" number="7.1.1">
+<h3 number="7.1.1"><span class="header-section-number">7.1.1</span> All models</h3>
 <pre class="r"><code>GLODAP_glanced %&gt;%
   ggplot(aes(as.factor(n_predictors),
              !!sym(params_local$MLR_criterion),
@@ -15856,6 +15893,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">b03fbd3</a>
@@ -16004,8 +16052,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="best-models" class="section level3" number="6.1.2">
-<h3 number="6.1.2"><span class="header-section-number">6.1.2</span> Best models</h3>
+<div id="best-models" class="section level3" number="7.1.2">
+<h3 number="7.1.2"><span class="header-section-number">7.1.2</span> Best models</h3>
 <pre class="r"><code>left_join(lm_best_target %&gt;% select(basin, gamma_slab, era, model),
           GLODAP_glanced) %&gt;%
   ggplot(aes(&quot;&quot;,
@@ -16040,6 +16088,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">b03fbd3</a>
@@ -16189,11 +16248,11 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="rmse-correlation-between-eras" class="section level2" number="6.2">
-<h2 number="6.2"><span class="header-section-number">6.2</span> RMSE correlation between eras</h2>
+<div id="rmse-correlation-between-eras" class="section level2" number="7.2">
+<h2 number="7.2"><span class="header-section-number">7.2</span> RMSE correlation between eras</h2>
 <p>RMSE was plotted to compare the agreement for one model applied to two adjecent eras (ie check whether the same predictor combination performs equal in both eras).</p>
-<div id="all-models-1" class="section level3" number="6.2.1">
-<h3 number="6.2.1"><span class="header-section-number">6.2.1</span> All models</h3>
+<div id="all-models-1" class="section level3" number="7.2.1">
+<h3 number="7.2.1"><span class="header-section-number">7.2.1</span> All models</h3>
 <pre class="r"><code># find max rmse to scale axis
 max_rmse &lt;-
   max(c(lm_all_eras$rmse,
@@ -16231,6 +16290,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">b03fbd3</a>
@@ -16556,8 +16626,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(max_rmse)</code></pre>
 </div>
-<div id="best-models-1" class="section level3" number="6.2.2">
-<h3 number="6.2.2"><span class="header-section-number">6.2.2</span> Best models</h3>
+<div id="best-models-1" class="section level3" number="7.2.2">
+<h3 number="7.2.2"><span class="header-section-number">7.2.2</span> Best models</h3>
 <pre class="r"><code># find max rmse to scale axis
 max_rmse &lt;-
   max(c(lm_best_eras$rmse,
@@ -16595,6 +16665,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">b03fbd3</a>
@@ -16734,8 +16815,8 @@ jens-daniel-mueller
 <pre class="r"><code>rm(max_rmse)</code></pre>
 </div>
 </div>
-<div id="predictor-counts" class="section level2" number="6.3">
-<h2 number="6.3"><span class="header-section-number">6.3</span> Predictor counts</h2>
+<div id="predictor-counts" class="section level2" number="7.3">
+<h2 number="7.3"><span class="header-section-number">7.3</span> Predictor counts</h2>
 <p>The number of models where a particular predictor was included were counted for each basin, density slab and compared eras</p>
 <pre class="r"><code># calculate cases of predictor used
 lm_all_stats &lt;- lm_best_cant %&gt;% 
@@ -17686,8 +17767,8 @@ lm_all_stats %&gt;%
   
 </table></div>
 </div>
-<div id="rmse-alternatives" class="section level2" number="6.4">
-<h2 number="6.4"><span class="header-section-number">6.4</span> RMSE alternatives</h2>
+<div id="rmse-alternatives" class="section level2" number="7.4">
+<h2 number="7.4"><span class="header-section-number">7.4</span> RMSE alternatives</h2>
 <p>AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.</p>
 <pre class="r"><code>lm_all_eras %&gt;% 
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
@@ -17717,6 +17798,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">b03fbd3</a>
@@ -17883,6 +17975,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ac1a8361ccf3f0cc74aeadbf931da9f58468a378/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">ac1a836</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b03fbd3652fc09ce37cdc3c6bfacf4e888d46f70/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">b03fbd3</a>
 </td>
 <td>
@@ -18017,6 +18120,73 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+</div>
+<div id="residual-patterns" class="section level2" number="7.5">
+<h2 number="7.5"><span class="header-section-number">7.5</span> Residual patterns</h2>
+<div id="pooled" class="section level3" number="7.5.1">
+<h3 number="7.5.1"><span class="header-section-number">7.5.1</span> Pooled</h3>
+<pre class="r"><code>GLODAP_augmented_best &lt;- left_join(
+  lm_best_target %&gt;% select(basin, gamma_slab, era, model),
+  GLODAP_augmented
+)
+
+GLODAP_augmented_best %&gt;% 
+  ggplot(aes(cstar_tref, .fitted)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = &quot;log10&quot;)</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>i_ylim &lt;- c(-30,30)
+i_binwidth &lt;- 1
+
+
+GLODAP_augmented_best %&gt;%
+  ggplot(aes(lat, .resid)) +
+  geom_bin2d(binwidth = i_binwidth) +
+  geom_hline(yintercept = 0, col = &quot;white&quot;) +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  labs(
+    title = paste(
+      &quot;Target variable:&quot;,
+      params_local$MLR_target,
+      &quot;| selected best models&quot;,
+      &quot;| all data&quot;
+    )
+  )</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>GLODAP_augmented_best %&gt;%
+  ggplot(aes(lat, .resid)) +
+  geom_bin2d(binwidth = i_binwidth) +
+  geom_hline(yintercept = 0, col = &quot;white&quot;) +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  coord_cartesian(ylim = i_ylim) +
+  labs(
+    title = paste(
+      &quot;Target variable:&quot;,
+      params_local$MLR_target,
+      &quot;| selected best models&quot;,
+      &quot;| all data&quot;
+    )
+  )</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="by-model-domain" class="section level3" number="7.5.2">
+<h3 number="7.5.2"><span class="header-section-number">7.5.2</span> By model domain</h3>
+<pre class="r"><code>GLODAP_augmented_best %&gt;%
+  filter(basin == unique(GLODAP_augmented_best$basin)[2]) %&gt;% 
+  ggplot(aes(lat, .resid)) +
+  geom_bin2d(binwidth = i_binwidth) +
+  geom_hline(yintercept = 0, col = &quot;black&quot;) +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  facet_grid(gamma_slab ~ era) +
+  coord_cartesian(ylim = i_ylim) +
+  labs(
+    title = paste(
+      &quot;Target variable:&quot;,
+      params_local$MLR_target,
+      &quot;| selected best models&quot;
+    )
+  )</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -18081,6 +18251,7 @@ loaded via a namespace (and not attached):
 [76] xfun_0.18                openxlsx_4.2.3           RcppEigen_0.3.3.7.0     
 [79] later_1.1.0.1            viridisLite_0.3.0        ellipsis_0.3.1          
 [82] here_0.1                </code></pre>
+</div>
 </div>
 </div>
 </div>
