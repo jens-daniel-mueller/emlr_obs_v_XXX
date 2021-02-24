@@ -160,15 +160,15 @@ as a function of each predictor combination. Fitting was performed separately wi
 ```{r fit_all_models_purrr, results='hide'}
 
 GLODAP %>% 
-  filter(basin %in% unique(GLODAP$basin)[1],
-         era %in% unique(GLODAP$era)[c(1,2)],
-         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  # filter(basin %in% unique(GLODAP$basin)[1],
+  #        era %in% unique(GLODAP$era)[c(1,2)],
+  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  filter(basin %in% unique(GLODAP$basin)[1],
-         era %in% unique(GLODAP$era)[c(1,2)],
-         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  # filter(basin %in% unique(GLODAP$basin)[1],
+  #        era %in% unique(GLODAP$era)[c(1,2)],
+  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   drop_na() %>% 
   group_by(gamma_slab, era, basin) %>% 
   nest()
