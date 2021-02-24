@@ -604,16 +604,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree06a2f3b6097b6f6ec119d420cc6891665e17ff6btargetblank06a2f3ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/06a2f3b6097b6f6ec119d420cc6891665e17ff6b" target="_blank">06a2f3b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede11bfe4a76eb2f0c586c4fc18d64826edc3ac5atargetblankde11bfea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de11bfe4a76eb2f0c586c4fc18d64826edc3ac5a" target="_blank">de11bfe</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree06a2f3b6097b6f6ec119d420cc6891665e17ff6btargetblank06a2f3ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede11bfe4a76eb2f0c586c4fc18d64826edc3ac5atargetblankde11bfea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/06a2f3b6097b6f6ec119d420cc6891665e17ff6b" target="_blank">06a2f3b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de11bfe4a76eb2f0c586c4fc18d64826edc3ac5a" target="_blank">de11bfe</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -663,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/de11bfe4a76eb2f0c586c4fc18d64826edc3ac5a/analysis/eMLR_model_fitting.Rmd" target="_blank">de11bfe</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+clean up purrr approach and residual plots
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/42eca5db0b215bae9a016e0d2598460bdde87f5a/docs/eMLR_model_fitting.html" target="_blank">42eca5d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2150,7 +2184,9 @@ rm(i_gamma_slab,
 <li>cstar_tref</li>
 </ul>
 <p>as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE), were calculated for each fitted model.</p>
-<pre class="r"><code>GLODAP %&gt;% 
+<pre class="r"><code># prepare nested data frame
+
+GLODAP %&gt;% 
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
   #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %&gt;%
@@ -2164,10 +2200,14 @@ GLODAP_nested &lt;- GLODAP %&gt;%
   group_by(gamma_slab, era, basin) %&gt;% 
   nest()
 
+# expand with model definitions
+
 GLODAP_nested_lm &lt;- expand_grid(
   GLODAP_nested,
   lm_all
 )
+
+# fit models and extract tidy model output
 
 GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
   mutate(
@@ -2178,60 +2218,51 @@ GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;%
     augmented = map(fit, augment)
   )
 
-print(object.size(GLODAP_nested), units = &quot;MB&quot;)
-print(object.size(GLODAP_nested_lm), units = &quot;MB&quot;)
-print(object.size(GLODAP_nested_lm_fit), units = &quot;MB&quot;)</code></pre>
+# print(object.size(GLODAP_nested), units = &quot;MB&quot;)
+# print(object.size(GLODAP_nested_lm), units = &quot;MB&quot;)
+# print(object.size(GLODAP_nested_lm_fit), units = &quot;MB&quot;)</code></pre>
 </div>
 <div id="tidy-models" class="section level1" number="5">
 <h1 number="5"><span class="header-section-number">5</span> Tidy models</h1>
-<pre class="r"><code>GLODAP_glanced &lt;- GLODAP_nested_lm_fit %&gt;%
+<pre class="r"><code># extract glanced model output (model diagnostics, such as AIC)
+GLODAP_glanced &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(data, fit, tidied, augmented)) %&gt;%
-  unnest(glanced)
-
-GLODAP_glanced &lt;- GLODAP_glanced %&gt;% 
+  unnest(glanced) %&gt;% 
   rename(n_predictors = n)
 
+# extract tidy model output (model coefficients)
 GLODAP_tidy &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(data, fit, glanced, augmented)) %&gt;%
   unnest(tidied)
 
+# extract augmented model output (fitted values and residuals)
 GLODAP_augmented &lt;- GLODAP_nested_lm_fit %&gt;% 
   select(-c(data, fit, tidied, glanced)) %&gt;% 
   unnest(augmented) 
 
 # print(object.size(GLODAP_augmented), units = &quot;MB&quot;)
 
+# calculate RMSE from augmented output
 GLODAP_glanced_rmse &lt;- GLODAP_augmented %&gt;%
   group_by(gamma_slab, era, basin, model) %&gt;%
   summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %&gt;%
   ungroup()
 
+# add RMSE to glanced output
 GLODAP_glanced &lt;- full_join(GLODAP_glanced, GLODAP_glanced_rmse)
 rm(GLODAP_glanced_rmse)
 
+
+# extract input data
 GLODAP_data &lt;- GLODAP_nested_lm_fit %&gt;%
   select(-c(fit, tidied, glanced, augmented)) %&gt;%
   unnest(data)
 
-
+# append input data with augmented data
 GLODAP_augmented &lt;- bind_cols(
   GLODAP_data,
   GLODAP_augmented %&gt;% select(.fitted, .resid)
 )
-
-# # find max predictor correlation
-# i_cor_max &lt;- GLODAP_basin_era_slab %&gt;%
-#   select(!!!syms(str_split(i_predictors, &quot; &quot;,
-#                            simplify = TRUE))) %&gt;%
-#   correlate(quiet = TRUE) %&gt;%
-#   select(-term) %&gt;%
-#   abs() %&gt;%
-#   max(na.rm = TRUE)
-# 
-# 
-# # calculate maximum residual
-# i_resid_max &lt;- max(abs(i_lm_fit$residuals))
-# 
 
 rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all,
    GLODAP_data)</code></pre>
@@ -15902,7 +15933,8 @@ lm_best_cant &lt;- lm_best_cant %&gt;%
 </div>
 <div id="write-files" class="section level2" number="6.4">
 <h2 number="6.4"><span class="header-section-number">6.4</span> Write files</h2>
-<pre class="r"><code>lm_best_target &lt;- lm_best %&gt;% 
+<pre class="r"><code># create table of target varaible coefficients in wide format
+lm_best_target &lt;- lm_best %&gt;% 
   pivot_wider(names_from = &quot;term&quot;,
               names_prefix = &quot;coeff_&quot;,
               values_from = &quot;estimate&quot;,
@@ -18191,58 +18223,54 @@ jens-daniel-mueller
 </div>
 <div id="residual-patterns" class="section level2" number="7.5">
 <h2 number="7.5"><span class="header-section-number">7.5</span> Residual patterns</h2>
-<div id="pooled" class="section level3" number="7.5.1">
-<h3 number="7.5.1"><span class="header-section-number">7.5.1</span> Pooled</h3>
+<div id="fitted-vs-actual-models" class="section level3" number="7.5.1">
+<h3 number="7.5.1"><span class="header-section-number">7.5.1</span> Fitted vs actual models</h3>
+<p>Plotted are fitted vs actual target variable values, here: <code>r</code>params_local$MLR_target`</p>
 <pre class="r"><code>GLODAP_augmented_best &lt;- left_join(
   lm_best_target %&gt;% select(basin, gamma_slab, era, model),
   GLODAP_augmented
-)
+)</code></pre>
+<pre class="r"><code># calculate equal axis limits and binwidth
+axis_lims &lt;- GLODAP_augmented %&gt;%
+  summarise(
+    max_value = max(
+      c(max(.fitted, max(!!sym(params_local$MLR_target))))
+      ),
+    min_value = min(
+      c(min(.fitted, min(!!sym(params_local$MLR_target))))
+    )
+  )
 
-GLODAP_augmented_best %&gt;% 
-  ggplot(aes(cstar_tref, .fitted)) +
-  geom_bin2d() +
-  scale_fill_viridis_c(trans = &quot;log10&quot;)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns-1">
-Past versions of residual_patterns-1.png
-</button>
-</p>
-<div id="fig-residual_patterns-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/071743d8e86476364e26746044aa47d1bf4f2c12/docs/figure/eMLR_model_fitting.Rmd/residual_patterns-1.png" target="_blank">071743d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-02-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>i_ylim &lt;- c(-30,30)
 i_binwidth &lt;- 1
+# binwidth_value &lt;- (axis_lims$max_value - axis_lims$min_value) / 40
+axis_lims &lt;- c(axis_lims$min_value, axis_lims$max_value)
 
+GLODAP_augmented %&gt;%
+  ggplot(aes(cstar_tref, .fitted)) +
+  geom_bin2d(binwidth = i_binwidth) +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  geom_abline(slope = 1,
+              col = &#39;red&#39;) +
+  coord_equal(xlim = axis_lims,
+              ylim = axis_lims) +
+  labs(title = &quot;All models&quot;)</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>GLODAP_augmented_best %&gt;%
+  ggplot(aes(cstar_tref, .fitted)) +
+  geom_bin2d(binwidth = i_binwidth) +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  geom_abline(slope = 1,
+              col = &#39;red&#39;) +
+  coord_equal(xlim = axis_lims,
+              ylim = axis_lims) +
+  labs(title = &quot;Selected models&quot;)</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(binwidth_value, axis_lims)</code></pre>
+</div>
+<div id="pooled" class="section level3" number="7.5.2">
+<h3 number="7.5.2"><span class="header-section-number">7.5.2</span> Pooled</h3>
+<p>In the following, we present residual patterns vs latitude across all domains.</p>
+<pre class="r"><code>i_ylim &lt;- c(-30,30)
 
 GLODAP_augmented_best %&gt;%
   ggplot(aes(lat, .resid)) +
@@ -18253,48 +18281,12 @@ GLODAP_augmented_best %&gt;%
     title = paste(
       &quot;Target variable:&quot;,
       params_local$MLR_target,
-      &quot;| selected best models&quot;,
-      &quot;| all data&quot;
+      &quot;| Selected models&quot;,
+      &quot;| All domains&quot;
     )
   )</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns-2">
-Past versions of residual_patterns-2.png
-</button>
-</p>
-<div id="fig-residual_patterns-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/071743d8e86476364e26746044aa47d1bf4f2c12/docs/figure/eMLR_model_fitting.Rmd/residual_patterns-2.png" target="_blank">071743d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-02-24
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Due to the few large residuals, we limit the y axis range for the plots below.</p>
 <pre class="r"><code>GLODAP_augmented_best %&gt;%
   ggplot(aes(lat, .resid)) +
   geom_bin2d(binwidth = i_binwidth) +
@@ -18305,51 +18297,15 @@ jens-daniel-mueller
     title = paste(
       &quot;Target variable:&quot;,
       params_local$MLR_target,
-      &quot;| selected best models&quot;,
-      &quot;| all data&quot;
+      &quot;| Selected models&quot;,
+      &quot;| All domains&quot;
     )
   )</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns-3">
-Past versions of residual_patterns-3.png
-</button>
-</p>
-<div id="fig-residual_patterns-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/071743d8e86476364e26746044aa47d1bf4f2c12/docs/figure/eMLR_model_fitting.Rmd/residual_patterns-3.png" target="_blank">071743d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-02-24
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-</div>
-<div id="by-model-domain" class="section level3" number="7.5.2">
-<h3 number="7.5.2"><span class="header-section-number">7.5.2</span> By model domain</h3>
+<div id="by-model-domain" class="section level3" number="7.5.3">
+<h3 number="7.5.3"><span class="header-section-number">7.5.3</span> By model domain</h3>
+<p>In the following, we present residual patterns vs latitude for separate model domains, ie basins, density slabs and eras.</p>
 <pre class="r"><code>p_residuals &lt;- function(df){
     ggplot(data = df, aes(lat, .resid)) +
       geom_bin2d(binwidth = i_binwidth) +
