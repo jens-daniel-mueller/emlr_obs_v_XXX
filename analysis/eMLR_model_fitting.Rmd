@@ -697,6 +697,61 @@ GLODAP_augmented_best %>%
 
 ```
 
+### Latitudinal mean
+
+```{r latitudinal_residual, fig.asp=2}
+
+GLODAP_augmented_best <- GLODAP_augmented_best %>%
+  mutate(lat_grid = as.numeric(as.character(cut(
+    lat,
+    seq(-90, 90, 10),
+    seq(-85, 85, 10)
+  ))))
+
+lat_residual <- GLODAP_augmented_best %>%
+  group_by(basin, gamma_slab, era, lat_grid) %>% 
+  summarise(.resid_mean = mean(.resid)) %>% 
+  ungroup()
+
+lat_residual %>%
+  ggplot(aes(lat_grid, .resid_mean, col=era)) +
+  geom_line() +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "black") +
+  facet_grid(gamma_slab ~ basin)
+
+
+```
+
+
+
+### Latitudinal offset
+
+```{r latitudinal_residual_offset, fig.asp=2}
+
+# calculate residual offset for adjacent eras
+lat_residual_offset <- lat_residual  %>%
+  select(basin, gamma_slab, era, lat_grid, .resid_mean) %>% 
+  arrange(era) %>% 
+  group_by(basin, gamma_slab, lat_grid) %>% 
+  mutate(eras = paste(lag(era), era, sep = " --> "),
+         .resid_mean_offset = .resid_mean - lag(.resid_mean)
+         ) %>% 
+  ungroup() %>% 
+  select(-era) %>% 
+  drop_na() %>% 
+  filter(eras != paste(unique(lat_residual$era)[1],
+                       unique(lat_residual$era)[3],
+                       sep = " --> "))
+
+lat_residual_offset %>%
+  ggplot(aes(lat_grid, .resid_mean_offset, col=eras)) +
+  geom_line() +
+  geom_point() +
+  geom_hline(yintercept = 0, col = "black") +
+  facet_grid(gamma_slab ~ basin)
+
+```
 
 
 
