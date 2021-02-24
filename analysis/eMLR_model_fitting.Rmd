@@ -616,57 +616,8 @@ GLODAP_augmented_best %>%
 
 ```{r residual_patterns_by_model_domain, fig.asp=2}
 
-
-# GLODAP_augmented_best %>%
-#   filter(basin == unique(GLODAP_augmented_best$basin)[2]) %>% 
-#   ggplot(aes(lat, .resid)) +
-#   geom_bin2d(binwidth = i_binwidth) +
-#   geom_hline(yintercept = 0, col = "black") +
-#   scale_fill_viridis_c(trans = "log10") +
-#   facet_grid(gamma_slab ~ era) +
-#   coord_cartesian(ylim = i_ylim) +
-#   labs(
-#     title = paste(
-#       "Target variable:",
-#       params_local$MLR_target,
-#       "| selected best models"
-#     )
-#   )
-
-
-# GLODAP_augmented_best_plot <- GLODAP_augmented_best %>%
-#   group_by(basin) %>%
-#   nest() %>%
-#   mutate(
-#     plot = map2(
-#       data,
-#       basin,
-#       ~   ggplot(data = .x, aes(lat, .resid)) +
-#         geom_bin2d(binwidth = i_binwidth) +
-#         geom_hline(yintercept = 0, col = "black") +
-#         scale_fill_viridis_c(trans = "log10") +
-#         facet_grid(gamma_slab ~ era) +
-#         coord_cartesian(ylim = i_ylim) +
-#         labs(
-#           title = paste(
-#             "Target variable:",
-#             params_local$MLR_target,
-#             "| selected best models | basin:",
-#             .y
-#           )
-#         )
-#     )
-#   )
-# 
-# GLODAP_augmented_best_plot$plot[1]
-
-
-
-map(
-  unique(GLODAP_augmented_best$basin),
-    ~   GLODAP_augmented_best %>% 
-    filter(basin == .x) %>% 
-    ggplot(aes(lat, .resid)) +
+p_residuals <- function(df){
+    ggplot(data = df, aes(lat, .resid)) +
       geom_bin2d(binwidth = i_binwidth) +
       geom_hline(yintercept = 0, col = "black") +
       scale_fill_viridis_c(trans = "log10") +
@@ -677,10 +628,15 @@ map(
           "Target variable:",
           params_local$MLR_target,
           "| selected best models | basin:",
-          .x
+          unique(df$basin)
         )
       )
-)
+}
+
+GLODAP_augmented_best %>% 
+  group_split(basin) %>% 
+  map(p_residuals)
+  
 
 
 ```
