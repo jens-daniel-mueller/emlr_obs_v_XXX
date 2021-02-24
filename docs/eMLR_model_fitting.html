@@ -604,16 +604,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9ebedacc71e6075f91e845de6f4e200797a3dee7targetblank9ebedaca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9ebedacc71e6075f91e845de6f4e200797a3dee7" target="_blank">9ebedac</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7f77d912c16090627d17afe9790dc19fd93aea5ftargetblank7f77d91a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7f77d912c16090627d17afe9790dc19fd93aea5f" target="_blank">7f77d91</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9ebedacc71e6075f91e845de6f4e200797a3dee7targetblank9ebedaca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7f77d912c16090627d17afe9790dc19fd93aea5ftargetblank7f77d91a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9ebedacc71e6075f91e845de6f4e200797a3dee7" target="_blank">9ebedac</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7f77d912c16090627d17afe9790dc19fd93aea5f" target="_blank">7f77d91</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -663,6 +663,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7f77d912c16090627d17afe9790dc19fd93aea5f/analysis/eMLR_model_fitting.Rmd" target="_blank">7f77d91</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+removed log10 color scale
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/fec3558cf5a7c6881e47d1e3de1c4e570ec76929/docs/eMLR_model_fitting.html" target="_blank">fec3558</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -18282,7 +18316,7 @@ axis_lims &lt;- c(axis_lims$min_value, axis_lims$max_value)
 GLODAP_augmented %&gt;%
   ggplot(aes(cstar_tref, .fitted)) +
   geom_bin2d(binwidth = i_binwidth) +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   geom_abline(slope = 1,
               col = &#39;red&#39;) +
   coord_equal(xlim = axis_lims,
@@ -18329,7 +18363,7 @@ jens-daniel-mueller
 <pre class="r"><code>GLODAP_augmented_best %&gt;%
   ggplot(aes(cstar_tref, .fitted)) +
   geom_bin2d(binwidth = i_binwidth) +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   geom_abline(slope = 1,
               col = &#39;red&#39;) +
   coord_equal(xlim = axis_lims,
@@ -18384,7 +18418,7 @@ GLODAP_augmented_best %&gt;%
   ggplot(aes(lat, .resid)) +
   geom_bin2d(binwidth = i_binwidth) +
   geom_hline(yintercept = 0, col = &quot;white&quot;) +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   labs(
     title = paste(
       &quot;Target variable:&quot;,
@@ -18436,7 +18470,7 @@ jens-daniel-mueller
   ggplot(aes(lat, .resid)) +
   geom_bin2d(binwidth = i_binwidth) +
   geom_hline(yintercept = 0, col = &quot;white&quot;) +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   coord_cartesian(ylim = i_ylim) +
   labs(
     title = paste(
@@ -18492,7 +18526,7 @@ jens-daniel-mueller
     ggplot(data = df, aes(lat, .resid)) +
       geom_bin2d(binwidth = i_binwidth) +
       geom_hline(yintercept = 0, col = &quot;black&quot;) +
-      scale_fill_viridis_c(trans = &quot;log10&quot;) +
+      scale_fill_viridis_c() +
       facet_grid(gamma_slab ~ era) +
       coord_cartesian(ylim = i_ylim) +
       labs(
@@ -18620,6 +18654,43 @@ lat_residual %&gt;%
   geom_hline(yintercept = 0, col = &quot;black&quot;) +
   facet_grid(gamma_slab ~ basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-latitudinal_residual-1">
+Past versions of latitudinal_residual-1.png
+</button>
+</p>
+<div id="fig-latitudinal_residual-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/fec3558cf5a7c6881e47d1e3de1c4e570ec76929/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">fec3558</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="latitudinal-offset" class="section level3" number="7.5.5">
 <h3 number="7.5.5"><span class="header-section-number">7.5.5</span> Latitudinal offset</h3>
@@ -18645,6 +18716,43 @@ lat_residual_offset %&gt;%
   geom_hline(yintercept = 0, col = &quot;black&quot;) +
   facet_grid(gamma_slab ~ basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-latitudinal_residual_offset-1">
+Past versions of latitudinal_residual_offset-1.png
+</button>
+</p>
+<div id="fig-latitudinal_residual_offset-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/fec3558cf5a7c6881e47d1e3de1c4e570ec76929/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">fec3558</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-02-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
