@@ -158,10 +158,47 @@ Join Cant fields of G19 and S04
 G19_cant_3d <- G19_cant_3d %>% 
   select(lon, lat, depth, cant_pos_G19 = cant_pos)
 
+map +
+  geom_raster(data = G19_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Gruber 2019 coverage")) +
+  geom_raster(data = GLODAP %>% distinct(lat, lon),
+              aes(lon, lat, fill = "GLODAP coverage")) +
+  scale_fill_viridis_d(name = "Source")
+
 S04_cant_3d <- S04_cant_3d %>% 
   select(lon, lat, depth, cant_pos_S04 = cant_pos)
 
-cant_3d <- inner_join(S04_cant_3d, G19_cant_3d)
+map +
+  geom_raster(data = S04_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Sabine 2004 coverage")) +
+  geom_raster(data = GLODAP %>% distinct(lat, lon),
+              aes(lon, lat, fill = "GLODAP coverage")) +
+  scale_fill_viridis_d(name = "Source")
+
+map +
+  geom_raster(data = S04_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Sabine 2004 coverage")) +
+  geom_raster(data = G19_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Gruber 2019 coverage")) +
+  scale_fill_viridis_d(name = "Source")
+
+map +
+  geom_raster(data = G19_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Gruber 2019 coverage")) +
+  geom_raster(data = S04_cant_3d %>% distinct(lat, lon),
+              aes(lon, lat, fill = "Sabine 2004 coverage")) +
+  scale_fill_viridis_d(name = "Source")
+
+cant_3d <- full_join(S04_cant_3d, G19_cant_3d)
+
+
+cant_3d <- cant_3d %>%
+  mutate(cant_pos_S04 = replace_na(cant_pos_S04, 0),
+         cant_pos_G19 = replace_na(cant_pos_G19, 0))
+
+
+# cant_3d %>%
+#   filter_all(any_vars(is.na(.)))
 
 ```
 
@@ -190,6 +227,9 @@ cant_3d <- cant_3d %>%
 cant_3d <- cant_3d %>% 
   select(lon, lat, depth, era, cant_pos)
 
+# cant_3d %>%
+#   filter_all(any_vars(is.na(.)))
+
 ```
 
 
@@ -206,6 +246,9 @@ cant_3d_obs <- left_join(
   GLODAP_obs_grid_era,
   cant_3d)
 
+# cant_3d_obs %>%
+#   filter_all(any_vars(is.na(.)))
+
 # calculate number of cant data points per grid cell
 cant_3d_obs <- cant_3d_obs %>%
   group_by(lon, lat, era) %>% 
@@ -216,8 +259,8 @@ cant_3d_obs <- cant_3d_obs %>%
 map +
   geom_raster(data = cant_3d_obs %>% filter(n > 1),
              aes(lon, lat, fill = "> 1")) +
-  geom_raster(data = cant_3d_obs %>% filter(n <= 1),
-             aes(lon, lat, fill = "<= 1")) +
+  geom_raster(data = cant_3d_obs %>% filter(n == 1),
+             aes(lon, lat, fill = "= 1")) +
   scale_fill_brewer(palette = "Set1", name="n") +
   facet_wrap( ~ era, ncol = 1) +
   labs(title = "Number of Cant depth levels",
@@ -234,7 +277,6 @@ GLODAP_cant_obs <- GLODAP_cant_obs %>%
   group_by(lon, lat, era) %>% 
   fill(n, .direction = "updown") %>% 
   ungroup()
-
 
 ```
 
@@ -253,12 +295,18 @@ GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %>%
   ungroup()
 
+GLODAP_cant_obs_int %>% 
+  filter(is.na(cant_pos_int))
+
 # set cant for observation depth if only one cant available
 GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
   filter(n == 1) %>%
   group_by(lat, lon, era) %>%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %>%
   ungroup()
+
+GLODAP_cant_obs_set %>% 
+  filter(is.na(cant_pos_int))
 
 # bin data sets with interpolated and set cant
 GLODAP_cant_obs <- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
@@ -295,6 +343,10 @@ GLODAP <- GLODAP_cant_obs %>%
   select(-cant_pos_int, n)
 
 rm(GLODAP_cant_obs)
+
+
+GLODAP %>%
+  filter_all(any_vars(is.na(.)))
 
 ```
 
