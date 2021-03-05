@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "removed log10 color scale")
+wflow_publish(all = TRUE, message = "Canyon-B comparison for all years")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -28,11 +28,11 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "introduced purrr::map to model fitting, rebuild all",
+message = "comparison to CANYON-B started",
 republish = TRUE)
 
 
 
-# Push latest version to GitHub
+  # Push latest version to GitHub
 wflow_git_push()
 jens-daniel-mueller
