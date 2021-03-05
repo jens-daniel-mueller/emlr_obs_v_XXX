@@ -50,6 +50,7 @@ path_version_figures  <-
 ```{r load_libraries_specific, include = FALSE}
 library(marelac)
 library(lubridate)
+library(broom)
 ```
 
 # Required data
@@ -631,7 +632,109 @@ rm(GLODAP_vars, GLODAP_vars_long)
 
 
 
-# Individual cruise sections
+# Cruise quality check
+
+## MLR models
+
+In the following, we fit the full MLR model to the GLODAP data set.
+
+```{r define_full_model}
+
+model <- paste(params_local$MLR_target,
+               paste(params_local$MLR_predictors, collapse = " + "),
+               sep = " ~ ")
+
+model
+
+```
+
+
+```{r fit_MLR_to_all_data}
+
+# prepare nested data frame
+GLODAP_nested <- GLODAP %>%
+  group_by(gamma_slab, basin) %>%
+  nest()
+
+# expand with model definitions
+GLODAP_nested_lm <- expand_grid(GLODAP_nested,
+                                model)
+
+# fit models and extract tidy model output
+GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
+  mutate(
+    fit = map2(.x = data, .y = model,
+               ~ lm(as.formula(.y), data = .x)),
+    tidied = map(fit, tidy),
+    glanced = map(fit, glance),
+    augmented = map(fit, augment)
+  )
+
+# extract augmented model output (fitted values and residuals)
+GLODAP_augmented <- GLODAP_nested_lm_fit %>%
+  select(-c(data, fit, tidied, glanced)) %>%
+  unnest(augmented)
+
+# extract input data
+GLODAP_data <- GLODAP_nested_lm_fit %>%
+  select(-c(fit, tidied, glanced, augmented)) %>%
+  unnest(data)
+
+# append input data with augmented data
+GLODAP_augmented <- bind_cols(GLODAP_data,
+                              GLODAP_augmented %>% select(.fitted, .resid))
+
+rm(GLODAP_data)
+
+GLODAP_augmented %>%
+  ggplot(aes(year, cstar_tref - mean(cstar_tref))) +
+  geom_bin2d(binwidth = c(1, 1)) +
+  scale_fill_viridis_c()
+
+GLODAP_augmented %>%
+  ggplot(aes(year, .resid)) +
+  geom_bin2d(binwidth = c(1, 1)) +
+  scale_fill_viridis_c()
+
+
+# calculate RMSE from augmented output per cruise
+cruise_all <- GLODAP_augmented %>%
+  group_by(cruise) %>%
+  summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %>%
+  ungroup()
+
+# rank RMSE
+cruise_all <- cruise_all %>% 
+  mutate(rank_rmse = rank(rmse),
+         cruise = as.factor(cruise))
+
+cruise_rmse_max <- 10
+
+cruise_out <- cruise_all %>% 
+  filter(rmse > cruise_rmse_max)
+
+GLODAP_out <- GLODAP_augmented %>% 
+  filter(cruise %in% cruise_out$cruise)
+
+ggplot() +
+  geom_hline(yintercept = cruise_rmse_max) +
+  geom_point(data = cruise_all,
+             aes(rank_rmse, rmse)) +
+  geom_point(data = cruise_out,
+             aes(rank_rmse, rmse, col = cruise))
+
+map +
+  geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
+              aes(lon, lat)) +
+  facet_wrap(~era, ncol = 1)
+
+nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
+
+
+```
+
+
+## Individual cruise sections
 
 Zonal and meridional section plots are produce for each cruise individually and are available under:  
 
@@ -804,6 +907,7 @@ rm(map_plot,
 
 # select relevant columns
 GLODAP <- GLODAP %>%
+  filter(!(cruise %in% cruise_out$cruise)) %>%
   select(
     year,
     date,
