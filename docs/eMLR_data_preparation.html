@@ -486,7 +486,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">04 March, 2021</h4>
+<h4 class="date">05 March, 2021</h4>
 
 </div>
 
@@ -511,7 +511,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-03-04
+<strong>Last updated:</strong> 2021-03-05
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -602,16 +602,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9cf1fda0a06c7faed318dfac1e9e9dba26cf05ctargetblankc9cf1fda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9cf1fda0a06c7faed318dfac1e9e9dba26cf05c" target="_blank">c9cf1fd</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree006c875fb4f9df5ebcf582f14386ba9b009ee09ctargetblank006c875a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/006c875fb4f9df5ebcf582f14386ba9b009ee09c" target="_blank">006c875</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9cf1fda0a06c7faed318dfac1e9e9dba26cf05ctargetblankc9cf1fda" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree006c875fb4f9df5ebcf582f14386ba9b009ee09ctargetblank006c875a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9cf1fda0a06c7faed318dfac1e9e9dba26cf05c" target="_blank">c9cf1fd</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/006c875fb4f9df5ebcf582f14386ba9b009ee09c" target="_blank">006c875</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -664,6 +664,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/006c875fb4f9df5ebcf582f14386ba9b009ee09c/analysis/eMLR_data_preparation.Rmd" target="_blank">006c875</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-05
+</td>
+<td>
+rebuild with NA in Cant replaced by 0
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/af70b945d751756feb713a1b3762429391fd126a/docs/eMLR_data_preparation.html" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1955,44 +1989,81 @@ GLODAP &lt;- GLODAP %&gt;%
 <pre class="r"><code>G19_cant_3d &lt;- G19_cant_3d %&gt;% 
   select(lon, lat, depth, cant_pos_G19 = cant_pos)
 
-map +
-  geom_raster(data = G19_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Gruber 2019 coverage&quot;)) +
-  geom_raster(data = GLODAP %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;GLODAP coverage&quot;)) +
-  scale_fill_viridis_d(name = &quot;Source&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>S04_cant_3d &lt;- S04_cant_3d %&gt;% 
+S04_cant_3d &lt;- S04_cant_3d %&gt;% 
   select(lon, lat, depth, cant_pos_S04 = cant_pos)
 
-map +
-  geom_raster(data = S04_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Sabine 2004 coverage&quot;)) +
-  geom_raster(data = GLODAP %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;GLODAP coverage&quot;)) +
-  scale_fill_viridis_d(name = &quot;Source&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>map +
-  geom_raster(data = S04_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Sabine 2004 coverage&quot;)) +
-  geom_raster(data = G19_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Gruber 2019 coverage&quot;)) +
-  scale_fill_viridis_d(name = &quot;Source&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>map +
-  geom_raster(data = G19_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Gruber 2019 coverage&quot;)) +
-  geom_raster(data = S04_cant_3d %&gt;% distinct(lat, lon),
-              aes(lon, lat, fill = &quot;Sabine 2004 coverage&quot;)) +
-  scale_fill_viridis_d(name = &quot;Source&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>cant_3d &lt;- full_join(S04_cant_3d, G19_cant_3d)
+cant_3d_coverage &lt;- full_join(
+  S04_cant_3d %&gt;% distinct(lat, lon),
+  G19_cant_3d %&gt;% distinct(lat, lon)
+)
 
+cant_3d_coverage &lt;- full_join(
+  cant_3d_coverage,
+  G19_cant_3d %&gt;% distinct(lat, lon) %&gt;% mutate(G19 = &quot;y&quot;)
+)
+
+cant_3d_coverage &lt;- full_join(
+  cant_3d_coverage,
+  S04_cant_3d %&gt;% distinct(lat, lon) %&gt;% mutate(S04 = &quot;y&quot;)
+)
+
+cant_3d_coverage &lt;- cant_3d_coverage %&gt;% 
+  mutate(coverage = case_when(
+    G19 == &quot;y&quot; &amp; S04 == &quot;y&quot; ~ &quot;both&quot;,
+    is.na(G19) &amp; S04 == &quot;y&quot; ~ &quot;S04&quot;,
+    G19 == &quot;y&quot; &amp; is.na(S04) ~ &quot;G19&quot;))
+
+map +
+  geom_raster(data = cant_3d_coverage,
+              aes(lon, lat, fill = coverage)) +
+  geom_raster(data = GLODAP %&gt;% distinct(lat, lon),
+              aes(lon, lat)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-join_cant_estimates-1">
+Past versions of join_cant_estimates-1.png
+</button>
+</p>
+<div id="fig-join_cant_estimates-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(cant_3d_coverage)
+
+cant_3d &lt;- full_join(S04_cant_3d, G19_cant_3d)
 
 cant_3d &lt;- cant_3d %&gt;%
   mutate(cant_pos_S04 = replace_na(cant_pos_S04, 0),
          cant_pos_G19 = replace_na(cant_pos_G19, 0))
-
 
 # cant_3d %&gt;%
 #   filter_all(any_vars(is.na(.)))</code></pre>
@@ -2032,6 +2103,10 @@ GLODAP_obs_grid_era &lt;- GLODAP %&gt;%
 cant_3d_obs &lt;- left_join(
   GLODAP_obs_grid_era,
   cant_3d)
+
+cant_3d_obs &lt;- cant_3d_obs %&gt;%
+  mutate(cant_pos = replace_na(cant_pos, 0),
+         depth = replace_na(depth, 0))
 
 # cant_3d_obs %&gt;%
 #   filter_all(any_vars(is.na(.)))
@@ -2075,6 +2150,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">7b672f7</a>
@@ -2213,44 +2299,20 @@ GLODAP_cant_obs_int &lt;- GLODAP_cant_obs %&gt;%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %&gt;%
   ungroup()
 
-GLODAP_cant_obs_int %&gt;% 
-  filter(is.na(cant_pos_int))</code></pre>
-<pre><code># A tibble: 0 x 28
-# … with 28 variables: year &lt;dbl&gt;, date &lt;date&gt;, era &lt;chr&gt;, basin &lt;chr&gt;,
-#   basin_AIP &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;, cruise &lt;dbl&gt;, bottomdepth &lt;dbl&gt;,
-#   depth &lt;dbl&gt;, temp &lt;dbl&gt;, sal &lt;dbl&gt;, gamma &lt;dbl&gt;, tco2 &lt;dbl&gt;, talk &lt;dbl&gt;,
-#   phosphate &lt;dbl&gt;, oxygen &lt;dbl&gt;, aou &lt;dbl&gt;, nitrate &lt;dbl&gt;, silicate &lt;dbl&gt;,
-#   phosphate_star &lt;dbl&gt;, rCP_phosphate &lt;dbl&gt;, talk_05 &lt;dbl&gt;,
-#   rNP_phosphate_05 &lt;dbl&gt;, cstar &lt;dbl&gt;, cant_pos &lt;dbl&gt;, n &lt;int&gt;,
-#   cant_pos_int &lt;dbl&gt;</code></pre>
-<pre class="r"><code># set cant for observation depth if only one cant available
+# GLODAP_cant_obs_int %&gt;% 
+#   filter(is.na(cant_pos_int))
+
+# set cant for observation depth if only one cant available
 GLODAP_cant_obs_set &lt;- GLODAP_cant_obs %&gt;%
   filter(n == 1) %&gt;%
   group_by(lat, lon, era) %&gt;%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %&gt;%
   ungroup()
 
-GLODAP_cant_obs_set %&gt;% 
-  filter(is.na(cant_pos_int))</code></pre>
-<pre><code># A tibble: 27 x 28
-    year date       era   basin basin_AIP   lat   lon cruise bottomdepth depth
-   &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
- 1  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  150 
- 2  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  200 
- 3  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  250 
- 4  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  300 
- 5  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  350 
- 6  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  400 
- 7  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  463 
- 8  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  152.
- 9  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  199.
-10  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  252.
-# … with 17 more rows, and 18 more variables: temp &lt;dbl&gt;, sal &lt;dbl&gt;,
-#   gamma &lt;dbl&gt;, tco2 &lt;dbl&gt;, talk &lt;dbl&gt;, phosphate &lt;dbl&gt;, oxygen &lt;dbl&gt;,
-#   aou &lt;dbl&gt;, nitrate &lt;dbl&gt;, silicate &lt;dbl&gt;, phosphate_star &lt;dbl&gt;,
-#   rCP_phosphate &lt;dbl&gt;, talk_05 &lt;dbl&gt;, rNP_phosphate_05 &lt;dbl&gt;, cstar &lt;dbl&gt;,
-#   cant_pos &lt;dbl&gt;, n &lt;int&gt;, cant_pos_int &lt;dbl&gt;</code></pre>
-<pre class="r"><code># bin data sets with interpolated and set cant
+# GLODAP_cant_obs_set %&gt;% 
+#   filter(is.na(cant_pos_int))
+
+# bin data sets with interpolated and set cant
 GLODAP_cant_obs &lt;- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 
@@ -2423,26 +2485,8 @@ GLODAP &lt;- GLODAP_cant_obs %&gt;%
 rm(GLODAP_cant_obs)
 
 
-GLODAP %&gt;%
-  filter_all(any_vars(is.na(.)))</code></pre>
-<pre><code># A tibble: 26 x 27
-    year date       era   basin basin_AIP   lat   lon cruise bottomdepth depth
-   &lt;dbl&gt; &lt;date&gt;     &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
- 1  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  150 
- 2  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  200 
- 3  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  250 
- 4  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  300 
- 5  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  350 
- 6  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  400 
- 7  2001 2001-11-15 2000… Atla… Atlantic   58.5  370.    662         477  463 
- 8  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  152.
- 9  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  199.
-10  2002 2002-02-19 2000… Atla… Atlantic   58.5  370.    663         511  252.
-# … with 16 more rows, and 17 more variables: temp &lt;dbl&gt;, sal &lt;dbl&gt;,
-#   gamma &lt;dbl&gt;, tco2 &lt;dbl&gt;, talk &lt;dbl&gt;, phosphate &lt;dbl&gt;, oxygen &lt;dbl&gt;,
-#   aou &lt;dbl&gt;, nitrate &lt;dbl&gt;, silicate &lt;dbl&gt;, phosphate_star &lt;dbl&gt;,
-#   rCP_phosphate &lt;dbl&gt;, talk_05 &lt;dbl&gt;, rNP_phosphate_05 &lt;dbl&gt;, cstar &lt;dbl&gt;,
-#   cant_pos &lt;dbl&gt;, n &lt;int&gt;</code></pre>
+# GLODAP %&gt;%
+#   filter_all(any_vars(is.na(.)))</code></pre>
 </div>
 <div id="merge-glodap-atm.-pco2" class="section level3" number="3.3.4">
 <h3 number="3.3.4"><span class="header-section-number">3.3.4</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
@@ -2503,6 +2547,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">7b672f7</a>
@@ -2778,6 +2833,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">7b672f7</a>
@@ -3063,6 +3129,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">7b672f7</a>
@@ -4554,6 +4631,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-7.png" target="_blank">7b672f7</a>
 </td>
 <td>
@@ -5401,6 +5489,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">af70b94</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-04
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">7b672f7</a>
 </td>
 <td>
@@ -5782,9 +5881,9 @@ loaded via a namespace (and not attached):
 [55] grid_4.0.3               rstudioapi_0.13          labeling_0.4.2          
 [58] rmarkdown_2.5            testthat_2.3.2           gtable_0.3.0            
 [61] DBI_1.1.0                R6_2.5.0                 knitr_1.30              
-[64] utf8_1.1.4               rprojroot_2.0.2          stringi_1.5.3           
-[67] parallel_4.0.3           Rcpp_1.0.5               vctrs_0.3.5             
-[70] dbplyr_1.4.4             tidyselect_1.1.0         xfun_0.18               </code></pre>
+[64] rprojroot_2.0.2          stringi_1.5.3            parallel_4.0.3          
+[67] Rcpp_1.0.5               vctrs_0.3.5              dbplyr_1.4.4            
+[70] tidyselect_1.1.0         xfun_0.18               </code></pre>
 </div>
 </div>
 
