@@ -767,13 +767,13 @@ source("code/CANYON-B-master/CANYONB.R")
 # GLODAP <- GLODAP %>% 
 #   arrange(date)
 
-for (i_year in unique(GLODAP$year)) {
+#for (i_year in unique(GLODAP$year)) {
 
   # i_year <- 2017
-print(i_year)
+#print(i_year)
   
 GLODAP_CB <- GLODAP %>%
-  filter(year == i_year) %>% 
+  #filter(year == i_year) %>% 
   mutate(lon = if_else(lon > 180, lon-360, lon))
 
 # GLODAP_CB %>% 
@@ -881,7 +881,7 @@ for (i_variable in variables) {
 }
   
     
-}
+#}
 
 
 
