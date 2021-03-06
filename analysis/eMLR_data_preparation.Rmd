@@ -742,7 +742,7 @@ source("code/CANYON-B-master/CANYONB.R")
 
 GLODAP_CB <- GLODAP %>%
   mutate(lon = if_else(lon > 180, lon - 360, lon)) %>%
-  arrange(date)
+  arrange(year)
 
 GLODAP_CB <- GLODAP_CB %>%
   mutate(as_tibble(
@@ -774,8 +774,6 @@ GLODAP_CB <- GLODAP_CB %>%
 
 variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
 
-
-
 for (i_variable in variables) {
   # i_variable <- variables[1]
   
@@ -806,13 +804,13 @@ for (i_variable in variables) {
       scale_fill_viridis_c(trans = "log10") +
       geom_abline(slope = 1, col = 'red') +
       coord_equal(xlim = axis_lims,
-                  ylim = axis_lims)
-  ) +
-    facet_wrap(~ basin_AIP) +
-    labs(title = "All years")
+                  ylim = axis_lims) +
+      facet_wrap( ~ basin_AIP) +
+      labs(title = "All years")
+  ) 
   
   
-  for (i_year in unique(GLODAP$year)) {
+  for (i_year in unique(GLODAP_CB$year)) {
     # i_year <- 2017
     
     print(
