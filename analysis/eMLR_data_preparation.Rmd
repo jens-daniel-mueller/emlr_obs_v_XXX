@@ -735,57 +735,16 @@ nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
 ## CANYON-B comparison
 
-### All years
+```{r CANYON-B}
 
-```{r CANYON-B_all}
 
 source("code/CANYON-B-master/CANYONB.R")
-# source("code/CONTENT-master/CO2CONTENT.R")
 
-# CANYONB(
-#   date = as.Date(ymd_hm("2014-12-09 08:45")),
-#   lat = 17.6,
-#   lon = -24.3,
-#   pres = 180,
-#   temp = 16,
-#   psal = 36.1,
-#   doxy = 104
-# )
-
-# with(
-#   GLODAP_CB[1, ],
-#   CANYONB(
-#     date = date,
-#     lat = lat,
-#     lon = lon,
-#     pres = depth,
-#     temp = temp,
-#     psal = sal,
-#     doxy = oxygen,
-#     param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#   )
-# )
-
-# GLODAP <- GLODAP %>% 
-#   arrange(date)
-
-#for (i_year in unique(GLODAP$year)) {
-
-  # i_year <- 2017
-#print(i_year)
-  
 GLODAP_CB <- GLODAP %>%
-  #filter(year == i_year) %>% 
-  mutate(lon = if_else(lon > 180, lon-360, lon))
+  mutate(lon = if_else(lon > 180, lon - 360, lon)) %>%
+  arrange(date)
 
-# GLODAP_CB %>% 
-#   distinct(lat, lon) %>% 
-#   ggplot(aes(lon, lat)) +
-#   geom_raster()
-
-# paste0(as.character(GLODAP_CB$date[1]), " 12:00")
-
-GLODAP_CB <- GLODAP_CB %>% 
+GLODAP_CB <- GLODAP_CB %>%
   mutate(as_tibble(
     CANYONB(
       date = paste0(as.character(date), " 12:00"),
@@ -799,36 +758,8 @@ GLODAP_CB <- GLODAP_CB %>%
     )
   ))
 
-# GLODAP_CB <- GLODAP_CB %>% 
-#   mutate(as_tibble(
-#     CANYONB(
-#       date = date,
-#       lat = lat,
-#       lon = lon,
-#       pres = depth,
-#       temp = temp,
-#       psal = sal,
-#       doxy = oxygen,
-#       param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#     )
-#   ))
-
 GLODAP_CB <- GLODAP_CB %>%
   select(-ends_with(c("_ci", "_cim", "_cin", "_cii")))
-
-# CB_table_single <- with(
-#   GLODAP_CB[5328,],
-#   CANYONB(
-#     date = date,
-#     lat = lat,
-#     lon = lon,
-#     pres = depth,
-#     temp = temp,
-#     psal = sal,
-#     doxy = oxygen,
-#     param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#   )
-# )
 
 
 GLODAP_CB <- GLODAP_CB %>%
@@ -840,12 +771,9 @@ GLODAP_CB <- GLODAP_CB %>%
     "silicate_CANYONB" = "SiOH4"
   )
 
-# GLODAP_CB %>%
-#   ggplot(aes(`talk_CANYONB`)) +
-#   geom_histogram()
 
 variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
-# variables <- c("talk", "tco2")
+
 
 
 for (i_variable in variables) {
@@ -879,172 +807,37 @@ for (i_variable in variables) {
       geom_abline(slope = 1, col = 'red') +
       coord_equal(xlim = axis_lims,
                   ylim = axis_lims)
-  )
-}
+  ) +
+    facet_wrap(~ basin_AIP) +
+    labs(title = "All years")
   
+  
+  for (i_year in unique(GLODAP$year)) {
+    # i_year <- 2017
     
-#}
-
-
-
-
-```
-
-### Individual years
-
-```{r CANYON-B_by_year}
-
-source("code/CANYON-B-master/CANYONB.R")
-# source("code/CONTENT-master/CO2CONTENT.R")
-
-# CANYONB(
-#   date = as.Date(ymd_hm("2014-12-09 08:45")),
-#   lat = 17.6,
-#   lon = -24.3,
-#   pres = 180,
-#   temp = 16,
-#   psal = 36.1,
-#   doxy = 104
-# )
-
-# with(
-#   GLODAP_CB[1, ],
-#   CANYONB(
-#     date = date,
-#     lat = lat,
-#     lon = lon,
-#     pres = depth,
-#     temp = temp,
-#     psal = sal,
-#     doxy = oxygen,
-#     param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#   )
-# )
-
-# GLODAP <- GLODAP %>% 
-#   arrange(date)
-
-for (i_year in unique(GLODAP$year)) {
-
-  # i_year <- 2017
-print(i_year)
-  
-GLODAP_CB <- GLODAP %>%
-  filter(year == i_year) %>% 
-  mutate(lon = if_else(lon > 180, lon-360, lon))
-
-# GLODAP_CB %>% 
-#   distinct(lat, lon) %>% 
-#   ggplot(aes(lon, lat)) +
-#   geom_raster()
-
-# paste0(as.character(GLODAP_CB$date[1]), " 12:00")
-
-GLODAP_CB <- GLODAP_CB %>% 
-  mutate(as_tibble(
-    CANYONB(
-      date = paste0(as.character(date), " 12:00"),
-      lat = lat,
-      lon = lon,
-      pres = depth,
-      temp = temp,
-      psal = sal,
-      doxy = oxygen,
-      param = c("AT", "CT", "NO3", "PO4", "SiOH4")
+    print(
+      ggplot(
+        GLODAP_CB %>% filter(year == i_year),
+        aes(x = !!sym(i_variable),
+            y = !!sym(paste0(
+              i_variable, "_CANYONB"
+            )))
+      ) +
+        geom_bin2d(binwidth = binwidth_value) +
+        scale_fill_viridis_c(trans = "log10") +
+        geom_abline(slope = 1, col = 'red') +
+        coord_equal(xlim = axis_lims,
+                    ylim = axis_lims) +
+        facet_wrap( ~ basin_AIP) +
+        labs(title = paste("Year:", i_year))
     )
-  ))
-
-# GLODAP_CB <- GLODAP_CB %>% 
-#   mutate(as_tibble(
-#     CANYONB(
-#       date = date,
-#       lat = lat,
-#       lon = lon,
-#       pres = depth,
-#       temp = temp,
-#       psal = sal,
-#       doxy = oxygen,
-#       param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#     )
-#   ))
-
-GLODAP_CB <- GLODAP_CB %>%
-  select(-ends_with(c("_ci", "_cim", "_cin", "_cii")))
-
-# CB_table_single <- with(
-#   GLODAP_CB[5328,],
-#   CANYONB(
-#     date = date,
-#     lat = lat,
-#     lon = lon,
-#     pres = depth,
-#     temp = temp,
-#     psal = sal,
-#     doxy = oxygen,
-#     param = c("AT", "CT", "NO3", "PO4", "SiOH4")
-#   )
-# )
-
-
-GLODAP_CB <- GLODAP_CB %>%
-  rename(
-    "talk_CANYONB" = "AT",
-    "tco2_CANYONB" = "CT",
-    "nitrate_CANYONB" = "NO3",
-    "phosphate_CANYONB" = "PO4",
-    "silicate_CANYONB" = "SiOH4"
-  )
-
-# GLODAP_CB %>%
-#   ggplot(aes(`talk_CANYONB`)) +
-#   geom_histogram()
-
-variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
-# variables <- c("talk", "tco2")
-
-
-for (i_variable in variables) {
-  # i_variable <- variables[1]
+  }
   
-  # calculate equal axis limits and binwidth
-  axis_lims <- GLODAP_CB %>%
-    summarise(max_value = max(c(max(
-      !!sym(i_variable)
-    ),
-    max(!!sym(
-      paste0(i_variable, "_CANYONB")
-    )))),
-    min_value = min(c(min(
-      !!sym(i_variable)
-    ),
-    min(!!sym(
-      paste0(i_variable, "_CANYONB")
-    )))))
-  
-  binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 40
-  axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
-  
-  print(
-    ggplot(GLODAP_CB, aes(
-      x = !!sym(i_variable),
-      y = !!sym(paste0(i_variable, "_CANYONB"))
-    )) +
-      geom_bin2d(binwidth = binwidth_value) +
-      scale_fill_viridis_c(trans = "log10") +
-      geom_abline(slope = 1, col = 'red') +
-      coord_equal(xlim = axis_lims,
-                  ylim = axis_lims)
-  )
 }
-  
-    
-}
-
 
 
 
 ```
-
 
 
 ## Individual cruise sections
