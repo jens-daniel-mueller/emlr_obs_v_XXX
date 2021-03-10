@@ -76,6 +76,11 @@ GLODAP <-
                  sep = ""))
 
 
+GLODAP_CB <-
+  read_csv(paste(path_preprocessing,
+                 "GLODAPv2.2020_Canyon-B.csv",
+                 sep = ""))
+
 ```
 
 
@@ -626,6 +631,99 @@ GLODAP <- GLODAP %>%
 
 ```
 
+## CANYON-B filter
+
+```{r filter_CANYON-B_outlier}
+
+GLODAP_combined <- left_join(GLODAP,
+                             GLODAP_CB)
+
+GLODAP_combined <- GLODAP_combined %>%
+  mutate(
+    offset_talk = talk - talk_CANYONB,
+    offset_tco2 = tco2 - tco2_CANYONB,
+    offset_nitrate = nitrate - nitrate_CANYONB,
+    offset_phosphate = phosphate - phosphate_CANYONB,
+    offset_silicate = silicate - silicate_CANYONB
+  ) %>%
+  select(row_number,
+         year,
+         cruise,
+         basin_AIP,
+         lat,
+         lon,
+         starts_with("offset_"))
+
+
+GLODAP_combined <- GLODAP_combined %>%
+  pivot_longer(
+    starts_with("offset"),
+    names_to = "parameter",
+    names_prefix = "offset_",
+    values_to = "offset"
+  )
+
+GLODAP_combined %>%
+  ggplot(aes(offset)) +
+  geom_histogram() +
+  scale_y_continuous(trans = "log10") +
+  facet_grid(basin_AIP ~ parameter, scales = "free")
+
+cruise_all <- GLODAP_combined %>%
+  group_by(cruise, parameter) %>%
+  summarise(
+    mean_offset = mean(offset, na.rm = TRUE),
+    sd_offset = sd(offset, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+# rank offsets
+cruise_all <- cruise_all %>%
+  group_by(parameter) %>%
+  mutate(
+    rank_offset = rank(mean_offset),
+    threshold_offset = sd(mean_offset) * 2,
+    cruise = as.factor(cruise)
+  ) %>%
+  ungroup() %>%
+  arrange(parameter, rank_offset)
+
+cruise_out <- cruise_all %>%
+  filter(abs(mean_offset) > threshold_offset)
+
+ggplot() +
+  geom_hline(data = cruise_all, aes(yintercept = c(-1, 1) * threshold_offset)) +
+  geom_ribbon(
+    data = cruise_all,
+    aes(
+      x = rank_offset,
+      ymax = mean_offset + sd_offset,
+      ymin = mean_offset-+sd_offset
+    ),
+    alpha = 0.1
+  ) +
+  geom_path(data = cruise_all,
+            aes(rank_offset, mean_offset)) +
+  geom_point(data = cruise_out,
+             aes(rank_offset, mean_offset, col = cruise)) +
+  facet_wrap( ~ parameter, scales = "free_y")
+
+
+GLODAP_out <- GLODAP %>%
+  filter(cruise %in% cruise_out$cruise)
+
+map +
+  geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
+              aes(lon, lat)) +
+  facet_wrap( ~ era, ncol = 1)
+
+nrow(GLODAP_out) / nrow(GLODAP) * 100
+
+GLODAP <- GLODAP %>%
+  filter(!(cruise %in% cruise_out$cruise))
+
+```
+
 
 ## Manual adjustment A16 cruise
 
@@ -683,7 +781,7 @@ GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
 
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
-  select(row_number, year, date, era, basin, basin_AIP, lat, lon, cruise,
+  select(year, date, era, basin, basin_AIP, lat, lon, cruise,
          bottomdepth, depth,
          temp, sal, gamma,
          tco2, talk, phosphate,
