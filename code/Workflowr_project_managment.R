@@ -28,11 +28,10 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "comparison to CANYON-B started",
+message = "filter based on comparison to CANYON-B",
 republish = TRUE)
 
 
-
-  # Push latest version to GitHub
+# Push latest version to GitHub
 wflow_git_push()
 jens-daniel-mueller
