@@ -631,13 +631,17 @@ GLODAP <- GLODAP %>%
 
 ```
 
-## CANYON-B filter
+## CANYON-B comparison
 
-```{r filter_CANYON-B_outlier}
+Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets. This critrion is evaluated individually for each variable involved in the eMLR approach.
 
+```{r combine_GLODAP_CANYON_B}
+
+# join data frames
 GLODAP_combined <- left_join(GLODAP,
                              GLODAP_CB)
 
+# calculate offset by parameter
 GLODAP_combined <- GLODAP_combined %>%
   mutate(
     offset_talk = talk - talk_CANYONB,
@@ -654,7 +658,7 @@ GLODAP_combined <- GLODAP_combined %>%
          lon,
          starts_with("offset_"))
 
-
+# pivot to long format
 GLODAP_combined <- GLODAP_combined %>%
   pivot_longer(
     starts_with("offset"),
@@ -663,12 +667,26 @@ GLODAP_combined <- GLODAP_combined %>%
     values_to = "offset"
   )
 
+
+```
+
+### Residual histograms
+
+```{r CANYON_B_residual_histograms, fig.asp=0.6}
+
 GLODAP_combined %>%
   ggplot(aes(offset)) +
   geom_histogram() +
   scale_y_continuous(trans = "log10") +
-  facet_grid(basin_AIP ~ parameter, scales = "free")
+  facet_grid(basin_AIP ~ parameter, scales = "free_x")
 
+```
+
+### Ranked residuals
+
+```{r CANYON_B_ranked_residuals}
+
+# calculate mean cruise offset by parameter
 cruise_all <- GLODAP_combined %>%
   group_by(cruise, parameter) %>%
   summarise(
@@ -677,37 +695,62 @@ cruise_all <- GLODAP_combined %>%
   ) %>%
   ungroup()
 
-# rank offsets
+# rank offsets and calculate offset threshols
 cruise_all <- cruise_all %>%
   group_by(parameter) %>%
   mutate(
     rank_offset = rank(mean_offset),
-    threshold_offset = sd(mean_offset) * 2,
+    threshold_offset = sd(mean_offset) * params_local$CANYON_B_max,
     cruise = as.factor(cruise)
   ) %>%
   ungroup() %>%
   arrange(parameter, rank_offset)
 
 cruise_out <- cruise_all %>%
+  filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>% 
   filter(abs(mean_offset) > threshold_offset)
 
-ggplot() +
-  geom_hline(data = cruise_all, aes(yintercept = c(-1, 1) * threshold_offset)) +
-  geom_ribbon(
-    data = cruise_all,
-    aes(
-      x = rank_offset,
-      ymax = mean_offset + sd_offset,
-      ymin = mean_offset-+sd_offset
-    ),
-    alpha = 0.1
-  ) +
-  geom_path(data = cruise_all,
-            aes(rank_offset, mean_offset)) +
-  geom_point(data = cruise_out,
-             aes(rank_offset, mean_offset, col = cruise)) +
-  facet_wrap( ~ parameter, scales = "free_y")
+# length(unique(cruise_out$cruise))
 
+for (i_parameter in unique(cruise_all$parameter)) {
+  # i_parameter <- unique(cruise_all$parameter)[1]
+  
+  i_cruise_all <- cruise_all %>%
+    filter(parameter == i_parameter)
+  
+  i_cruise_out <- cruise_out %>%
+    filter(parameter == i_parameter)
+  
+  print(
+  ggplot() +
+    geom_hline(data = i_cruise_all,
+               aes(yintercept = c(-1, 1) * threshold_offset),
+               lty = 2) +
+    geom_ribbon(
+      data = i_cruise_all,
+      aes(
+        x = rank_offset,
+        ymax = mean_offset + sd_offset,
+        ymin = mean_offset-+sd_offset
+      ),
+      alpha = 0.3
+    ) +
+    geom_path(data = i_cruise_all,
+              aes(rank_offset, mean_offset)) +
+    geom_point(data = i_cruise_out,
+               aes(rank_offset, mean_offset, col = cruise)) +
+    labs(title = i_parameter)
+  )
+  
+}
+
+rm(i_parameter, i_cruise_all, i_cruise_out)
+
+```
+
+### Remove cruises
+
+```{r CANYON_B_removed_cruises_map, fig.asp=1.1}
 
 GLODAP_out <- GLODAP %>%
   filter(cruise %in% cruise_out$cruise)
@@ -715,7 +758,14 @@ GLODAP_out <- GLODAP %>%
 map +
   geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
               aes(lon, lat)) +
-  facet_wrap( ~ era, ncol = 1)
+  facet_wrap( ~ era, ncol = 1) +
+  labs(title = "Maps of removed cruises")
+
+```
+
+The ratio (%) of removed cruises is:
+
+```{r CANYON_B_remove_cruises}
 
 nrow(GLODAP_out) / nrow(GLODAP) * 100
 
@@ -723,6 +773,7 @@ GLODAP <- GLODAP %>%
   filter(!(cruise %in% cruise_out$cruise))
 
 ```
+
 
 
 ## Manual adjustment A16 cruise
