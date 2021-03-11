@@ -636,20 +636,16 @@ rm(GLODAP_vars, GLODAP_vars_long)
 
 ## MLR models
 
-In the following, we fit the full MLR model to the GLODAP data set.
+In the following, we fit the full MLR model to the GLODAP data set:
 
-```{r define_full_model}
+```{r fit_MLR_to_all_data}
 
-model <- paste(params_local$MLR_target,
+#define full model
+model <- paste("cstar",
                paste(params_local$MLR_predictors, collapse = " + "),
                sep = " ~ ")
 
 model
-
-```
-
-
-```{r fit_MLR_to_all_data}
 
 # prepare nested data frame
 GLODAP_nested <- GLODAP %>%
@@ -685,6 +681,11 @@ GLODAP_augmented <- bind_cols(GLODAP_data,
                               GLODAP_augmented %>% select(.fitted, .resid))
 
 rm(GLODAP_data)
+```
+
+### Residuals
+
+```{r Residuals_global_c_star, fig.asp=0.5}
 
 GLODAP_augmented %>%
   ggplot(aes(year, cstar_tref - mean(cstar_tref))) +
@@ -695,6 +696,13 @@ GLODAP_augmented %>%
   ggplot(aes(year, .resid)) +
   geom_bin2d(binwidth = c(1, 1)) +
   scale_fill_viridis_c()
+
+
+```
+
+### Ranked RMSE
+
+```{r ranked_cstar_rmse, fig.asp=0.5}
 
 
 # calculate RMSE from augmented output per cruise
@@ -708,30 +716,38 @@ cruise_all <- cruise_all %>%
   mutate(rank_rmse = rank(rmse),
          cruise = as.factor(cruise))
 
-cruise_rmse_max <- 10
-
 cruise_out <- cruise_all %>% 
-  filter(rmse > cruise_rmse_max)
+  filter(rmse > params_local$c_star_rmse_max)
 
 GLODAP_out <- GLODAP_augmented %>% 
   filter(cruise %in% cruise_out$cruise)
 
 ggplot() +
-  geom_hline(yintercept = cruise_rmse_max) +
+  geom_hline(yintercept = params_local$c_star_rmse_max) +
   geom_point(data = cruise_all,
              aes(rank_rmse, rmse)) +
   geom_point(data = cruise_out,
              aes(rank_rmse, rmse, col = cruise))
+
+
+```
+
+### Removed cruises
+
+Following fraction (%) of cruises was removed:
+
+```{r cstar_rmse_removed_cruises, fig.asp=1.1}
+
+nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
 map +
   geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
               aes(lon, lat)) +
   facet_wrap(~era, ncol = 1)
 
-nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
-
-
 ```
+
+
 
 ## Individual cruise sections
 
