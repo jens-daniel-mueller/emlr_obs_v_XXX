@@ -602,16 +602,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0ad56e36b23884a063573b6975e8b0034a511d4dtargetblank0ad56e3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0ad56e36b23884a063573b6975e8b0034a511d4d" target="_blank">0ad56e3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef568b8e83da80eeff83a2e88ade2736f0f3b726ftargetblankf568b8ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f568b8e83da80eeff83a2e88ade2736f0f3b726f" target="_blank">f568b8e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0ad56e36b23884a063573b6975e8b0034a511d4dtargetblank0ad56e3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef568b8e83da80eeff83a2e88ade2736f0f3b726ftargetblankf568b8ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0ad56e36b23884a063573b6975e8b0034a511d4d" target="_blank">0ad56e3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f568b8e83da80eeff83a2e88ade2736f0f3b726f" target="_blank">f568b8e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -662,6 +662,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f568b8e83da80eeff83a2e88ade2736f0f3b726f/analysis/eMLR_data_preparation.Rmd" target="_blank">f568b8e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-11
+</td>
+<td>
+cleaned cstar filtering
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/6482ed7f2152e0d7b2676807232a6bdd5e7c9a20/docs/eMLR_data_preparation.html" target="_blank">6482ed7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -6105,13 +6139,14 @@ jens-daniel-mueller
 <h1 number="7"><span class="header-section-number">7</span> Cruise quality check</h1>
 <div id="mlr-models" class="section level2" number="7.1">
 <h2 number="7.1"><span class="header-section-number">7.1</span> MLR models</h2>
-<p>In the following, we fit the full MLR model to the GLODAP data set.</p>
-<pre class="r"><code>model &lt;- paste(params_local$MLR_target,
+<p>In the following, we fit the full MLR model to the GLODAP data set:</p>
+<pre class="r"><code>#define full model
+model &lt;- paste(&quot;cstar&quot;,
                paste(params_local$MLR_predictors, collapse = &quot; + &quot;),
                sep = &quot; ~ &quot;)
 
 model</code></pre>
-<pre><code>[1] &quot;cstar_tref ~ sal + temp + aou + nitrate + silicate + phosphate + phosphate_star&quot;</code></pre>
+<pre><code>[1] &quot;cstar ~ sal + temp + aou + nitrate + silicate + phosphate + phosphate_star&quot;</code></pre>
 <pre class="r"><code># prepare nested data frame
 GLODAP_nested &lt;- GLODAP %&gt;%
   group_by(gamma_slab, basin) %&gt;%
@@ -6145,114 +6180,22 @@ GLODAP_data &lt;- GLODAP_nested_lm_fit %&gt;%
 GLODAP_augmented &lt;- bind_cols(GLODAP_data,
                               GLODAP_augmented %&gt;% select(.fitted, .resid))
 
-rm(GLODAP_data)
-
-GLODAP_augmented %&gt;%
+rm(GLODAP_data)</code></pre>
+<div id="residuals" class="section level3" number="7.1.1">
+<h3 number="7.1.1"><span class="header-section-number">7.1.1</span> Residuals</h3>
+<pre class="r"><code>GLODAP_augmented %&gt;%
   ggplot(aes(year, cstar_tref - mean(cstar_tref))) +
   geom_bin2d(binwidth = c(1, 1)) +
   scale_fill_viridis_c()</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fit_MLR_to_all_data-1">
-Past versions of fit_MLR_to_all_data-1.png
-</button>
-</p>
-<div id="fig-fit_MLR_to_all_data-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-1.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6c0bec68150fd0a0981d68bbb601b8ad86e795f9/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-1.png" target="_blank">6c0bec6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-05
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>GLODAP_augmented %&gt;%
   ggplot(aes(year, .resid)) +
   geom_bin2d(binwidth = c(1, 1)) +
   scale_fill_viridis_c()</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fit_MLR_to_all_data-2">
-Past versions of fit_MLR_to_all_data-2.png
-</button>
-</p>
-<div id="fig-fit_MLR_to_all_data-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-2.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6c0bec68150fd0a0981d68bbb601b8ad86e795f9/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-2.png" target="_blank">6c0bec6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-05
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
+<div id="ranked-rmse" class="section level3" number="7.1.2">
+<h3 number="7.1.2"><span class="header-section-number">7.1.2</span> Ranked RMSE</h3>
 <pre class="r"><code># calculate RMSE from augmented output per cruise
 cruise_all &lt;- GLODAP_augmented %&gt;%
   group_by(cruise) %&gt;%
@@ -6264,124 +6207,31 @@ cruise_all &lt;- cruise_all %&gt;%
   mutate(rank_rmse = rank(rmse),
          cruise = as.factor(cruise))
 
-cruise_rmse_max &lt;- 10
-
 cruise_out &lt;- cruise_all %&gt;% 
-  filter(rmse &gt; cruise_rmse_max)
+  filter(rmse &gt; params_local$c_star_rmse_max)
 
 GLODAP_out &lt;- GLODAP_augmented %&gt;% 
   filter(cruise %in% cruise_out$cruise)
 
 ggplot() +
-  geom_hline(yintercept = cruise_rmse_max) +
+  geom_hline(yintercept = params_local$c_star_rmse_max) +
   geom_point(data = cruise_all,
              aes(rank_rmse, rmse)) +
   geom_point(data = cruise_out,
              aes(rank_rmse, rmse, col = cruise))</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fit_MLR_to_all_data-3">
-Past versions of fit_MLR_to_all_data-3.png
-</button>
-</p>
-<div id="fig-fit_MLR_to_all_data-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-3.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6c0bec68150fd0a0981d68bbb601b8ad86e795f9/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-3.png" target="_blank">6c0bec6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-05
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/eMLR_data_preparation.Rmd/ranked_cstar_rmse-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
+<div id="removed-cruises" class="section level3" number="7.1.3">
+<h3 number="7.1.3"><span class="header-section-number">7.1.3</span> Removed cruises</h3>
+<p>Following fraction (%) of cruises was removed:</p>
+<pre class="r"><code>nrow(GLODAP_out)/nrow(GLODAP_augmented)*100</code></pre>
+<pre><code>[1] 2.372523</code></pre>
 <pre class="r"><code>map +
   geom_raster(data = GLODAP_out %&gt;% distinct(lat, lon, era),
               aes(lon, lat)) +
   facet_wrap(~era, ncol = 1)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fit_MLR_to_all_data-4">
-Past versions of fit_MLR_to_all_data-4.png
-</button>
-</p>
-<div id="fig-fit_MLR_to_all_data-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-4.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6c0bec68150fd0a0981d68bbb601b8ad86e795f9/docs/figure/eMLR_data_preparation.Rmd/fit_MLR_to_all_data-4.png" target="_blank">6c0bec6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-05
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-<pre class="r"><code>nrow(GLODAP_out)/nrow(GLODAP_augmented)*100</code></pre>
-<pre><code>[1] 1.660254</code></pre>
 </div>
 <div id="individual-cruise-sections" class="section level2" number="7.2">
 <h2 number="7.2"><span class="header-section-number">7.2</span> Individual cruise sections</h2>
