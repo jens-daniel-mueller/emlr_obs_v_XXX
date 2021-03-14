@@ -742,10 +742,18 @@ Following fraction (%) of cruises was removed:
 
 nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
-map +
+if (nrow(GLODAP_out) > 0) {
+  map +
   geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
               aes(lon, lat)) +
-  facet_wrap(~era, ncol = 1)
+  facet_wrap( ~ era, ncol = 1) +
+  labs(title = "Maps of removed cruises")
+
+} else {
+  print("no cruises removed")
+  
+}
+
 
 ```
 

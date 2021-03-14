@@ -755,11 +755,17 @@ rm(i_parameter, i_cruise_all, i_cruise_out)
 GLODAP_out <- GLODAP %>%
   filter(cruise %in% cruise_out$cruise)
 
-map +
+if (nrow(GLODAP_out) > 0) {
+  map +
   geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
               aes(lon, lat)) +
   facet_wrap( ~ era, ncol = 1) +
   labs(title = "Maps of removed cruises")
+
+} else {
+  print("no cruises removed")
+  
+}
 
 ```
 
