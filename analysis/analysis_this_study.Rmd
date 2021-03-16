@@ -228,6 +228,133 @@ Please note that:
 - density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
 - gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
 
+
+### Slab boundary depth
+
+```{r gamma_slab_boundary_depth, fig.asp=1.5}
+
+# gamma field in Atl
+predictors_gamma_Atl <- cant_3d %>%
+  select(basin_AIP, lat, lon, depth, gamma) %>% 
+  filter(basin_AIP == "Atlantic") %>% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Atl <- predictors_gamma_Atl %>%
+  group_by(lat, lon) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  filter(n > 1) %>% 
+  select(-n)
+
+# 3D grid with Atl slab boundaries
+slabs_Atl <- expand_grid(predictors_gamma_Atl %>% distinct(lat, lon),
+                         gamma = params_local$slabs_Atl) %>% 
+  mutate(basin_AIP = "flag")
+
+# join slab boundary grid with gamma field
+slabs_Atl_int <- full_join(slabs_Atl,
+                           predictors_gamma_Atl) %>%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Atl_int <- slabs_Atl_int %>% 
+  group_by(lat, lon) %>% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %>% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Atl_int <- slabs_Atl_int %>% 
+  filter(basin_AIP == "flag",
+         !is.na(depth))
+
+#### Indo-Pacific
+
+# gamma field in Pac
+predictors_gamma_Ind_Pac <- cant_3d %>%
+  select(basin_AIP, lat, lon, depth, gamma) %>% 
+  filter(basin_AIP %in% c("Indian", "Pacific")) %>% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Ind_Pac <- predictors_gamma_Ind_Pac %>%
+  group_by(lat, lon) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  filter(n > 1) %>% 
+  select(-n)
+
+# 3D grid with Pac slab boundaries
+slabs_Ind_Pac <- expand_grid(predictors_gamma_Ind_Pac %>% distinct(lat, lon),
+                         gamma = params_local$slabs_Ind_Pac) %>% 
+  mutate(basin_AIP = "flag")
+
+# join slab boundary grid with gamma field
+slabs_Ind_Pac_int <- full_join(slabs_Ind_Pac,
+                           predictors_gamma_Ind_Pac) %>%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Ind_Pac_int <- slabs_Ind_Pac_int %>% 
+  group_by(lat, lon) %>% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %>% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Ind_Pac_int <- slabs_Ind_Pac_int %>% 
+  filter(basin_AIP == "flag",
+         !is.na(depth))
+
+
+# join interpolated gamma depth
+slabs <- bind_rows(slabs_Atl_int,
+                   slabs_Ind_Pac_int) %>%
+  select(-basin_AIP)
+
+slabs <- inner_join(
+  basinmask %>% select(lat, lon, basin_AIP) %>% distinct(),
+  slabs)
+
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = depth)) +
+  facet_wrap(~ gamma, ncol = 3) +
+  scale_fill_viridis_c(direction = -1)
+
+rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)
+
+```
+
+```{r calculate_slab_thickness, fig.asp=1.5}
+ 
+# slabs_ex <- slabs %>% 
+#   filter(lat == 0.5,
+#          lon == 250.5)
+
+slabs <- slabs %>% 
+  group_by(lat, lon) %>% 
+  arrange(depth) %>% 
+  mutate(depth_lower_bound = depth,
+         depth_upper_bound = lag(depth, default = 0),
+         slab_thickness = depth_lower_bound - depth_upper_bound,
+         gamma_in_slab = gamma - 0.01) %>% 
+  ungroup()
+
+slabs <- m_cut_gamma(slabs, "gamma_in_slab")
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = slab_thickness)) +
+  facet_wrap(~ gamma_slab, ncol = 3) +
+  scale_fill_viridis_c(direction = -1)
+
+rm(slabs)
+
+```
+
+
+
 ```{r calculate_gamma_slab_maps}
 
 cant_gamma_maps <- m_cant_slab(cant_3d)
@@ -260,6 +387,22 @@ for (i_eras in unique(cant_gamma_maps$eras)) {
 
 
 ```
+
+```{r test_inventory_map, eval=FALSE}
+
+map +
+  geom_contour_filled(
+    data = cant_gamma_maps %>%
+      filter(eras == i_eras,
+             gamma_slab == i_gamma_slab),
+    aes(lon, lat, z = cant),
+    breaks = c(seq(0, 18, 2), Inf)
+  ) +
+  scale_fill_viridis_d()
+
+```
+
+
 
 ## Inventory map
 
@@ -574,6 +717,7 @@ map +
 rm(GLODAP_obs_coverage)
 
 ```
+
 
 # Target variable
 
