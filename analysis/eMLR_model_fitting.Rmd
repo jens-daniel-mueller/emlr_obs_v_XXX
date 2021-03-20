@@ -159,12 +159,9 @@ as a function of each predictor combination. Fitting was performed separately wi
 
 ```{r fit_all_models_purrr, results='hide'}
 
-# GLODAP_NA <- GLODAP %>% 
-#   filter_all(any_vars(is.na(.)))
-
 # prepare nested data frame
 
-GLODAP %>% 
+GLODAP %>%
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
   #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
@@ -174,7 +171,6 @@ GLODAP_nested <- GLODAP %>%
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
   #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
-  drop_na() %>% 
   group_by(gamma_slab, era, basin) %>% 
   nest()
 
@@ -196,6 +192,13 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
     augmented = map(fit, augment)
   )
 
+# calculate vif
+GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>% 
+  mutate(
+    # vif = map(fit, car::vif)
+    vif = map(fit, ols_vif_tol)
+  )
+
 # print(object.size(GLODAP_nested), units = "MB")
 # print(object.size(GLODAP_nested_lm), units = "MB")
 # print(object.size(GLODAP_nested_lm_fit), units = "MB")
@@ -209,21 +212,32 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 
 # extract glanced model output (model diagnostics, such as AIC)
 GLODAP_glanced <- GLODAP_nested_lm_fit %>%
-  select(-c(data, fit, tidied, augmented)) %>%
+  select(-c(data, fit, tidied, augmented, vif)) %>%
   unnest(glanced) %>% 
   rename(n_predictors = n)
 
 # extract tidy model output (model coefficients)
 GLODAP_tidy <- GLODAP_nested_lm_fit %>%
-  select(-c(data, fit, glanced, augmented)) %>%
+  select(-c(data, fit, glanced, augmented, vif)) %>%
   unnest(tidied)
 
 # extract augmented model output (fitted values and residuals)
 GLODAP_augmented <- GLODAP_nested_lm_fit %>% 
-  select(-c(data, fit, tidied, glanced)) %>% 
+  select(-c(data, fit, tidied, glanced, vif)) %>% 
   unnest(augmented) 
 
 # print(object.size(GLODAP_augmented), units = "MB")
+
+# extract VIC from output
+GLODAP_glanced_vif <- GLODAP_nested_lm_fit %>%
+  select(-c(data, fit, tidied, augmented, glanced)) %>%
+  unnest(vif)
+
+# calculte max vif per model
+GLODAP_glanced_vif_max <- GLODAP_glanced_vif %>% 
+  group_by(era, basin, gamma_slab, model, n) %>% 
+  summarise(vif_max = max(VIF)) %>% 
+  ungroup()
 
 # calculate RMSE from augmented output
 GLODAP_glanced_rmse <- GLODAP_augmented %>%
@@ -231,14 +245,16 @@ GLODAP_glanced_rmse <- GLODAP_augmented %>%
   summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %>%
   ungroup()
 
-# add RMSE to glanced output
+# add RMSE and vif_max to glanced output
 GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_rmse)
+#GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_vif_max)
 rm(GLODAP_glanced_rmse)
+# rm(GLODAP_glanced_vif_max)
 
 
 # extract input data
 GLODAP_data <- GLODAP_nested_lm_fit %>%
-  select(-c(fit, tidied, glanced, augmented)) %>%
+  select(-c(fit, tidied, glanced, augmented, vif)) %>%
   unnest(data)
 
 # append input data with augmented data
@@ -277,12 +293,14 @@ The criterion was summed up for two adjacent eras, and the models with lowest su
 
 # calculate RMSE sum for adjacent eras
 lm_all_eras <- GLODAP_glanced  %>%
-  select(basin, gamma_slab, model, era, AIC, rmse) %>% 
+  # select(basin, gamma_slab, model, era, AIC, rmse) %>% 
+  select(basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
          rmse_sum = rmse + lag(rmse),
-         aic_sum = AIC + lag(AIC)
+         aic_sum = AIC + lag(AIC),
+         bic_sum = BIC + lag(BIC)
          ) %>% 
   ungroup() %>% 
   select(-c(era)) %>% 
@@ -299,7 +317,19 @@ if (params_local$MLR_criterion == "aic") {
               n = params_local$MLR_number) %>%
     ungroup() %>%
     arrange(basin, gamma_slab, eras, model)
-} else {
+} 
+
+if (params_local$MLR_criterion == "bic") {
+  lm_best_eras <- lm_all_eras %>%
+    group_by(basin, gamma_slab, eras) %>%
+    slice_min(order_by = bic_sum,
+              with_ties = FALSE,
+              n = params_local$MLR_number) %>%
+    ungroup() %>%
+    arrange(basin, gamma_slab, eras, model)
+}
+
+if (params_local$MLR_criterion == "rmse") {
   lm_best_eras <- lm_all_eras %>%
     group_by(basin, gamma_slab, eras) %>%
     slice_min(order_by = rmse_sum,
@@ -757,4 +787,26 @@ lat_residual_offset %>%
 ```
 
 
+# VIF
+
+```{r vif_distribution_n_predictors, fig.asp=2}
+
+GLODAP_glanced_vif_max %>% 
+  ggplot(aes(as.factor(n), log10(vif_max))) + 
+  geom_hline(yintercept = 1) +
+  geom_violin() +
+  facet_grid(gamma_slab~era)
+  
+
+```
+
+```{r vif_distribution_type_predictor, fig.asp=2}
+
+GLODAP_glanced_vif %>% 
+  ggplot(aes(Variables, log10(VIF))) + 
+  geom_hline(yintercept = 1) +
+  geom_violin() +
+  facet_grid(gamma_slab~era)
+  
+```
 
