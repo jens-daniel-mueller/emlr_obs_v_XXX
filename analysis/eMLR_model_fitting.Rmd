@@ -168,9 +168,9 @@ GLODAP %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  filter(basin %in% unique(GLODAP$basin)[1],
-         era %in% unique(GLODAP$era)[c(1,2)],
-         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  # filter(basin %in% unique(GLODAP$basin)[1],
+  #        era %in% unique(GLODAP$era)[c(1,2)],
+  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   group_by(gamma_slab, era, basin) %>% 
   nest()
 
@@ -278,10 +278,17 @@ To avoid multicollinearity among predictors, models were excluded with a VIF abo
 
 - `r params_local$vif_max`
 
+After removing models affected by multicollinearity, the targeted number of MLRs (`r params_local$MLR_number`) was undercut in following fitting units:
+
 ```{r VIF_threshold}
 
 GLODAP_glanced_clean <- GLODAP_glanced %>% 
   filter(vif_max <= params_local$vif_max)
+
+GLODAP_glanced_clean %>% 
+  group_by(era, basin, gamma_slab) %>% 
+  count() %>% 
+  filter(n < params_local$MLR_number)
 
 ```
 
