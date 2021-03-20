@@ -168,9 +168,9 @@ GLODAP %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  filter(basin %in% unique(GLODAP$basin)[1],
+         era %in% unique(GLODAP$era)[c(1,2)],
+         gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   group_by(gamma_slab, era, basin) %>% 
   nest()
 
@@ -189,13 +189,7 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
                ~ lm(as.formula(.y), data = .x)),
     tidied = map(fit, tidy),
     glanced = map(fit, glance),
-    augmented = map(fit, augment)
-  )
-
-# calculate vif
-GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>% 
-  mutate(
-    # vif = map(fit, car::vif)
+    augmented = map(fit, augment),
     vif = map(fit, ols_vif_tol)
   )
 
@@ -247,9 +241,9 @@ GLODAP_glanced_rmse <- GLODAP_augmented %>%
 
 # add RMSE and vif_max to glanced output
 GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_rmse)
-#GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_vif_max)
+GLODAP_glanced <- full_join(GLODAP_glanced, GLODAP_glanced_vif_max)
 rm(GLODAP_glanced_rmse)
-# rm(GLODAP_glanced_vif_max)
+rm(GLODAP_glanced_vif_max)
 
 
 # extract input data
@@ -276,6 +270,22 @@ rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all,
 Coefficients are prepared for the mapping of Cant and the chosen target variable.
 
 
+
+
+## VIF threshold
+
+To avoid multicollinearity among predictors, models were excluded with a VIF above:  
+
+- `r params_local$vif_max`
+
+```{r VIF_threshold}
+
+GLODAP_glanced_clean <- GLODAP_glanced %>% 
+  filter(vif_max <= params_local$vif_max)
+
+```
+
+
 ## Predictor selection
 
 Within each basin and slab, the following number of best linear regression models was selected:  
@@ -292,8 +302,7 @@ The criterion was summed up for two adjacent eras, and the models with lowest su
 ```{r predictor_selection}
 
 # calculate RMSE sum for adjacent eras
-lm_all_eras <- GLODAP_glanced  %>%
-  # select(basin, gamma_slab, model, era, AIC, rmse) %>% 
+lm_all_eras <- GLODAP_glanced_clean  %>%
   select(basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
@@ -468,7 +477,6 @@ GLODAP_glanced %>%
 
 ```{r eMLR_predictor_model_quality_best, fig.asp=2}
 
-
 left_join(lm_best_target %>% select(basin, gamma_slab, era, model),
           GLODAP_glanced) %>%
   ggplot(aes("",
@@ -567,6 +575,8 @@ lm_all_stats %>%
 
 ## RMSE alternatives
 
+### AIC
+
 AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
 ```{r aic_vs_rmse_all_models}
@@ -585,6 +595,66 @@ lm_best_eras %>%
   geom_point() +
   scale_color_viridis_d() +
   facet_grid(eras~basin)
+
+```
+
+### BIC
+
+BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
+
+```{r BIC_vs_rmse_all_models}
+lm_all_eras %>% 
+  ggplot(aes(rmse, BIC, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(eras~basin)
+
+```
+
+
+```{r BIC_vs_rmse_selected_models}
+lm_best_eras %>% 
+  ggplot(aes(rmse, BIC, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(eras~basin)
+
+```
+
+### AIC vs BIC
+
+BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
+
+```{r BIC_vs_AIC_all_models}
+lm_all_eras %>% 
+  ggplot(aes(AIC, BIC, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(eras~basin)
+
+```
+
+
+```{r BIC_vs_AIC_selected_models}
+lm_best_eras %>% 
+  ggplot(aes(AIC, BIC, col = gamma_slab)) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(eras~basin)
+
+```
+
+## RMSE vs VIF
+
+
+```{r rmse_vs_VIF_all_models, fig.asp=2}
+
+GLODAP_glanced %>% 
+  ggplot(aes(rmse, log10(vif_max))) +
+  geom_hline(yintercept = 1) +
+  geom_point() +
+  scale_color_viridis_d() +
+  facet_grid(gamma_slab~basin)
 
 ```
 
@@ -791,11 +861,11 @@ lat_residual_offset %>%
 
 ```{r vif_distribution_n_predictors, fig.asp=2}
 
-GLODAP_glanced_vif_max %>% 
+GLODAP_glanced %>% 
   ggplot(aes(as.factor(n), log10(vif_max))) + 
-  geom_hline(yintercept = 1) +
+  geom_hline(yintercept = log10(params_local$vif_max)) +
   geom_violin() +
-  facet_grid(gamma_slab~era)
+  facet_grid(gamma_slab~basin)
   
 
 ```
@@ -804,9 +874,11 @@ GLODAP_glanced_vif_max %>%
 
 GLODAP_glanced_vif %>% 
   ggplot(aes(Variables, log10(VIF))) + 
-  geom_hline(yintercept = 1) +
+  geom_hline(yintercept = log10(params_local$vif_max)) +
   geom_violin() +
-  facet_grid(gamma_slab~era)
+  # geom_point(shape = 21) +
+  facet_grid(gamma_slab~basin) +
+  coord_flip()
   
 ```
 

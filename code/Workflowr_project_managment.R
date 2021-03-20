@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "Canyon-B comparison for singla and all years")
+wflow_publish(all = TRUE, message = "included vif removel option")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -28,7 +28,7 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "filter based on comparison to CANYON-B",
+message = "added vif calculation and plots",
 republish = TRUE)
 
 
