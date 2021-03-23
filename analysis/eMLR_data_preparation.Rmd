@@ -236,7 +236,7 @@ cant_3d <- cant_3d %>%
 
 ### Combine GLODAP + Cant
 
-```{r merge_cstar_cant, fig.asp=1}
+```{r merge_cstar_cant, fig.asp=0.8}
 
 # observations grid per era
 GLODAP_obs_grid_era <- GLODAP %>% 
@@ -257,19 +257,22 @@ cant_3d_obs <- cant_3d_obs %>%
 # calculate number of cant data points per grid cell
 cant_3d_obs <- cant_3d_obs %>%
   group_by(lon, lat, era) %>% 
-  mutate(n = n()) %>% 
+  mutate(n = n(),
+         n_group = if_else(n > 1, "n > 1", "n <= 1")) %>% 
   ungroup()
 
 # GLODAP observations with only one Cant value
 map +
-  geom_raster(data = cant_3d_obs %>% filter(n > 1),
-             aes(lon, lat, fill = "> 1")) +
-  geom_raster(data = cant_3d_obs %>% filter(n == 1),
-             aes(lon, lat, fill = "= 1")) +
+  geom_raster(data = cant_3d_obs,
+             aes(lon, lat, fill = n_group)) +
   scale_fill_brewer(palette = "Set1", name="n") +
   facet_wrap( ~ era, ncol = 1) +
   labs(title = "Number of Cant depth levels",
        subtitle = "available per latxlon grid cell")
+
+
+cant_3d_obs <- cant_3d_obs %>% 
+  select(-n_group)
 
 rm(cant_3d, GLODAP_obs_grid_era)
 
@@ -318,28 +321,28 @@ GLODAP_cant_obs <- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 
 
-ggplot() +
-  geom_path(
-    data = GLODAP_cant_obs %>%
-      filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
-      arrange(depth),
-    aes(cant_pos, depth, col = "mapped")
-  ) +
-  geom_point(
-    data = GLODAP_cant_obs %>%
-      filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
-      arrange(depth),
-    aes(cant_pos, depth, col = "mapped")
-  ) +
-  geom_point(
-    data = GLODAP_cant_obs %>%
-      filter(lat == 48.5, lon == 165.5, date == ymd("2018-06-27")),
-    aes(cant_pos_int, depth, col = "interpolated")
-  ) +
-  scale_y_reverse() +
-  facet_wrap(~era) +
-  scale_color_brewer(palette = "Dark2", name = "") +
-  labs(title = "Cant interpolation to sampling depth - example profile")
+# ggplot() +
+#   geom_path(
+#     data = GLODAP_cant_obs %>%
+#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
+#       arrange(depth),
+#     aes(cant_pos, depth, col = "mapped")
+#   ) +
+#   geom_point(
+#     data = GLODAP_cant_obs %>%
+#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
+#       arrange(depth),
+#     aes(cant_pos, depth, col = "mapped")
+#   ) +
+#   geom_point(
+#     data = GLODAP_cant_obs %>%
+#       filter(lat == 48.5, lon == 165.5, date == ymd("2018-06-27")),
+#     aes(cant_pos_int, depth, col = "interpolated")
+#   ) +
+#   scale_y_reverse() +
+#   facet_wrap(~era) +
+#   scale_color_brewer(palette = "Dark2", name = "") +
+#   labs(title = "Cant interpolation to sampling depth - example profile")
 
 # remove cant data at grid cells without observations
 GLODAP <- GLODAP_cant_obs %>%
@@ -571,7 +574,7 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 # Observations coverage
 
-```{r obs_gamma_slab, fig.asp=1}
+```{r obs_gamma_slab, fig.asp=0.8}
 
 GLODAP <- GLODAP %>% 
   mutate(gamma_slab = factor(gamma_slab), 
@@ -604,7 +607,7 @@ for (i_basin in unique(GLODAP$basin)) {
 
 ## Histograms
 
-```{r histogram_predictor, fig.asp=1}
+```{r histogram_predictor, fig.asp=0.8}
 
 GLODAP_vars <- GLODAP %>% 
   select(params_local$MLR_target,
@@ -738,7 +741,7 @@ ggplot() +
 
 Following fraction (%) of cruises was removed:
 
-```{r cstar_rmse_removed_cruises, fig.asp=1.1}
+```{r cstar_rmse_removed_cruises, fig.asp=0.8}
 
 nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
