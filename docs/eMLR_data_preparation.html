@@ -602,16 +602,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6601b9276341bc6b8e52b079d9ca36e46026a3ebtargetblank6601b92a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6601b9276341bc6b8e52b079d9ca36e46026a3eb" target="_blank">6601b92</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2021931d0f7d03e62334a4b43334e78d0599d4d4targetblank2021931a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2021931d0f7d03e62334a4b43334e78d0599d4d4" target="_blank">2021931</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6601b9276341bc6b8e52b079d9ca36e46026a3ebtargetblank6601b92a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2021931d0f7d03e62334a4b43334e78d0599d4d4targetblank2021931a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6601b9276341bc6b8e52b079d9ca36e46026a3eb" target="_blank">6601b92</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2021931d0f7d03e62334a4b43334e78d0599d4d4" target="_blank">2021931</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -620,10 +620,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -662,6 +658,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2021931d0f7d03e62334a4b43334e78d0599d4d4/analysis/eMLR_data_preparation.Rmd" target="_blank">2021931</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+<td>
+restriction to two eras and new definition procedure
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/f155edded56945182934b97f737e08cb24f55884/docs/eMLR_data_preparation.html" target="_blank">f155edd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2784,15 +2814,14 @@ cant_3d_obs &lt;- cant_3d_obs %&gt;%
 # calculate number of cant data points per grid cell
 cant_3d_obs &lt;- cant_3d_obs %&gt;%
   group_by(lon, lat, era) %&gt;% 
-  mutate(n = n()) %&gt;% 
+  mutate(n = n(),
+         n_group = if_else(n &gt; 1, &quot;n &gt; 1&quot;, &quot;n &lt;= 1&quot;)) %&gt;% 
   ungroup()
 
 # GLODAP observations with only one Cant value
 map +
-  geom_raster(data = cant_3d_obs %&gt;% filter(n &gt; 1),
-             aes(lon, lat, fill = &quot;&gt; 1&quot;)) +
-  geom_raster(data = cant_3d_obs %&gt;% filter(n == 1),
-             aes(lon, lat, fill = &quot;= 1&quot;)) +
+  geom_raster(data = cant_3d_obs,
+             aes(lon, lat, fill = n_group)) +
   scale_fill_brewer(palette = &quot;Set1&quot;, name=&quot;n&quot;) +
   facet_wrap( ~ era, ncol = 1) +
   labs(title = &quot;Number of Cant depth levels&quot;,
@@ -2820,6 +2849,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">f155edd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a1d52ff78a78b51913b89c5e0172e7966dbbdb91/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">a1d52ff</a>
@@ -3011,7 +3051,10 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>rm(cant_3d, GLODAP_obs_grid_era)
+<pre class="r"><code>cant_3d_obs &lt;- cant_3d_obs %&gt;% 
+  select(-n_group)
+
+rm(cant_3d, GLODAP_obs_grid_era)
 
 GLODAP_cant_obs &lt;- full_join(GLODAP, cant_3d_obs)
 
@@ -3053,221 +3096,30 @@ GLODAP_cant_obs &lt;- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 
 
-ggplot() +
-  geom_path(
-    data = GLODAP_cant_obs %&gt;%
-      filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %&gt;%
-      arrange(depth),
-    aes(cant_pos, depth, col = &quot;mapped&quot;)
-  ) +
-  geom_point(
-    data = GLODAP_cant_obs %&gt;%
-      filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %&gt;%
-      arrange(depth),
-    aes(cant_pos, depth, col = &quot;mapped&quot;)
-  ) +
-  geom_point(
-    data = GLODAP_cant_obs %&gt;%
-      filter(lat == 48.5, lon == 165.5, date == ymd(&quot;2018-06-27&quot;)),
-    aes(cant_pos_int, depth, col = &quot;interpolated&quot;)
-  ) +
-  scale_y_reverse() +
-  facet_wrap(~era) +
-  scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;&quot;) +
-  labs(title = &quot;Cant interpolation to sampling depth - example profile&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_interpolation_to_observations-1">
-Past versions of cant_interpolation_to_observations-1.png
-</button>
-</p>
-<div id="fig-cant_interpolation_to_observations-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a1d52ff78a78b51913b89c5e0172e7966dbbdb91/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">a1d52ff</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0bade3b99e8d7ea3a292371f4628611f388aae35/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">0bade3b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27c1f4bde53ae3344e9f0631e10b06f0c7494886/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">27c1f4b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af75ebf0ed2b8bc1792cbe361bc6bbb6d7afd68e/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">af75ebf</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">7b672f7</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-01-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">33ba23c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-01-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">318609d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">9d0b2d0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">0aa2b50</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">2886da0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-19
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">02f0ee9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7bcb4eb7094c0eac8e1f8f1e7b9408391324dcf3/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">7bcb4eb</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-12-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">196be51</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2020-11-30
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/cant_interpolation_to_observations-1.png" target="_blank">bc61ce3</a>
-</td>
-<td>
-Jens Müller
-</td>
-<td>
-2020-11-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code># remove cant data at grid cells without observations
+# ggplot() +
+#   geom_path(
+#     data = GLODAP_cant_obs %&gt;%
+#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %&gt;%
+#       arrange(depth),
+#     aes(cant_pos, depth, col = &quot;mapped&quot;)
+#   ) +
+#   geom_point(
+#     data = GLODAP_cant_obs %&gt;%
+#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %&gt;%
+#       arrange(depth),
+#     aes(cant_pos, depth, col = &quot;mapped&quot;)
+#   ) +
+#   geom_point(
+#     data = GLODAP_cant_obs %&gt;%
+#       filter(lat == 48.5, lon == 165.5, date == ymd(&quot;2018-06-27&quot;)),
+#     aes(cant_pos_int, depth, col = &quot;interpolated&quot;)
+#   ) +
+#   scale_y_reverse() +
+#   facet_wrap(~era) +
+#   scale_color_brewer(palette = &quot;Dark2&quot;, name = &quot;&quot;) +
+#   labs(title = &quot;Cant interpolation to sampling depth - example profile&quot;)
+
+# remove cant data at grid cells without observations
 GLODAP &lt;- GLODAP_cant_obs %&gt;%
   filter(!is.na(cstar)) %&gt;%
   mutate(cant_pos = cant_pos_int) %&gt;%
@@ -6261,6 +6113,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">f155edd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83a13dee49338c30966eb0bde780917c3cc511a9/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">83a13de</a>
 </td>
 <td>
@@ -6484,6 +6347,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">f155edd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83a13dee49338c30966eb0bde780917c3cc511a9/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">83a13de</a>
@@ -7367,7 +7241,7 @@ jens-daniel-mueller
 <h3 number="7.1.3"><span class="header-section-number">7.1.3</span> Removed cruises</h3>
 <p>Following fraction (%) of cruises was removed:</p>
 <pre class="r"><code>nrow(GLODAP_out)/nrow(GLODAP_augmented)*100</code></pre>
-<pre><code>[1] 2.372523</code></pre>
+<pre><code>[1] 0</code></pre>
 <pre class="r"><code>if (nrow(GLODAP_out) &gt; 0) {
   map +
   geom_raster(data = GLODAP_out %&gt;% distinct(lat, lon, era),
@@ -7379,121 +7253,7 @@ jens-daniel-mueller
   print(&quot;no cruises removed&quot;)
   
 }</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_rmse_removed_cruises-1">
-Past versions of cstar_rmse_removed_cruises-1.png
-</button>
-</p>
-<div id="fig-cstar_rmse_removed_cruises-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83a13dee49338c30966eb0bde780917c3cc511a9/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">83a13de</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/cf98c6d2bcaec21304069c8d3a17db72cc4ba9dd/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">cf98c6d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a1d52ff78a78b51913b89c5e0172e7966dbbdb91/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">a1d52ff</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0bade3b99e8d7ea3a292371f4628611f388aae35/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">0bade3b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27c1f4bde53ae3344e9f0631e10b06f0c7494886/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">27c1f4b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af75ebf0ed2b8bc1792cbe361bc6bbb6d7afd68e/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">af75ebf</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50177095186ec196d54d90cc618e8e2922be2727/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">5017709</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/585b07f92966db179b5bf6e984353199c5269548/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">585b07f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-11
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<pre><code>[1] &quot;no cruises removed&quot;</code></pre>
 </div>
 </div>
 <div id="individual-cruise-sections" class="section level2" number="7.2">
