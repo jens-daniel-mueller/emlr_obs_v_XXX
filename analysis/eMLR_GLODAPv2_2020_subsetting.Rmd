@@ -259,7 +259,7 @@ rm(GLODAP_obs)
 
 #### f flag
 
-```{r tco2_f_subset, fig.asp=0.7}
+```{r tco2_f_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2f)
@@ -282,7 +282,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r tco2_qc_subset, fig.asp=0.7}
+```{r tco2_qc_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2qc)
@@ -324,7 +324,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r talk_na_subset, fig.asp=0.7}
+```{r talk_na_subset, fig.asp=0.6}
 
 GLODAP <- GLODAP %>% 
   mutate(talkna = if_else(is.na(talk), "NA", "Value"))
@@ -368,7 +368,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r talk_f_subset, fig.asp=0.7}
+```{r talk_f_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkf)
@@ -393,7 +393,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r talk_qc_subset, fig.asp=0.7}
+```{r talk_qc_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkqc)
@@ -438,7 +438,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r phosphate_na_subset, fig.asp=0.7}
+```{r phosphate_na_subset, fig.asp=0.6}
 
 GLODAP <- GLODAP %>% 
   mutate(phosphatena = if_else(is.na(phosphate), "NA", "Value"))
@@ -482,7 +482,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r phosphate_f_subset, fig.asp=0.7}
+```{r phosphate_f_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphatef)
@@ -506,7 +506,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r phosphate_qc_subset, fig.asp=0.7}
+```{r phosphate_qc_subset, fig.asp=0.6}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphateqc)
@@ -779,7 +779,7 @@ rm(i_parameter, i_cruise_all, i_cruise_out)
 
 ### Remove cruises
 
-```{r CANYON_B_removed_cruises_map, fig.asp=1.1}
+```{r CANYON_B_removed_cruises_map, fig.asp=1}
 
 GLODAP_out <- GLODAP %>%
   filter(cruise %in% cruise_out$cruise)
@@ -955,20 +955,20 @@ GLODAP_histogram_year <- GLODAP %>%
 
 GLODAP_histogram_year %>%
   ggplot() +
-  geom_vline(xintercept = c(
-    params_local$era_breaks + 0.5
-  )) +
-  geom_col(aes(year, n, fill = basin)) +
+  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
+  geom_col(aes(year, n,
+               fill = basin),
+               col = "black") +
   geom_point(
     data = era_median_year,
-    aes(t_ref, 0, shape = "Median year"),
+    aes(t_ref, 100, shape = "Median year"),
     size = 2,
     fill = "white"
   ) +
   scale_fill_brewer(palette = "Dark2") +
   scale_shape_manual(values = 24, name = "") +
   scale_y_continuous() +
-  coord_cartesian() +
+  coord_cartesian(expand = 0) +
   theme(
     legend.position = "top",
     legend.direction = "vertical",
@@ -993,7 +993,7 @@ GLODAP_hovmoeller_year <- GLODAP %>%
 GLODAP_hovmoeller_year %>%
   ggplot(aes(year, lat_grid, fill = n)) +
   geom_tile() +
-  geom_vline(xintercept = c(1999.5, 2012.5)) +
+  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   scale_fill_viridis_c(option = "magma",
                        direction = -1,
                        trans = "log10") +
@@ -1038,13 +1038,12 @@ map +
 
 The following plots show the remaining data density in each grid cell **after all cleaning steps**, separately for each era.
 
-```{r coverage_maps_era_clean, fig.asp=1.3}
+```{r coverage_maps_era_clean, fig.asp=1}
 
 GLODAP_tco2_grid <- GLODAP %>%
   count(lat, lon)
 
 map +
-  # geom_raster(data = GLODAP_tco2_grid, aes(lon, lat), fill = "grey80") +
   geom_bin2d(data = GLODAP,
              aes(lon, lat),
              binwidth = c(1,1)) +
