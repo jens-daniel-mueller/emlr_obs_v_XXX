@@ -108,15 +108,43 @@ GLODAP <- expand_grid(
   era_labels
 )
 
+# extract A16 cruise data from 2013/14
+GLODAP_A16_backup <- GLODAP %>% 
+  filter(cruise %in% c(1041, 1042),
+         era == sort(unique(GLODAP$era))[2])
+
+
 GLODAP <- GLODAP %>% 
-  filter(year >= start & year <= end) %>% 
+  filter(year >= start & year <= end)
+
+
+if (params_local$A16_GO_SHIP == "y") {
+  GLODAP <- bind_rows(GLODAP,
+                      GLODAP_A16_backup)
+  
+  map +
+    geom_raster(data = GLODAP_A16_backup %>% distinct(lat, lon, cruise),
+                aes(lon, lat, fill = as.factor(cruise))) +
+    scale_fill_brewer(palette = "Dark2") +
+    labs(
+      title = "Manual adjustment of A16 cruise",
+      subtitle = paste(
+        "For harmonization with Gruber et al. (2019),
+        cruises 1041 (A16N) and 1042 (A16S) were grouped into the",
+        sort(unique(GLODAP$era))[2], "era
+        despite taking place in 2013/14"
+      )
+    ) +
+    theme(legend.title = element_blank())
+  
+}
+
+GLODAP <- GLODAP %>% 
   select(-c(start, end))
 
-levels(GLODAP$era)
 rm(era_labels)
 
 ```
-
 
 ## Spatial boundaries
 
@@ -231,7 +259,7 @@ rm(GLODAP_obs)
 
 #### f flag
 
-```{r tco2_f_subset, fig.asp=0.8}
+```{r tco2_f_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2f)
@@ -254,7 +282,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r tco2_qc_subset, fig.asp=0.8}
+```{r tco2_qc_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2qc)
@@ -296,7 +324,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r talk_na_subset, fig.asp=0.8}
+```{r talk_na_subset, fig.asp=0.7}
 
 GLODAP <- GLODAP %>% 
   mutate(talkna = if_else(is.na(talk), "NA", "Value"))
@@ -340,7 +368,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r talk_f_subset, fig.asp=0.8}
+```{r talk_f_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkf)
@@ -365,7 +393,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r talk_qc_subset, fig.asp=0.8}
+```{r talk_qc_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, talkqc)
@@ -410,7 +438,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### NA
 
-```{r phosphate_na_subset, fig.asp=0.8}
+```{r phosphate_na_subset, fig.asp=0.7}
 
 GLODAP <- GLODAP %>% 
   mutate(phosphatena = if_else(is.na(phosphate), "NA", "Value"))
@@ -454,7 +482,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r phosphate_f_subset, fig.asp=0.8}
+```{r phosphate_f_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphatef)
@@ -478,7 +506,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r phosphate_qc_subset, fig.asp=0.8}
+```{r phosphate_qc_subset, fig.asp=0.7}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphateqc)
@@ -781,39 +809,6 @@ GLODAP <- GLODAP %>%
 
 ```
 
-
-
-## Manual adjustment A16 cruise
-
-For harmonization with Gruber et al. (2019), cruises 1041 (A16N) and 1042 (A16S) were grouped into the `r sort(unique(GLODAP$era))[2]` era despite taking place in 2013/14:  
-
-- `r params_local$A16_GO_SHIP` (y = applied, n = not applied)
-
-```{r GLODAP_Atl_cruises_2013_2014_map}
-
-GLODAP_cruises <- GLODAP %>% 
-  filter(basin_AIP == "Atlantic",
-         year %in% c(2013, 2014)) %>% 
-  count(lat, lon, cruise)
-
-map +
-  geom_raster(data = GLODAP_cruises, aes(lon, lat, fill = as.factor(cruise))) +
-  scale_fill_brewer(palette = "Dark2") +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-rm(GLODAP_cruises)
-
-```
-
-```{r switch_eras_manually}
-if (params_local$A16_GO_SHIP == "y") {
-  
-GLODAP <- GLODAP %>%
-  mutate(era = if_else(cruise %in% c(1041, 1042),
-                       sort(unique(GLODAP$era))[2], era))
-}
-```
 
 ## Create clean observations grid
 
