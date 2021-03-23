@@ -920,7 +920,7 @@ GLODAP_histogram_lat %>%
   geom_col() +
   scale_fill_brewer(palette = "Dark2") +
   facet_wrap( ~ basin) +
-  coord_flip() +
+  coord_flip(expand = 0) +
   theme(legend.position = "top",
         legend.title = element_blank())
 
@@ -997,6 +997,7 @@ GLODAP_hovmoeller_year %>%
   scale_fill_viridis_c(option = "magma",
                        direction = -1,
                        trans = "log10") +
+  coord_cartesian(expand = 0) +
   facet_wrap( ~ basin, ncol = 1) +
   theme(legend.position = "top",
         axis.title.x = element_blank())
