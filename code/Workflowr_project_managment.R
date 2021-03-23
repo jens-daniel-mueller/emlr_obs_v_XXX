@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "included vif removel option")
+wflow_publish(all = TRUE, message = "restriction to two eras and new definition procedure")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -28,7 +28,7 @@ wflow_publish(here::here(
     "analysis_this_study.Rmd"
   )
 ),
-message = "added vif calculation and plots",
+message = "rerun w/o post 2012 era",
 republish = TRUE)
 
 

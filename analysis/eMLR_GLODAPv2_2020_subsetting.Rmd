@@ -93,26 +93,27 @@ Samples were assigned to following eras:
 ```{r assign_eras}
 
 # create labels for era
-labels <- bind_cols(
-  start = params_local$era_breaks+1,
-  end = lead(params_local$era_breaks))
+era_labels <- bind_cols(
+  start = params_local$era_start,
+  end = params_local$era_end)
 
-labels <- labels %>% 
-  filter(!is.na(end)) %>% 
-  mutate(end = if_else(end == Inf, max(GLODAP$year), end),
-         label = paste(start, end, sep = "-")) %>% 
-  select(label) %>% 
-  pull()
+era_labels <- era_labels %>% 
+  mutate(start = if_else(start == -Inf, max(GLODAP$year), start),
+         end = if_else(end == Inf, max(GLODAP$year), end),
+         era = as.factor(paste(start, end, sep = "-")))
 
-# cut observation years into era applying the labels
-GLODAP <- GLODAP %>%
-  filter(year > params_local$era_breaks[1]) %>% 
-  mutate(era = cut(year,
-                   params_local$era_breaks,
-                   labels = labels))
+# filter GLODAP data within eras
+GLODAP <- expand_grid(
+  GLODAP,
+  era_labels
+)
+
+GLODAP <- GLODAP %>% 
+  filter(year >= start & year <= end) %>% 
+  select(-c(start, end))
 
 levels(GLODAP$era)
-rm(labels)
+rm(era_labels)
 
 ```
 
