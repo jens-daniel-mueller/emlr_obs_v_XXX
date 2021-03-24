@@ -88,6 +88,35 @@ co2_atm <-
 
 ```
 
+## Convert to long format
+
+```{r convert_mod_obs_to_long_format}
+
+GLODAP <- GLODAP %>% 
+  rename_with(~ gsub("_model", "_mod", .x)) %>% 
+  rename_with(.cols = c(temp, sal, gamma, tco2, talk, phosphate,
+                        oxygen, aou, nitrate, silicate),
+              ~ paste(.x, "obs", sep = "_"))
+
+GLODAP <- GLODAP %>% 
+  pivot_longer(
+    -c(year:depth), 
+    names_to = c(".value", "data_source"), 
+    names_sep = "_"
+  )
+
+# GLODAP %>% 
+#   ggplot(aes(tco2, depth)) +
+#   geom_bin2d(bins = 100) +
+#   scale_y_reverse() +
+#   scale_fill_viridis_c() +
+#   facet_wrap(~ data_source)
+  
+
+```
+
+
+
 # PO~4~*
 
 ## Calculation 
@@ -228,9 +257,6 @@ cant_3d <- cant_3d %>%
 cant_3d <- cant_3d %>% 
   select(lon, lat, depth, era, cant_pos)
 
-# cant_3d %>%
-#   filter_all(any_vars(is.na(.)))
-
 ```
 
 
@@ -250,9 +276,6 @@ cant_3d_obs <- left_join(
 cant_3d_obs <- cant_3d_obs %>%
   mutate(cant_pos = replace_na(cant_pos, 0),
          depth = replace_na(depth, 0))
-
-# cant_3d_obs %>%
-#   filter_all(any_vars(is.na(.)))
 
 # calculate number of cant data points per grid cell
 cant_3d_obs <- cant_3d_obs %>%
@@ -282,7 +305,7 @@ rm(GLODAP, cant_3d_obs)
 
 # fill number of cant data points per grid cell to all observations
 GLODAP_cant_obs <- GLODAP_cant_obs %>%
-  group_by(lon, lat, era) %>% 
+  group_by(lon, lat, era, data_source) %>% 
   fill(n, .direction = "updown") %>% 
   ungroup()
 
@@ -303,18 +326,12 @@ GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %>%
   ungroup()
 
-# GLODAP_cant_obs_int %>% 
-#   filter(is.na(cant_pos_int))
-
 # set cant for observation depth if only one cant available
 GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
   filter(n == 1) %>%
   group_by(lat, lon, era) %>%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %>%
   ungroup()
-
-# GLODAP_cant_obs_set %>% 
-#   filter(is.na(cant_pos_int))
 
 # bin data sets with interpolated and set cant
 GLODAP_cant_obs <- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
@@ -351,10 +368,6 @@ GLODAP <- GLODAP_cant_obs %>%
   select(-cant_pos_int, n)
 
 rm(GLODAP_cant_obs)
-
-
-# GLODAP %>%
-#   filter_all(any_vars(is.na(.)))
 
 ```
 
@@ -405,7 +418,8 @@ GLODAP <- GLODAP %>%
 GLODAP %>% 
   ggplot(aes(cstar_tref_delta)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "Histogramm with binwidth = 1")
+  labs(title = "Histogramm with binwidth = 1") +
+  facet_wrap(~ data_source)
 
 ```
 
@@ -416,8 +430,8 @@ GLODAP %>%
   ggplot(aes(year, cstar_tref_delta, col = cant_pos)) +
   geom_point() +
   scale_color_viridis_c() +
-  labs(title = "Time series of random subsample 1e4")
-
+  labs(title = "Time series of random subsample 1e4") +
+  facet_wrap(~ data_source)
 
 ```
 
@@ -427,7 +441,8 @@ GLODAP %>%
   ggplot(aes(year, cstar_tref_delta)) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
-  labs(title = "Heatmap with binwidth = 1")
+  labs(title = "Heatmap with binwidth = 1") +
+  facet_wrap(~ data_source)
 
 ```
 
@@ -453,14 +468,16 @@ map +
               arrange(date),
              aes(lon, lat, col = date)) +
   scale_color_viridis_c(trans = "date") +
-  labs(title = paste("Cruise year:", mean(GLODAP_cruise$year)))
+  labs(title = paste("Cruise year:", mean(GLODAP_cruise$year))) +
+  facet_wrap(~ data_source)
 
 lat_section <- 
 GLODAP_cruise %>%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
   scale_fill_viridis_c() +
-  theme(axis.title.x = element_blank())
+  theme(axis.title.x = element_blank()) +
+  facet_wrap(~ data_source)
 
 for (i_var in c("tco2",
                 "rCP_phosphate",
@@ -504,7 +521,8 @@ lat_section <-
 GLODAP_cruise %>%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  facet_wrap(~ data_source)
 
 lat_section +
   geom_point(aes(col = gamma_slab)) +
@@ -545,7 +563,7 @@ GLODAP_cruise <- GLODAP_cruise %>%
          gamma_provided = gamma)
 
 library(reticulate)
-source_python(here::here("code/python_scripts",
+data_source_python(here::here("code/python_scripts",
                          "Gamma_GLODAP_python.py"))
 
 GLODAP_cruise <- calculate_gamma(GLODAP_cruise)
@@ -581,7 +599,7 @@ GLODAP <- GLODAP %>%
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
 
 for (i_basin in unique(GLODAP$basin)) {
-  # i_basin <- unique(GLODAP$basin)[3]
+  # i_basin <- unique(GLODAP$basin)[1]
   
   print(
     GLODAP %>%
@@ -596,7 +614,7 @@ for (i_basin in unique(GLODAP$basin)) {
       scale_x_continuous(breaks = seq(-100, 100, 20),
                          limits = c(params_global$lat_min,
                                     params_global$lat_max)) +
-      facet_grid(era ~ .) +
+      facet_grid(era ~ data_source) +
       labs(title = paste("MLR region: ", i_basin))
   )
   
@@ -607,10 +625,11 @@ for (i_basin in unique(GLODAP$basin)) {
 
 ## Histograms
 
-```{r histogram_predictor, fig.asp=0.8}
+```{r histogram_predictor, fig.asp=0.5}
 
 GLODAP_vars <- GLODAP %>% 
-  select(params_local$MLR_target,
+  select(data_source,
+         params_local$MLR_target,
          params_local$MLR_predictors)
 
 GLODAP_vars_long <- GLODAP_vars %>%
@@ -624,9 +643,8 @@ GLODAP_vars_long <- GLODAP_vars %>%
 GLODAP_vars_long %>% 
   ggplot(aes(value)) +
   geom_histogram() +
-  facet_wrap(~ variable,
-             ncol = 2,
-             scales = "free")
+  facet_grid(data_source ~ variable,
+             scales = "free_x")
 
 rm(GLODAP_vars, GLODAP_vars_long)
 
@@ -652,7 +670,7 @@ model
 
 # prepare nested data frame
 GLODAP_nested <- GLODAP %>%
-  group_by(gamma_slab, basin) %>%
+  group_by(gamma_slab, basin, data_source) %>%
   nest()
 
 # expand with model definitions
@@ -690,18 +708,24 @@ rm(GLODAP_data)
 
 Below, the residuals of C* from the mean C* and from C* predicted with the global model are shown.
 
-```{r Residuals_global_c_star, fig.asp=0.5}
+```{r Residuals_global_c_star, fig.asp=0.4}
 
 GLODAP_augmented %>%
-  ggplot(aes(year, cstar_tref - mean(cstar_tref))) +
+  group_by(data_source) %>% 
+  mutate(cstar_minus_mean = cstar_tref - mean(cstar_tref)) %>% 
+  ungroup() %>% 
+  ggplot(aes(year, cstar_minus_mean)) +
+  geom_hline(yintercept = 0) +
   geom_bin2d(binwidth = c(1, 1)) +
-  scale_fill_viridis_c()
+  scale_fill_viridis_c() +
+  facet_grid(. ~ data_source)
 
 GLODAP_augmented %>%
   ggplot(aes(year, .resid)) +
+  geom_hline(yintercept = 0) +
   geom_bin2d(binwidth = c(1, 1)) +
-  scale_fill_viridis_c()
-
+  scale_fill_viridis_c() +
+  facet_grid(. ~ data_source)
 
 ```
 
@@ -712,14 +736,16 @@ GLODAP_augmented %>%
 
 # calculate RMSE from augmented output per cruise
 cruise_all <- GLODAP_augmented %>%
-  group_by(cruise) %>%
+  group_by(cruise, data_source) %>%
   summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %>%
   ungroup()
 
 # rank RMSE
 cruise_all <- cruise_all %>% 
-  mutate(rank_rmse = rank(rmse),
-         cruise = as.factor(cruise))
+  mutate(cruise = as.factor(cruise)) %>% 
+  group_by(data_source) %>% 
+  mutate(rank_rmse = rank(rmse)) %>% 
+  ungroup()
 
 cruise_out <- cruise_all %>% 
   filter(rmse > params_local$c_star_rmse_max)
@@ -732,7 +758,8 @@ ggplot() +
   geom_point(data = cruise_all,
              aes(rank_rmse, rmse)) +
   geom_point(data = cruise_out,
-             aes(rank_rmse, rmse, col = cruise))
+             aes(rank_rmse, rmse, col = cruise)) +
+  facet_grid(. ~ data_source)
 
 
 ```
@@ -945,6 +972,7 @@ GLODAP <- GLODAP %>%
     lat,
     lon,
     depth,
+    data_source,
     gamma,
     gamma_slab,
     params_local$MLR_predictors,
