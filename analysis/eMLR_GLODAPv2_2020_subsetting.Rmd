@@ -28,12 +28,17 @@ params_local <-
 
 ```{r define_paths, include = FALSE}
 
-# only path_observations needs to be changed to model
 path_observations <-
   paste(path_root, "/observations/", sep = "")
 
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
+
+path_model <-
+  paste(path_root, "/model/", sep = "")
+
+path_preprocessing_model    <-
+  paste(path_model, "preprocessing/", sep = "")
 
 path_version_data     <-
   paste(path_observations,
@@ -70,16 +75,31 @@ Main data source for this project is the preprocessed version of the `GLODAPv2.2
 
 ```{r read_GLODAPv2_2020_merged_master_file}
 
-GLODAP <-
+GLODAP_obs_only <-
   read_csv(paste(path_preprocessing,
                  "GLODAPv2.2020_preprocessed.csv",
                  sep = ""))
 
 
+GLODAP <-
+  read_csv(
+    paste(
+      path_preprocessing_model,
+      "GLODAPv2.2020_preprocessed_model_runA_both.csv",
+      sep = ""
+    )
+  )
+
+GLODAP <- GLODAP %>%
+  arrange(date) %>%
+  relocate(row_number)
+
 GLODAP_CB <-
   read_csv(paste(path_preprocessing,
                  "GLODAPv2.2020_Canyon-B.csv",
                  sep = ""))
+
+
 
 ```
 
@@ -838,7 +858,12 @@ GLODAP <- GLODAP %>%
          bottomdepth, depth,
          temp, sal, gamma,
          tco2, talk, phosphate,
-         oxygen, aou, nitrate, silicate)
+         oxygen, aou, nitrate, silicate,
+         temp_model, sal_model = so_model, gamma_model,
+         tco2_model = dissic_model, talk_model, phosphate_model = po4_model,
+         oxygen_model = o2_model, aou_model,
+         nitrate_model = no3_model, silicate_model = si_model
+         )
 
 
 GLODAP  %>%  write_csv(paste(path_version_data,
@@ -1058,6 +1083,64 @@ ggsave(path = path_version_figures,
        filename = "data_distribution_era.png",
        height = 8,
        width = 5)
+
+```
+
+
+## Model vs observation
+
+```{r model_obs_comparison}
+
+variables <-
+  c(
+    "temp",
+    "sal",
+    "gamma",
+    "tco2",
+    "talk",
+    "phosphate",
+    "oxygen",
+    "aou",
+    "nitrate",
+    "silicate"
+  )
+
+for (i_var in variables) {
+  #  i_var <- variables[1]
+  
+  # calculate equal axis limits and binwidth
+  axis_lims <- GLODAP %>%
+    summarise(max_value = max(c(max(!!sym(
+      i_var
+    )),
+    max(!!sym(
+      paste0(i_var, "_model")
+    )))),
+    min_value = min(c(min(!!sym(
+      i_var
+    )),
+    min(!!sym(
+      paste0(i_var, "_model")
+    )))))
+  
+  binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 40
+  axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
+  
+  # obs-model plot (season)
+  print(
+    ggplot(GLODAP, aes(
+      x = !!sym(i_var),
+      y = !!sym(paste0(i_var, "_model"))
+    )) +
+      geom_bin2d(binwidth = binwidth_value) +
+      scale_fill_viridis_c(trans = "log10") +
+      geom_abline(slope = 1,
+                  col = 'red') +
+      coord_equal(xlim = axis_lims,
+                  ylim = axis_lims) +
+      labs(x = "observation", y = "model", title = i_var)
+  )
+}
 
 ```
 
