@@ -31,6 +31,18 @@ wflow_publish(here::here(
 message = "rerun w/o post 2012 era",
 republish = TRUE)
 
+wflow_publish(here::here(
+  "analysis",
+  c(
+    "index.Rmd",
+    "config_dependencies.Rmd",
+    "config_parameterization_local.Rmd",
+    "eMLR_GLODAPv2_2020_subsetting.Rmd",
+    "eMLR_data_preparation.Rmd"
+  )
+),
+message = "included model data")
+
 
 # Push latest version to GitHub
 wflow_git_push()
