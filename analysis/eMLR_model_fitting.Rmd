@@ -533,16 +533,16 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 GLODAP_glanced %>%
   group_split(era) %>%
-  imap(
+  map(
     ~ ggplot(data = .x,
              aes(
                as.factor(n_predictors),
                !!sym(params_local$MLR_criterion),
-               col = basin
+               col = data_source
              )) +
       geom_hline(yintercept = c(0, 10)) +
       geom_boxplot() +
-      facet_grid(gamma_slab ~ data_source) +
+      facet_grid(gamma_slab ~ basin) +
       scale_color_brewer(palette = "Set1") +
       ylim(c(0, NA)) +
       labs(x = "Number of predictors",
@@ -565,10 +565,10 @@ left_join(lm_best_target %>% select(basin, gamma_slab, era, model),
   ~ ggplot(data = .x,
          aes("",
              !!sym(params_local$MLR_criterion),
-             col = basin)) +
+             col = data_source)) +
   geom_hline(yintercept = c(0, 10)) +
   geom_boxplot() +
-  facet_grid(gamma_slab ~ data_source) +
+  facet_grid(gamma_slab ~ basin) +
   scale_color_brewer(palette = "Set1") +
   ylim(c(0, NA)) +
   labs(x = "Number of predictors pooled",
@@ -650,7 +650,7 @@ lm_all_stats <- lm_best_cant %>%
 # print table
 lm_all_stats %>%
   gt(rowname_col = "gamma_slab",
-     groupname_col = c("data_source", "basin")) %>% 
+     groupname_col = c("basin", "data_source")) %>% 
   summary_rows(
     groups = TRUE,
     fns = list(total = "sum")
@@ -689,16 +689,6 @@ BIC is an alternative criterion to RMSE to judge model quality, but not (yet) ta
 
 ```{r BIC_vs_AIC_all_models}
 lm_all_eras %>% 
-  ggplot(aes(AIC, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(data_source~basin)
-
-```
-
-
-```{r BIC_vs_AIC_selected_models}
-lm_best_eras %>% 
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -813,7 +803,7 @@ GLODAP_augmented_best %>%
 
 Due to the few large residuals, we limit the y axis range for the plots below.
 
-```{r residual_patterns_y_range_limit}
+```{r residual_patterns_y_range_limit, fig.asp=0.5}
 
 GLODAP_augmented_best %>%
   ggplot(aes(lat, .resid)) +
@@ -851,9 +841,9 @@ GLODAP_augmented_best %>%
       coord_cartesian(ylim = i_ylim) +
       labs(
         title = paste(
-          "Target variable:",
+          "Target:",
           params_local$MLR_target,
-          "| selected best models | basin:",
+          "| best models | basin:",
           unique(.x$basin),
           "| era:",
           unique(.x$era)
@@ -941,7 +931,7 @@ GLODAP_glanced %>%
 
 ```
 
-```{r vif_distribution_type_predictor, fig.asp=2.5}
+```{r vif_distribution_type_predictor, fig.asp=3.5}
 
 GLODAP_glanced_vif %>% 
   ggplot(aes(Variables,
