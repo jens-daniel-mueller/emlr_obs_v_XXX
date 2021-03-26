@@ -166,9 +166,7 @@ GLODAP %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
+  # filter(gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   group_by(gamma_slab, era, basin, data_source) %>% 
   nest()
 
@@ -180,7 +178,6 @@ GLODAP_nested_lm <- expand_grid(
 )
 
 # fit models and extract tidy model output
-
 GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
   mutate(
     fit = map2(.x = data, .y = model, 
@@ -190,6 +187,76 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
     augmented = map(fit, augment),
     vif = map(fit, ols_vif_tol)
   )
+
+
+# test parallel processing
+# 
+# library(parallel)
+# library(multidplyr)
+# 
+# n_cores <- detectCores()
+# system.time(
+# cluster <- new_cluster(5)
+# )
+# 
+# cluster
+# 
+# system.time(
+#   GLODAP_nested_lm <-
+#     expand_grid(GLODAP,
+#                 lm_all) %>%
+#     group_by(gamma_slab, era, basin, data_source, model, predictors, n) %>%
+#     partition(cluster)
+# )
+# 
+# GLODAP_nested_lm 
+# 
+# cluster %>%
+#   cluster_library(c("tidyverse",
+#                     "broom",
+#                     "olsrr",
+#                     "purrr"))
+# 
+# cluster_call(cluster, search())
+# 
+# system.time(
+# GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
+#   mutate(
+#     fit = map2(.x = data, .y = model, 
+#                ~ lm(as.formula(.y), data = .x)),
+#     tidied = map(fit, tidy),
+#     glanced = map(fit, glance),
+#     augmented = map(fit, augment),
+#     vif = map(fit, ols_vif_tol)
+#   )
+# )
+# 
+# system.time(
+# GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>% 
+#   collect()
+# )
+# 
+# 
+# 
+# library(furrr)
+# 
+# plan(sequential)
+# plan(multisession, workers = 5)
+# 
+# # This does run in parallel!
+# system.time(
+# GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
+#   mutate(
+#     fit = future_map2(.x = data, .y = model, 
+#                ~ lm(as.formula(.y), data = .x))
+#     # tidied = future_map(fit, tidy),
+#     # glanced = future_map(fit, glance),
+#     # augmented = future_map(fit, augment),
+#     # vif = future_map(fit, ols_vif_tol)
+#   )
+# )
+
+
 
 # print(object.size(GLODAP_nested), units = "MB")
 # print(object.size(GLODAP_nested_lm), units = "MB")
@@ -464,23 +531,23 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 ```{r eMLR_predictor_model_quality_all, fig.asp=2}
 
-plot_fun <- function(df){
-  ggplot(data = df,
-         aes(as.factor(n_predictors),
-             !!sym(params_local$MLR_criterion),
-             col = basin)) +
-  geom_hline(yintercept = c(0,10)) +
-  geom_boxplot() +
-  facet_grid(gamma_slab~era) +
-  scale_color_brewer(palette = "Set1") +
-  ylim(c(0,NA)) +
-  labs(x="Number of predictors",
-       title = paste("data_source:",unique(df$data_source)))
-}
-
 GLODAP_glanced %>%
-  group_split(data_source) %>%
-  map(plot_fun)
+  group_split(era) %>%
+  imap(
+    ~ ggplot(data = .x,
+             aes(
+               as.factor(n_predictors),
+               !!sym(params_local$MLR_criterion),
+               col = basin
+             )) +
+      geom_hline(yintercept = c(0, 10)) +
+      geom_boxplot() +
+      facet_grid(gamma_slab ~ data_source) +
+      scale_color_brewer(palette = "Set1") +
+      ylim(c(0, NA)) +
+      labs(x = "Number of predictors",
+           title = paste("Era:", unique(.x$era)))
+  )
 
 
 
@@ -493,15 +560,20 @@ GLODAP_glanced %>%
 
 left_join(lm_best_target %>% select(basin, gamma_slab, era, model),
           GLODAP_glanced) %>%
-  ggplot(aes("",
+  group_split(era) %>%
+  imap(
+  ~ ggplot(data = .x,
+         aes("",
              !!sym(params_local$MLR_criterion),
              col = basin)) +
   geom_hline(yintercept = c(0, 10)) +
   geom_boxplot() +
-  facet_grid(gamma_slab ~ era) +
+  facet_grid(gamma_slab ~ data_source) +
   scale_color_brewer(palette = "Set1") +
   ylim(c(0, NA)) +
-  labs(x = "Number of predictors pooled")
+  labs(x = "Number of predictors pooled",
+           title = paste("Era:", unique(.x$era)))
+  )
 
 ```
 
@@ -527,7 +599,7 @@ lm_all_eras %>%
               ylim = c(0, max_rmse)) +
   geom_abline(slope = 1,
               col = 'red') +
-  facet_grid(eras ~ basin)
+  facet_grid(data_source ~ basin)
 
 rm(max_rmse)
 
@@ -551,7 +623,7 @@ lm_best_eras %>%
               ylim = c(0, max_rmse)) +
   geom_abline(slope = 1,
               col = 'red') +
-  facet_grid(eras ~ basin)
+  facet_grid(data_source ~ basin)
 
 rm(max_rmse)
 ```
@@ -570,7 +642,7 @@ lm_all_stats <- lm_best_cant %>%
                values_to = "delta_coeff") %>% 
   filter(term != "(Intercept)",
          delta_coeff != 0) %>% 
-  group_by(basin, eras, gamma_slab) %>% 
+  group_by(data_source, basin, gamma_slab) %>% 
   count(term) %>% 
   ungroup() %>% 
   pivot_wider(values_from = n, names_from = term)
@@ -578,7 +650,7 @@ lm_all_stats <- lm_best_cant %>%
 # print table
 lm_all_stats %>%
   gt(rowname_col = "gamma_slab",
-     groupname_col = c("basin", "eras")) %>% 
+     groupname_col = c("data_source", "basin")) %>% 
   summary_rows(
     groups = TRUE,
     fns = list(total = "sum")
@@ -598,7 +670,7 @@ lm_all_eras %>%
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)
+  facet_grid(data_source~basin)
 
 ```
 
@@ -608,33 +680,9 @@ lm_best_eras %>%
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)
+  facet_grid(data_source~basin)
 
 ```
-
-### BIC
-
-BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
-
-```{r BIC_vs_rmse_all_models}
-lm_all_eras %>% 
-  ggplot(aes(rmse, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(eras~basin)
-
-```
-
-
-```{r BIC_vs_rmse_selected_models}
-lm_best_eras %>% 
-  ggplot(aes(rmse, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(eras~basin)
-
-```
-
 ### AIC vs BIC
 
 BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
@@ -644,7 +692,7 @@ lm_all_eras %>%
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)
+  facet_grid(data_source~basin)
 
 ```
 
@@ -654,7 +702,7 @@ lm_best_eras %>%
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)
+  facet_grid(data_source~basin)
 
 ```
 
@@ -664,10 +712,10 @@ lm_best_eras %>%
 ```{r rmse_vs_VIF_all_models, fig.asp=2}
 
 GLODAP_glanced %>% 
-  ggplot(aes(rmse, log10(vif_max))) +
+  ggplot(aes(rmse, log10(vif_max),col=data_source)) +
   geom_hline(yintercept = 1) +
   geom_point() +
-  scale_color_viridis_d() +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(gamma_slab~basin)
 
 ```
@@ -682,13 +730,13 @@ Plotted are fitted vs actual target variable values, here: `r `params_local$MLR_
 ```{r subset_best_models}
 
 GLODAP_augmented_best <- left_join(
-  lm_best_target %>% select(basin, gamma_slab, era, model),
+  lm_best_target %>% select(data_source, basin, gamma_slab, era, model),
   GLODAP_augmented
 )
 
 ```
 
-```{r fitted_vs_actual_all}
+```{r fitted_vs_actual_all, fig.asp=0.5}
 
 # calculate equal axis limits and binwidth
 axis_lims <- GLODAP_augmented %>%
@@ -713,7 +761,8 @@ GLODAP_augmented %>%
               col = 'red') +
   coord_equal(xlim = axis_lims,
               ylim = axis_lims) +
-  labs(title = "All models")
+  labs(title = "All models") +
+  facet_wrap(~data_source)
 
 ```
 
@@ -728,7 +777,8 @@ GLODAP_augmented_best %>%
               col = 'red') +
   coord_equal(xlim = axis_lims,
               ylim = axis_lims) +
-  labs(title = "Selected models")
+  labs(title = "Selected models") +
+  facet_wrap(~data_source)
 
 rm(binwidth_value, axis_lims)
 
@@ -739,7 +789,7 @@ rm(binwidth_value, axis_lims)
 
 In the following, we present residual patterns vs latitude across all domains.
 
-```{r residual_patterns_full_range}
+```{r residual_patterns_full_range, fig.asp=0.5}
 
 i_ylim <- c(-30,30)
 
@@ -755,7 +805,8 @@ GLODAP_augmented_best %>%
       "| Selected models",
       "| All domains"
     )
-  )
+  ) +
+  facet_wrap(~data_source)
 
 
 ```
@@ -777,7 +828,8 @@ GLODAP_augmented_best %>%
       "| Selected models",
       "| All domains"
     )
-  )
+  ) +
+  facet_wrap(~data_source)
 
 
 ```
@@ -789,28 +841,25 @@ In the following, we present residual patterns vs latitude for separate model do
 
 ```{r residual_patterns_by_model_domain, fig.asp=2}
 
-p_residuals <- function(df){
-    ggplot(data = df, aes(lat, .resid)) +
+GLODAP_augmented_best %>% 
+  group_split(basin, era) %>% 
+  map(~ ggplot(data = .x, aes(lat, .resid)) +
       geom_bin2d(binwidth = i_binwidth) +
       geom_hline(yintercept = 0, col = "black") +
       scale_fill_viridis_c() +
-      facet_grid(gamma_slab ~ era) +
+      facet_grid(gamma_slab ~ data_source) +
       coord_cartesian(ylim = i_ylim) +
       labs(
         title = paste(
           "Target variable:",
           params_local$MLR_target,
           "| selected best models | basin:",
-          unique(df$basin)
+          unique(.x$basin),
+          "| era:",
+          unique(.x$era)
         )
-      )
-}
-
-GLODAP_augmented_best %>% 
-  group_split(basin) %>% 
-  map(p_residuals)
+      ))
   
-
 
 ```
 
@@ -826,16 +875,21 @@ GLODAP_augmented_best <- GLODAP_augmented_best %>%
   ))))
 
 lat_residual <- GLODAP_augmented_best %>%
-  group_by(basin, gamma_slab, era, lat_grid) %>% 
+  group_by(data_source, basin, gamma_slab, era, lat_grid) %>% 
   summarise(.resid_mean = mean(.resid)) %>% 
   ungroup()
 
 lat_residual %>%
-  ggplot(aes(lat_grid, .resid_mean, col=era)) +
+  group_split(basin) %>% 
+  map(
+  ~ggplot(data = .x,
+          aes(lat_grid, .resid_mean, col=era)) +
   geom_line() +
   geom_point() +
   geom_hline(yintercept = 0, col = "black") +
-  facet_grid(gamma_slab ~ basin)
+  facet_grid(gamma_slab ~ data_source) +
+    labs(title = paste("Basin:", unique(.x$basin)))
+  )
 
 
 ```
@@ -848,7 +902,7 @@ lat_residual %>%
 
 # calculate residual offset for adjacent eras
 lat_residual_offset <- lat_residual  %>%
-  select(basin, gamma_slab, era, lat_grid, .resid_mean) %>% 
+  select(data_source, basin, gamma_slab, era, lat_grid, .resid_mean) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, lat_grid) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
@@ -876,21 +930,26 @@ lat_residual_offset %>%
 ```{r vif_distribution_n_predictors, fig.asp=2}
 
 GLODAP_glanced %>% 
-  ggplot(aes(as.factor(n), log10(vif_max))) + 
+  ggplot(aes(as.factor(n),
+             log10(vif_max),
+             col=data_source)) + 
   geom_hline(yintercept = log10(params_local$vif_max)) +
+  scale_color_brewer(palette = "Set1") +
   geom_violin() +
   facet_grid(gamma_slab~basin)
   
 
 ```
 
-```{r vif_distribution_type_predictor, fig.asp=2}
+```{r vif_distribution_type_predictor, fig.asp=2.5}
 
 GLODAP_glanced_vif %>% 
-  ggplot(aes(Variables, log10(VIF))) + 
+  ggplot(aes(Variables,
+             log10(VIF),
+             col = data_source)) + 
   geom_hline(yintercept = log10(params_local$vif_max)) +
   geom_violin() +
-  # geom_point(shape = 21) +
+  scale_color_brewer(palette = "Set1") +
   facet_grid(gamma_slab~basin) +
   coord_flip()
   
