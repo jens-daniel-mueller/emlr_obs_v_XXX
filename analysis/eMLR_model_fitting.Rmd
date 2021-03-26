@@ -268,8 +268,6 @@ rm(GLODAP, GLODAP_nested, GLODAP_nested_lm, GLODAP_nested_lm_fit, lm_all,
 Coefficients are prepared for the mapping of Cant and the chosen target variable.
 
 
-
-
 ## VIF threshold
 
 To avoid multicollinearity among predictors, models were excluded with a VIF above:  
@@ -310,7 +308,7 @@ The criterion was summed up for two adjacent eras, and the models with lowest su
 lm_all_eras <- GLODAP_glanced_clean  %>%
   select(data_source, basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
   arrange(era) %>% 
-  group_by(basin, gamma_slab, model) %>% 
+  group_by(data_source, basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
          rmse_sum = rmse + lag(rmse),
          aic_sum = AIC + lag(AIC),
@@ -392,7 +390,9 @@ eras_era <- full_join(eras_backward, eras_forward) %>%
 # extend best model selection from eras to era
 lm_best <- full_join(
   lm_best_eras %>% select(data_source, basin, gamma_slab, model, eras),
-  eras_era)
+  eras_era) %>% 
+  drop_na() %>% 
+  arrange(era, basin, gamma_slab, data_source)
 
 lm_best <- left_join(
   lm_best,
