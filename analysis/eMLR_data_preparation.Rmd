@@ -105,13 +105,6 @@ GLODAP <- GLODAP %>%
     names_sep = "_"
   )
 
-# GLODAP %>% 
-#   ggplot(aes(tco2, depth)) +
-#   geom_bin2d(bins = 100) +
-#   scale_y_reverse() +
-#   scale_fill_viridis_c() +
-#   facet_wrap(~ data_source)
-  
 
 ```
 
@@ -266,7 +259,7 @@ cant_3d <- cant_3d %>%
 
 # observations grid per era
 GLODAP_obs_grid_era <- GLODAP %>% 
-  distinct(lat, lon, era)
+  distinct(lat, lon, era, data_source)
 
 # cant data at observations grid
 cant_3d_obs <- left_join(
@@ -279,7 +272,7 @@ cant_3d_obs <- cant_3d_obs %>%
 
 # calculate number of cant data points per grid cell
 cant_3d_obs <- cant_3d_obs %>%
-  group_by(lon, lat, era) %>% 
+  group_by(lon, lat, era, data_source) %>% 
   mutate(n = n(),
          n_group = if_else(n > 1, "n > 1", "n <= 1")) %>% 
   ungroup()
@@ -289,7 +282,7 @@ map +
   geom_raster(data = cant_3d_obs,
              aes(lon, lat, fill = n_group)) +
   scale_fill_brewer(palette = "Set1", name="n") +
-  facet_wrap( ~ era, ncol = 1) +
+  facet_grid(data_source ~ era) +
   labs(title = "Number of Cant depth levels",
        subtitle = "available per latxlon grid cell")
 
@@ -321,7 +314,7 @@ The mapped Cant product was merged with GLODAP observation by:
 # interpolate cant to observation depth
 GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
   filter(n > 1) %>% 
-  group_by(lat, lon, era) %>%
+  group_by(lat, lon, era, data_source) %>%
   arrange(depth) %>%
   mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %>%
   ungroup()
@@ -329,7 +322,7 @@ GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
 # set cant for observation depth if only one cant available
 GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
   filter(n == 1) %>%
-  group_by(lat, lon, era) %>%
+  group_by(lat, lon, era, data_source) %>%
   mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %>%
   ungroup()
 
@@ -388,7 +381,7 @@ GLODAP <- left_join(GLODAP, co2_atm)
 
 # assign reference year
 GLODAP <- GLODAP %>% 
-  group_by(era) %>% 
+  group_by(era, data_source) %>% 
   mutate(tref = median(year)) %>% 
   ungroup()
 

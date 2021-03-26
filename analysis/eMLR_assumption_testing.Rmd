@@ -92,11 +92,6 @@ for both basins, with color indicating neutral density slabs (high density = dar
 
 ```{r predictor_correlation_per_basin, fig.asp=1}
 
-  # ggplot(data = df) + 
-  # geom_bar(aes(mpg)) + 
-  # labs(title = paste(Carb: unique(.x$carb))) + 
-  # theme_bw()
-
 plot_fun <- function(df){
   ggpairs(
     data = df,
@@ -124,24 +119,6 @@ GLODAP %>%
 GLODAP <- GLODAP %>% 
   filter(data_source == "obs") %>% 
   select(-data_source)
-
-# for (i_basin in unique(GLODAP$basin)) {
-# # i_basin <- unique(GLODAP$basin)[1]
-# 
-# print(
-# GLODAP %>% 
-#   filter(basin == i_basin) %>% 
-#   sample_frac(0.05) %>% 
-#   ggpairs(columns = c(params_local$MLR_target,
-#                       params_local$MLR_predictors),
-#           upper = "blank",
-#           ggplot2::aes(col = gamma_slab, fill = gamma_slab, alpha = 0.01)) +
-#       scale_fill_viridis_d(direction = -1) +
-#       scale_color_viridis_d(direction = -1) +
-#       labs(title = paste("Basin:", i_basin ,"| era: all | subsample size: 5 % of",
-#                          nrow(GLODAP %>% filter(basin == i_basin))))
-# )
-# }
 
 ```
 
