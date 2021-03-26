@@ -604,16 +604,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6d2102ad8265993041e0d4726ec17519ceb27321targetblank6d2102aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6d2102ad8265993041e0d4726ec17519ceb27321" target="_blank">6d2102a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee4ef0f6f619c6f37e6b08c8b6b13305847821bdctargetblanke4ef0f6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e4ef0f6f619c6f37e6b08c8b6b13305847821bdc" target="_blank">e4ef0f6</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6d2102ad8265993041e0d4726ec17519ceb27321targetblank6d2102aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee4ef0f6f619c6f37e6b08c8b6b13305847821bdctargetblanke4ef0f6a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6d2102ad8265993041e0d4726ec17519ceb27321" target="_blank">6d2102a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e4ef0f6f619c6f37e6b08c8b6b13305847821bdc" target="_blank">e4ef0f6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -667,6 +667,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e4ef0f6f619c6f37e6b08c8b6b13305847821bdc/analysis/eMLR_model_fitting.Rmd" target="_blank">e4ef0f6</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+<td>
+included model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/06bfaf7229a480db075efb303d655ed3ef794c02/docs/eMLR_model_fitting.html" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2756,9 +2790,7 @@ GLODAP %&gt;%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested &lt;- GLODAP %&gt;% 
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %&gt;%
+  # filter(gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %&gt;%
   group_by(gamma_slab, era, basin, data_source) %&gt;% 
   nest()
 
@@ -2770,7 +2802,6 @@ GLODAP_nested_lm &lt;- expand_grid(
 )
 
 # fit models and extract tidy model output
-
 GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
   mutate(
     fit = map2(.x = data, .y = model, 
@@ -2780,6 +2811,76 @@ GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;%
     augmented = map(fit, augment),
     vif = map(fit, ols_vif_tol)
   )
+
+
+# test parallel processing
+# 
+# library(parallel)
+# library(multidplyr)
+# 
+# n_cores &lt;- detectCores()
+# system.time(
+# cluster &lt;- new_cluster(5)
+# )
+# 
+# cluster
+# 
+# system.time(
+#   GLODAP_nested_lm &lt;-
+#     expand_grid(GLODAP,
+#                 lm_all) %&gt;%
+#     group_by(gamma_slab, era, basin, data_source, model, predictors, n) %&gt;%
+#     partition(cluster)
+# )
+# 
+# GLODAP_nested_lm 
+# 
+# cluster %&gt;%
+#   cluster_library(c(&quot;tidyverse&quot;,
+#                     &quot;broom&quot;,
+#                     &quot;olsrr&quot;,
+#                     &quot;purrr&quot;))
+# 
+# cluster_call(cluster, search())
+# 
+# system.time(
+# GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
+#   mutate(
+#     fit = map2(.x = data, .y = model, 
+#                ~ lm(as.formula(.y), data = .x)),
+#     tidied = map(fit, tidy),
+#     glanced = map(fit, glance),
+#     augmented = map(fit, augment),
+#     vif = map(fit, ols_vif_tol)
+#   )
+# )
+# 
+# system.time(
+# GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm_fit %&gt;% 
+#   collect()
+# )
+# 
+# 
+# 
+# library(furrr)
+# 
+# plan(sequential)
+# plan(multisession, workers = 5)
+# 
+# # This does run in parallel!
+# system.time(
+# GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
+#   mutate(
+#     fit = future_map2(.x = data, .y = model, 
+#                ~ lm(as.formula(.y), data = .x))
+#     # tidied = future_map(fit, tidy),
+#     # glanced = future_map(fit, glance),
+#     # augmented = future_map(fit, augment),
+#     # vif = future_map(fit, ols_vif_tol)
+#   )
+# )
+
+
 
 # print(object.size(GLODAP_nested), units = &quot;MB&quot;)
 # print(object.size(GLODAP_nested_lm), units = &quot;MB&quot;)
@@ -21259,23 +21360,23 @@ lm_best_cant %&gt;%
 <p>The selection criterion (rmse) was plotted against the number of predictors (limited to 2 - 5).</p>
 <div id="all-models" class="section level3" number="7.1.1">
 <h3 number="7.1.1"><span class="header-section-number">7.1.1</span> All models</h3>
-<pre class="r"><code>plot_fun &lt;- function(df){
-  ggplot(data = df,
-         aes(as.factor(n_predictors),
-             !!sym(params_local$MLR_criterion),
-             col = basin)) +
-  geom_hline(yintercept = c(0,10)) +
-  geom_boxplot() +
-  facet_grid(gamma_slab~era) +
-  scale_color_brewer(palette = &quot;Set1&quot;) +
-  ylim(c(0,NA)) +
-  labs(x=&quot;Number of predictors&quot;,
-       title = paste(&quot;data_source:&quot;,unique(df$data_source)))
-}
-
-GLODAP_glanced %&gt;%
-  group_split(data_source) %&gt;%
-  map(plot_fun)</code></pre>
+<pre class="r"><code>GLODAP_glanced %&gt;%
+  group_split(era) %&gt;%
+  imap(
+    ~ ggplot(data = .x,
+             aes(
+               as.factor(n_predictors),
+               !!sym(params_local$MLR_criterion),
+               col = basin
+             )) +
+      geom_hline(yintercept = c(0, 10)) +
+      geom_boxplot() +
+      facet_grid(gamma_slab ~ data_source) +
+      scale_color_brewer(palette = &quot;Set1&quot;) +
+      ylim(c(0, NA)) +
+      labs(x = &quot;Number of predictors&quot;,
+           title = paste(&quot;Era:&quot;, unique(.x$era)))
+  )</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -21701,15 +21802,21 @@ jens-daniel-mueller
 <h3 number="7.1.2"><span class="header-section-number">7.1.2</span> Best models</h3>
 <pre class="r"><code>left_join(lm_best_target %&gt;% select(basin, gamma_slab, era, model),
           GLODAP_glanced) %&gt;%
-  ggplot(aes(&quot;&quot;,
+  group_split(era) %&gt;%
+  imap(
+  ~ ggplot(data = .x,
+         aes(&quot;&quot;,
              !!sym(params_local$MLR_criterion),
              col = basin)) +
   geom_hline(yintercept = c(0, 10)) +
   geom_boxplot() +
-  facet_grid(gamma_slab ~ era) +
+  facet_grid(gamma_slab ~ data_source) +
   scale_color_brewer(palette = &quot;Set1&quot;) +
   ylim(c(0, NA)) +
-  labs(x = &quot;Number of predictors pooled&quot;)</code></pre>
+  labs(x = &quot;Number of predictors pooled&quot;,
+           title = paste(&quot;Era:&quot;, unique(.x$era)))
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-eMLR_predictor_model_quality_best-1">
@@ -21733,6 +21840,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">2eb881a</a>
@@ -22100,6 +22218,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="rmse-correlation-between-eras" class="section level2" number="7.2">
@@ -22120,7 +22241,7 @@ lm_all_eras %&gt;%
               ylim = c(0, max_rmse)) +
   geom_abline(slope = 1,
               col = &#39;red&#39;) +
-  facet_grid(eras ~ basin)</code></pre>
+  facet_grid(data_source ~ basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rmse_correlation_across_eras_all_models-1">
@@ -22144,6 +22265,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">2eb881a</a>
@@ -22704,7 +22836,7 @@ lm_best_eras %&gt;%
               ylim = c(0, max_rmse)) +
   geom_abline(slope = 1,
               col = &#39;red&#39;) +
-  facet_grid(eras ~ basin)</code></pre>
+  facet_grid(data_source ~ basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rmse_correlation_across_eras_best_models-1">
@@ -22728,6 +22860,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">2eb881a</a>
@@ -23098,7 +23241,7 @@ lm_all_stats &lt;- lm_best_cant %&gt;%
                values_to = &quot;delta_coeff&quot;) %&gt;% 
   filter(term != &quot;(Intercept)&quot;,
          delta_coeff != 0) %&gt;% 
-  group_by(basin, eras, gamma_slab) %&gt;% 
+  group_by(data_source, basin, gamma_slab) %&gt;% 
   count(term) %&gt;% 
   ungroup() %&gt;% 
   pivot_wider(values_from = n, names_from = term)
@@ -23106,7 +23249,7 @@ lm_all_stats &lt;- lm_best_cant %&gt;%
 # print table
 lm_all_stats %&gt;%
   gt(rowname_col = &quot;gamma_slab&quot;,
-     groupname_col = c(&quot;basin&quot;, &quot;eras&quot;)) %&gt;% 
+     groupname_col = c(&quot;data_source&quot;, &quot;basin&quot;)) %&gt;% 
   summary_rows(
     groups = TRUE,
     fns = list(total = &quot;sum&quot;)
@@ -23463,290 +23606,576 @@ lm_all_stats %&gt;%
   </thead>
   <tbody class="gt_table_body">
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">Atlantic - 1981-1999 --&gt; 2000-2012</td>
+      <td colspan="8" class="gt_group_heading">mod - Atlantic</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">20</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26,26.5]</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">16</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">17</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">17</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">18</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">13</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">17</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
-      <td class="gt_row gt_center">11</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">17</td>
-      <td class="gt_row gt_center">18</td>
-      <td class="gt_row gt_center">14</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">14</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">17</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">17</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">156.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">79.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">126.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">179.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">186.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">155.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">204.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">60.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">82.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">102.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">104.00</td>
     </tr>
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">Indo-Pacific - 1981-1999 --&gt; 2000-2012</td>
+      <td colspan="8" class="gt_group_heading">mod - Indo-Pacific</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
-      <td class="gt_row gt_center">12</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">20</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26,26.5]</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">20</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">20</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">19</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">15</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">20</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">17</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">38.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">37.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">104.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">68.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">99.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">obs - Atlantic</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">19</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">16</td>
-      <td class="gt_row gt_center">17</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">15</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">NA</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">16</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">15</td>
+      <td class="gt_row gt_center">4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">11</td>
-      <td class="gt_row gt_center">18</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">1</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">13</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">17</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
+      <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">14</td>
-      <td class="gt_row gt_center">15</td>
-      <td class="gt_row gt_center">12</td>
-      <td class="gt_row gt_center">17</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">99.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">104.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">93.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">191.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">164.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">148.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">208.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">73.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">97.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">84.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">72.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">100.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="8" class="gt_group_heading">obs - Indo-Pacific</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26,26.5]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27,27.25]</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">61.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">47.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">56.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">87.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">81.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">80.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">109.00</td>
     </tr>
   </tbody>
   
@@ -23762,7 +24191,7 @@ lm_all_stats %&gt;%
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
+  facet_grid(data_source~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-aic_vs_rmse_all_models-1">
@@ -23786,6 +24215,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">2eb881a</a>
@@ -24146,7 +24586,7 @@ jens-daniel-mueller
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
+  facet_grid(data_source~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-aic_vs_rmse_selected_models-1">
@@ -24170,6 +24610,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">2eb881a</a>
@@ -24527,236 +24978,14 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="bic" class="section level3" number="7.4.2">
-<h3 number="7.4.2"><span class="header-section-number">7.4.2</span> BIC</h3>
-<p>BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.</p>
-<pre class="r"><code>lm_all_eras %&gt;% 
-  ggplot(aes(rmse, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-BIC_vs_rmse_all_models-1">
-Past versions of BIC_vs_rmse_all_models-1.png
-</button>
-</p>
-<div id="fig-BIC_vs_rmse_all_models-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">2eb881a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">03b6009</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/de6256b05a34086dab05094bc0c8356399649b7a/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">de6256b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">f155edd</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/380d215e770da2e57cdc57346b8b32ec7bde369f/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">380d215</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33b385b8217459ac17b75a5e90a8411ae67f9f71/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">33b385b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/108d6b2e619fd1a7956822c81c2420de84bb1974/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_all_models-1.png" target="_blank">108d6b2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>lm_best_eras %&gt;% 
-  ggplot(aes(rmse, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-BIC_vs_rmse_selected_models-1">
-Past versions of BIC_vs_rmse_selected_models-1.png
-</button>
-</p>
-<div id="fig-BIC_vs_rmse_selected_models-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">2eb881a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">03b6009</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/de6256b05a34086dab05094bc0c8356399649b7a/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">de6256b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">f155edd</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/380d215e770da2e57cdc57346b8b32ec7bde369f/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">380d215</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33b385b8217459ac17b75a5e90a8411ae67f9f71/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">33b385b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/108d6b2e619fd1a7956822c81c2420de84bb1974/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_rmse_selected_models-1.png" target="_blank">108d6b2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="aic-vs-bic" class="section level3" number="7.4.3">
-<h3 number="7.4.3"><span class="header-section-number">7.4.3</span> AIC vs BIC</h3>
+<div id="aic-vs-bic" class="section level3" number="7.4.2">
+<h3 number="7.4.2"><span class="header-section-number">7.4.2</span> AIC vs BIC</h3>
 <p>BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.</p>
 <pre class="r"><code>lm_all_eras %&gt;% 
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
+  facet_grid(data_source~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-BIC_vs_AIC_all_models-1">
@@ -24780,6 +25009,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">2eb881a</a>
@@ -24865,7 +25105,7 @@ jens-daniel-mueller
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
-  facet_grid(eras~basin)</code></pre>
+  facet_grid(data_source~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-BIC_vs_AIC_selected_models-1">
@@ -24889,6 +25129,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">2eb881a</a>
@@ -24975,10 +25226,10 @@ jens-daniel-mueller
 <div id="rmse-vs-vif" class="section level2" number="7.5">
 <h2 number="7.5"><span class="header-section-number">7.5</span> RMSE vs VIF</h2>
 <pre class="r"><code>GLODAP_glanced %&gt;% 
-  ggplot(aes(rmse, log10(vif_max))) +
+  ggplot(aes(rmse, log10(vif_max),col=data_source)) +
   geom_hline(yintercept = 1) +
   geom_point() +
-  scale_color_viridis_d() +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
   facet_grid(gamma_slab~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -25069,7 +25320,7 @@ jens-daniel-mueller
 <h3 number="7.6.1"><span class="header-section-number">7.6.1</span> Fitted vs actual models</h3>
 <p>Plotted are fitted vs actual target variable values, here: <code>r</code>params_local$MLR_target`</p>
 <pre class="r"><code>GLODAP_augmented_best &lt;- left_join(
-  lm_best_target %&gt;% select(basin, gamma_slab, era, model),
+  lm_best_target %&gt;% select(data_source, basin, gamma_slab, era, model),
   GLODAP_augmented
 )</code></pre>
 <pre class="r"><code># calculate equal axis limits and binwidth
@@ -25095,7 +25346,8 @@ GLODAP_augmented %&gt;%
               col = &#39;red&#39;) +
   coord_equal(xlim = axis_lims,
               ylim = axis_lims) +
-  labs(title = &quot;All models&quot;)</code></pre>
+  labs(title = &quot;All models&quot;) +
+  facet_wrap(~data_source)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fitted_vs_actual_all-1">
@@ -25340,7 +25592,8 @@ jens-daniel-mueller
               col = &#39;red&#39;) +
   coord_equal(xlim = axis_lims,
               ylim = axis_lims) +
-  labs(title = &quot;Selected models&quot;)</code></pre>
+  labs(title = &quot;Selected models&quot;) +
+  facet_wrap(~data_source)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fitted_vs_actual_best-1">
@@ -25364,6 +25617,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" target="_blank">2eb881a</a>
@@ -25618,7 +25882,8 @@ GLODAP_augmented_best %&gt;%
       &quot;| Selected models&quot;,
       &quot;| All domains&quot;
     )
-  )</code></pre>
+  ) +
+  facet_wrap(~data_source)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns_full_range-1">
@@ -25642,6 +25907,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">2eb881a</a>
@@ -25891,7 +26167,8 @@ jens-daniel-mueller
       &quot;| Selected models&quot;,
       &quot;| All domains&quot;
     )
-  )</code></pre>
+  ) +
+  facet_wrap(~data_source)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns_y_range_limit-1">
@@ -25915,6 +26192,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">2eb881a</a>
@@ -26154,26 +26442,24 @@ jens-daniel-mueller
 <div id="by-model-domain" class="section level3" number="7.6.3">
 <h3 number="7.6.3"><span class="header-section-number">7.6.3</span> By model domain</h3>
 <p>In the following, we present residual patterns vs latitude for separate model domains, ie basins, density slabs and eras.</p>
-<pre class="r"><code>p_residuals &lt;- function(df){
-    ggplot(data = df, aes(lat, .resid)) +
+<pre class="r"><code>GLODAP_augmented_best %&gt;% 
+  group_split(basin, era) %&gt;% 
+  map(~ ggplot(data = .x, aes(lat, .resid)) +
       geom_bin2d(binwidth = i_binwidth) +
       geom_hline(yintercept = 0, col = &quot;black&quot;) +
       scale_fill_viridis_c() +
-      facet_grid(gamma_slab ~ era) +
+      facet_grid(gamma_slab ~ data_source) +
       coord_cartesian(ylim = i_ylim) +
       labs(
         title = paste(
           &quot;Target variable:&quot;,
           params_local$MLR_target,
           &quot;| selected best models | basin:&quot;,
-          unique(df$basin)
+          unique(.x$basin),
+          &quot;| era:&quot;,
+          unique(.x$era)
         )
-      )
-}
-
-GLODAP_augmented_best %&gt;% 
-  group_split(basin) %&gt;% 
-  map(p_residuals)</code></pre>
+      ))</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -26198,6 +26484,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">2eb881a</a>
@@ -26471,6 +26768,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">2eb881a</a>
 </td>
 <td>
@@ -26693,6 +27001,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[4]]</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="latitudinal-mean" class="section level3" number="7.6.4">
 <h3 number="7.6.4"><span class="header-section-number">7.6.4</span> Latitudinal mean</h3>
@@ -26704,16 +27018,22 @@ jens-daniel-mueller
   ))))
 
 lat_residual &lt;- GLODAP_augmented_best %&gt;%
-  group_by(basin, gamma_slab, era, lat_grid) %&gt;% 
+  group_by(data_source, basin, gamma_slab, era, lat_grid) %&gt;% 
   summarise(.resid_mean = mean(.resid)) %&gt;% 
   ungroup()
 
 lat_residual %&gt;%
-  ggplot(aes(lat_grid, .resid_mean, col=era)) +
+  group_split(basin) %&gt;% 
+  map(
+  ~ggplot(data = .x,
+          aes(lat_grid, .resid_mean, col=era)) +
   geom_line() +
   geom_point() +
   geom_hline(yintercept = 0, col = &quot;black&quot;) +
-  facet_grid(gamma_slab ~ basin)</code></pre>
+  facet_grid(gamma_slab ~ data_source) +
+    labs(title = paste(&quot;Basin:&quot;, unique(.x$basin)))
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-latitudinal_residual-1">
@@ -26737,6 +27057,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">2eb881a</a>
@@ -26961,12 +27292,15 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="latitudinal-offset" class="section level3" number="7.6.5">
 <h3 number="7.6.5"><span class="header-section-number">7.6.5</span> Latitudinal offset</h3>
 <pre class="r"><code># calculate residual offset for adjacent eras
 lat_residual_offset &lt;- lat_residual  %&gt;%
-  select(basin, gamma_slab, era, lat_grid, .resid_mean) %&gt;% 
+  select(data_source, basin, gamma_slab, era, lat_grid, .resid_mean) %&gt;% 
   arrange(era) %&gt;% 
   group_by(basin, gamma_slab, lat_grid) %&gt;% 
   mutate(eras = paste(lag(era), era, sep = &quot; --&gt; &quot;),
@@ -27008,6 +27342,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">06bfaf7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">2eb881a</a>
@@ -27238,8 +27583,11 @@ jens-daniel-mueller
 <div id="vif" class="section level1" number="8">
 <h1 number="8"><span class="header-section-number">8</span> VIF</h1>
 <pre class="r"><code>GLODAP_glanced %&gt;% 
-  ggplot(aes(as.factor(n), log10(vif_max))) + 
+  ggplot(aes(as.factor(n),
+             log10(vif_max),
+             col=data_source)) + 
   geom_hline(yintercept = log10(params_local$vif_max)) +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
   geom_violin() +
   facet_grid(gamma_slab~basin)</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/vif_distribution_n_predictors-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -27347,10 +27695,12 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>GLODAP_glanced_vif %&gt;% 
-  ggplot(aes(Variables, log10(VIF))) + 
+  ggplot(aes(Variables,
+             log10(VIF),
+             col = data_source)) + 
   geom_hline(yintercept = log10(params_local$vif_max)) +
   geom_violin() +
-  # geom_point(shape = 21) +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
   facet_grid(gamma_slab~basin) +
   coord_flip()</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/vif_distribution_type_predictor-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -27485,11 +27835,11 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] gt_0.2.2         corrr_0.4.3      broom_0.7.2      kableExtra_1.3.1
+ [1] gt_0.2.2         corrr_0.4.3      broom_0.7.5      kableExtra_1.3.1
  [5] knitr_1.30       olsrr_0.5.3      GGally_2.0.0     lubridate_1.7.9 
  [9] metR_0.9.0       scico_1.2.0      patchwork_1.1.1  collapse_1.5.0  
 [13] forcats_0.5.0    stringr_1.4.0    dplyr_1.0.5      purrr_0.3.4     
-[17] readr_1.4.0      tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.2   
+[17] readr_1.4.0      tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.3   
 [21] tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
