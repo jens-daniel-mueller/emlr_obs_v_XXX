@@ -604,16 +604,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee4ef0f6f619c6f37e6b08c8b6b13305847821bdctargetblanke4ef0f6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e4ef0f6f619c6f37e6b08c8b6b13305847821bdc" target="_blank">e4ef0f6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree88fa51993e7776143c0de65459f9a0d16b6a5be7targetblank88fa519a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/88fa51993e7776143c0de65459f9a0d16b6a5be7" target="_blank">88fa519</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee4ef0f6f619c6f37e6b08c8b6b13305847821bdctargetblanke4ef0f6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree88fa51993e7776143c0de65459f9a0d16b6a5be7targetblank88fa519a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e4ef0f6f619c6f37e6b08c8b6b13305847821bdc" target="_blank">e4ef0f6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/88fa51993e7776143c0de65459f9a0d16b6a5be7" target="_blank">88fa519</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -667,6 +667,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88fa51993e7776143c0de65459f9a0d16b6a5be7/analysis/eMLR_model_fitting.Rmd" target="_blank">88fa519</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+<td>
+included model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/594d5036350b1d47570567db62eca493e50820c5/docs/eMLR_model_fitting.html" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -21362,16 +21396,16 @@ lm_best_cant %&gt;%
 <h3 number="7.1.1"><span class="header-section-number">7.1.1</span> All models</h3>
 <pre class="r"><code>GLODAP_glanced %&gt;%
   group_split(era) %&gt;%
-  imap(
+  map(
     ~ ggplot(data = .x,
              aes(
                as.factor(n_predictors),
                !!sym(params_local$MLR_criterion),
-               col = basin
+               col = data_source
              )) +
       geom_hline(yintercept = c(0, 10)) +
       geom_boxplot() +
-      facet_grid(gamma_slab ~ data_source) +
+      facet_grid(gamma_slab ~ basin) +
       scale_color_brewer(palette = &quot;Set1&quot;) +
       ylim(c(0, NA)) +
       labs(x = &quot;Number of predictors&quot;,
@@ -21401,6 +21435,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">2eb881a</a>
@@ -21784,6 +21829,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-2.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-2.png" target="_blank">2eb881a</a>
 </td>
 <td>
@@ -21807,10 +21863,10 @@ jens-daniel-mueller
   ~ ggplot(data = .x,
          aes(&quot;&quot;,
              !!sym(params_local$MLR_criterion),
-             col = basin)) +
+             col = data_source)) +
   geom_hline(yintercept = c(0, 10)) +
   geom_boxplot() +
-  facet_grid(gamma_slab ~ data_source) +
+  facet_grid(gamma_slab ~ basin) +
   scale_color_brewer(palette = &quot;Set1&quot;) +
   ylim(c(0, NA)) +
   labs(x = &quot;Number of predictors pooled&quot;,
@@ -21840,6 +21896,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">06bfaf7</a>
@@ -22221,6 +22288,43 @@ jens-daniel-mueller
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-eMLR_predictor_model_quality_best-2">
+Past versions of eMLR_predictor_model_quality_best-2.png
+</button>
+</p>
+<div id="fig-eMLR_predictor_model_quality_best-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="rmse-correlation-between-eras" class="section level2" number="7.2">
@@ -22265,6 +22369,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">06bfaf7</a>
@@ -22862,6 +22977,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">06bfaf7</a>
 </td>
 <td>
@@ -23249,7 +23375,7 @@ lm_all_stats &lt;- lm_best_cant %&gt;%
 # print table
 lm_all_stats %&gt;%
   gt(rowname_col = &quot;gamma_slab&quot;,
-     groupname_col = c(&quot;data_source&quot;, &quot;basin&quot;)) %&gt;% 
+     groupname_col = c(&quot;basin&quot;, &quot;data_source&quot;)) %&gt;% 
   summary_rows(
     groups = TRUE,
     fns = list(total = &quot;sum&quot;)
@@ -23606,7 +23732,7 @@ lm_all_stats %&gt;%
   </thead>
   <tbody class="gt_table_body">
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">mod - Atlantic</td>
+      <td colspan="8" class="gt_group_heading">Atlantic - mod</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
@@ -23759,7 +23885,7 @@ lm_all_stats %&gt;%
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">104.00</td>
     </tr>
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">mod - Indo-Pacific</td>
+      <td colspan="8" class="gt_group_heading">Indo-Pacific - mod</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
@@ -23892,7 +24018,7 @@ lm_all_stats %&gt;%
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">99.00</td>
     </tr>
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">obs - Atlantic</td>
+      <td colspan="8" class="gt_group_heading">Atlantic - obs</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
@@ -24045,7 +24171,7 @@ lm_all_stats %&gt;%
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">100.00</td>
     </tr>
     <tr class="gt_group_heading_row">
-      <td colspan="8" class="gt_group_heading">obs - Indo-Pacific</td>
+      <td colspan="8" class="gt_group_heading">Indo-Pacific - obs</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
@@ -24215,6 +24341,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">06bfaf7</a>
@@ -24610,6 +24747,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">06bfaf7</a>
@@ -25011,6 +25159,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">06bfaf7</a>
 </td>
 <td>
@@ -25101,126 +25260,6 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>lm_best_eras %&gt;% 
-  ggplot(aes(AIC, BIC, col = gamma_slab)) +
-  geom_point() +
-  scale_color_viridis_d() +
-  facet_grid(data_source~basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-BIC_vs_AIC_selected_models-1">
-Past versions of BIC_vs_AIC_selected_models-1.png
-</button>
-</p>
-<div id="fig-BIC_vs_AIC_selected_models-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">06bfaf7</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">2eb881a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">03b6009</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/de6256b05a34086dab05094bc0c8356399649b7a/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">de6256b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f155edded56945182934b97f737e08cb24f55884/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">f155edd</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/380d215e770da2e57cdc57346b8b32ec7bde369f/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">380d215</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33b385b8217459ac17b75a5e90a8411ae67f9f71/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">33b385b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/108d6b2e619fd1a7956822c81c2420de84bb1974/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_selected_models-1.png" target="_blank">108d6b2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-20
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 </div>
 <div id="rmse-vs-vif" class="section level2" number="7.5">
@@ -25254,6 +25293,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-1.png" target="_blank">2eb881a</a>
@@ -25371,6 +25421,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all-1.png" target="_blank">2eb881a</a>
@@ -25617,6 +25678,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best-1.png" target="_blank">06bfaf7</a>
@@ -25909,6 +25981,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">06bfaf7</a>
 </td>
 <td>
@@ -26194,6 +26277,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">06bfaf7</a>
 </td>
 <td>
@@ -26452,9 +26546,9 @@ jens-daniel-mueller
       coord_cartesian(ylim = i_ylim) +
       labs(
         title = paste(
-          &quot;Target variable:&quot;,
+          &quot;Target:&quot;,
           params_local$MLR_target,
-          &quot;| selected best models | basin:&quot;,
+          &quot;| best models | basin:&quot;,
           unique(.x$basin),
           &quot;| era:&quot;,
           unique(.x$era)
@@ -26484,6 +26578,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">06bfaf7</a>
@@ -26768,6 +26873,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">06bfaf7</a>
 </td>
 <td>
@@ -27004,9 +27120,83 @@ jens-daniel-mueller
 <pre><code>
 [[3]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns_by_model_domain-3">
+Past versions of residual_patterns_by_model_domain-3.png
+</button>
+</p>
+<div id="fig-residual_patterns_by_model_domain-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-residual_patterns_by_model_domain-4">
+Past versions of residual_patterns_by_model_domain-4.png
+</button>
+</p>
+<div id="fig-residual_patterns_by_model_domain-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="latitudinal-mean" class="section level3" number="7.6.4">
 <h3 number="7.6.4"><span class="header-section-number">7.6.4</span> Latitudinal mean</h3>
@@ -27057,6 +27247,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">06bfaf7</a>
@@ -27295,6 +27496,43 @@ jens-daniel-mueller
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-latitudinal_residual-2">
+Past versions of latitudinal_residual-2.png
+</button>
+</p>
+<div id="fig-latitudinal_residual-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="latitudinal-offset" class="section level3" number="7.6.5">
 <h3 number="7.6.5"><span class="header-section-number">7.6.5</span> Latitudinal offset</h3>
@@ -27342,6 +27580,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/06bfaf7229a480db075efb303d655ed3ef794c02/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">06bfaf7</a>
@@ -27615,6 +27864,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_n_predictors-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_n_predictors-1.png" target="_blank">2eb881a</a>
 </td>
 <td>
@@ -27726,6 +27986,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594d5036350b1d47570567db62eca493e50820c5/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_type_predictor-1.png" target="_blank">594d503</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-26
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2eb881a26a4192a15354a9bd4ac4bc3c8a941e6d/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_type_predictor-1.png" target="_blank">2eb881a</a>
