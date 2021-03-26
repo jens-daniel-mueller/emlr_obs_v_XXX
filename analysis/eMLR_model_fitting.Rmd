@@ -90,9 +90,10 @@ i_era   <- unique(GLODAP$era)[1]
 
 # subset one basin and era for fitting
 GLODAP_basin_era <- GLODAP %>%
-  filter(basin == i_basin, era == i_era)
+  filter(basin == i_basin, era == i_era,
+         data_source == "obs")
 
-i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[1]
+i_gamma_slab <- unique(GLODAP_basin_era$gamma_slab)[3]
 print(i_gamma_slab)
 
 # subset one gamma slab
@@ -162,16 +163,13 @@ as a function of each predictor combination. Fitting was performed separately wi
 # prepare nested data frame
 
 GLODAP %>%
-  # filter(basin %in% unique(GLODAP$basin)[1],
-  #        era %in% unique(GLODAP$era)[c(1,2)],
-  #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
   # filter(basin %in% unique(GLODAP$basin)[1],
   #        era %in% unique(GLODAP$era)[c(1,2)],
   #        gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
-  group_by(gamma_slab, era, basin) %>% 
+  group_by(gamma_slab, era, basin, data_source) %>% 
   nest()
 
 # expand with model definitions
@@ -229,13 +227,13 @@ GLODAP_glanced_vif <- GLODAP_nested_lm_fit %>%
 
 # calculte max vif per model
 GLODAP_glanced_vif_max <- GLODAP_glanced_vif %>% 
-  group_by(era, basin, gamma_slab, model, n) %>% 
+  group_by(data_source, era, basin, gamma_slab, model, n) %>% 
   summarise(vif_max = max(VIF)) %>% 
   ungroup()
 
 # calculate RMSE from augmented output
 GLODAP_glanced_rmse <- GLODAP_augmented %>%
-  group_by(gamma_slab, era, basin, model) %>%
+  group_by(data_source, era, basin, gamma_slab, model) %>%
   summarise(rmse = sqrt(c(crossprod(.resid)) / length(.resid))) %>%
   ungroup()
 
@@ -286,7 +284,7 @@ GLODAP_glanced_clean <- GLODAP_glanced %>%
   filter(vif_max <= params_local$vif_max)
 
 GLODAP_glanced_clean %>% 
-  group_by(era, basin, gamma_slab) %>% 
+  group_by(data_source, era, basin, gamma_slab) %>% 
   count() %>% 
   filter(n < params_local$MLR_number)
 
@@ -310,7 +308,7 @@ The criterion was summed up for two adjacent eras, and the models with lowest su
 
 # calculate RMSE sum for adjacent eras
 lm_all_eras <- GLODAP_glanced_clean  %>%
-  select(basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
+  select(data_source, basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
   arrange(era) %>% 
   group_by(basin, gamma_slab, model) %>% 
   mutate(eras = paste(lag(era), era, sep = " --> "),
@@ -327,7 +325,7 @@ lm_all_eras <- GLODAP_glanced_clean  %>%
 
 if (params_local$MLR_criterion == "aic") {
   lm_best_eras <- lm_all_eras %>%
-    group_by(basin, gamma_slab, eras) %>%
+    group_by(data_source, basin, gamma_slab, eras) %>%
     slice_min(order_by = aic_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
@@ -337,7 +335,7 @@ if (params_local$MLR_criterion == "aic") {
 
 if (params_local$MLR_criterion == "bic") {
   lm_best_eras <- lm_all_eras %>%
-    group_by(basin, gamma_slab, eras) %>%
+    group_by(data_source, basin, gamma_slab, eras) %>%
     slice_min(order_by = bic_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
@@ -347,7 +345,7 @@ if (params_local$MLR_criterion == "bic") {
 
 if (params_local$MLR_criterion == "rmse") {
   lm_best_eras <- lm_all_eras %>%
-    group_by(basin, gamma_slab, eras) %>%
+    group_by(data_source, basin, gamma_slab, eras) %>%
     slice_min(order_by = rmse_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
@@ -393,12 +391,12 @@ eras_era <- full_join(eras_backward, eras_forward) %>%
 
 # extend best model selection from eras to era
 lm_best <- full_join(
-  lm_best_eras %>% select(basin, gamma_slab, model, eras),
+  lm_best_eras %>% select(data_source, basin, gamma_slab, model, eras),
   eras_era)
 
 lm_best <- left_join(
   lm_best,
-  GLODAP_tidy %>% select(basin, gamma_slab, era, model, term, estimate))
+  GLODAP_tidy %>% select(data_source, basin, gamma_slab, era, model, term, estimate))
 
 rm(eras_era, eras_forward, eras_backward)
 
@@ -413,7 +411,7 @@ A data frame of coefficient offsets is prepared to facilitate the direct mapping
 # subtract coefficients of adjacent era  
 lm_best_cant <- lm_best %>%
   arrange(era) %>%
-  group_by(basin, gamma_slab, eras, model, term) %>%
+  group_by(data_source, basin, gamma_slab, eras, model, term) %>%
   mutate(delta_coeff = estimate - lag(estimate)) %>%
   ungroup() %>%
   arrange(basin, gamma_slab, model, term, eras) %>%
@@ -466,8 +464,9 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 ```{r eMLR_predictor_model_quality_all, fig.asp=2}
 
-GLODAP_glanced %>%
-  ggplot(aes(as.factor(n_predictors),
+plot_fun <- function(df){
+  ggplot(data = df,
+         aes(as.factor(n_predictors),
              !!sym(params_local$MLR_criterion),
              col = basin)) +
   geom_hline(yintercept = c(0,10)) +
@@ -475,7 +474,15 @@ GLODAP_glanced %>%
   facet_grid(gamma_slab~era) +
   scale_color_brewer(palette = "Set1") +
   ylim(c(0,NA)) +
-  labs(x="Number of predictors")
+  labs(x="Number of predictors",
+       title = paste("data_source:",unique(df$data_source)))
+}
+
+GLODAP_glanced %>%
+  group_split(data_source) %>%
+  map(plot_fun)
+
+
 
 ```
 
