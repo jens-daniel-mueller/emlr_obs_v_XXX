@@ -353,7 +353,7 @@ Mean and sd are calculated across `r params_local$MLR_number` models for Cant in
 
 ```{r calc_cant_model_mean}
 
-cant_average <- m_cant_model_average(cant)
+cant_average <- m_cant_model_average_data_source(cant)
 cant_average <- m_cut_gamma(cant_average, "gamma")
 
 # split data set for individual predictor contributions and total cant
@@ -361,7 +361,7 @@ cant_predictor_average <- cant_average %>%
   select(-c("cant", "cant_pos", ends_with("_sd")))
 
 cant_average <- cant_average %>% 
-  select(lon, lat, depth, eras, basin, basin_AIP,
+  select(lon, lat, depth, eras, basin, basin_AIP, data_source,
             cant, cant_pos, cant_sd, cant_pos_sd,
             gamma, gamma_sd, gamma_slab)
 
@@ -370,35 +370,27 @@ cant_average <- cant_average %>%
 
 ```{r cant_deep_climatology_map, fig.asp=0.6}
 
-# i_eras <- unique(cant_average$eras)[2]
+cant_average %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "cant_pos",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
 
-for (i_eras in unique(cant_surface$eras)) {
-  print(
-    p_map_climatology(
-      df = cant_average %>% filter(eras == i_eras),
-      var = "cant_pos",
-      subtitle_text = paste("era:", i_eras)
-    )
-  )
-  
-}
 
 ```
 
 
 ```{r cant_deep_climatology_sections, fig.asp=1}
 
-# i_eras <- unique(cant_surface$eras)[2]
-
-for (i_eras in unique(cant_surface$eras)) {
-  print(
-    p_section_climatology_regular(
-      df = cant_average %>% filter(eras == i_eras),
-      var = "cant_pos",
-      subtitle_text = paste("era:", i_eras)
-    )
-  )
-}
+cant_average %>%
+  group_split(data_source) %>%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = "cant_pos",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
 
 ```
 
@@ -410,7 +402,10 @@ The averaging function is also applied to the surface data, although only one va
 
 ```{r calculate_cant_mean_surface}
 
-cant_surface_average <- m_cant_model_average(cant_surface)
+cant_surface_average <-
+  m_cant_model_average_data_source(expand_grid(cant_surface,
+                                               data_source = c("mod", "obs")))
+
 cant_surface_average <- m_cut_gamma(cant_surface_average, "gamma")
 rm(cant_surface)
 
@@ -433,7 +428,7 @@ For each basin and era combination, the zonal mean cant is calculated, again for
 
 ```{r calc_cant_zonal_mean_sections}
 
-cant_average_zonal <- m_cant_zonal_mean(cant_average)
+cant_average_zonal <- m_cant_zonal_mean_data_source(cant_average)
 cant_average_zonal <- m_cut_gamma(cant_average_zonal, "gamma_mean")
 
 ```
@@ -445,7 +440,7 @@ For each basin and era combination, the zonal mean is calculated for the term of
 ```{r calculate_cant_predictor_mean_sections}
 
 cant_predictor_average_zonal <-
-  m_cant_predictor_zonal_mean(cant_predictor_average)
+  m_cant_predictor_zonal_mean_data_source(cant_predictor_average)
 
 cant_predictor_average_zonal <-
   m_cut_gamma(cant_predictor_average_zonal, "gamma")
@@ -464,12 +459,12 @@ Step 2 is performed separately for all Cant and positive Cant values only.
 
 ```{r cant_inventories, fig.asp=1}
 
-cant_inv <- m_cant_inv(cant_average)
+cant_inv <- m_cant_inv_data_source(cant_average)
 
 p_map_cant_inv(df = cant_inv,
                var = "cant_pos_inv",
                subtitle_text = "for predefined integration depths") +
-  facet_grid(inv_depth ~ eras)
+  facet_grid(inv_depth ~ data_source)
 
 ```
 
