@@ -249,24 +249,34 @@ cant_gamma_maps <- cant_gamma_maps %>%
 
 ```{r cant_pos_gamma_slab_maps, fig.asp=0.5}
 
-# i_data_source <- unique(cant_gamma_maps$data_source)[1]
-# i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[1]
+cant_gamma_maps %>%
+  group_split(gamma_slab, data_source) %>%
+  map(
+    ~ p_map_cant_slab(
+    df = .x,
+    subtitle_text = paste("data_source:", unique(.x$data_source),
+                          "| Neutral density:", unique(.x$gamma_slab))
+  ))
 
-for (i_data_source in unique(cant_gamma_maps$data_source)) {
-  for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
-    print(
-      p_map_cant_slab(
-        df = cant_gamma_maps %>%
-          filter(data_source == i_data_source,
-                 gamma_slab == i_gamma_slab),
-        subtitle_text = paste(
-          "data_source:", i_data_source,
-          "| Neutral density:", i_gamma_slab)
-        )
-    )
-    
-  }
-}
+
+# # i_data_source <- unique(cant_gamma_maps$data_source)[1]
+# # i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[1]
+# 
+# for (i_data_source in unique(cant_gamma_maps$data_source)) {
+#   for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
+#     print(
+#       p_map_cant_slab(
+#         df = cant_gamma_maps %>%
+#           filter(data_source == i_data_source,
+#                  gamma_slab == i_gamma_slab),
+#         subtitle_text = paste(
+#           "data_source:", i_data_source,
+#           "| Neutral density:", i_gamma_slab)
+#         )
+#     )
+#     
+#   }
+# }
 
 
 ```
@@ -302,25 +312,36 @@ Please note that:
 
 ```{r cant_all_gamma_slab_maps, fig.asp=0.5}
 
-# i_data_source <- unique(cant_gamma_maps$data_source)[1]
-# i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[5]
+cant_gamma_maps %>%
+  group_split(gamma_slab, data_source) %>%
+  map(
+    ~ p_map_cant_slab(
+    df = .x,
+    var = "cant",
+    col = "divergent",
+    subtitle_text = paste("data_source:", unique(.x$data_source),
+                          "| Neutral density:", unique(.x$gamma_slab))
+  ))
 
-for (i_data_source in unique(cant_gamma_maps$data_source)) {
-  for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
-    print(
-      p_map_cant_slab(
-        df = cant_gamma_maps %>%
-          filter(data_source == i_data_source,
-                 gamma_slab == i_gamma_slab),
-        var = "cant",
-        col = "divergent",
-        subtitle_text = paste(
-          "data_source:", i_data_source,
-          "| Neutral density:", i_gamma_slab))
-    )
-    
-  }
-}
+# # i_data_source <- unique(cant_gamma_maps$data_source)[1]
+# # i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[5]
+# 
+# for (i_data_source in unique(cant_gamma_maps$data_source)) {
+#   for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
+#     print(
+#       p_map_cant_slab(
+#         df = cant_gamma_maps %>%
+#           filter(data_source == i_data_source,
+#                  gamma_slab == i_gamma_slab),
+#         var = "cant",
+#         col = "divergent",
+#         subtitle_text = paste(
+#           "data_source:", i_data_source,
+#           "| Neutral density:", i_gamma_slab))
+#     )
+#     
+#   }
+# }
 
 
 ```
