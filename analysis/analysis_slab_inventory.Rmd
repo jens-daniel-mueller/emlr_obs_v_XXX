@@ -1,0 +1,326 @@
+---
+title: "Analysis of cant estimates"
+author: "Jens Daniel Müller"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  workflowr::wflow_html:
+    number_sections: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+editor_options:
+  chunk_output_type: console
+---
+
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+params_local <-
+  read_rds(here::here("data/auxillary",
+                       "params_local.rds"))
+
+```
+
+```{r define_paths, include = FALSE}
+
+# only path_observations needs to be changed to model
+path_observations <-
+  paste(path_root, "/observations/", sep = "")
+
+path_preprocessing    <-
+  paste(path_observations, "preprocessing/", sep = "")
+
+path_version_data     <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/data/",
+        sep = "")
+
+path_version_figures  <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/figures/",
+        sep = "")
+```
+
+```{r load_libraries_specific, include = FALSE}
+library(scales)
+library(marelac)
+library(kableExtra)
+library(gt)
+```
+
+# Data sources
+
+Cant estimates from this sensitivity case:
+
+- Mean and SD per grid cell (lat, lon, depth)
+- Zonal mean and SD (basin, lat, depth)
+- Inventories (lat, lon)
+
+
+```{r read_cant_files}
+
+cant_3d <-
+  read_csv(paste(path_version_data,
+                 "cant_3d.csv",
+                 sep = ""))
+
+# cant_zonal <-
+#   read_csv(paste(path_version_data,
+#                  "cant_zonal.csv",
+#                  sep = ""))
+# 
+# cant_predictor_zonal <-
+#   read_csv(paste(path_version_data,
+#                  "cant_predictor_zonal.csv",
+#                  sep = ""))
+# 
+# cant_inv <-
+#   read_csv(paste(path_version_data,
+#                  "cant_inv.csv",
+#                  sep = ""))
+
+```
+
+Cleaned GLODAPv2_2020 file as used in this sensitivity case
+
+```{r read_GLODAP_used_for_fitting}
+
+GLODAP <-
+  read_csv(paste(
+    path_version_data,
+    "GLODAPv2.2020_MLR_fitting_ready.csv",
+    sep = ""
+  ))
+
+```
+
+# Cant - positive
+
+In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+
+## Isoneutral slab distribution
+
+Mean of positive cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+
+Please note that:
+
+- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
+- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
+
+
+### Slab boundary depth
+
+```{r gamma_slab_boundary_depth, fig.asp=2.5}
+
+# gamma field in Atl
+predictors_gamma_Atl <- cant_3d %>%
+  select(data_source, basin_AIP, lat, lon, depth, gamma) %>% 
+  filter(basin_AIP == "Atlantic") %>% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Atl <- predictors_gamma_Atl %>%
+  group_by(data_source, lat, lon) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  filter(n > 1) %>% 
+  select(-n)
+
+# 3D grid with Atl slab boundaries
+slabs_Atl <- expand_grid(predictors_gamma_Atl %>% distinct(data_source, lat, lon),
+                         gamma = params_local$slabs_Atl) %>% 
+  mutate(basin_AIP = "flag")
+
+# join slab boundary grid with gamma field
+slabs_Atl_int <- full_join(slabs_Atl,
+                           predictors_gamma_Atl) %>%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Atl_int <- slabs_Atl_int %>% 
+  group_by(data_source, lat, lon) %>% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %>% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Atl_int <- slabs_Atl_int %>% 
+  filter(basin_AIP == "flag",
+         !is.na(depth))
+
+#### Indo-Pacific
+
+# gamma field in Pac
+predictors_gamma_Ind_Pac <- cant_3d %>%
+  select(data_source, basin_AIP, lat, lon, depth, gamma) %>% 
+  filter(basin_AIP %in% c("Indian", "Pacific")) %>% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Ind_Pac <- predictors_gamma_Ind_Pac %>%
+  group_by(data_source, lat, lon) %>%
+  mutate(n = n()) %>%
+  ungroup() %>% 
+  filter(n > 1) %>% 
+  select(-n)
+
+# 3D grid with Pac slab boundaries
+slabs_Ind_Pac <- expand_grid(predictors_gamma_Ind_Pac %>% distinct(data_source, lat, lon),
+                         gamma = params_local$slabs_Ind_Pac) %>% 
+  mutate(basin_AIP = "flag")
+
+# join slab boundary grid with gamma field
+slabs_Ind_Pac_int <- full_join(slabs_Ind_Pac,
+                           predictors_gamma_Ind_Pac) %>%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Ind_Pac_int <- slabs_Ind_Pac_int %>% 
+  group_by(data_source, lat, lon) %>% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %>% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Ind_Pac_int <- slabs_Ind_Pac_int %>% 
+  filter(basin_AIP == "flag",
+         !is.na(depth))
+
+
+# join interpolated gamma depth
+slabs <- bind_rows(slabs_Atl_int,
+                   slabs_Ind_Pac_int) %>%
+  select(-basin_AIP)
+
+slabs <- inner_join(
+  basinmask %>% select(lat, lon, basin_AIP) %>% distinct(),
+  slabs)
+
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = depth)) +
+  facet_grid(gamma ~ data_source) +
+  scale_fill_viridis_c(direction = -1)
+
+rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)
+
+```
+
+```{r calculate_slab_thickness, fig.asp=2.5}
+ 
+# slabs_ex <- slabs %>% 
+#   filter(lat == 0.5,
+#          lon == 250.5)
+
+slabs <- slabs %>% 
+  group_by(data_source, lat, lon) %>% 
+  arrange(depth) %>% 
+  mutate(depth_lower_bound = depth,
+         depth_upper_bound = lag(depth, default = 0),
+         slab_thickness = depth_lower_bound - depth_upper_bound,
+         gamma_in_slab = gamma - 0.01) %>% 
+  ungroup()
+
+slabs <- m_cut_gamma(slabs, "gamma_in_slab")
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = slab_thickness)) +
+  facet_grid(gamma_slab ~ data_source) +
+  scale_fill_viridis_c(direction = -1)
+
+rm(slabs)
+
+```
+
+```{r calculate_gamma_slab_maps}
+
+cant_gamma_maps <- m_cant_slab_data_source(cant_3d)
+
+cant_gamma_maps <- cant_gamma_maps %>% 
+  arrange(gamma_slab, data_source)
+
+```
+
+```{r cant_pos_gamma_slab_maps, fig.asp=0.5}
+
+# i_data_source <- unique(cant_gamma_maps$data_source)[1]
+# i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[1]
+
+for (i_data_source in unique(cant_gamma_maps$data_source)) {
+  for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
+    print(
+      p_map_cant_slab(
+        df = cant_gamma_maps %>%
+          filter(data_source == i_data_source,
+                 gamma_slab == i_gamma_slab),
+        subtitle_text = paste(
+          "data_source:", i_data_source,
+          "| Neutral density:", i_gamma_slab)
+        )
+    )
+    
+  }
+}
+
+
+```
+
+```{r test_inventory_map, eval=FALSE}
+
+map +
+  geom_contour_filled(
+    data = cant_gamma_maps %>%
+      filter(data_source == i_data_source,
+             gamma_slab == i_gamma_slab),
+    aes(lon, lat, z = cant),
+    breaks = c(seq(0, 18, 2), Inf)
+  ) +
+  scale_fill_viridis_d()
+
+```
+
+
+# Cant - all
+
+In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
+
+## Isoneutral slab distribution
+
+Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+
+Please note that:
+
+- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
+- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
+
+
+```{r cant_all_gamma_slab_maps, fig.asp=0.5}
+
+# i_data_source <- unique(cant_gamma_maps$data_source)[1]
+# i_gamma_slab <- unique(cant_gamma_maps$gamma_slab)[5]
+
+for (i_data_source in unique(cant_gamma_maps$data_source)) {
+  for (i_gamma_slab in unique(cant_gamma_maps$gamma_slab)) {
+    print(
+      p_map_cant_slab(
+        df = cant_gamma_maps %>%
+          filter(data_source == i_data_source,
+                 gamma_slab == i_gamma_slab),
+        var = "cant",
+        col = "divergent",
+        subtitle_text = paste(
+          "data_source:", i_data_source,
+          "| Neutral density:", i_gamma_slab))
+    )
+    
+  }
+}
+
+
+```
