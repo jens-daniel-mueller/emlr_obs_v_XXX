@@ -492,7 +492,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">07 April, 2021</h4>
+<h4 class="date">08 April, 2021</h4>
 
 </div>
 
@@ -517,7 +517,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-04-07
+<strong>Last updated:</strong> 2021-04-08
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -608,16 +608,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeccd395151ec69bd2c74da38f553f23cad1d7db03targetblankccd3951a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ccd395151ec69bd2c74da38f553f23cad1d7db03" target="_blank">ccd3951</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d9e1ea7f9c1df71ff9aca6b3a1f5187b1f13893targetblank3d9e1eaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d9e1ea7f9c1df71ff9aca6b3a1f5187b1f13893" target="_blank">3d9e1ea</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeccd395151ec69bd2c74da38f553f23cad1d7db03targetblankccd3951a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d9e1ea7f9c1df71ff9aca6b3a1f5187b1f13893targetblank3d9e1eaa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ccd395151ec69bd2c74da38f553f23cad1d7db03" target="_blank">ccd3951</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d9e1ea7f9c1df71ff9aca6b3a1f5187b1f13893" target="_blank">3d9e1ea</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -677,6 +677,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3d9e1ea7f9c1df71ff9aca6b3a1f5187b1f13893/analysis/mapping_predictor_preparation.Rmd" target="_blank">3d9e1ea</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-08
+</td>
+<td>
+included model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c0895f88da6f0e1f11870f0a7eb47a06eabe97bb/docs/mapping_predictor_preparation.html" target="_blank">c0895f8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2012,6 +2046,8 @@ Initial commit
 </div>
 <div id="required-data" class="section level1" number="1">
 <h1 number="1"><span class="header-section-number">1</span> Required data</h1>
+<div id="observational" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Observational</h2>
 <p>Currently, following data sets are used for mapping:</p>
 <ul>
 <li>GLODAPv2_2016b_MappedClimatologies, with variables
@@ -2053,6 +2089,9 @@ GLODAP_predictors &lt;- GLODAP_predictors %&gt;%
 
 # removed na&#39;s attributable to slightly different coverage of predictor fields
 GLODAP_predictors &lt;- GLODAP_predictors %&gt;%
+  select(lon, lat, depth, basin_AIP,
+         phosphate, oxygen, nitrate,
+         any_of(params_local$MLR_predictors)) %&gt;% 
   drop_na()</code></pre>
 <pre class="r"><code>variables &lt;-
   c(&quot;PO4&quot;, &quot;silicate&quot;, &quot;TAlk&quot;, &quot;TCO2&quot;)
@@ -2095,8 +2134,38 @@ GLODAP_predictors_CO2 &lt;- GLODAP_predictors_CO2 %&gt;%
                  &quot;WOA18_sal_temp.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="join-woa18-glodap" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Join WOA18 + GLODAP</h1>
+<div id="model" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Model</h2>
+<ul>
+<li>Cmorized model runA climatologies in 2007, with variables
+<ul>
+<li>Phosphate (-&gt; phosphate_star)</li>
+<li>Silicate</li>
+<li>Oxygen</li>
+<li>AOU (already calculated)</li>
+<li>TAlk (surface only)</li>
+<li>TCO2 (surface only)</li>
+</ul></li>
+</ul>
+<pre class="r"><code>climatology &lt;-
+  read_csv(paste(path_model_preprocessing, &quot;climatology_runA_2007.csv&quot;, sep = &quot;&quot;))
+
+climatology &lt;- climatology %&gt;%
+  rename(aou = AOU, TCO2 = tco2, TAlk = talk) %&gt;% 
+  select(-aou)
+
+model_predictors &lt;- climatology %&gt;%
+  select(lon, lat, depth, basin_AIP, gamma, 
+         phosphate, oxygen, temp, nitrate,
+         any_of(params_local$MLR_predictors))</code></pre>
+<pre class="r"><code>model_predictors_surface &lt;- climatology %&gt;%
+  select(lon, lat, depth, basin_AIP, gamma, sal, temp, TCO2, TAlk, phosphate, silicate)</code></pre>
+</div>
+</div>
+<div id="join-data" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Join data</h1>
+<div id="woa18-glodap" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> WOA18 + GLODAP</h2>
 <p>WOA18 and GLODAP predictor climatologies are merged. Only horizontal grid cells with observations from both predictor fields are kept.</p>
 <pre class="r"><code># join deep water predictors
 predictors &lt;- full_join(
@@ -2115,8 +2184,26 @@ predictors_surface &lt;- full_join(
 
 predictors_surface &lt;- predictors_surface %&gt;% 
   drop_na()</code></pre>
-<div id="apply-density-threshold" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Apply density threshold</h2>
+</div>
+<div id="model-observational" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> Model + observational</h2>
+<pre class="r"><code># join deep water predictors
+predictors &lt;- bind_rows(
+  predictors %&gt;% mutate(data_source = &quot;obs&quot;),
+  model_predictors %&gt;% mutate(data_source = &quot;mod&quot;))
+
+rm(model_predictors)
+
+# join surface water predictors
+predictors_surface &lt;- bind_rows(
+  predictors_surface %&gt;% mutate(data_source = &quot;obs&quot;),
+  model_predictors_surface %&gt;% mutate(data_source = &quot;mod&quot;))
+
+rm(model_predictors_surface)</code></pre>
+</div>
+</div>
+<div id="apply-density-threshold" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Apply density threshold</h1>
 <p>The predictor field was split into two parts:</p>
 <ol style="list-style-type: decimal">
 <li>Deep water: neutral densities &gt;= 26 and depth &gt;= 150m</li>
@@ -2130,21 +2217,25 @@ predictors &lt;- predictors %&gt;%
 predictors_surface &lt;- predictors_surface %&gt;%
   filter(depth &lt; params_local$depth_min,
          gamma &lt; params_local$gamma_min)</code></pre>
-</div>
-<div id="apply-basin-mask" class="section level2" number="2.2">
-<h2 number="2.2"><span class="header-section-number">2.2</span> Apply basin mask</h2>
+<div id="apply-basin-mask" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Apply basin mask</h2>
 <p>Data outside the WOA18 basin mask were removed for further analysis.</p>
 <pre class="r"><code>predictors &lt;- inner_join(predictors, basinmask)
 predictors_surface &lt;- inner_join(predictors_surface, basinmask)</code></pre>
 </div>
-<div id="control-plots" class="section level2" number="2.3">
-<h2 number="2.3"><span class="header-section-number">2.3</span> Control plots</h2>
+<div id="control-plots" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Control plots</h2>
 <p>Plots below are generated to control successful merging of data sets.</p>
-<div id="maps-interior" class="section level3" number="2.3.1">
-<h3 number="2.3.1"><span class="header-section-number">2.3.1</span> Maps interior</h3>
-<pre class="r"><code>p_map_climatology(
-  df = predictors, 
-  var = &quot;phosphate&quot;)</code></pre>
+<div id="maps-interior" class="section level3" number="3.2.1">
+<h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Maps interior</h3>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;phosphate&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_PO4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_PO4-1">
@@ -2293,9 +2384,17 @@ Jens Müller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_map_climatology(
-  df = predictors, 
-  var = &quot;temp&quot;)</code></pre>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_PO4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;temp&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_temp-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_temp-1">
@@ -2422,12 +2521,20 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_temp-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="maps-surface" class="section level3" number="2.3.2">
-<h3 number="2.3.2"><span class="header-section-number">2.3.2</span> Maps surface</h3>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface, 
-  var = &quot;TAlk&quot;)</code></pre>
+<div id="maps-surface" class="section level3" number="3.2.2">
+<h3 number="3.2.2"><span class="header-section-number">3.2.2</span> Maps surface</h3>
+<pre class="r"><code>predictors_surface %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;TAlk&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_TAlk_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_TAlk_surface-1">
@@ -2576,9 +2683,17 @@ Jens Müller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface, 
-  var = &quot;TCO2&quot;)</code></pre>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_TAlk_surface-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>predictors_surface %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;TCO2&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_TCO2_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_TCO2_surface-1">
@@ -2727,9 +2842,17 @@ Jens Müller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface, 
-  var = &quot;sal&quot;)</code></pre>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_TCO2_surface-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>predictors_surface %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;sal&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_sal_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_sal_surface-1">
@@ -2878,9 +3001,17 @@ Jens Müller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_map_climatology(
-  df = predictors_surface, 
-  var = &quot;temp&quot;)</code></pre>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_sal_surface-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>predictors_surface %&gt;%
+  group_split(data_source) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;temp&quot;,
+    subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_temp_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-joined_climatology_control_temp_surface-1">
@@ -3007,9 +3138,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/joined_climatology_control_temp_surface-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="predictor-profiles" class="section level3" number="2.3.3">
-<h3 number="2.3.3"><span class="header-section-number">2.3.3</span> Predictor profiles</h3>
+<div id="predictor-profiles" class="section level3" number="3.2.3">
+<h3 number="3.2.3"><span class="header-section-number">3.2.3</span> Predictor profiles</h3>
 <p>Likewise, predictor profiles for the North Atlantic (40.5 / 335.5) are plotted to control successful merging of the data sets.</p>
 <pre class="r"><code># subset data
 N_Atl &lt;- predictors %&gt;% 
@@ -3024,7 +3158,7 @@ N_Atl &lt;- N_Atl %&gt;%
 
 # plot profiles
 N_Atl %&gt;% 
-  ggplot(aes(value, depth)) +
+  ggplot(aes(value, depth, col=data_source)) +
   geom_path() +
   geom_point() +
   scale_y_reverse() +
@@ -3183,20 +3317,27 @@ Jens Müller
 </div>
 </div>
 </div>
-<div id="prepare-predictor-fields" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Prepare predictor fields</h1>
+<div id="prepare-predictor-fields" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Prepare predictor fields</h1>
 <p>Additional predictor fields need to calculated from available climatologies</p>
-<div id="po4-calculation" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> PO<sub>4</sub>* calculation</h2>
+<div id="po4-calculation" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> PO<sub>4</sub>* calculation</h2>
 <p>The predictor PO<sub>4</sub>* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.</p>
 <pre class="r"><code>predictors &lt;- predictors %&gt;%
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))</code></pre>
-<div id="maps" class="section level3" number="3.1.1">
-<h3 number="3.1.1"><span class="header-section-number">3.1.1</span> Maps</h3>
-<pre class="r"><code>p_map_climatology(
-  df = predictors,
-  var = &quot;phosphate_star&quot;,
-  col = &quot;divergent&quot;)</code></pre>
+<div id="maps" class="section level3" number="4.1.1">
+<h3 number="4.1.1"><span class="header-section-number">4.1.1</span> Maps</h3>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(
+    ~ p_map_climatology(
+      df = .x,
+      var = &quot;phosphate_star&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+    )
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/PO4_star_climatology_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PO4_star_climatology_maps-1">
@@ -3345,13 +3486,23 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/PO4_star_climatology_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="global-section" class="section level3" number="3.1.2">
-<h3 number="3.1.2"><span class="header-section-number">3.1.2</span> Global section</h3>
-<pre class="r"><code>p_section_global(
-  df = predictors,
-  var = &quot;phosphate_star&quot;,
-  col = &quot;divergent&quot;)</code></pre>
+<div id="global-section" class="section level3" number="4.1.2">
+<h3 number="4.1.2"><span class="header-section-number">4.1.2</span> Global section</h3>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(
+    ~ p_section_global(
+      df = .x,
+      var = &quot;phosphate_star&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+    )
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/PO4_star_climatology_section-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PO4_star_climatology_section-1">
@@ -3500,12 +3651,15 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/PO4_star_climatology_section-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="aou" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> AOU</h2>
-<div id="calculation" class="section level3" number="3.2.1">
-<h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Calculation</h3>
+<div id="aou" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> AOU</h2>
+<div id="calculation" class="section level3" number="4.2.1">
+<h3 number="4.2.1"><span class="header-section-number">4.2.1</span> Calculation</h3>
 <p>AOU was calculated as the difference between saturation concentration and observed concentration. <strong>CAVEAT</strong>: Algorithms used to calculate oxygen saturation concentration are not yet identical in GLODAP data set (fitting) and predictor climatologies (mapping).</p>
 <pre class="r"><code>predictors &lt;- predictors %&gt;% 
   mutate(aou = b_aou(
@@ -3514,12 +3668,19 @@ Jens Müller
     depth = depth,
     oxygen = oxygen))</code></pre>
 </div>
-<div id="maps-1" class="section level3" number="3.2.2">
-<h3 number="3.2.2"><span class="header-section-number">3.2.2</span> Maps</h3>
-<pre class="r"><code>p_map_climatology(
-  df = predictors,
-  var = &quot;aou&quot;,
-  col = &quot;divergent&quot;)</code></pre>
+<div id="maps-1" class="section level3" number="4.2.2">
+<h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Maps</h3>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(
+    ~ p_map_climatology(
+      df = .x,
+      var = &quot;aou&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+    )
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/aou_climatology_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-aou_climatology_maps-1">
@@ -3668,13 +3829,23 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/aou_climatology_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="global-section-1" class="section level3" number="3.2.3">
-<h3 number="3.2.3"><span class="header-section-number">3.2.3</span> Global section</h3>
-<pre class="r"><code>p_section_global(
-  df = predictors,
-  var = &quot;aou&quot;,
-  col = &quot;divergent&quot;)</code></pre>
+<div id="global-section-1" class="section level3" number="4.2.3">
+<h3 number="4.2.3"><span class="header-section-number">4.2.3</span> Global section</h3>
+<pre class="r"><code>predictors %&gt;%
+  group_split(data_source) %&gt;%
+  map(
+    ~ p_section_global(
+      df = .x,
+      var = &quot;aou&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+    )
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/aou_climatology_section-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-aou_climatology_section-1">
@@ -3823,10 +3994,13 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/aou_climatology_section-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="isoneutral-slabs" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Isoneutral slabs</h2>
+<div id="isoneutral-slabs" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Isoneutral slabs</h2>
 <p>The following boundaries for isoneutral slabs were defined:</p>
 <ul>
 <li>Atlantic: -, 26, 26.5, 26.75, 27, 27.25, 27.5, 27.75, 27.85, 27.95, 28.05, 28.1, 28.15, 28.2, </li>
@@ -3836,10 +4010,10 @@ Jens Müller
 <pre class="r"><code>predictors &lt;- m_cut_gamma(predictors, &quot;gamma&quot;)</code></pre>
 </div>
 </div>
-<div id="plot-al-predictor-sections" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Plot al predictor sections</h1>
-<div id="deep-waters" class="section level2" number="4.1">
-<h2 number="4.1"><span class="header-section-number">4.1</span> Deep waters</h2>
+<div id="plot-al-predictor-sections" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Plot al predictor sections</h1>
+<div id="deep-waters" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Deep waters</h2>
 <p>Predictor sections along with lines are shown below for each (potential) predictor variable.</p>
 <pre class="r"><code>map +
   geom_bin2d(data = predictors,
@@ -3847,7 +4021,8 @@ Jens Müller
              binwidth = c(1,1)) +
   geom_vline(xintercept = params_global$longitude_sections_regular,
              col = &quot;white&quot;) +
-  scale_fill_viridis_c(direction = -1)</code></pre>
+  scale_fill_viridis_c(direction = -1) +
+  facet_wrap(~ data_source, ncol = 1)</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/predictors_observations_sections_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-predictors_observations_sections_map-1">
@@ -3997,12 +4172,17 @@ Jens Müller
 </div>
 </div>
 <pre class="r"><code>for (i_var in params_local$MLR_predictors) {
-  print(
-    p_section_climatology_regular(
-      df = predictors,
-      var = i_var)
-    )
+  print(predictors %&gt;%
+          group_split(data_source) %&gt;%
+          map(
+            ~ p_section_climatology_regular(
+              df = .x,
+              var = i_var,
+              subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+            )
+          ))
 }</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-1">
@@ -4173,6 +4353,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-2">
@@ -4343,6 +4525,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-3">
@@ -4513,6 +4697,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-4">
@@ -4683,6 +4869,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-5">
@@ -4853,6 +5041,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-6.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-6">
@@ -5001,6 +5191,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-7.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-7">
@@ -5149,9 +5341,144 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections-8">
+Past versions of all_predictor_sections-8.png
+</button>
+</p>
+<div id="fig-all_predictor_sections-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e4ca289015ab305428b830b555629cb5c3e1c9f6/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">e4ca289</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3ebff890e641ba3f8cc320711281a2dae3536822/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">3ebff89</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f8358f8829b196b5e7e7f1ed109972cacfab8296/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">f8358f8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/mapping_predictor_preparation.Rmd/all_predictor_sections-8.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="surface-waters" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Surface waters</h2>
+</div>
+<pre><code>
+[[1]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-10.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[1]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-11.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-12.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[1]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-13.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections-14.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="surface-waters" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Surface waters</h2>
 <p>Predictor sections along with lines are shown below for each (potential) predictor variable.</p>
 <pre class="r"><code>map +
   geom_bin2d(data = predictors_surface,
@@ -5160,7 +5487,8 @@ Jens Müller
   geom_vline(xintercept = params_global$longitude_sections_regular,
              col = &quot;white&quot;) +
   scale_fill_viridis_c(direction = -1) +
-  theme(legend.position = &quot;bottom&quot;)</code></pre>
+  theme(legend.position = &quot;bottom&quot;) +
+  facet_wrap(~ data_source)</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/predictors_observations_sections_map_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-predictors_observations_sections_map_surface-1">
@@ -5311,12 +5639,19 @@ Jens Müller
 
 for (i_var in vars) {
   print(
-    p_section_climatology_regular(
-      df = predictors_surface,
-      var = i_var,
-      surface = &quot;y&quot;)
-    )
+    predictors_surface %&gt;%
+      group_split(data_source) %&gt;%
+      map(
+        ~ p_section_climatology_regular(
+          df = .x,
+          var = i_var,
+          surface = &quot;y&quot;,
+          subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+        )
+      )
+  )
 }</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections_surface-1">
@@ -5498,6 +5833,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections_surface-2">
@@ -5679,6 +6016,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections_surface-3">
@@ -5860,6 +6199,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections_surface-4">
@@ -6041,6 +6382,8 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[1]]</code></pre>
 <p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-all_predictor_sections_surface-5">
@@ -6222,10 +6565,25 @@ Jens Müller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[1]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[1]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_predictor_preparation.Rmd/all_predictor_sections_surface-10.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-<div id="write-csv" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Write csv</h1>
+<div id="write-csv" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Write csv</h1>
 <pre class="r"><code>predictors %&gt;%
   write_csv(paste(path_version_data,
                   &quot;W18_st_G16_opsn.csv&quot;,
