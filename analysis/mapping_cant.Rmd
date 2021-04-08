@@ -231,17 +231,29 @@ predictors_surface <- predictors_surface %>%
 
 ```{r pCO2_climatology_map, fig.asp=0.6}
 
-p_map_climatology(df = predictors_surface,
-                  var = "pCO2")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "pCO2",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
 
 ```
 
 
 ```{r pCO2_climatology_sections, fig.asp=1}
 
-p_section_climatology_regular(df = predictors_surface,
-                              var = "pCO2",
-                              surface = "y")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "pCO2",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
 
 ```
 
@@ -271,17 +283,29 @@ predictors_surface <- predictors_surface %>%
 
 ```{r revelle_factor_climatology_map, fig.asp=0.6}
 
-p_map_climatology(df = predictors_surface,
-                  var = "rev_fac")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "rev_fac",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
 
 ```
 
 
 ```{r revelle_factor_climatology_sections, fig.asp=1}
 
-p_section_climatology_regular(df = predictors_surface,
-                              var = "rev_fac",
-                              surface = "y")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "rev_fac",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
 
 ```
 
@@ -315,32 +339,31 @@ cant_surface <- cant_surface %>%
 
 ```{r cant_surface_climatology_map, fig.asp=0.6}
 
-# i_eras <- unique(cant_average$eras)[2]
 
-for (i_eras in unique(cant_surface$eras)) {
-  print(
-    p_map_climatology(df = cant_surface %>% filter(eras == i_eras),
-                      var = "cant")  +
-      labs(subtitle = paste("era:", i_eras))
-  )
-  
-}
+cant_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "cant",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
 ```
 
 
 ```{r cant_surface_climatology_sections, fig.asp=1}
 
-# i_eras <- unique(cant_surface$eras)[2]
+cant_surface %>%
+  group_split(data_source) %>%
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "cant",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
 
-for (i_eras in unique(cant_surface$eras)) {
-  print(
-    p_section_climatology_regular(df = cant_surface %>% filter(eras == i_eras),
-                                  var = "cant",
-                                  surface = "y") +
-      labs(subtitle = paste("era:", i_eras))
-  )
-  
-}
 
 ```
 
@@ -400,11 +423,10 @@ cant_average %>%
 
 The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
 
-```{r calculate_cant_mean_surface}
+```{r calc_cant_mean_surface}
 
 cant_surface_average <-
-  m_cant_model_average_data_source(expand_grid(cant_surface,
-                                               data_source = c("mod", "obs")))
+  m_cant_model_average_data_source(cant_surface)
 
 cant_surface_average <- m_cut_gamma(cant_surface_average, "gamma")
 rm(cant_surface)
@@ -437,7 +459,7 @@ cant_average_zonal <- m_cut_gamma(cant_average_zonal, "gamma_mean")
 
 For each basin and era combination, the zonal mean is calculated for the term of each predictor.
 
-```{r calculate_cant_predictor_mean_sections}
+```{r calc_cant_predictor_mean_sections}
 
 cant_predictor_average_zonal <-
   m_cant_predictor_zonal_mean_data_source(cant_predictor_average)
