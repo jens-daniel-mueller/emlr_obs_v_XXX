@@ -27,7 +27,7 @@ params_local <-
 
 ```{r define_paths, include = FALSE}
 
-# only path_observations needs to be changed to model
+# paths to observational data
 path_observations <-
   paste(path_root, "/observations/", sep = "")
 
@@ -45,6 +45,17 @@ path_version_figures  <-
         params_local$Version_ID,
         "/figures/",
         sep = "")
+
+
+# paths to model data
+
+path_model <-
+  paste(path_root, "/model/", sep = "")
+
+path_model_preprocessing    <-
+  paste(path_model, "preprocessing/", sep = "")
+
+
 ```
 
 ```{r select_basin_mask, include=FALSE}
@@ -62,6 +73,8 @@ library(gsw)
 ```
 
 # Required data
+
+## Observational
 
 Currently, following data sets are used for mapping:
 
@@ -105,6 +118,9 @@ GLODAP_predictors <- GLODAP_predictors %>%
 
 # removed na's attributable to slightly different coverage of predictor fields
 GLODAP_predictors <- GLODAP_predictors %>%
+  select(lon, lat, depth, basin_AIP,
+         phosphate, oxygen, nitrate,
+         any_of(params_local$MLR_predictors)) %>% 
   drop_na()
 
 ```
@@ -157,7 +173,46 @@ WOA18_predictors <-
 
 ```
 
-# Join WOA18 + GLODAP
+
+## Model
+
+- Cmorized model runA climatologies in 2007, with variables  
+  - Phosphate (-> phosphate_star)
+  - Silicate
+  - Oxygen 
+  - AOU (already calculated)
+  - TAlk (surface only)
+  - TCO2 (surface only)
+
+
+```{r load_model_climatologies_interior_mapping}
+
+climatology <-
+  read_csv(paste(path_model_preprocessing, "climatology_runA_2007.csv", sep = ""))
+
+climatology <- climatology %>%
+  rename(aou = AOU, TCO2 = tco2, TAlk = talk) %>% 
+  select(-aou)
+
+model_predictors <- climatology %>%
+  select(lon, lat, depth, basin_AIP, gamma, 
+         phosphate, oxygen, temp, nitrate,
+         any_of(params_local$MLR_predictors))
+
+```
+
+
+```{r load_model_climatologies_surface_mapping}
+
+model_predictors_surface <- climatology %>%
+  select(lon, lat, depth, basin_AIP, gamma, sal, temp, TCO2, TAlk, phosphate, silicate)
+
+```
+
+
+# Join data
+
+## WOA18 + GLODAP
 
 WOA18 and GLODAP predictor climatologies are merged. Only horizontal grid cells with observations from both predictor fields are kept.
 
@@ -183,8 +238,30 @@ predictors_surface <- predictors_surface %>%
 
 ```
 
+## Model + observational
 
-## Apply density threshold
+
+```{r join_model_observational_predictors}
+
+# join deep water predictors
+predictors <- bind_rows(
+  predictors %>% mutate(data_source = "obs"),
+  model_predictors %>% mutate(data_source = "mod"))
+
+rm(model_predictors)
+
+# join surface water predictors
+predictors_surface <- bind_rows(
+  predictors_surface %>% mutate(data_source = "obs"),
+  model_predictors_surface %>% mutate(data_source = "mod"))
+
+rm(model_predictors_surface)
+
+
+```
+
+
+# Apply density threshold
 
 The predictor field was split into two parts:
 
@@ -225,43 +302,71 @@ Plots below are generated to control successful merging of data sets.
 
 ```{r joined_climatology_control_PO4, fig.asp=0.6}
 
-p_map_climatology(
-  df = predictors, 
-  var = "phosphate")
+predictors %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "phosphate",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
 
 
 ```
 
 ```{r joined_climatology_control_temp, fig.asp=0.6}
-p_map_climatology(
-  df = predictors, 
-  var = "temp")
+
+predictors %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "temp",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
+
 ```
 
 ### Maps surface
 
 ```{r joined_climatology_control_TAlk_surface, fig.asp=0.6}
-p_map_climatology(
-  df = predictors_surface, 
-  var = "TAlk")
+
+predictors_surface %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "TAlk",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
+
 ```
 
 ```{r joined_climatology_control_TCO2_surface, fig.asp=0.6}
-p_map_climatology(
-  df = predictors_surface, 
-  var = "TCO2")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "TCO2",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
 ```
 
 ```{r joined_climatology_control_sal_surface, fig.asp=0.6}
-p_map_climatology(
-  df = predictors_surface, 
-  var = "sal")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "sal",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
 ```
 
 ```{r joined_climatology_control_temp_surface, fig.asp=0.6}
-p_map_climatology(
-  df = predictors_surface, 
-  var = "temp")
+predictors_surface %>%
+  group_split(data_source) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "temp",
+    subtitle_text = paste("Data source: ", unique(.x$data_source))
+  ))
 ```
 
 
@@ -284,7 +389,7 @@ N_Atl <- N_Atl %>%
 
 # plot profiles
 N_Atl %>% 
-  ggplot(aes(value, depth)) +
+  ggplot(aes(value, depth, col=data_source)) +
   geom_path() +
   geom_point() +
   scale_y_reverse() +
@@ -315,10 +420,16 @@ predictors <- predictors %>%
 
 ```{r PO4_star_climatology_maps, fig.asp=0.6}
 
-p_map_climatology(
-  df = predictors,
-  var = "phosphate_star",
-  col = "divergent")
+predictors %>%
+  group_split(data_source) %>%
+  map(
+    ~ p_map_climatology(
+      df = .x,
+      var = "phosphate_star",
+      col = "divergent",
+      subtitle_text = paste("Data source: ", unique(.x$data_source))
+    )
+  )
 
 ```
 
@@ -326,10 +437,16 @@ p_map_climatology(
 
 ```{r PO4_star_climatology_section}
 
-p_section_global(
-  df = predictors,
-  var = "phosphate_star",
-  col = "divergent")
+predictors %>%
+  group_split(data_source) %>%
+  map(
+    ~ p_section_global(
+      df = .x,
+      var = "phosphate_star",
+      col = "divergent",
+      subtitle_text = paste("Data source: ", unique(.x$data_source))
+    )
+  )
 
 ```
 
@@ -357,10 +474,16 @@ predictors <- predictors %>%
 
 ```{r aou_climatology_maps, fig.asp=0.6}
 
-p_map_climatology(
-  df = predictors,
-  var = "aou",
-  col = "divergent")
+predictors %>%
+  group_split(data_source) %>%
+  map(
+    ~ p_map_climatology(
+      df = .x,
+      var = "aou",
+      col = "divergent",
+      subtitle_text = paste("Data source: ", unique(.x$data_source))
+    )
+  )
 
 ```
 
@@ -368,10 +491,16 @@ p_map_climatology(
 
 ```{r aou_climatology_section}
 
-p_section_global(
-  df = predictors,
-  var = "aou",
-  col = "divergent")
+predictors %>%
+  group_split(data_source) %>%
+  map(
+    ~ p_section_global(
+      df = .x,
+      var = "aou",
+      col = "divergent",
+      subtitle_text = paste("Data source: ", unique(.x$data_source))
+    )
+  )
 
 ```
 
@@ -396,7 +525,7 @@ predictors <- m_cut_gamma(predictors, "gamma")
 
 Predictor sections along with lines are shown below for each (potential) predictor variable.
 
-```{r predictors_observations_sections_map, fig.asp=0.6}
+```{r predictors_observations_sections_map, fig.asp=0.8}
 
 map +
   geom_bin2d(data = predictors,
@@ -404,18 +533,23 @@ map +
              binwidth = c(1,1)) +
   geom_vline(xintercept = params_global$longitude_sections_regular,
              col = "white") +
-  scale_fill_viridis_c(direction = -1)
+  scale_fill_viridis_c(direction = -1) +
+  facet_wrap(~ data_source, ncol = 1)
 
 ```
 
 ```{r all_predictor_sections, fig.asp=1.2}
 
 for (i_var in params_local$MLR_predictors) {
-  print(
-    p_section_climatology_regular(
-      df = predictors,
-      var = i_var)
-    )
+  print(predictors %>%
+          group_split(data_source) %>%
+          map(
+            ~ p_section_climatology_regular(
+              df = .x,
+              var = i_var,
+              subtitle_text = paste("Data source: ", unique(.x$data_source))
+            )
+          ))
 }
 
 ```
@@ -433,7 +567,8 @@ map +
   geom_vline(xintercept = params_global$longitude_sections_regular,
              col = "white") +
   scale_fill_viridis_c(direction = -1) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  facet_wrap(~ data_source)
 
 ```
 
@@ -452,12 +587,19 @@ vars <-
 
 for (i_var in vars) {
   print(
-    p_section_climatology_regular(
-      df = predictors_surface,
-      var = i_var,
-      surface = "y")
-    )
+    predictors_surface %>%
+      group_split(data_source) %>%
+      map(
+        ~ p_section_climatology_regular(
+          df = .x,
+          var = i_var,
+          surface = "y",
+          subtitle_text = paste("Data source: ", unique(.x$data_source))
+        )
+      )
+  )
 }
+
 
 ```
 
