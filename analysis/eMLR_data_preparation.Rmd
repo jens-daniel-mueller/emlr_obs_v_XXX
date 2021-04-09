@@ -34,6 +34,9 @@ path_observations <-
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
 
+path_model_preprocessing    <-
+  paste(path_root, "/model/preprocessing/", sep = "")
+
 path_version_data     <-
   paste(path_observations,
         params_local$Version_ID,
@@ -79,6 +82,20 @@ G19_cant_3d <-
   read_csv(paste(path_preprocessing,
                  "G19_cant_3d.csv",
                  sep = ""))
+
+m94_cant_3d <-
+  read_csv(paste(
+    path_model_preprocessing,
+    "cant_annual_field_AD/cant_1994.csv",
+    sep = ""
+  ))
+
+m07_cant_3d <-
+  read_csv(paste(
+    path_model_preprocessing,
+    "cant_annual_field_AD/cant_2007.csv",
+    sep = ""
+  ))
 
 co2_atm <-
   read_csv(paste(path_preprocessing,
@@ -225,6 +242,45 @@ cant_3d <- cant_3d %>%
 
 ```
 
+Join model Cant fields of 1994 and 2007
+
+```{r join_cant_estimates_model, fig.asp=0.5}
+
+m94_cant_3d <- m94_cant_3d %>% 
+  mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
+  select(lon, lat, depth, cant_pos_S04 = cant_pos)
+
+m07_cant_3d <- m07_cant_3d %>% 
+  mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
+  select(lon, lat, depth, cant_pos_m07 = cant_pos)
+
+mod_cant_3d <- full_join(
+  m94_cant_3d,
+  m07_cant_3d
+)
+
+mod_cant_3d <- mod_cant_3d %>% 
+  mutate(cant_pos_G19 = cant_pos_m07 - cant_pos_S04,
+         cant_pos_G19 = if_else(cant_pos_G19 <= 0, 0, cant_pos_G19)) %>% 
+  select(-cant_pos_m07)
+
+rm(m07_cant_3d,
+   m94_cant_3d)
+
+```
+
+Join mod and obs Cant
+
+```{r join_obs_mod_cant}
+
+cant_3d <- bind_rows(
+  mod_cant_3d %>% mutate(data_source = "mod"),
+  cant_3d %>% mutate(data_source = "obs")
+)
+
+```
+
+
 ### Cant at tref
 
 Calculate Cant at tref by adding G19, scaled for the time since 1994.
@@ -248,7 +304,7 @@ cant_3d <- cant_3d %>%
 
 # remove columns
 cant_3d <- cant_3d %>% 
-  select(lon, lat, depth, era, cant_pos)
+  select(data_source, lon, lat, depth, era, cant_pos)
 
 ```
 
