@@ -481,7 +481,17 @@ Step 2 is performed separately for all Cant and positive Cant values only.
 
 ```{r cant_inventories, fig.asp=1}
 
-cant_inv <- m_cant_inv_data_source(cant_average)
+cant_inv_mod <- m_cant_inv(cant_average %>% filter(data_source == "mod")) %>% 
+  mutate(data_source = "mod")
+cant_inv_obs <- m_cant_inv(cant_average %>% filter(data_source == "obs")) %>% 
+  mutate(data_source = "obs")
+
+cant_inv <- bind_rows(
+  cant_inv_mod,
+  cant_inv_obs
+)
+
+rm(cant_inv_mod, cant_inv_obs)
 
 p_map_cant_inv(df = cant_inv,
                var = "cant_pos_inv",
