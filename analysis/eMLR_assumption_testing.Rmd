@@ -105,14 +105,15 @@ plot_fun <- function(df){
     labs(title = paste(
       "Basin:",
       unique(df$basin),
-      "| era: all | subsample size: 5 % of",
+      "| era: all | random subsample:",
       nrow(df),
-      "data source:",
+      "| data source:",
       unique(df$data_source)
     ))
 }
 
 GLODAP %>%
+  slice_sample(n = 5e3) %>% 
   group_split(basin, data_source) %>%
   map(plot_fun)
 
