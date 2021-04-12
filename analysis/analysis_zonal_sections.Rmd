@@ -106,6 +106,13 @@ In a first series of plots we explore the distribution of Cant, taking only posi
 
 ```{r cant_pos_zonal_mean_sections, fig.asp=0.6}
 
+cant_zonal_bias <- cant_zonal %>%
+  filter(data_source %in% c("mod", "model_truth")) %>%
+  select(lat, depth, basin_AIP, data_source, cant_pos_mean) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos_mean) %>%
+  mutate(cant_pos_bias = mod - model_truth)
+
 # cant_zonal %>%
 #   group_split(data_source, basin_AIP) %>%
 #   map(
@@ -135,24 +142,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
     )
     
   }
-}
-  
-```
-
-### Offset
-
-```{r Cant_pos_model_truth_offset}
-
-cant_zonal_bias <- cant_zonal %>%
-  filter(data_source %in% c("mod", "model_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, cant_pos_mean) %>%
-  pivot_wider(names_from = data_source,
-              values_from = cant_pos_mean) %>%
-  mutate(cant_pos_bias = mod - model_truth)
-
-
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  print(
+    print(
     p_section_zonal(
       df = cant_zonal_bias %>%
         filter(basin_AIP == i_basin_AIP),
@@ -161,13 +151,13 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
       breaks = params_global$breaks_cant_offset,
       plot_slabs = "n",
       subtitle_text =
-        paste("Basin:", i_basin_AIP)
+        paste("Basin:", i_basin_AIP, "| data_source: mod - model_truth")
     )
   )
-  
 }
 
-
+rm(cant_zonal_bias)
+  
 ```
 
 
@@ -238,36 +228,5 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
   
 }
   
-```
-
-### Offset
-
-```{r Cant_model_truth_offset, eval=FALSE}
-
-cant_zonal_bias <- cant_zonal %>%
-  filter(data_source %in% c("mod", "model_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, cant_mean) %>%
-  pivot_wider(names_from = data_source,
-              values_from = cant_mean) %>%
-  mutate(cant_bias = mod - model_truth)
-
-
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  print(
-    p_section_zonal(
-      df = cant_zonal_bias %>%
-        filter(basin_AIP == i_basin_AIP),
-      var = "cant_bias",
-      col="divergent",
-      breaks = params_global$breaks_cant_offset,
-      plot_slabs = "n",
-      subtitle_text =
-        paste("Basin:", i_basin_AIP)
-    )
-  )
-  
-}
-
-
 ```
 
