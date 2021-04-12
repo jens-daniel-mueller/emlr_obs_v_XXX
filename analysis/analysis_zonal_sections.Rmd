@@ -65,15 +65,36 @@ Cant estimates from this sensitivity case:
 
 ```{r read_cant_files}
 
+
 cant_3d <-
   read_csv(paste(path_version_data,
                  "cant_3d.csv",
                  sep = ""))
 
+cant_3d_model_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_3d_model_truth.csv",
+                 sep = ""))
+
+cant_3d <- bind_rows(cant_3d,
+                     cant_3d_model_truth %>% mutate(data_source = "model_truth",
+                                                    gamma_slab = NA))
+
 cant_zonal <-
   read_csv(paste(path_version_data,
                  "cant_zonal.csv",
                  sep = ""))
+
+cant_zonal_model_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_zonal_model_truth.csv",
+                 sep = ""))
+
+cant_zonal <- bind_rows(
+  cant_zonal,
+  cant_zonal_model_truth %>% mutate(data_source = "model_truth",
+                                    gamma_slab = NA)
+)
 
 
 ```
@@ -117,6 +138,38 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
 }
   
 ```
+
+### Offset
+
+```{r Cant_pos_model_truth_offset}
+
+cant_zonal_bias <- cant_zonal %>%
+  filter(data_source %in% c("mod", "model_truth")) %>%
+  select(lat, depth, basin_AIP, data_source, cant_pos_mean) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos_mean) %>%
+  mutate(cant_pos_bias = mod - model_truth)
+
+
+for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
+  print(
+    p_section_zonal(
+      df = cant_zonal_bias %>%
+        filter(basin_AIP == i_basin_AIP),
+      var = "cant_pos_bias",
+      col="divergent",
+      breaks = params_global$breaks_cant_offset,
+      plot_slabs = "n",
+      subtitle_text =
+        paste("Basin:", i_basin_AIP)
+    )
+  )
+  
+}
+
+
+```
+
 
 ## Global sections
 
@@ -165,3 +218,35 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
 }
   
 ```
+
+### Offset
+
+```{r Cant_model_truth_offset}
+
+cant_zonal_bias <- cant_zonal %>%
+  filter(data_source %in% c("mod", "model_truth")) %>%
+  select(lat, depth, basin_AIP, data_source, cant_mean) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_mean) %>%
+  mutate(cant_bias = mod - model_truth)
+
+
+for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
+  print(
+    p_section_zonal(
+      df = cant_zonal_bias %>%
+        filter(basin_AIP == i_basin_AIP),
+      var = "cant_bias",
+      col="divergent",
+      breaks = params_global$breaks_cant_offset,
+      plot_slabs = "n",
+      subtitle_text =
+        paste("Basin:", i_basin_AIP)
+    )
+  )
+  
+}
+
+
+```
+

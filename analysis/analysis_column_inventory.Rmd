@@ -70,6 +70,13 @@ cant_inv <-
                  "cant_inv.csv",
                  sep = ""))
 
+cant_inv_model_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_inv_model_truth.csv",
+                 sep = ""))
+
+cant_inv <- bind_rows(cant_inv, cant_inv_model_truth)
+
 ```
 
 The following analysis is restricted to the standard inventory depth of `r params_global$inventory_depth_standard` m.
