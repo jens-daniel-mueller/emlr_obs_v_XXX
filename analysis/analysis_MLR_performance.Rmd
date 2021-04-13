@@ -236,3 +236,75 @@ cant_zonal %>%
   )
 
 ```
+
+### Cant bias vs model SD
+
+```{r cant_bias_vs_cant_sd}
+
+cant_3d_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_3d_mod_truth.csv",
+                 sep = ""))
+
+cant_3d <- bind_rows(cant_3d,
+                     cant_3d_mod_truth)
+
+
+cant_3d_bias <- cant_3d %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(lat, lon, depth, data_source, basin_AIP, gamma_slab, cant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant) %>%
+  mutate(cant_bias = mod - mod_truth)
+
+cant_3d_bias_sd <- cant_3d %>% 
+  filter(data_source %in% c("mod")) %>%
+  select(lat, lon, depth, cant, cant_sd)
+
+cant_3d_bias <- full_join(cant_3d_bias, cant_3d_bias_sd)
+
+cant_3d_bias %>% 
+  ggplot(aes(cant_sd, cant_bias)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10")
+
+
+```
+
+
+```{r cant_bias_vs_cant_sd_basin_gamma_slab, fig.asp=2}
+
+cant_3d_bias %>% 
+  ggplot(aes(cant_sd, cant_bias)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(gamma_slab ~ basin_AIP)
+
+```
+
+
+### Cant bias vs cant
+
+
+```{r cant_bias_vs_cant}
+cant_3d_bias %>% 
+  ggplot(aes(cant, cant_bias)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10")
+
+```
+
+
+
+```{r cant_bias_vs_cant_basin_gamma_slab, fig.asp=2}
+
+cant_3d_bias %>% 
+  ggplot(aes(cant, cant_bias)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(gamma_slab ~ basin_AIP)
+
+```
+
+
+
