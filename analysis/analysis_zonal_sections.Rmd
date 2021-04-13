@@ -108,6 +108,12 @@ cant_zonal_bias <- cant_zonal %>%
               values_from = cant_pos_mean) %>%
   mutate(cant_pos_bias = mod - mod_truth)
 
+cant_zonal_bias <- full_join(
+  cant_zonal_bias,
+  cant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
+)
+
+
 # cant_zonal %>%
 #   group_split(data_source, basin_AIP) %>%
 #   map(
@@ -144,7 +150,6 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
       var = "cant_pos_bias",
       col="divergent",
       breaks = params_global$breaks_cant_offset,
-      plot_slabs = "n",
       subtitle_text =
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
@@ -188,6 +193,11 @@ cant_zonal_bias <- cant_zonal %>%
               values_from = cant_mean) %>%
   mutate(cant_bias = mod - mod_truth)
 
+cant_zonal_bias <- full_join(
+  cant_zonal_bias,
+  cant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
+)
+
 # i_data_source <- unique(cant_zonal$data_source)[1]
 # i_basin_AIP <- unique(cant_zonal$basin_AIP)[1]
 
@@ -215,7 +225,6 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
       var = "cant_bias",
       col="divergent",
       breaks = params_global$breaks_cant_offset,
-      plot_slabs = "n",
       subtitle_text =
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
