@@ -34,11 +34,8 @@ path_observations <-
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
 
-path_model <-
-  paste(path_root, "/model/", sep = "")
-
 path_preprocessing_model    <-
-  paste(path_model, "preprocessing/", sep = "")
+  paste(path_root, "/model/preprocessing/", sep = "")
 
 path_version_data     <-
   paste(path_observations,
@@ -75,12 +72,6 @@ Main data source for this project is the preprocessed version of the `GLODAPv2.2
 
 ```{r read_GLODAPv2_2020_merged_master_file}
 
-GLODAP_obs_only <-
-  read_csv(paste(path_preprocessing,
-                 "GLODAPv2.2020_preprocessed.csv",
-                 sep = ""))
-
-
 GLODAP <-
   read_csv(
     paste(
@@ -98,8 +89,6 @@ GLODAP_CB <-
   read_csv(paste(path_preprocessing,
                  "GLODAPv2.2020_Canyon-B.csv",
                  sep = ""))
-
-
 
 ```
 
@@ -133,7 +122,7 @@ GLODAP_A16_backup <- GLODAP %>%
   filter(cruise %in% c(1041, 1042),
          era == sort(unique(GLODAP$era))[2])
 
-
+# select data within each era
 GLODAP <- GLODAP %>% 
   filter(year >= start & year <= end)
 
@@ -167,7 +156,6 @@ rm(era_labels, GLODAP_A16_backup)
 ```
 
 ## Spatial boundaries
-
 
 ### Basin mask
 
@@ -883,12 +871,9 @@ GLODAP  %>%  write_csv(paste(path_version_data,
 GLODAP %>% 
   group_by(era, basin_AIP) %>% 
   count() %>% 
-  gt(rowname_col = "basin_AIP",
-     groupname_col = c("era")) %>% 
-  summary_rows(
-    groups = TRUE,
-    fns = list(total = "sum")
-  )
+  ggplot(aes(basin_AIP, n, fill = era)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2")
 
 ```
 
@@ -958,6 +943,7 @@ rm(GLODAP_histogram_lat)
 Median years of each era (tref) were determined as:
 
 ```{r calculate_median_years}
+
 era_median_year <- GLODAP %>%
   group_by(era) %>%
   summarise(t_ref = median(year)) %>%
@@ -982,8 +968,7 @@ GLODAP_histogram_year %>%
   ggplot() +
   geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   geom_col(aes(year, n,
-               fill = basin),
-               col = "black") +
+               fill = basin)) +
   geom_point(
     data = era_median_year,
     aes(t_ref, 100, shape = "Median year"),

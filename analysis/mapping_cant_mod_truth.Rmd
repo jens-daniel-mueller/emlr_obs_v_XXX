@@ -99,15 +99,17 @@ cant_tref_2 <- cant_tref_2 %>%
   rename(cant_tref_2 = cant_total) %>%
   select(-year)
 
+```
+
+
+```{r select_basin_mask, include=FALSE}
 
 basinmask <- basinmask %>% 
   filter(MLR_basins == params_local$MLR_basins) %>% 
   select(-c(MLR_basins, basin_AIP))
 
-
-
-
 ```
+
 
 ```{r load_model_gamma_climatology}
 

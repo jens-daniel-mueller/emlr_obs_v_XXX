@@ -27,12 +27,14 @@ params_local <-
 
 ```{r define_paths, include = FALSE}
 
-# paths to observational data
 path_observations <-
   paste(path_root, "/observations/", sep = "")
 
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
+
+path_preprocessing_model    <-
+  paste(path_root, "/model/preprocessing/", sep = "")
 
 path_version_data     <-
   paste(path_observations,
@@ -45,15 +47,6 @@ path_version_figures  <-
         params_local$Version_ID,
         "/figures/",
         sep = "")
-
-
-# paths to model data
-
-path_model <-
-  paste(path_root, "/model/", sep = "")
-
-path_model_preprocessing    <-
-  paste(path_model, "preprocessing/", sep = "")
 
 
 ```
@@ -188,7 +181,7 @@ WOA18_predictors <-
 ```{r load_model_climatologies_interior_mapping}
 
 climatology <-
-  read_csv(paste(path_model_preprocessing, "climatology_runA_2007.csv", sep = ""))
+  read_csv(paste(path_preprocessing_model, "climatology_runA_2007.csv", sep = ""))
 
 climatology <- climatology %>%
   rename(aou = AOU, TCO2 = tco2, TAlk = talk) %>% 

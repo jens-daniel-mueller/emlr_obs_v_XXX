@@ -34,7 +34,7 @@ path_observations <-
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
 
-path_model_preprocessing    <-
+path_preprocessing_model    <-
   paste(path_root, "/model/preprocessing/", sep = "")
 
 path_version_data     <-
@@ -85,14 +85,14 @@ G19_cant_3d <-
 
 m94_cant_3d <-
   read_csv(paste(
-    path_model_preprocessing,
+    path_preprocessing_model,
     "cant_annual_field_AD/cant_1994.csv",
     sep = ""
   ))
 
 m07_cant_3d <-
   read_csv(paste(
-    path_model_preprocessing,
+    path_preprocessing_model,
     "cant_annual_field_AD/cant_2007.csv",
     sep = ""
   ))
@@ -182,11 +182,13 @@ GLODAP <- GLODAP %>%
 
 ## Reference year adjustment
 
-To adjust C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
+To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
 
 Cant(tref) = S04 + (tref-1994)/13 * G19
 
 This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.
+
+For the model data, we perform the adjustment based on the total Cant estimate for 1994, and the delta Cant estimate for 1994 - 2007.
 
 
 ### Join Cant fields
@@ -386,29 +388,6 @@ GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
 GLODAP_cant_obs <- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
 
-
-# ggplot() +
-#   geom_path(
-#     data = GLODAP_cant_obs %>%
-#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
-#       arrange(depth),
-#     aes(cant_pos, depth, col = "mapped")
-#   ) +
-#   geom_point(
-#     data = GLODAP_cant_obs %>%
-#       filter(lat == 48.5, lon == 165.5,!is.na(cant_pos)) %>%
-#       arrange(depth),
-#     aes(cant_pos, depth, col = "mapped")
-#   ) +
-#   geom_point(
-#     data = GLODAP_cant_obs %>%
-#       filter(lat == 48.5, lon == 165.5, date == ymd("2018-06-27")),
-#     aes(cant_pos_int, depth, col = "interpolated")
-#   ) +
-#   scale_y_reverse() +
-#   facet_wrap(~era) +
-#   scale_color_brewer(palette = "Dark2", name = "") +
-#   labs(title = "Cant interpolation to sampling depth - example profile")
 
 # remove cant data at grid cells without observations
 GLODAP <- GLODAP_cant_obs %>%
@@ -797,7 +776,8 @@ cruise_all <- cruise_all %>%
   ungroup()
 
 cruise_out <- cruise_all %>% 
-  filter(rmse > params_local$c_star_rmse_max)
+  filter(data_source == "obs",
+         rmse > params_local$c_star_rmse_max)
 
 GLODAP_out <- GLODAP_augmented %>% 
   filter(cruise %in% cruise_out$cruise)
@@ -835,8 +815,6 @@ if (nrow(GLODAP_out) > 0) {
 
 
 ```
-
-
 
 ## Individual cruise sections
 
