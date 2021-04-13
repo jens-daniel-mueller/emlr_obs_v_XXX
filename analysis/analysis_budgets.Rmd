@@ -124,6 +124,23 @@ cant_inv_budget %>%
   )
 
 
+cant_inv_bias <- cant_inv_budget %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(data_source, basin_AIP, inv_depth, cant_pos_total, cant_total) %>%
+  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
+  pivot_wider(names_from = data_source,
+              values_from = cant_total) %>%
+  mutate(cant_bias = mod - mod_truth,
+         cant_bias_rel = cant_bias / mod_truth)
+
+cant_inv_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(cant_bias, estimate, fill=basin_AIP)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2")
+
+
 ```
 
 ## Other depths
@@ -151,5 +168,13 @@ cant_inv_budget %>%
   )
 
 rm(cant_inv_budget)
+
+cant_inv_bias %>% 
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  ggplot(aes(cant_bias, estimate, fill=basin_AIP)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_wrap(~ inv_depth)
 
 ```
