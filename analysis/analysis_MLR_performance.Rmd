@@ -224,13 +224,12 @@ cant_zonal %>%
     ~ ggplot(data = .x, aes(cant_mean, cant_sd)) +
       geom_vline(xintercept = 0) +
       geom_hline(yintercept = 10) +
-      geom_bin2d() +
       scale_fill_viridis_c(
         option = "magma",
         direction = -1,
-        trans = "log10",
-        name = "log10(n)"
+        trans = "log10"
       ) +
+      geom_bin2d() +
       facet_grid(gamma_slab ~ data_source)  +
       labs(title = paste("Basin:", unique(.x$basin_AIP)))
   )
@@ -263,10 +262,14 @@ cant_3d_bias_sd <- cant_3d %>%
 
 cant_3d_bias <- full_join(cant_3d_bias, cant_3d_bias_sd)
 
-cant_3d_bias %>% 
+cant_3d_bias %>%
   ggplot(aes(cant_sd, cant_bias)) +
-  geom_bin2d() +
-  scale_fill_viridis_c(trans = "log10")
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_fill_viridis_c(option = "magma",
+                       direction = -1,
+                       trans = "log10") +
+  geom_bin2d()
 
 
 ```
@@ -274,10 +277,14 @@ cant_3d_bias %>%
 
 ```{r cant_bias_vs_cant_sd_basin_gamma_slab, fig.asp=2}
 
-cant_3d_bias %>% 
+cant_3d_bias %>%
   ggplot(aes(cant_sd, cant_bias)) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_fill_viridis_c(option = "magma",
+                       direction = -1,
+                       trans = "log10") +
   geom_bin2d() +
-  scale_fill_viridis_c(trans = "log10") +
   facet_grid(gamma_slab ~ basin_AIP)
 
 ```
@@ -287,21 +294,30 @@ cant_3d_bias %>%
 
 
 ```{r cant_bias_vs_cant}
-cant_3d_bias %>% 
-  ggplot(aes(cant, cant_bias)) +
-  geom_bin2d() +
-  scale_fill_viridis_c(trans = "log10")
 
+cant_3d_bias %>%
+  ggplot(aes(cant, cant_bias)) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_fill_viridis_c(option = "magma",
+                       direction = -1,
+                       trans = "log10") +
+  geom_bin2d()
 ```
 
 
 
 ```{r cant_bias_vs_cant_basin_gamma_slab, fig.asp=2}
 
-cant_3d_bias %>% 
+
+cant_3d_bias %>%
   ggplot(aes(cant, cant_bias)) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  scale_fill_viridis_c(option = "magma",
+                       direction = -1,
+                       trans = "log10") +
   geom_bin2d() +
-  scale_fill_viridis_c(trans = "log10") +
   facet_grid(gamma_slab ~ basin_AIP)
 
 ```
