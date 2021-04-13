@@ -432,7 +432,7 @@ div.tocify {
       <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cant_model_truth.html">Cant model_truth</a>
+      <a href="mapping_cant_mod_truth.html">Cant model_truth</a>
     </li>
   </ul>
 </li>
@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree80e1ee3533439c6e4eeae1fe308c7683c7acf5actargetblank80e1ee3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/80e1ee3533439c6e4eeae1fe308c7683c7acf5ac" target="_blank">80e1ee3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree80e1ee3533439c6e4eeae1fe308c7683c7acf5actargetblank80e1ee3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/80e1ee3533439c6e4eeae1fe308c7683c7acf5ac" target="_blank">80e1ee3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -631,8 +631,8 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
-    Modified:   analysis/_site.yml
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -671,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/80e1ee3533439c6e4eeae1fe308c7683c7acf5ac/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">80e1ee3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+rerun post-2000 with model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c98be8457226d0a999e9ae65a54c159ba5c47c07/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">c98be84</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2688,13 +2722,7 @@ first rebuild on ETH server
 <h1 number="1"><span class="header-section-number">1</span> Read files</h1>
 <p>Main data source for this project is the preprocessed version of the <code>GLODAPv2.2020_Merged_Master_File.csv</code> downloaded from <a href="https://www.glodap.info/" target="_blank">glodap.info</a> in June 2020.</p>
 <p><strong>CAVEAT:</strong> This file still contains neutral densities <code>gamma</code> calculated with a preliminary method. However, this is consistent with the way gamma is currently calculated in this script and should therefore be maintained until changed on all levels.</p>
-<pre class="r"><code>GLODAP_obs_only &lt;-
-  read_csv(paste(path_preprocessing,
-                 &quot;GLODAPv2.2020_preprocessed.csv&quot;,
-                 sep = &quot;&quot;))
-
-
-GLODAP &lt;-
+<pre class="r"><code>GLODAP &lt;-
   read_csv(
     paste(
       path_preprocessing_model,
@@ -2738,7 +2766,7 @@ GLODAP_A16_backup &lt;- GLODAP %&gt;%
   filter(cruise %in% c(1041, 1042),
          era == sort(unique(GLODAP$era))[2])
 
-
+# select data within each era
 GLODAP &lt;- GLODAP %&gt;% 
   filter(year &gt;= start &amp; year &lt;= end)
 
@@ -2762,101 +2790,9 @@ if (params_local$A16_GO_SHIP == &quot;y&quot;) {
     ) +
     theme(legend.title = element_blank())
   
-}</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-assign_eras-1">
-Past versions of assign_eras-1.png
-</button>
-</p>
-<div id="fig-assign_eras-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">338dd3c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">a79ca2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">eb827c9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/05cc66bc17ac3f00c8feb6fb30a9caeeda012254/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">05cc66b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">03b6009</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/685338e9913339a8f019cd75babd839d39c589f7/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/assign_eras-1.png" target="_blank">685338e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
+}
+
+GLODAP &lt;- GLODAP %&gt;% 
   select(-c(start, end))
 
 rm(era_labels, GLODAP_A16_backup)</code></pre>
@@ -7610,7 +7546,7 @@ jens-daniel-mueller
 </div>
 <p>The ratio (%) of removed cruises is:</p>
 <pre class="r"><code>nrow(GLODAP_out) / nrow(GLODAP) * 100</code></pre>
-<pre><code>[1] 2.113295</code></pre>
+<pre><code>[1] 0.8900126</code></pre>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;%
   filter(!(cruise %in% cruise_out$cruise))</code></pre>
 </div>
@@ -7654,399 +7590,10 @@ GLODAP  %&gt;%  write_csv(paste(path_version_data,
 <pre class="r"><code>GLODAP %&gt;% 
   group_by(era, basin_AIP) %&gt;% 
   count() %&gt;% 
-  gt(rowname_col = &quot;basin_AIP&quot;,
-     groupname_col = c(&quot;era&quot;)) %&gt;% 
-  summary_rows(
-    groups = TRUE,
-    fns = list(total = &quot;sum&quot;)
-  )</code></pre>
-<style>html {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
-}
-
-#qckjgrtnjc .gt_table {
-  display: table;
-  border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
-  color: #333333;
-  font-size: 16px;
-  font-weight: normal;
-  font-style: normal;
-  background-color: #FFFFFF;
-  width: auto;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #A8A8A8;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #A8A8A8;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_heading {
-  background-color: #FFFFFF;
-  text-align: center;
-  border-bottom-color: #FFFFFF;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_title {
-  color: #333333;
-  font-size: 125%;
-  font-weight: initial;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  border-bottom-color: #FFFFFF;
-  border-bottom-width: 0;
-}
-
-#qckjgrtnjc .gt_subtitle {
-  color: #333333;
-  font-size: 85%;
-  font-weight: initial;
-  padding-top: 0;
-  padding-bottom: 4px;
-  border-top-color: #FFFFFF;
-  border-top-width: 0;
-}
-
-#qckjgrtnjc .gt_bottom_border {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_col_headings {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_col_heading {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  padding-left: 5px;
-  padding-right: 5px;
-  overflow-x: hidden;
-}
-
-#qckjgrtnjc .gt_column_spanner_outer {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: normal;
-  text-transform: inherit;
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-
-#qckjgrtnjc .gt_column_spanner_outer:first-child {
-  padding-left: 0;
-}
-
-#qckjgrtnjc .gt_column_spanner_outer:last-child {
-  padding-right: 0;
-}
-
-#qckjgrtnjc .gt_column_spanner {
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: bottom;
-  padding-top: 5px;
-  padding-bottom: 6px;
-  overflow-x: hidden;
-  display: inline-block;
-  width: 100%;
-}
-
-#qckjgrtnjc .gt_group_heading {
-  padding: 8px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#qckjgrtnjc .gt_empty_group_heading {
-  padding: 0.5px;
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  vertical-align: middle;
-}
-
-#qckjgrtnjc .gt_from_md > :first-child {
-  margin-top: 0;
-}
-
-#qckjgrtnjc .gt_from_md > :last-child {
-  margin-bottom: 0;
-}
-
-#qckjgrtnjc .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  border-top-style: solid;
-  border-top-width: 1px;
-  border-top-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 1px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 1px;
-  border-right-color: #D3D3D3;
-  vertical-align: middle;
-  overflow-x: hidden;
-}
-
-#qckjgrtnjc .gt_stub {
-  color: #333333;
-  background-color: #FFFFFF;
-  font-size: 100%;
-  font-weight: initial;
-  text-transform: inherit;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-  padding-left: 12px;
-}
-
-#qckjgrtnjc .gt_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qckjgrtnjc .gt_first_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_grand_summary_row {
-  color: #333333;
-  background-color: #FFFFFF;
-  text-transform: inherit;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-#qckjgrtnjc .gt_first_grand_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
-  border-top-style: double;
-  border-top-width: 6px;
-  border-top-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#qckjgrtnjc .gt_table_body {
-  border-top-style: solid;
-  border-top-width: 2px;
-  border-top-color: #D3D3D3;
-  border-bottom-style: solid;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_footnotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_footnote {
-  margin: 0px;
-  font-size: 90%;
-  padding: 4px;
-}
-
-#qckjgrtnjc .gt_sourcenotes {
-  color: #333333;
-  background-color: #FFFFFF;
-  border-bottom-style: none;
-  border-bottom-width: 2px;
-  border-bottom-color: #D3D3D3;
-  border-left-style: none;
-  border-left-width: 2px;
-  border-left-color: #D3D3D3;
-  border-right-style: none;
-  border-right-width: 2px;
-  border-right-color: #D3D3D3;
-}
-
-#qckjgrtnjc .gt_sourcenote {
-  font-size: 90%;
-  padding: 4px;
-}
-
-#qckjgrtnjc .gt_left {
-  text-align: left;
-}
-
-#qckjgrtnjc .gt_center {
-  text-align: center;
-}
-
-#qckjgrtnjc .gt_right {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-#qckjgrtnjc .gt_font_normal {
-  font-weight: normal;
-}
-
-#qckjgrtnjc .gt_font_bold {
-  font-weight: bold;
-}
-
-#qckjgrtnjc .gt_font_italic {
-  font-style: italic;
-}
-
-#qckjgrtnjc .gt_super {
-  font-size: 65%;
-}
-
-#qckjgrtnjc .gt_footnote_marks {
-  font-style: italic;
-  font-size: 65%;
-}
-</style>
-<div id="qckjgrtnjc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
-  
-  <thead class="gt_col_headings">
-    <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1"></th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">n</th>
-    </tr>
-  </thead>
-  <tbody class="gt_table_body">
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">1981-1999</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_center">20519</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_center">19115</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_center">22481</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">62,115.00</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">2000-2012</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_center">32826</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_center">14975</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_center">58270</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">106,071.00</td>
-    </tr>
-  </tbody>
-  
-  
-</table></div>
+  ggplot(aes(basin_AIP, n, fill = era)) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/counts-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cleaning-stats" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> Cleaning stats</h2>
@@ -8828,8 +8375,8 @@ era_median_year</code></pre>
 <pre><code># A tibble: 2 x 2
   era       t_ref
   &lt;fct&gt;     &lt;dbl&gt;
-1 1981-1999  1995
-2 2000-2012  2007</code></pre>
+1 2000-2009  2006
+2 2010-2019  2014</code></pre>
 </div>
 <div id="histogram-temporal-coverage" class="section level2" number="3.6">
 <h2 number="3.6"><span class="header-section-number">3.6</span> Histogram temporal coverage</h2>
@@ -8842,8 +8389,7 @@ GLODAP_histogram_year %&gt;%
   ggplot() +
   geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   geom_col(aes(year, n,
-               fill = basin),
-               col = &quot;black&quot;) +
+               fill = basin)) +
   geom_point(
     data = era_median_year,
     aes(t_ref, 100, shape = &quot;Median year&quot;),
@@ -11350,29 +10896,29 @@ other attached packages:
 [13] tibble_3.0.4    ggplot2_3.3.3   tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] httr_1.4.2               sass_0.2.0               viridisLite_0.3.0       
- [4] jsonlite_1.7.1           here_0.1                 modelr_0.1.8            
- [7] assertthat_0.2.1         blob_1.2.1               cellranger_1.1.0        
-[10] yaml_2.2.1               pillar_1.4.7             backports_1.1.10        
-[13] lattice_0.20-41          glue_1.4.2               RcppEigen_0.3.3.7.0     
-[16] digest_0.6.27            RColorBrewer_1.1-2       promises_1.1.1          
-[19] checkmate_2.0.0          rvest_0.3.6              colorspace_1.4-1        
-[22] htmltools_0.5.0          httpuv_1.5.4             Matrix_1.2-18           
-[25] pkgconfig_2.0.3          broom_0.7.5              haven_2.3.1             
-[28] scales_1.1.1             whisker_0.4              later_1.1.0.1           
-[31] git2r_0.27.1             generics_0.0.2           farver_2.0.3            
-[34] ellipsis_0.3.1           withr_2.3.0              cli_2.1.0               
-[37] magrittr_1.5             crayon_1.3.4             readxl_1.3.1            
-[40] evaluate_0.14            fs_1.5.0                 fansi_0.4.1             
-[43] xml2_1.3.2               RcppArmadillo_0.10.1.2.0 tools_4.0.3             
-[46] data.table_1.13.2        hms_0.5.3                lifecycle_1.0.0         
-[49] munsell_0.5.0            reprex_0.3.0             compiler_4.0.3          
-[52] rlang_0.4.10             grid_4.0.3               rstudioapi_0.13         
-[55] labeling_0.4.2           rmarkdown_2.5            gtable_0.3.0            
-[58] DBI_1.1.0                R6_2.5.0                 knitr_1.30              
-[61] utf8_1.1.4               rprojroot_2.0.2          stringi_1.5.3           
-[64] parallel_4.0.3           Rcpp_1.0.5               vctrs_0.3.5             
-[67] dbplyr_1.4.4             tidyselect_1.1.0         xfun_0.18               </code></pre>
+ [1] httr_1.4.2               viridisLite_0.3.0        jsonlite_1.7.1          
+ [4] here_0.1                 modelr_0.1.8             assertthat_0.2.1        
+ [7] blob_1.2.1               cellranger_1.1.0         yaml_2.2.1              
+[10] pillar_1.4.7             backports_1.1.10         lattice_0.20-41         
+[13] glue_1.4.2               RcppEigen_0.3.3.7.0      digest_0.6.27           
+[16] RColorBrewer_1.1-2       promises_1.1.1           checkmate_2.0.0         
+[19] rvest_0.3.6              colorspace_1.4-1         htmltools_0.5.0         
+[22] httpuv_1.5.4             Matrix_1.2-18            pkgconfig_2.0.3         
+[25] broom_0.7.5              haven_2.3.1              scales_1.1.1            
+[28] whisker_0.4              later_1.1.0.1            git2r_0.27.1            
+[31] generics_0.0.2           farver_2.0.3             ellipsis_0.3.1          
+[34] withr_2.3.0              cli_2.1.0                magrittr_1.5            
+[37] crayon_1.3.4             readxl_1.3.1             evaluate_0.14           
+[40] fs_1.5.0                 fansi_0.4.1              xml2_1.3.2              
+[43] RcppArmadillo_0.10.1.2.0 tools_4.0.3              data.table_1.13.2       
+[46] hms_0.5.3                lifecycle_1.0.0          munsell_0.5.0           
+[49] reprex_0.3.0             compiler_4.0.3           rlang_0.4.10            
+[52] grid_4.0.3               rstudioapi_0.13          labeling_0.4.2          
+[55] rmarkdown_2.5            gtable_0.3.0             DBI_1.1.0               
+[58] R6_2.5.0                 knitr_1.30               utf8_1.1.4              
+[61] rprojroot_2.0.2          stringi_1.5.3            parallel_4.0.3          
+[64] Rcpp_1.0.5               vctrs_0.3.5              dbplyr_1.4.4            
+[67] tidyselect_1.1.0         xfun_0.18               </code></pre>
 </div>
 </div>
 </div>
