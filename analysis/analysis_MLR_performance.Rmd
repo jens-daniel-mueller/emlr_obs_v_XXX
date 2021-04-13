@@ -75,6 +75,14 @@ cant_zonal <-
                  "cant_zonal.csv",
                  sep = ""))
 
+cant_zonal_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_zonal_mod_truth.csv",
+                 sep = ""))
+
+cant_zonal <- bind_rows(cant_zonal,
+                        cant_zonal_mod_truth)
+
 cant_inv <-
   read_csv(paste(path_version_data,
                  "cant_inv.csv",
@@ -168,16 +176,22 @@ cant_3d %>%
 
 ```{r cant_vs_sd_by_basin_gamma, fig.asp=2}
 
-cant_3d %>% 
-  ggplot(aes(cant, cant_sd)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 10) +
-  geom_bin2d() +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10",
-                       name = "log10(n)") +
-  facet_grid(gamma_slab ~ basin_AIP)
+cant_3d %>%
+  group_split(basin_AIP) %>%
+  map(
+    ~ ggplot(data = .x, aes(cant, cant_sd)) +
+      geom_vline(xintercept = 0) +
+      geom_hline(yintercept = 10) +
+      geom_bin2d() +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10",
+        name = "log10(n)"
+      ) +
+      facet_grid(gamma_slab ~ data_source) +
+      labs(title = paste("Basin:", unique(.x$basin_AIP)))
+  )
 
 ```
 
@@ -204,15 +218,21 @@ cant_zonal %>%
 
 ```{r cant_vs_sd_by_basin_gamma_zonal, fig.asp=2}
 
-cant_zonal %>% 
-  ggplot(aes(cant_mean, cant_sd)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 10) +
-  geom_bin2d() +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10",
-                       name = "log10(n)") +
-  facet_grid(gamma_slab ~ basin_AIP)
+cant_zonal %>%
+  group_split(basin_AIP) %>%
+  map(
+    ~ ggplot(data = .x, aes(cant_mean, cant_sd)) +
+      geom_vline(xintercept = 0) +
+      geom_hline(yintercept = 10) +
+      geom_bin2d() +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10",
+        name = "log10(n)"
+      ) +
+      facet_grid(gamma_slab ~ data_source)  +
+      labs(title = paste("Basin:", unique(.x$basin_AIP)))
+  )
 
 ```
