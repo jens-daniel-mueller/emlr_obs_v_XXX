@@ -116,7 +116,7 @@ cant_average <- cant_average %>%
   mutate(cant_pos = if_else(cant <= 0, 0, cant))
 
 rm(cant_tref_1, cant_tref_2)
-cant_average <- left_join(basinmask, cant_average)
+cant_average <- inner_join(basinmask, cant_average)
 
 cant_average <- m_cant_model_average(cant_average %>% mutate(eras = "blank",
                                              gamma = 0))

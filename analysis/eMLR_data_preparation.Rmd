@@ -448,7 +448,7 @@ co2_atm_tref <- right_join(co2_atm, tref) %>%
 
 # merge atm pCO2 at tref with GLODAP
 GLODAP <- full_join(GLODAP, co2_atm_tref)
-rm(co2_atm, tref)
+rm(co2_atm)
 
 # calculate cstar for reference year
 GLODAP <- GLODAP %>%
@@ -1036,6 +1036,10 @@ GLODAP %>% write_csv(paste(
 
 co2_atm_tref %>%  write_csv(paste(path_version_data,
                                   "co2_atm_tref.csv",
+                                  sep = ""))
+
+tref %>%  write_csv(paste(path_version_data,
+                                  "tref.csv",
                                   sep = ""))
 
 ```
