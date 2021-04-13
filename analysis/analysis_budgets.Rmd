@@ -70,6 +70,13 @@ cant_inv <-
                  "cant_inv.csv",
                  sep = ""))
 
+cant_inv_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_inv_mod_truth.csv",
+                 sep = ""))
+
+cant_inv <- bind_rows(cant_inv, cant_inv_mod_truth)
+
 ```
 
 # Cant budgets
@@ -100,6 +107,14 @@ Results integrated over the upper `r params_global$inventory_depth_standard` m
 
 cant_inv_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
+  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_wrap(~ estimate)
+
+cant_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
   gt(rowname_col = "basin_AIP",
      groupname_col = c("data_source", "inv_depth"),
      row_group.sep = " | Depth: ") %>% 
@@ -115,7 +130,15 @@ cant_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depths` m
 
-```{r cant_budget_other_depth}
+```{r cant_budget_other_depth, fig.asp=1}
+
+cant_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
+  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(inv_depth ~ estimate, scales = "free_y")
 
 cant_inv_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 

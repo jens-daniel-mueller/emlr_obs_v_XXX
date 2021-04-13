@@ -23,6 +23,7 @@ wflow_publish(here::here(
     "eMLR_model_fitting.Rmd",
     "mapping_predictor_preparation.Rmd",
     "mapping_cant.Rmd",
+    "mapping_cant_mod_truth.Rmd",
     "analysis_budgets.Rmd",
     "analysis_column_inventory.Rmd",
     "analysis_zonal_sections.Rmd",
@@ -36,7 +37,7 @@ republish = TRUE)
 wflow_publish(here::here(
   "analysis",
   c(
-    "eMLR_data_preparation.Rmd"
+    "analysis_slab_inventory.Rmd"
   )
 ),
 message = "included model data")
