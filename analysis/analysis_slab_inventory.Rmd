@@ -70,20 +70,14 @@ cant_3d <-
                  "cant_3d.csv",
                  sep = ""))
 
-# cant_zonal <-
-#   read_csv(paste(path_version_data,
-#                  "cant_zonal.csv",
-#                  sep = ""))
-# 
-# cant_predictor_zonal <-
-#   read_csv(paste(path_version_data,
-#                  "cant_predictor_zonal.csv",
-#                  sep = ""))
-# 
-# cant_inv <-
-#   read_csv(paste(path_version_data,
-#                  "cant_inv.csv",
-#                  sep = ""))
+cant_3d_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_3d_mod_truth.csv",
+                 sep = ""))
+
+cant_3d <- bind_rows(cant_3d,
+                     cant_3d_mod_truth)
+
 
 ```
 
@@ -97,6 +91,136 @@ GLODAP <-
     "GLODAPv2.2020_MLR_fitting_ready.csv",
     sep = ""
   ))
+
+```
+
+
+```{r calculate_gamma_slab_maps}
+
+cant_gamma_maps <- m_cant_slab_data_source(cant_3d)
+
+cant_gamma_maps <- cant_gamma_maps %>% 
+  arrange(gamma_slab, data_source)
+
+```
+
+
+
+# Cant - positive
+
+In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+
+Mean of positive cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+
+Please note that:
+
+- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
+- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
+
+
+```{r cant_pos_gamma_slab_maps, fig.asp=0.5}
+
+cant_gamma_maps %>%
+  group_split(gamma_slab, data_source) %>%
+  map(
+    ~ p_map_cant_slab(
+    df = .x,
+    subtitle_text = paste("data_source:", unique(.x$data_source),
+                          "| Neutral density:", unique(.x$gamma_slab))
+  ))
+
+
+```
+
+```{r test_inventory_map, eval=FALSE}
+
+i_gamma_slab <- unique(cant_3d$gamma_slab)[2]
+i_data_source <- unique(cant_3d$data_source)[2]
+
+map +
+  geom_contour_filled(
+    data = cant_gamma_maps %>%
+      filter(data_source == i_data_source,
+             gamma_slab == i_gamma_slab),
+    aes(lon, lat, z = cant)
+  ) +
+  scale_fill_viridis_d()
+
+```
+
+
+# Cant - all
+
+In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
+
+Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+
+Please note that:
+
+- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
+- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
+
+
+```{r cant_all_gamma_slab_maps, fig.asp=0.5}
+
+cant_gamma_maps %>%
+  group_split(gamma_slab, data_source) %>%
+  map(
+    ~ p_map_cant_slab(
+    df = .x,
+    var = "cant",
+    col = "divergent",
+    subtitle_text = paste("data_source:", unique(.x$data_source),
+                          "| Neutral density:", unique(.x$gamma_slab))
+  ))
+
+
+
+```
+
+# Slab inventories
+
+```{r calc_slab_inventory}
+
+cant_slab_inv <- m_cant_slab_inv_data_source(cant_3d)
+
+cant_slab_inv %>% 
+  ggplot(aes(data_source, cant_pos_total, fill = gamma_slab)) +
+  geom_col() +
+  scale_fill_viridis_d(direction = -1) +
+  facet_wrap(~ basin_AIP)
+
+cant_slab_inv %>% 
+  ggplot(aes(data_source, cant_total, fill = gamma_slab)) +
+  geom_col() +
+  scale_fill_viridis_d(direction = -1) +
+  facet_wrap(~ basin_AIP)
+
+cant_slab_bias <- cant_slab_inv %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(basin_AIP, data_source, gamma_slab, cant_pos_total) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos_total) %>%
+  mutate(cant_pos_bias = mod - mod_truth)
+
+cant_slab_bias %>% 
+  ggplot(aes(gamma_slab, cant_pos_bias, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip()
+
+cant_slab_bias <- cant_slab_inv %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(basin_AIP, data_source, gamma_slab, cant_total) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_total) %>%
+  mutate(cant_bias = mod - mod_truth)
+
+cant_slab_bias %>% 
+  ggplot(aes(gamma_slab, cant_bias, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip()
 
 ```
 
@@ -222,86 +346,5 @@ map +
   scale_fill_viridis_c(direction = -1)
 
 rm(slabs)
-
-```
-
-```{r calculate_gamma_slab_maps}
-
-cant_gamma_maps <- m_cant_slab_data_source(cant_3d)
-
-cant_gamma_maps <- cant_gamma_maps %>% 
-  arrange(gamma_slab, data_source)
-
-```
-
-
-
-# Cant - positive
-
-In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
-
-Mean of positive cant within each horizontal grid cell (lon x lat) per isoneutral slab.
-
-Please note that:
-
-- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
-- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
-
-
-```{r cant_pos_gamma_slab_maps, fig.asp=0.5}
-
-cant_gamma_maps %>%
-  group_split(gamma_slab, data_source) %>%
-  map(
-    ~ p_map_cant_slab(
-    df = .x,
-    subtitle_text = paste("data_source:", unique(.x$data_source),
-                          "| Neutral density:", unique(.x$gamma_slab))
-  ))
-
-
-```
-
-```{r test_inventory_map, eval=FALSE}
-
-map +
-  geom_contour_filled(
-    data = cant_gamma_maps %>%
-      filter(data_source == i_data_source,
-             gamma_slab == i_gamma_slab),
-    aes(lon, lat, z = cant),
-    breaks = c(seq(0, 18, 2), Inf)
-  ) +
-  scale_fill_viridis_d()
-
-```
-
-
-# Cant - all
-
-In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
-
-Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.
-
-Please note that:
-
-- density slabs covering values >28.1 occur by definition only either in the Atlantic or Indo-Pacific basin
-- gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
-
-
-```{r cant_all_gamma_slab_maps, fig.asp=0.5}
-
-cant_gamma_maps %>%
-  group_split(gamma_slab, data_source) %>%
-  map(
-    ~ p_map_cant_slab(
-    df = .x,
-    var = "cant",
-    col = "divergent",
-    subtitle_text = paste("data_source:", unique(.x$data_source),
-                          "| Neutral density:", unique(.x$gamma_slab))
-  ))
-
-
 
 ```
