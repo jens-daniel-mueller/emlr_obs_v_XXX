@@ -98,6 +98,19 @@ Column inventory of positive cant between the surface and `r params_global$inven
 
 ```{r cant_pos_inventory_map, fig.asp=0.5}
 
+cant_inv_bias <- cant_inv %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(lat, lon, data_source, cant_pos_inv) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos_inv) %>%
+  mutate(cant_pos_bias = mod - mod_truth)
+
+p_map_cant_inv(
+    df = cant_inv_bias,
+    var = "cant_pos_bias",
+    col = "divergent",
+    subtitle_text = "data_source: mod - model_truth")
+
 
 cant_inv %>%
   group_split(data_source) %>%
@@ -117,6 +130,19 @@ In a second series of plots we explore the distribution of all Cant, taking posi
 Column inventory of all Cant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
 ```{r cant_all_inventory_map, fig.asp=0.5}
+
+cant_inv_bias <- cant_inv %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(lat, lon, data_source, cant_inv) %>%
+  pivot_wider(names_from = data_source,
+              values_from = cant_inv) %>%
+  mutate(cant_bias = mod - mod_truth)
+
+p_map_cant_inv(
+    df = cant_inv_bias,
+    var = "cant_bias",
+    col = "divergent",
+    subtitle_text = "data_source: mod - model_truth")
 
 cant_inv %>%
   group_split(data_source) %>%
