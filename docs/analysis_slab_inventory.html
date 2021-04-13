@@ -432,7 +432,7 @@ div.tocify {
       <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cant_model_truth.html">Cant model_truth</a>
+      <a href="mapping_cant_mod_truth.html">Cant model_truth</a>
     </li>
   </ul>
 </li>
@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebeaec1767f919a2ca65cbca7fed2ce6cad4212e7targetblankbeaec17a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/beaec1767f919a2ca65cbca7fed2ce6cad4212e7" target="_blank">beaec17</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebeaec1767f919a2ca65cbca7fed2ce6cad4212e7targetblankbeaec17a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/beaec1767f919a2ca65cbca7fed2ce6cad4212e7" target="_blank">beaec17</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,8 @@ Ignored files:
 
 Unstaged changes:
     Modified:   analysis/_site.yml
+    Modified:   analysis/mapping_cant_mod_truth.Rmd
+    Deleted:    analysis/mapping_cant_model_truth.Rmd
     Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
@@ -671,6 +673,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/beaec1767f919a2ca65cbca7fed2ce6cad4212e7/analysis/analysis_slab_inventory.Rmd" target="_blank">beaec17</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+included model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c98be8457226d0a999e9ae65a54c159ba5c47c07/docs/analysis_slab_inventory.html" target="_blank">c98be84</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -878,20 +914,13 @@ included model data
                  &quot;cant_3d.csv&quot;,
                  sep = &quot;&quot;))
 
-# cant_zonal &lt;-
-#   read_csv(paste(path_version_data,
-#                  &quot;cant_zonal.csv&quot;,
-#                  sep = &quot;&quot;))
-# 
-# cant_predictor_zonal &lt;-
-#   read_csv(paste(path_version_data,
-#                  &quot;cant_predictor_zonal.csv&quot;,
-#                  sep = &quot;&quot;))
-# 
-# cant_inv &lt;-
-#   read_csv(paste(path_version_data,
-#                  &quot;cant_inv.csv&quot;,
-#                  sep = &quot;&quot;))</code></pre>
+cant_3d_mod_truth &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;cant_3d_mod_truth.csv&quot;,
+                 sep = &quot;&quot;))
+
+cant_3d &lt;- bind_rows(cant_3d,
+                     cant_3d_mod_truth)</code></pre>
 <p>Cleaned GLODAPv2_2020 file as used in this sensitivity case</p>
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(
@@ -899,268 +928,13 @@ included model data
     &quot;GLODAPv2.2020_MLR_fitting_ready.csv&quot;,
     sep = &quot;&quot;
   ))</code></pre>
-</div>
-<div id="slab-boundary-depth" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Slab boundary depth</h1>
-<pre class="r"><code># gamma field in Atl
-predictors_gamma_Atl &lt;- cant_3d %&gt;%
-  select(data_source, basin_AIP, lat, lon, depth, gamma) %&gt;% 
-  filter(basin_AIP == &quot;Atlantic&quot;) %&gt;% 
-  distinct()
-
-# filter grid cells with at least two depth layers
-predictors_gamma_Atl &lt;- predictors_gamma_Atl %&gt;%
-  group_by(data_source, lat, lon) %&gt;%
-  mutate(n = n()) %&gt;%
-  ungroup() %&gt;% 
-  filter(n &gt; 1) %&gt;% 
-  select(-n)
-
-# 3D grid with Atl slab boundaries
-slabs_Atl &lt;- expand_grid(predictors_gamma_Atl %&gt;% distinct(data_source, lat, lon),
-                         gamma = params_local$slabs_Atl) %&gt;% 
-  mutate(basin_AIP = &quot;flag&quot;)
-
-# join slab boundary grid with gamma field
-slabs_Atl_int &lt;- full_join(slabs_Atl,
-                           predictors_gamma_Atl) %&gt;%
-  arrange(lat, lon, gamma)
-
-# interpolate depth to slab boundary
-slabs_Atl_int &lt;- slabs_Atl_int %&gt;% 
-  group_by(data_source, lat, lon) %&gt;% 
-  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %&gt;% 
-  ungroup()
-
-# filter interpolated depths
-slabs_Atl_int &lt;- slabs_Atl_int %&gt;% 
-  filter(basin_AIP == &quot;flag&quot;,
-         !is.na(depth))
-
-#### Indo-Pacific
-
-# gamma field in Pac
-predictors_gamma_Ind_Pac &lt;- cant_3d %&gt;%
-  select(data_source, basin_AIP, lat, lon, depth, gamma) %&gt;% 
-  filter(basin_AIP %in% c(&quot;Indian&quot;, &quot;Pacific&quot;)) %&gt;% 
-  distinct()
-
-# filter grid cells with at least two depth layers
-predictors_gamma_Ind_Pac &lt;- predictors_gamma_Ind_Pac %&gt;%
-  group_by(data_source, lat, lon) %&gt;%
-  mutate(n = n()) %&gt;%
-  ungroup() %&gt;% 
-  filter(n &gt; 1) %&gt;% 
-  select(-n)
-
-# 3D grid with Pac slab boundaries
-slabs_Ind_Pac &lt;- expand_grid(predictors_gamma_Ind_Pac %&gt;% distinct(data_source, lat, lon),
-                         gamma = params_local$slabs_Ind_Pac) %&gt;% 
-  mutate(basin_AIP = &quot;flag&quot;)
-
-# join slab boundary grid with gamma field
-slabs_Ind_Pac_int &lt;- full_join(slabs_Ind_Pac,
-                           predictors_gamma_Ind_Pac) %&gt;%
-  arrange(lat, lon, gamma)
-
-# interpolate depth to slab boundary
-slabs_Ind_Pac_int &lt;- slabs_Ind_Pac_int %&gt;% 
-  group_by(data_source, lat, lon) %&gt;% 
-  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %&gt;% 
-  ungroup()
-
-# filter interpolated depths
-slabs_Ind_Pac_int &lt;- slabs_Ind_Pac_int %&gt;% 
-  filter(basin_AIP == &quot;flag&quot;,
-         !is.na(depth))
-
-
-# join interpolated gamma depth
-slabs &lt;- bind_rows(slabs_Atl_int,
-                   slabs_Ind_Pac_int) %&gt;%
-  select(-basin_AIP)
-
-slabs &lt;- inner_join(
-  basinmask %&gt;% select(lat, lon, basin_AIP) %&gt;% distinct(),
-  slabs)
-
-
-map + 
-  geom_raster(data = slabs,
-              aes(lon, lat, fill = depth)) +
-  facet_grid(gamma ~ data_source) +
-  scale_fill_viridis_c(direction = -1)</code></pre>
-<p><img src="figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-gamma_slab_boundary_depth-1">
-Past versions of gamma_slab_boundary_depth-1.png
-</button>
-</p>
-<div id="fig-gamma_slab_boundary_depth-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">338dd3c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">a79ca2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20b26d4bcd659a24b85fb71a45d9ae0108606b94/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">20b26d4</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-08
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/488c4c123f94bb8231ec5a4360c9d4bf8a0edb1b/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">488c4c1</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)</code></pre>
-<pre class="r"><code># slabs_ex &lt;- slabs %&gt;% 
-#   filter(lat == 0.5,
-#          lon == 250.5)
-
-slabs &lt;- slabs %&gt;% 
-  group_by(data_source, lat, lon) %&gt;% 
-  arrange(depth) %&gt;% 
-  mutate(depth_lower_bound = depth,
-         depth_upper_bound = lag(depth, default = 0),
-         slab_thickness = depth_lower_bound - depth_upper_bound,
-         gamma_in_slab = gamma - 0.01) %&gt;% 
-  ungroup()
-
-slabs &lt;- m_cut_gamma(slabs, &quot;gamma_in_slab&quot;)
-
-map + 
-  geom_raster(data = slabs,
-              aes(lon, lat, fill = slab_thickness)) +
-  facet_grid(gamma_slab ~ data_source) +
-  scale_fill_viridis_c(direction = -1)</code></pre>
-<p><img src="figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_slab_thickness-1">
-Past versions of calculate_slab_thickness-1.png
-</button>
-</p>
-<div id="fig-calculate_slab_thickness-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">338dd3c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">a79ca2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20b26d4bcd659a24b85fb71a45d9ae0108606b94/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">20b26d4</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-08
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/488c4c123f94bb8231ec5a4360c9d4bf8a0edb1b/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">488c4c1</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>rm(slabs)</code></pre>
 <pre class="r"><code>cant_gamma_maps &lt;- m_cant_slab_data_source(cant_3d)
 
 cant_gamma_maps &lt;- cant_gamma_maps %&gt;% 
   arrange(gamma_slab, data_source)</code></pre>
 </div>
-<div id="cant---positive" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Cant - positive</h1>
+<div id="cant---positive" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Cant - positive</h1>
 <p>In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
 <p>Mean of positive cant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
 <p>Please note that:</p>
@@ -3629,18 +3403,65 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>map +
+<pre><code>
+[[31]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-31.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[32]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-32.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[33]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-33.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[34]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-34.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[35]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-35.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[36]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-36.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[37]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-37.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[38]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-38.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[39]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-39.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[40]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-40.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[41]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-41.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[42]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-42.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[43]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-43.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[44]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-44.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[45]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-45.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>i_gamma_slab &lt;- unique(cant_3d$gamma_slab)[2]
+i_data_source &lt;- unique(cant_3d$data_source)[2]
+
+map +
   geom_contour_filled(
     data = cant_gamma_maps %&gt;%
       filter(data_source == i_data_source,
              gamma_slab == i_gamma_slab),
-    aes(lon, lat, z = cant),
-    breaks = c(seq(0, 18, 2), Inf)
+    aes(lon, lat, z = cant)
   ) +
   scale_fill_viridis_d()</code></pre>
 </div>
-<div id="cant---all" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Cant - all</h1>
+<div id="cant---all" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Cant - all</h1>
 <p>In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.</p>
 <p>Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
 <p>Please note that:</p>
@@ -6122,6 +5943,349 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[31]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-31.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[32]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-32.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[33]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-33.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[34]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-34.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[35]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-35.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[36]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-36.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[37]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-37.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[38]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-38.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[39]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-39.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[40]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-40.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[41]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-41.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[42]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-42.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[43]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-43.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[44]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-44.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[45]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-45.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slab-inventories" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Slab inventories</h1>
+<pre class="r"><code>cant_slab_inv &lt;- m_cant_slab_inv_data_source(cant_3d)
+
+cant_slab_inv %&gt;% 
+  ggplot(aes(data_source, cant_pos_total, fill = gamma_slab)) +
+  geom_col() +
+  scale_fill_viridis_d(direction = -1) +
+  facet_wrap(~ basin_AIP)</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/calc_slab_inventory-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_slab_inv %&gt;% 
+  ggplot(aes(data_source, cant_total, fill = gamma_slab)) +
+  geom_col() +
+  scale_fill_viridis_d(direction = -1) +
+  facet_wrap(~ basin_AIP)</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/calc_slab_inventory-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_slab_bias &lt;- cant_slab_inv %&gt;%
+  filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;)) %&gt;%
+  select(basin_AIP, data_source, gamma_slab, cant_pos_total) %&gt;%
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos_total) %&gt;%
+  mutate(cant_pos_bias = mod - mod_truth)
+
+cant_slab_bias %&gt;% 
+  ggplot(aes(gamma_slab, cant_pos_bias, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  coord_flip()</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/calc_slab_inventory-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_slab_bias &lt;- cant_slab_inv %&gt;%
+  filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;)) %&gt;%
+  select(basin_AIP, data_source, gamma_slab, cant_total) %&gt;%
+  pivot_wider(names_from = data_source,
+              values_from = cant_total) %&gt;%
+  mutate(cant_bias = mod - mod_truth)
+
+cant_slab_bias %&gt;% 
+  ggplot(aes(gamma_slab, cant_bias, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  coord_flip()</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/calc_slab_inventory-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="slab-boundary-depth" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Slab boundary depth</h1>
+<pre class="r"><code># gamma field in Atl
+predictors_gamma_Atl &lt;- cant_3d %&gt;%
+  select(data_source, basin_AIP, lat, lon, depth, gamma) %&gt;% 
+  filter(basin_AIP == &quot;Atlantic&quot;) %&gt;% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Atl &lt;- predictors_gamma_Atl %&gt;%
+  group_by(data_source, lat, lon) %&gt;%
+  mutate(n = n()) %&gt;%
+  ungroup() %&gt;% 
+  filter(n &gt; 1) %&gt;% 
+  select(-n)
+
+# 3D grid with Atl slab boundaries
+slabs_Atl &lt;- expand_grid(predictors_gamma_Atl %&gt;% distinct(data_source, lat, lon),
+                         gamma = params_local$slabs_Atl) %&gt;% 
+  mutate(basin_AIP = &quot;flag&quot;)
+
+# join slab boundary grid with gamma field
+slabs_Atl_int &lt;- full_join(slabs_Atl,
+                           predictors_gamma_Atl) %&gt;%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Atl_int &lt;- slabs_Atl_int %&gt;% 
+  group_by(data_source, lat, lon) %&gt;% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %&gt;% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Atl_int &lt;- slabs_Atl_int %&gt;% 
+  filter(basin_AIP == &quot;flag&quot;,
+         !is.na(depth))
+
+#### Indo-Pacific
+
+# gamma field in Pac
+predictors_gamma_Ind_Pac &lt;- cant_3d %&gt;%
+  select(data_source, basin_AIP, lat, lon, depth, gamma) %&gt;% 
+  filter(basin_AIP %in% c(&quot;Indian&quot;, &quot;Pacific&quot;)) %&gt;% 
+  distinct()
+
+# filter grid cells with at least two depth layers
+predictors_gamma_Ind_Pac &lt;- predictors_gamma_Ind_Pac %&gt;%
+  group_by(data_source, lat, lon) %&gt;%
+  mutate(n = n()) %&gt;%
+  ungroup() %&gt;% 
+  filter(n &gt; 1) %&gt;% 
+  select(-n)
+
+# 3D grid with Pac slab boundaries
+slabs_Ind_Pac &lt;- expand_grid(predictors_gamma_Ind_Pac %&gt;% distinct(data_source, lat, lon),
+                         gamma = params_local$slabs_Ind_Pac) %&gt;% 
+  mutate(basin_AIP = &quot;flag&quot;)
+
+# join slab boundary grid with gamma field
+slabs_Ind_Pac_int &lt;- full_join(slabs_Ind_Pac,
+                           predictors_gamma_Ind_Pac) %&gt;%
+  arrange(lat, lon, gamma)
+
+# interpolate depth to slab boundary
+slabs_Ind_Pac_int &lt;- slabs_Ind_Pac_int %&gt;% 
+  group_by(data_source, lat, lon) %&gt;% 
+  mutate(depth = approxfun(gamma, depth, rule = 1)(gamma)) %&gt;% 
+  ungroup()
+
+# filter interpolated depths
+slabs_Ind_Pac_int &lt;- slabs_Ind_Pac_int %&gt;% 
+  filter(basin_AIP == &quot;flag&quot;,
+         !is.na(depth))
+
+
+# join interpolated gamma depth
+slabs &lt;- bind_rows(slabs_Atl_int,
+                   slabs_Ind_Pac_int) %&gt;%
+  select(-basin_AIP)
+
+slabs &lt;- inner_join(
+  basinmask %&gt;% select(lat, lon, basin_AIP) %&gt;% distinct(),
+  slabs)
+
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = depth)) +
+  facet_grid(gamma ~ data_source) +
+  scale_fill_viridis_c(direction = -1)</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-gamma_slab_boundary_depth-1">
+Past versions of gamma_slab_boundary_depth-1.png
+</button>
+</p>
+<div id="fig-gamma_slab_boundary_depth-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20b26d4bcd659a24b85fb71a45d9ae0108606b94/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">20b26d4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/488c4c123f94bb8231ec5a4360c9d4bf8a0edb1b/docs/figure/analysis_slab_inventory.Rmd/gamma_slab_boundary_depth-1.png" target="_blank">488c4c1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)</code></pre>
+<pre class="r"><code># slabs_ex &lt;- slabs %&gt;% 
+#   filter(lat == 0.5,
+#          lon == 250.5)
+
+slabs &lt;- slabs %&gt;% 
+  group_by(data_source, lat, lon) %&gt;% 
+  arrange(depth) %&gt;% 
+  mutate(depth_lower_bound = depth,
+         depth_upper_bound = lag(depth, default = 0),
+         slab_thickness = depth_lower_bound - depth_upper_bound,
+         gamma_in_slab = gamma - 0.01) %&gt;% 
+  ungroup()
+
+slabs &lt;- m_cut_gamma(slabs, &quot;gamma_in_slab&quot;)
+
+map + 
+  geom_raster(data = slabs,
+              aes(lon, lat, fill = slab_thickness)) +
+  facet_grid(gamma_slab ~ data_source) +
+  scale_fill_viridis_c(direction = -1)</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_slab_thickness-1">
+Past versions of calculate_slab_thickness-1.png
+</button>
+</p>
+<div id="fig-calculate_slab_thickness-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20b26d4bcd659a24b85fb71a45d9ae0108606b94/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">20b26d4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/488c4c123f94bb8231ec5a4360c9d4bf8a0edb1b/docs/figure/analysis_slab_inventory.Rmd/calculate_slab_thickness-1.png" target="_blank">488c4c1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(slabs)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -6158,29 +6322,29 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 lubridate_1.7.9          gsw_1.0-5               
- [4] webshot_0.5.2            httr_1.4.2               rprojroot_2.0.2         
- [7] tools_4.0.3              backports_1.1.10         R6_2.5.0                
-[10] DBI_1.1.0                colorspace_1.4-1         withr_2.3.0             
-[13] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
-[16] cli_2.1.0                rvest_0.3.6              xml2_1.3.2              
-[19] labeling_0.4.2           checkmate_2.0.0          digest_0.6.27           
-[22] rmarkdown_2.5            oce_1.2-0                pkgconfig_2.0.3         
-[25] htmltools_0.5.0          dbplyr_1.4.4             rlang_0.4.10            
-[28] readxl_1.3.1             rstudioapi_0.13          generics_0.0.2          
-[31] farver_2.0.3             jsonlite_1.7.1           magrittr_1.5            
-[34] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
-[37] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
-[40] whisker_0.4              yaml_2.2.1               grid_4.0.3              
-[43] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
-[46] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
-[49] hms_0.5.3                seacarb_3.2.14           knitr_1.30              
-[52] pillar_1.4.7             reprex_0.3.0             glue_1.4.2              
-[55] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.13.2       
-[58] modelr_0.1.8             vctrs_0.3.5              httpuv_1.5.4            
-[61] testthat_2.3.2           cellranger_1.1.0         gtable_0.3.0            
-[64] assertthat_0.2.1         xfun_0.18                broom_0.7.5             
-[67] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
-[70] ellipsis_0.3.1           here_0.1                </code></pre>
+ [4] RColorBrewer_1.1-2       webshot_0.5.2            httr_1.4.2              
+ [7] rprojroot_2.0.2          tools_4.0.3              backports_1.1.10        
+[10] R6_2.5.0                 DBI_1.1.0                colorspace_1.4-1        
+[13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
+[16] git2r_0.27.1             cli_2.1.0                rvest_0.3.6             
+[19] xml2_1.3.2               labeling_0.4.2           checkmate_2.0.0         
+[22] digest_0.6.27            rmarkdown_2.5            oce_1.2-0               
+[25] pkgconfig_2.0.3          htmltools_0.5.0          dbplyr_1.4.4            
+[28] rlang_0.4.10             readxl_1.3.1             rstudioapi_0.13         
+[31] generics_0.0.2           farver_2.0.3             jsonlite_1.7.1          
+[34] magrittr_1.5             Matrix_1.2-18            Rcpp_1.0.5              
+[37] munsell_0.5.0            fansi_0.4.1              lifecycle_1.0.0         
+[40] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
+[43] grid_4.0.3               blob_1.2.1               parallel_4.0.3          
+[46] promises_1.1.1           crayon_1.3.4             lattice_0.20-41         
+[49] haven_2.3.1              hms_0.5.3                seacarb_3.2.14          
+[52] knitr_1.30               pillar_1.4.7             reprex_0.3.0            
+[55] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[58] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
+[61] httpuv_1.5.4             testthat_2.3.2           cellranger_1.1.0        
+[64] gtable_0.3.0             assertthat_0.2.1         xfun_0.18               
+[67] broom_0.7.5              RcppEigen_0.3.3.7.0      later_1.1.0.1           
+[70] viridisLite_0.3.0        ellipsis_0.3.1           here_0.1                </code></pre>
 </div>
 </div>
 
