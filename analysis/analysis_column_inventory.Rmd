@@ -70,12 +70,12 @@ cant_inv <-
                  "cant_inv.csv",
                  sep = ""))
 
-cant_inv_model_truth <-
+cant_inv_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_inv_model_truth.csv",
+                 "cant_inv_mod_truth.csv",
                  sep = ""))
 
-cant_inv <- bind_rows(cant_inv, cant_inv_model_truth)
+cant_inv <- bind_rows(cant_inv, cant_inv_mod_truth)
 
 ```
 
@@ -109,7 +109,7 @@ p_map_cant_inv(
     df = cant_inv_bias,
     var = "cant_pos_bias",
     col = "divergent",
-    subtitle_text = "data_source: mod - model_truth")
+    subtitle_text = "data_source: mod - mod_truth")
 
 
 cant_inv %>%
@@ -142,7 +142,7 @@ p_map_cant_inv(
     df = cant_inv_bias,
     var = "cant_bias",
     col = "divergent",
-    subtitle_text = "data_source: mod - model_truth")
+    subtitle_text = "data_source: mod - mod_truth")
 
 cant_inv %>%
   group_split(data_source) %>%

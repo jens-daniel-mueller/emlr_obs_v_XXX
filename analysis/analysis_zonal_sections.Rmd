@@ -65,36 +65,31 @@ Cant estimates from this sensitivity case:
 
 ```{r read_cant_files}
 
-
 cant_3d <-
   read_csv(paste(path_version_data,
                  "cant_3d.csv",
                  sep = ""))
 
-cant_3d_model_truth <-
+cant_3d_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_3d_model_truth.csv",
+                 "cant_3d_mod_truth.csv",
                  sep = ""))
 
 cant_3d <- bind_rows(cant_3d,
-                     cant_3d_model_truth %>% mutate(data_source = "model_truth",
-                                                    gamma_slab = NA))
+                     cant_3d_mod_truth)
 
 cant_zonal <-
   read_csv(paste(path_version_data,
                  "cant_zonal.csv",
                  sep = ""))
 
-cant_zonal_model_truth <-
+cant_zonal_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_zonal_model_truth.csv",
+                 "cant_zonal_mod_truth.csv",
                  sep = ""))
 
-cant_zonal <- bind_rows(
-  cant_zonal,
-  cant_zonal_model_truth %>% mutate(data_source = "model_truth",
-                                    gamma_slab = NA)
-)
+cant_zonal <- bind_rows(cant_zonal,
+                        cant_zonal_mod_truth)
 
 
 ```
@@ -107,11 +102,11 @@ In a first series of plots we explore the distribution of Cant, taking only posi
 ```{r cant_pos_zonal_mean_sections, fig.asp=0.6}
 
 cant_zonal_bias <- cant_zonal %>%
-  filter(data_source %in% c("mod", "model_truth")) %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
   select(lat, depth, basin_AIP, data_source, cant_pos_mean) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_pos_mean) %>%
-  mutate(cant_pos_bias = mod - model_truth)
+  mutate(cant_pos_bias = mod - mod_truth)
 
 # cant_zonal %>%
 #   group_split(data_source, basin_AIP) %>%
@@ -151,7 +146,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
       breaks = params_global$breaks_cant_offset,
       plot_slabs = "n",
       subtitle_text =
-        paste("Basin:", i_basin_AIP, "| data_source: mod - model_truth")
+        paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
   )
 }
@@ -187,11 +182,11 @@ In a second series of plots we explore the distribution of all Cant, taking posi
 ```{r cant_all_zonal_mean_sections, fig.asp=0.6}
 
 cant_zonal_bias <- cant_zonal %>%
-  filter(data_source %in% c("mod", "model_truth")) %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
   select(lat, depth, basin_AIP, data_source, cant_mean) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_mean) %>%
-  mutate(cant_bias = mod - model_truth)
+  mutate(cant_bias = mod - mod_truth)
 
 # i_data_source <- unique(cant_zonal$data_source)[1]
 # i_basin_AIP <- unique(cant_zonal$basin_AIP)[1]
@@ -222,7 +217,7 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
       breaks = params_global$breaks_cant_offset,
       plot_slabs = "n",
       subtitle_text =
-        paste("Basin:", i_basin_AIP, "| data_source: mod - model_truth")
+        paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
   )
   
