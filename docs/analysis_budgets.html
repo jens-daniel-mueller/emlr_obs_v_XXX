@@ -432,7 +432,7 @@ div.tocify {
       <a href="mapping_cant.html">Cant calculation</a>
     </li>
     <li>
-      <a href="mapping_cant_model_truth.html">Cant model_truth</a>
+      <a href="mapping_cant_mod_truth.html">Cant model_truth</a>
     </li>
   </ul>
 </li>
@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3efd03e9e92c1de0e618e2234c03b2f42e28e497targetblank3efd03ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3efd03e9e92c1de0e618e2234c03b2f42e28e497" target="_blank">3efd03e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1df24962f39487cd47312ca0ebbc5b4f7f19f97ctargetblank1df2496a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3efd03e9e92c1de0e618e2234c03b2f42e28e497targetblank3efd03ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1df24962f39487cd47312ca0ebbc5b4f7f19f97c" target="_blank">1df2496</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3efd03e9e92c1de0e618e2234c03b2f42e28e497" target="_blank">3efd03e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -629,10 +629,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   analysis/_site.yml
-    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -671,6 +667,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3efd03e9e92c1de0e618e2234c03b2f42e28e497/analysis/analysis_budgets.Rmd" target="_blank">3efd03e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+included model data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c98be8457226d0a999e9ae65a54c159ba5c47c07/docs/analysis_budgets.html" target="_blank">c98be84</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -825,7 +855,14 @@ included model data
 <pre class="r"><code>cant_inv &lt;-
   read_csv(paste(path_version_data,
                  &quot;cant_inv.csv&quot;,
-                 sep = &quot;&quot;))</code></pre>
+                 sep = &quot;&quot;))
+
+cant_inv_mod_truth &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;cant_inv_mod_truth.csv&quot;,
+                 sep = &quot;&quot;))
+
+cant_inv &lt;- bind_rows(cant_inv, cant_inv_mod_truth)</code></pre>
 </div>
 <div id="cant-budgets" class="section level1" number="2">
 <h1 number="2"><span class="header-section-number">2</span> Cant budgets</h1>
@@ -845,6 +882,14 @@ included model data
 <p>Results integrated over the upper 3000 m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
+  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = &quot;estimate&quot;, values_to = &quot;cant_total&quot;) %&gt;% 
+  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  geom_col() +
+  facet_wrap(~ estimate)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_standard_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_inv_budget %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
   gt(rowname_col = &quot;basin_AIP&quot;,
      groupname_col = c(&quot;data_source&quot;, &quot;inv_depth&quot;),
      row_group.sep = &quot; | Depth: &quot;) %&gt;% 
@@ -856,7 +901,7 @@ included model data
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#zdtxdianvx .gt_table {
+#anvxktrtfu .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -881,7 +926,7 @@ included model data
   border-left-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_heading {
+#anvxktrtfu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -893,7 +938,7 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_title {
+#anvxktrtfu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -903,7 +948,7 @@ included model data
   border-bottom-width: 0;
 }
 
-#zdtxdianvx .gt_subtitle {
+#anvxktrtfu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -913,13 +958,13 @@ included model data
   border-top-width: 0;
 }
 
-#zdtxdianvx .gt_bottom_border {
+#anvxktrtfu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_col_headings {
+#anvxktrtfu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -934,7 +979,7 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_col_heading {
+#anvxktrtfu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -954,7 +999,7 @@ included model data
   overflow-x: hidden;
 }
 
-#zdtxdianvx .gt_column_spanner_outer {
+#anvxktrtfu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -966,15 +1011,15 @@ included model data
   padding-right: 4px;
 }
 
-#zdtxdianvx .gt_column_spanner_outer:first-child {
+#anvxktrtfu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zdtxdianvx .gt_column_spanner_outer:last-child {
+#anvxktrtfu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zdtxdianvx .gt_column_spanner {
+#anvxktrtfu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -986,7 +1031,7 @@ included model data
   width: 100%;
 }
 
-#zdtxdianvx .gt_group_heading {
+#anvxktrtfu .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1008,7 +1053,7 @@ included model data
   vertical-align: middle;
 }
 
-#zdtxdianvx .gt_empty_group_heading {
+#anvxktrtfu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1023,15 +1068,15 @@ included model data
   vertical-align: middle;
 }
 
-#zdtxdianvx .gt_from_md > :first-child {
+#anvxktrtfu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zdtxdianvx .gt_from_md > :last-child {
+#anvxktrtfu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zdtxdianvx .gt_row {
+#anvxktrtfu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1050,7 +1095,7 @@ included model data
   overflow-x: hidden;
 }
 
-#zdtxdianvx .gt_stub {
+#anvxktrtfu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1062,7 +1107,7 @@ included model data
   padding-left: 12px;
 }
 
-#zdtxdianvx .gt_summary_row {
+#anvxktrtfu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1072,7 +1117,7 @@ included model data
   padding-right: 5px;
 }
 
-#zdtxdianvx .gt_first_summary_row {
+#anvxktrtfu .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1082,7 +1127,7 @@ included model data
   border-top-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_grand_summary_row {
+#anvxktrtfu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1092,7 +1137,7 @@ included model data
   padding-right: 5px;
 }
 
-#zdtxdianvx .gt_first_grand_summary_row {
+#anvxktrtfu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1102,11 +1147,11 @@ included model data
   border-top-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_striped {
+#anvxktrtfu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zdtxdianvx .gt_table_body {
+#anvxktrtfu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1115,7 +1160,7 @@ included model data
   border-bottom-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_footnotes {
+#anvxktrtfu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1129,13 +1174,13 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_footnote {
+#anvxktrtfu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#zdtxdianvx .gt_sourcenotes {
+#anvxktrtfu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1149,46 +1194,46 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#zdtxdianvx .gt_sourcenote {
+#anvxktrtfu .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#zdtxdianvx .gt_left {
+#anvxktrtfu .gt_left {
   text-align: left;
 }
 
-#zdtxdianvx .gt_center {
+#anvxktrtfu .gt_center {
   text-align: center;
 }
 
-#zdtxdianvx .gt_right {
+#anvxktrtfu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zdtxdianvx .gt_font_normal {
+#anvxktrtfu .gt_font_normal {
   font-weight: normal;
 }
 
-#zdtxdianvx .gt_font_bold {
+#anvxktrtfu .gt_font_bold {
   font-weight: bold;
 }
 
-#zdtxdianvx .gt_font_italic {
+#anvxktrtfu .gt_font_italic {
   font-style: italic;
 }
 
-#zdtxdianvx .gt_super {
+#anvxktrtfu .gt_super {
   font-size: 65%;
 }
 
-#zdtxdianvx .gt_footnote_marks {
+#anvxktrtfu .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="zdtxdianvx" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="anvxktrtfu" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1220,6 +1265,29 @@ included model data
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
       <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.90</td>
       <td class="gt_row gt_right gt_summary_row gt_first_summary_row">23.40</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth: 3000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">5.5</td>
+      <td class="gt_row gt_right">5.5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">6.0</td>
+      <td class="gt_row gt_right">6.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">10.7</td>
+      <td class="gt_row gt_right">10.8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">22.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">22.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth: 3000</td>
@@ -1254,6 +1322,14 @@ included model data
 <p>Results integrated over the upper 100, 500, 1000, 3000, 10^{4} m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth != params_global$inventory_depth_standard) %&gt;% 
+  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = &quot;estimate&quot;, values_to = &quot;cant_total&quot;) %&gt;% 
+  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  geom_col() +
+  facet_grid(inv_depth ~ estimate, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_inv_budget %&gt;%
+  filter(inv_depth != params_global$inventory_depth_standard) %&gt;% 
   gt(rowname_col = &quot;basin_AIP&quot;,
      groupname_col = c(&quot;data_source&quot;, &quot;inv_depth&quot;),
      row_group.sep = &quot; | Depth: &quot;) %&gt;% 
@@ -1265,7 +1341,7 @@ included model data
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ktrtfuewjl .gt_table {
+#ewjlzslyqc .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1290,7 +1366,7 @@ included model data
   border-left-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_heading {
+#ewjlzslyqc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1302,7 +1378,7 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_title {
+#ewjlzslyqc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1312,7 +1388,7 @@ included model data
   border-bottom-width: 0;
 }
 
-#ktrtfuewjl .gt_subtitle {
+#ewjlzslyqc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1322,13 +1398,13 @@ included model data
   border-top-width: 0;
 }
 
-#ktrtfuewjl .gt_bottom_border {
+#ewjlzslyqc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_col_headings {
+#ewjlzslyqc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1343,7 +1419,7 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_col_heading {
+#ewjlzslyqc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1363,7 +1439,7 @@ included model data
   overflow-x: hidden;
 }
 
-#ktrtfuewjl .gt_column_spanner_outer {
+#ewjlzslyqc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1375,15 +1451,15 @@ included model data
   padding-right: 4px;
 }
 
-#ktrtfuewjl .gt_column_spanner_outer:first-child {
+#ewjlzslyqc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ktrtfuewjl .gt_column_spanner_outer:last-child {
+#ewjlzslyqc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ktrtfuewjl .gt_column_spanner {
+#ewjlzslyqc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1395,7 +1471,7 @@ included model data
   width: 100%;
 }
 
-#ktrtfuewjl .gt_group_heading {
+#ewjlzslyqc .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1417,7 +1493,7 @@ included model data
   vertical-align: middle;
 }
 
-#ktrtfuewjl .gt_empty_group_heading {
+#ewjlzslyqc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1432,15 +1508,15 @@ included model data
   vertical-align: middle;
 }
 
-#ktrtfuewjl .gt_from_md > :first-child {
+#ewjlzslyqc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ktrtfuewjl .gt_from_md > :last-child {
+#ewjlzslyqc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ktrtfuewjl .gt_row {
+#ewjlzslyqc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1459,7 +1535,7 @@ included model data
   overflow-x: hidden;
 }
 
-#ktrtfuewjl .gt_stub {
+#ewjlzslyqc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1471,7 +1547,7 @@ included model data
   padding-left: 12px;
 }
 
-#ktrtfuewjl .gt_summary_row {
+#ewjlzslyqc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1481,7 +1557,7 @@ included model data
   padding-right: 5px;
 }
 
-#ktrtfuewjl .gt_first_summary_row {
+#ewjlzslyqc .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1491,7 +1567,7 @@ included model data
   border-top-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_grand_summary_row {
+#ewjlzslyqc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1501,7 +1577,7 @@ included model data
   padding-right: 5px;
 }
 
-#ktrtfuewjl .gt_first_grand_summary_row {
+#ewjlzslyqc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1511,11 +1587,11 @@ included model data
   border-top-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_striped {
+#ewjlzslyqc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ktrtfuewjl .gt_table_body {
+#ewjlzslyqc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1524,7 +1600,7 @@ included model data
   border-bottom-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_footnotes {
+#ewjlzslyqc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1538,13 +1614,13 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_footnote {
+#ewjlzslyqc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ktrtfuewjl .gt_sourcenotes {
+#ewjlzslyqc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1558,46 +1634,46 @@ included model data
   border-right-color: #D3D3D3;
 }
 
-#ktrtfuewjl .gt_sourcenote {
+#ewjlzslyqc .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ktrtfuewjl .gt_left {
+#ewjlzslyqc .gt_left {
   text-align: left;
 }
 
-#ktrtfuewjl .gt_center {
+#ewjlzslyqc .gt_center {
   text-align: center;
 }
 
-#ktrtfuewjl .gt_right {
+#ewjlzslyqc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ktrtfuewjl .gt_font_normal {
+#ewjlzslyqc .gt_font_normal {
   font-weight: normal;
 }
 
-#ktrtfuewjl .gt_font_bold {
+#ewjlzslyqc .gt_font_bold {
   font-weight: bold;
 }
 
-#ktrtfuewjl .gt_font_italic {
+#ewjlzslyqc .gt_font_italic {
   font-style: italic;
 }
 
-#ktrtfuewjl .gt_super {
+#ewjlzslyqc .gt_super {
   font-size: 65%;
 }
 
-#ktrtfuewjl .gt_footnote_marks {
+#ewjlzslyqc .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="ktrtfuewjl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="ewjlzslyqc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1698,6 +1774,98 @@ included model data
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
       <td class="gt_row gt_right gt_summary_row gt_first_summary_row">23.30</td>
       <td class="gt_row gt_right gt_summary_row gt_first_summary_row">26.10</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">1.1</td>
+      <td class="gt_row gt_right">1.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">2.2</td>
+      <td class="gt_row gt_right">2.2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.20</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">3.7</td>
+      <td class="gt_row gt_right">3.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">3.4</td>
+      <td class="gt_row gt_right">3.4</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">7.7</td>
+      <td class="gt_row gt_right">7.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.80</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:  1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">4.9</td>
+      <td class="gt_row gt_right">4.9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">5.1</td>
+      <td class="gt_row gt_right">5.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">9.9</td>
+      <td class="gt_row gt_right">9.9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">19.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">19.90</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">5.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">6.1</td>
+      <td class="gt_row gt_right">6.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">10.9</td>
+      <td class="gt_row gt_right">11.0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">22.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">22.70</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth:   100</td>
@@ -1831,30 +1999,31 @@ other attached packages:
 [17] ggplot2_3.3.3    tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
- [1] httr_1.4.2               sass_0.2.0               viridisLite_0.3.0       
- [4] jsonlite_1.7.1           here_0.1                 modelr_0.1.8            
- [7] assertthat_0.2.1         blob_1.2.1               cellranger_1.1.0        
-[10] yaml_2.2.1               pillar_1.4.7             backports_1.1.10        
-[13] lattice_0.20-41          glue_1.4.2               RcppEigen_0.3.3.7.0     
-[16] digest_0.6.27            promises_1.1.1           checkmate_2.0.0         
-[19] rvest_0.3.6              colorspace_1.4-1         htmltools_0.5.0         
-[22] httpuv_1.5.4             Matrix_1.2-18            pkgconfig_2.0.3         
-[25] broom_0.7.5              seacarb_3.2.14           haven_2.3.1             
-[28] webshot_0.5.2            whisker_0.4              later_1.1.0.1           
-[31] git2r_0.27.1             generics_0.0.2           ellipsis_0.3.1          
-[34] withr_2.3.0              cli_2.1.0                magrittr_1.5            
-[37] crayon_1.3.4             readxl_1.3.1             evaluate_0.14           
-[40] fs_1.5.0                 fansi_0.4.1              xml2_1.3.2              
-[43] RcppArmadillo_0.10.1.2.0 oce_1.2-0                tools_4.0.3             
-[46] data.table_1.13.2        hms_0.5.3                lifecycle_1.0.0         
-[49] munsell_0.5.0            reprex_0.3.0             gsw_1.0-5               
-[52] compiler_4.0.3           rlang_0.4.10             grid_4.0.3              
-[55] rstudioapi_0.13          rmarkdown_2.5            testthat_2.3.2          
-[58] gtable_0.3.0             DBI_1.1.0                R6_2.5.0                
-[61] lubridate_1.7.9          knitr_1.30               rprojroot_2.0.2         
-[64] stringi_1.5.3            parallel_4.0.3           Rcpp_1.0.5              
-[67] vctrs_0.3.5              dbplyr_1.4.4             tidyselect_1.1.0        
-[70] xfun_0.18               </code></pre>
+ [1] fs_1.5.0                 lubridate_1.7.9          gsw_1.0-5               
+ [4] webshot_0.5.2            RColorBrewer_1.1-2       httr_1.4.2              
+ [7] rprojroot_2.0.2          tools_4.0.3              backports_1.1.10        
+[10] R6_2.5.0                 DBI_1.1.0                colorspace_1.4-1        
+[13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
+[16] git2r_0.27.1             cli_2.1.0                rvest_0.3.6             
+[19] xml2_1.3.2               sass_0.2.0               labeling_0.4.2          
+[22] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.5           
+[25] oce_1.2-0                pkgconfig_2.0.3          htmltools_0.5.0         
+[28] dbplyr_1.4.4             rlang_0.4.10             readxl_1.3.1            
+[31] rstudioapi_0.13          farver_2.0.3             generics_0.0.2          
+[34] jsonlite_1.7.1           magrittr_1.5             Matrix_1.2-18           
+[37] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
+[40] lifecycle_1.0.0          stringi_1.5.3            whisker_0.4             
+[43] yaml_2.2.1               grid_4.0.3               blob_1.2.1              
+[46] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
+[49] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
+[52] seacarb_3.2.14           knitr_1.30               pillar_1.4.7            
+[55] reprex_0.3.0             glue_1.4.2               evaluate_0.14           
+[58] RcppArmadillo_0.10.1.2.0 data.table_1.13.2        modelr_0.1.8            
+[61] vctrs_0.3.5              httpuv_1.5.4             testthat_2.3.2          
+[64] cellranger_1.1.0         gtable_0.3.0             assertthat_0.2.1        
+[67] xfun_0.18                broom_0.7.5              RcppEigen_0.3.3.7.0     
+[70] later_1.1.0.1            viridisLite_0.3.0        ellipsis_0.3.1          
+[73] here_0.1                </code></pre>
 </div>
 </div>
 </div>
