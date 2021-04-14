@@ -921,7 +921,7 @@ GLODAP <- m_grid_horizontal_coarse(GLODAP)
 ```{r coverage_histogram_zonal}
 
 GLODAP_histogram_lat <- GLODAP %>%
-  group_by(era, lat_grid, basin) %>%
+  group_by(era, lat_grid, basin_AIP) %>%
   tally() %>%
   ungroup()
 
@@ -929,7 +929,7 @@ GLODAP_histogram_lat %>%
   ggplot(aes(lat_grid, n, fill = era)) +
   geom_col() +
   scale_fill_brewer(palette = "Dark2") +
-  facet_wrap( ~ basin) +
+  facet_wrap( ~ basin_AIP) +
   coord_flip(expand = 0) +
   theme(legend.position = "top",
         legend.title = element_blank())
@@ -960,7 +960,7 @@ era_median_year
 ```{r coverage_histogram_temporal}
 
 GLODAP_histogram_year <- GLODAP %>%
-  group_by(year, basin) %>%
+  group_by(year, basin_AIP) %>%
   tally() %>%
   ungroup()
 
@@ -968,7 +968,7 @@ GLODAP_histogram_year %>%
   ggplot() +
   geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   geom_col(aes(year, n,
-               fill = basin)) +
+               fill = basin_AIP)) +
   geom_point(
     data = era_median_year,
     aes(t_ref, 100, shape = "Median year"),
@@ -993,10 +993,10 @@ rm(GLODAP_histogram_year,
 
 ## Zonal temporal coverage (Hovmoeller)
 
-```{r coverage_hovmoeller, fig.asp=1}
+```{r coverage_hovmoeller, fig.asp=1.3}
 
 GLODAP_hovmoeller_year <- GLODAP %>%
-  group_by(year, lat_grid, basin) %>%
+  group_by(year, lat_grid, basin_AIP) %>%
   tally() %>%
   ungroup()
 
@@ -1008,7 +1008,7 @@ GLODAP_hovmoeller_year %>%
                        direction = -1,
                        trans = "log10") +
   coord_cartesian(expand = 0) +
-  facet_wrap( ~ basin, ncol = 1) +
+  facet_wrap( ~ basin_AIP, ncol = 1) +
   theme(legend.position = "top",
         axis.title.x = element_blank())
 
