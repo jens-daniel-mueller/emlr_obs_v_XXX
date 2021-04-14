@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6fcc01e3f7e5601370396cb4646a68f716dcc31ftargetblank6fcc01ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6fcc01e3f7e5601370396cb4646a68f716dcc31f" target="_blank">6fcc01e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee76af46d9f47e4247fc4cf1eebbe144461fd23e1targetblanke76af46a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e76af46d9f47e4247fc4cf1eebbe144461fd23e1" target="_blank">e76af46</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6fcc01e3f7e5601370396cb4646a68f716dcc31ftargetblank6fcc01ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee76af46d9f47e4247fc4cf1eebbe144461fd23e1targetblanke76af46a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6fcc01e3f7e5601370396cb4646a68f716dcc31f" target="_blank">6fcc01e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e76af46d9f47e4247fc4cf1eebbe144461fd23e1" target="_blank">e76af46</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -671,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e76af46d9f47e4247fc4cf1eebbe144461fd23e1/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">e76af46</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+<td>
+2 basins, high VIF
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">bb44686</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2931,6 +2965,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/WOA18_basin_mask_GLODAP_observations_map-1.png" target="_blank">bb44686</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/WOA18_basin_mask_GLODAP_observations_map-1.png" target="_blank">9f31fe3</a>
@@ -8184,7 +8229,7 @@ jens-daniel-mueller
 <div id="histogram-zonal-coverage" class="section level2" number="3.4">
 <h2 number="3.4"><span class="header-section-number">3.4</span> Histogram Zonal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
-  group_by(era, lat_grid, basin) %&gt;%
+  group_by(era, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
   ungroup()
 
@@ -8192,7 +8237,7 @@ GLODAP_histogram_lat %&gt;%
   ggplot(aes(lat_grid, n, fill = era)) +
   geom_col() +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
-  facet_wrap( ~ basin) +
+  facet_wrap( ~ basin_AIP) +
   coord_flip(expand = 0) +
   theme(legend.position = &quot;top&quot;,
         legend.title = element_blank())</code></pre>
@@ -8219,6 +8264,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">bb44686</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">9f31fe3</a>
@@ -8650,7 +8706,7 @@ era_median_year</code></pre>
 <div id="histogram-temporal-coverage" class="section level2" number="3.6">
 <h2 number="3.6"><span class="header-section-number">3.6</span> Histogram temporal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_year &lt;- GLODAP %&gt;%
-  group_by(year, basin) %&gt;%
+  group_by(year, basin_AIP) %&gt;%
   tally() %&gt;%
   ungroup()
 
@@ -8658,7 +8714,7 @@ GLODAP_histogram_year %&gt;%
   ggplot() +
   geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   geom_col(aes(year, n,
-               fill = basin)) +
+               fill = basin_AIP)) +
   geom_point(
     data = era_median_year,
     aes(t_ref, 100, shape = &quot;Median year&quot;),
@@ -8698,6 +8754,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">bb44686</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">9f31fe3</a>
@@ -9104,7 +9171,7 @@ jens-daniel-mueller
 <div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="3.7">
 <h2 number="3.7"><span class="header-section-number">3.7</span> Zonal temporal coverage (Hovmoeller)</h2>
 <pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
-  group_by(year, lat_grid, basin) %&gt;%
+  group_by(year, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
   ungroup()
 
@@ -9116,7 +9183,7 @@ GLODAP_hovmoeller_year %&gt;%
                        direction = -1,
                        trans = &quot;log10&quot;) +
   coord_cartesian(expand = 0) +
-  facet_wrap( ~ basin, ncol = 1) +
+  facet_wrap( ~ basin_AIP, ncol = 1) +
   theme(legend.position = &quot;top&quot;,
         axis.title.x = element_blank())</code></pre>
 <p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_hovmoeller-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -9142,6 +9209,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_hovmoeller-1.png" target="_blank">bb44686</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-14
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_hovmoeller-1.png" target="_blank">9f31fe3</a>
