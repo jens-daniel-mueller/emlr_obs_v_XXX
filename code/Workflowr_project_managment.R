@@ -31,7 +31,7 @@ wflow_publish(here::here(
     "analysis_MLR_performance.Rmd"
   )
 ),
-message = "included model data",
+message = "2 basins, high VIF",
 republish = TRUE)
 
 wflow_publish(here::here(
