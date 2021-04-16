@@ -826,7 +826,7 @@ Median years of each era (tref) were determined as:
 # calculate reference year
 tref <- GLODAP %>%
   group_by(era) %>%
-  summarise(year = median(year)) %>%
+  summarise(median_year = median(year)) %>%
   ungroup()
 
 tref
@@ -1000,7 +1000,7 @@ GLODAP_histogram_year %>%
                fill = basin_AIP)) +
   geom_point(
     data = tref,
-    aes(year, 100, shape = "tref"),
+    aes(median_year, 100, shape = "tref"),
     size = 2,
     fill = "white"
   ) +
