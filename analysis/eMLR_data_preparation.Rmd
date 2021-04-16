@@ -102,6 +102,11 @@ co2_atm <-
                  "co2_atm.csv",
                  sep = ""))
 
+tref <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
 
 ```
 
@@ -289,11 +294,11 @@ Calculate Cant at tref by adding G19, scaled for the time since 1994.
 
 ```{r calculate_cant_tref}
 
-# calculate reference year
-tref <- GLODAP %>%
-  group_by(era) %>%
-  summarise(year = median(year)) %>%
-  ungroup()
+# # calculate reference year
+# tref <- GLODAP %>%
+#   group_by(era) %>%
+#   summarise(year = median(year)) %>%
+#   ungroup()
 
 # join cant with tref
 cant_3d <- expand_grid(cant_3d, tref)
@@ -302,7 +307,7 @@ cant_3d <- expand_grid(cant_3d, tref)
 cant_3d <- cant_3d %>%
   mutate(cant_pos =
            cant_pos_S04 +
-           ((year - 1994) / 13 * cant_pos_G19))
+           ((median_year - 1994) / 13 * cant_pos_G19))
 
 # remove columns
 cant_3d <- cant_3d %>% 
@@ -415,13 +420,10 @@ GLODAP <- left_join(GLODAP, co2_atm)
 ```{r adjust_reference_year}
 
 # assign reference year
-GLODAP <- GLODAP %>% 
-  group_by(era, data_source) %>% 
-  mutate(tref = median(year)) %>% 
-  ungroup()
+GLODAP <- full_join(GLODAP, tref)
 
 # extract atm pCO2 at reference year
-co2_atm_tref <- right_join(co2_atm, tref) %>% 
+co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
   select(-year) %>% 
   rename(pCO2_tref = pCO2)
 
@@ -1014,10 +1016,6 @@ GLODAP %>% write_csv(paste(
 
 co2_atm_tref %>%  write_csv(paste(path_version_data,
                                   "co2_atm_tref.csv",
-                                  sep = ""))
-
-tref %>%  write_csv(paste(path_version_data,
-                                  "tref.csv",
                                   sep = ""))
 
 ```

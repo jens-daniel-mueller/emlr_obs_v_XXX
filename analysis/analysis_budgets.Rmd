@@ -77,7 +77,24 @@ cant_inv_mod_truth <-
 
 cant_inv <- bind_rows(cant_inv, cant_inv_mod_truth)
 
+tref <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
 ```
+
+# Time periods
+
+```{r time_periods}
+
+tref
+
+duration <- sort(tref$median_year)[2] - sort(tref$median_year)[1]
+duration
+
+```
+
 
 # Cant budgets
 
@@ -94,6 +111,16 @@ cant_inv_budget <- cant_inv %>%
             cant_total = round(cant_total,1),
             cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
             cant_pos_total = round(cant_pos_total,1)) %>% 
+  ungroup()
+
+cant_inv_budget %>%  
+  group_by(data_source, inv_depth) %>% 
+  summarise(cant_total = sum(cant_total),
+            cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_total),
+            cant_pos_total = round(cant_pos_total,1),
+            cant_total_rate = cant_total / duration,
+            cant_pos_total_rate = cant_pos_total / duration) %>% 
   ungroup()
 
 
