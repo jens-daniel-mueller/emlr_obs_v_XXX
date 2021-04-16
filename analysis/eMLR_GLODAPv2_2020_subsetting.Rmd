@@ -819,18 +819,25 @@ GLODAP <- GLODAP %>%
 
 # Manual cruise duplication
 
-```{r Manual_cruise_duplication, fig.asp=0.3}
+```{r Manual_cruise_duplication, fig.asp=2}
+
+map +
+  geom_raster(data =
+                GLODAP %>%
+                distinct(year, lat, lon, basin_AIP),
+              aes(lon, lat, fill=basin_AIP)) +
+  scale_fill_brewer(palette = "Set1") +
+  facet_wrap(~ year, ncol = 3)
 
 
-GLODAP %>%
-  distinct(year, cruise, lat, lon) %>%
-  group_split(year) %>%
-  map(~ map +
-        geom_raster(data = .x,
-                    aes(lon, lat, fill = as.factor(cruise))) +
-        scale_fill_brewer(palette = "Set1", name="Cruise") +
-        labs(title = paste("Year:", unique(.x$year))))
-  
+GLODAP_dup <- GLODAP %>% 
+  filter(basin_AIP == "Indian",
+         year >=2007,
+         year <=2009) %>% 
+  mutate(era = sort(unique(GLODAP$era))[2])
+
+GLODAP <- bind_rows(GLODAP, GLODAP_dup)
+rm(GLODAP_dup)
 
 ```
 
