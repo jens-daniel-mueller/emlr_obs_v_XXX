@@ -847,14 +847,14 @@ map +
   facet_wrap(~ year, ncol = 3)
 
 
-GLODAP_dup <- GLODAP %>% 
-  filter(basin_AIP == "Indian",
-         year >=2007,
-         year <=2009) %>% 
-  mutate(era = sort(unique(GLODAP$era))[2])
-
-GLODAP <- bind_rows(GLODAP, GLODAP_dup)
-rm(GLODAP_dup)
+# GLODAP_dup <- GLODAP %>% 
+#   filter(basin_AIP == "Indian",
+#          year >=2007,
+#          year <=2009) %>% 
+#   mutate(era = sort(unique(GLODAP$era))[2])
+# 
+# GLODAP <- bind_rows(GLODAP, GLODAP_dup)
+# rm(GLODAP_dup)
 
 ```
 
