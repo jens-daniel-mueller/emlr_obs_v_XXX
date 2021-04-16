@@ -846,6 +846,7 @@ map +
   scale_fill_brewer(palette = "Set1") +
   facet_wrap(~ year, ncol = 3)
 
+# Duplicate Indian ocean cruises manually
 
 # GLODAP_dup <- GLODAP %>% 
 #   filter(basin_AIP == "Indian",
@@ -855,6 +856,21 @@ map +
 # 
 # GLODAP <- bind_rows(GLODAP, GLODAP_dup)
 # rm(GLODAP_dup)
+
+# Duplicate overlapping eras manually
+
+GLODAP_dup_era1 <- GLODAP %>%
+  filter(year >=2007,
+         year <=2009) %>%
+  mutate(era = sort(unique(GLODAP$era))[2])
+
+GLODAP_dup_era2 <- GLODAP %>%
+  filter(year >=2010,
+         year <=2012) %>%
+  mutate(era = sort(unique(GLODAP$era))[1])
+
+GLODAP <- bind_rows(GLODAP, GLODAP_dup_era1, GLODAP_dup_era2)
+rm(GLODAP_dup_era1, GLODAP_dup_era2)
 
 ```
 
