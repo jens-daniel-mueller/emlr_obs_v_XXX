@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6e80fb529cbe7ffb415bdb7a1768f29ac3141b88targetblank6e80fb5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6e80fb529cbe7ffb415bdb7a1768f29ac3141b88" target="_blank">6e80fb5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree82df560bf89f823af660058967c0deb53ddf14bdtargetblank82df560a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/82df560bf89f823af660058967c0deb53ddf14bd" target="_blank">82df560</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6e80fb529cbe7ffb415bdb7a1768f29ac3141b88targetblank6e80fb5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree82df560bf89f823af660058967c0deb53ddf14bdtargetblank82df560a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6e80fb529cbe7ffb415bdb7a1768f29ac3141b88" target="_blank">6e80fb5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/82df560bf89f823af660058967c0deb53ddf14bd" target="_blank">82df560</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -671,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/82df560bf89f823af660058967c0deb53ddf14bd/analysis/analysis_budgets.Rmd" target="_blank">82df560</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+<td>
+corrected tref assignment
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/analysis_budgets.html" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1053,10 +1087,27 @@ cant_inv_mod_truth &lt;-
                  &quot;cant_inv_mod_truth.csv&quot;,
                  sep = &quot;&quot;))
 
-cant_inv &lt;- bind_rows(cant_inv, cant_inv_mod_truth)</code></pre>
+cant_inv &lt;- bind_rows(cant_inv, cant_inv_mod_truth)
+
+tref &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;tref.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
 </div>
-<div id="cant-budgets" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Cant budgets</h1>
+<div id="time-periods" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Time periods</h1>
+<pre class="r"><code>tref</code></pre>
+<pre><code># A tibble: 2 x 2
+  era       median_year
+  &lt;chr&gt;           &lt;dbl&gt;
+1 2000-2009        2006
+2 2010-2019        2014</code></pre>
+<pre class="r"><code>duration &lt;- sort(tref$median_year)[2] - sort(tref$median_year)[1]
+duration</code></pre>
+<pre><code>[1] 8</code></pre>
+</div>
+<div id="cant-budgets" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Cant budgets</h1>
 <p>Global Cant inventories were estimated in units of Pg C. Please note that here we added Cant (all vs postitive only) values and do not apply additional corrections for areas not covered.</p>
 <pre class="r"><code>cant_inv_budget &lt;- cant_inv %&gt;% 
   mutate(surface_area = earth_surf(lat, lon),
@@ -1067,9 +1118,38 @@ cant_inv &lt;- bind_rows(cant_inv, cant_inv_mod_truth)</code></pre>
             cant_total = round(cant_total,1),
             cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
             cant_pos_total = round(cant_pos_total,1)) %&gt;% 
+  ungroup()
+
+cant_inv_budget %&gt;%  
+  group_by(data_source, inv_depth) %&gt;% 
+  summarise(cant_total = sum(cant_total),
+            cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_total),
+            cant_pos_total = round(cant_pos_total,1),
+            cant_total_rate = cant_total / duration,
+            cant_pos_total_rate = cant_pos_total / duration) %&gt;% 
   ungroup()</code></pre>
-<div id="standard-depth" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Standard depth</h2>
+<pre><code># A tibble: 15 x 6
+   data_source inv_depth cant_total cant_pos_total cant_total_rate
+   &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;           &lt;dbl&gt;
+ 1 mod               100        2.9            3             0.362
+ 2 mod               500       11             11             1.38 
+ 3 mod              1000       15.3           15.5           1.91 
+ 4 mod              3000       20.1           20.4           2.51 
+ 5 mod             10000       20.8           21.5           2.6  
+ 6 mod_truth         100        2.9            2.9           0.362
+ 7 mod_truth         500       10.8           10.9           1.35 
+ 8 mod_truth        1000       14.8           14.8           1.85 
+ 9 mod_truth        3000       16.6           16.8           2.08 
+10 mod_truth       10000       17             17.1           2.12 
+11 obs               100        3.3            3.4           0.412
+12 obs               500       11.8           12             1.48 
+13 obs              1000       16.9           17.1           2.11 
+14 obs              3000       23.8           25.1           2.98 
+15 obs             10000       27.6           29.7           3.45 
+# … with 1 more variable: cant_pos_total_rate &lt;dbl&gt;</code></pre>
+<div id="standard-depth" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Standard depth</h2>
 <p>Results integrated over the upper 3000 m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
@@ -1101,6 +1181,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_standard_depth-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_standard_depth-1.png" target="_blank">81b7c6d</a>
@@ -1217,7 +1308,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#anvxktrtfu .gt_table {
+#tfuewjlzsl .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1242,7 +1333,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_heading {
+#tfuewjlzsl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1254,7 +1345,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_title {
+#tfuewjlzsl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1264,7 +1355,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#anvxktrtfu .gt_subtitle {
+#tfuewjlzsl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1274,13 +1365,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#anvxktrtfu .gt_bottom_border {
+#tfuewjlzsl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_col_headings {
+#tfuewjlzsl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1295,7 +1386,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_col_heading {
+#tfuewjlzsl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1315,7 +1406,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#anvxktrtfu .gt_column_spanner_outer {
+#tfuewjlzsl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1327,15 +1418,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#anvxktrtfu .gt_column_spanner_outer:first-child {
+#tfuewjlzsl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#anvxktrtfu .gt_column_spanner_outer:last-child {
+#tfuewjlzsl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#anvxktrtfu .gt_column_spanner {
+#tfuewjlzsl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1347,7 +1438,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#anvxktrtfu .gt_group_heading {
+#tfuewjlzsl .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1369,7 +1460,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#anvxktrtfu .gt_empty_group_heading {
+#tfuewjlzsl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1384,15 +1475,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#anvxktrtfu .gt_from_md > :first-child {
+#tfuewjlzsl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#anvxktrtfu .gt_from_md > :last-child {
+#tfuewjlzsl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#anvxktrtfu .gt_row {
+#tfuewjlzsl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1411,7 +1502,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#anvxktrtfu .gt_stub {
+#tfuewjlzsl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1423,7 +1514,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#anvxktrtfu .gt_summary_row {
+#tfuewjlzsl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1433,7 +1524,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#anvxktrtfu .gt_first_summary_row {
+#tfuewjlzsl .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1443,7 +1534,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_grand_summary_row {
+#tfuewjlzsl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1453,7 +1544,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#anvxktrtfu .gt_first_grand_summary_row {
+#tfuewjlzsl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1463,11 +1554,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_striped {
+#tfuewjlzsl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#anvxktrtfu .gt_table_body {
+#tfuewjlzsl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1476,7 +1567,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_footnotes {
+#tfuewjlzsl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1490,13 +1581,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_footnote {
+#tfuewjlzsl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#anvxktrtfu .gt_sourcenotes {
+#tfuewjlzsl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1510,46 +1601,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#anvxktrtfu .gt_sourcenote {
+#tfuewjlzsl .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#anvxktrtfu .gt_left {
+#tfuewjlzsl .gt_left {
   text-align: left;
 }
 
-#anvxktrtfu .gt_center {
+#tfuewjlzsl .gt_center {
   text-align: center;
 }
 
-#anvxktrtfu .gt_right {
+#tfuewjlzsl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#anvxktrtfu .gt_font_normal {
+#tfuewjlzsl .gt_font_normal {
   font-weight: normal;
 }
 
-#anvxktrtfu .gt_font_bold {
+#tfuewjlzsl .gt_font_bold {
   font-weight: bold;
 }
 
-#anvxktrtfu .gt_font_italic {
+#tfuewjlzsl .gt_font_italic {
   font-style: italic;
 }
 
-#anvxktrtfu .gt_super {
+#tfuewjlzsl .gt_super {
   font-size: 65%;
 }
 
-#anvxktrtfu .gt_footnote_marks {
+#tfuewjlzsl .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="anvxktrtfu" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="tfuewjlzsl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1564,69 +1655,69 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.2</td>
-      <td class="gt_row gt_right">5.4</td>
+      <td class="gt_row gt_right">5.7</td>
+      <td class="gt_row gt_right">5.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.7</td>
-      <td class="gt_row gt_right">4.7</td>
+      <td class="gt_row gt_right">5.1</td>
+      <td class="gt_row gt_right">5.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">8.4</td>
-      <td class="gt_row gt_right">8.6</td>
+      <td class="gt_row gt_right">9.3</td>
+      <td class="gt_row gt_right">9.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">18.30</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">18.70</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.10</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">mod_truth | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.6</td>
-      <td class="gt_row gt_right">3.6</td>
+      <td class="gt_row gt_right">4.1</td>
+      <td class="gt_row gt_right">4.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.9</td>
-      <td class="gt_row gt_right">4.0</td>
+      <td class="gt_row gt_right">4.5</td>
+      <td class="gt_row gt_right">4.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">6.9</td>
-      <td class="gt_row gt_right">7.1</td>
+      <td class="gt_row gt_right">8.0</td>
+      <td class="gt_row gt_right">8.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.40</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.70</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">16.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">16.80</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.7</td>
-      <td class="gt_row gt_right">5.8</td>
+      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">6.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.7</td>
-      <td class="gt_row gt_right">4.9</td>
+      <td class="gt_row gt_right">5.2</td>
+      <td class="gt_row gt_right">5.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">11.8</td>
-      <td class="gt_row gt_right">12.0</td>
+      <td class="gt_row gt_right">13.0</td>
+      <td class="gt_row gt_right">13.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">21.20</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">22.70</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">23.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">25.10</td>
     </tr>
   </tbody>
   
@@ -1670,6 +1761,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_standard_depth-2.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_standard_depth-2.png" target="_blank">81b7c6d</a>
@@ -1774,8 +1876,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="other-depths" class="section level2" number="2.2">
-<h2 number="2.2"><span class="header-section-number">2.2</span> Other depths</h2>
+<div id="other-depths" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Other depths</h2>
 <p>Results integrated over the upper 100, 500, 1000, 3000, 10^{4} m</p>
 <pre class="r"><code>cant_inv_budget %&gt;%
   filter(inv_depth != params_global$inventory_depth_standard) %&gt;% 
@@ -1807,6 +1909,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">81b7c6d</a>
@@ -1923,7 +2036,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ewjlzslyqc .gt_table {
+#yqckjgrtnj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -1948,7 +2061,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_heading {
+#yqckjgrtnj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1960,7 +2073,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_title {
+#yqckjgrtnj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1970,7 +2083,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#ewjlzslyqc .gt_subtitle {
+#yqckjgrtnj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1980,13 +2093,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#ewjlzslyqc .gt_bottom_border {
+#yqckjgrtnj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_col_headings {
+#yqckjgrtnj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2001,7 +2114,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_col_heading {
+#yqckjgrtnj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2021,7 +2134,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#ewjlzslyqc .gt_column_spanner_outer {
+#yqckjgrtnj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2033,15 +2146,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#ewjlzslyqc .gt_column_spanner_outer:first-child {
+#yqckjgrtnj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ewjlzslyqc .gt_column_spanner_outer:last-child {
+#yqckjgrtnj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ewjlzslyqc .gt_column_spanner {
+#yqckjgrtnj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2053,7 +2166,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#ewjlzslyqc .gt_group_heading {
+#yqckjgrtnj .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2075,7 +2188,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#ewjlzslyqc .gt_empty_group_heading {
+#yqckjgrtnj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2090,15 +2203,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#ewjlzslyqc .gt_from_md > :first-child {
+#yqckjgrtnj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ewjlzslyqc .gt_from_md > :last-child {
+#yqckjgrtnj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ewjlzslyqc .gt_row {
+#yqckjgrtnj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2117,7 +2230,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#ewjlzslyqc .gt_stub {
+#yqckjgrtnj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2129,7 +2242,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#ewjlzslyqc .gt_summary_row {
+#yqckjgrtnj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2139,7 +2252,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#ewjlzslyqc .gt_first_summary_row {
+#yqckjgrtnj .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2149,7 +2262,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_grand_summary_row {
+#yqckjgrtnj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2159,7 +2272,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#ewjlzslyqc .gt_first_grand_summary_row {
+#yqckjgrtnj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2169,11 +2282,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_striped {
+#yqckjgrtnj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ewjlzslyqc .gt_table_body {
+#yqckjgrtnj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2182,7 +2295,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_footnotes {
+#yqckjgrtnj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2196,13 +2309,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_footnote {
+#yqckjgrtnj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ewjlzslyqc .gt_sourcenotes {
+#yqckjgrtnj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2216,46 +2329,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#ewjlzslyqc .gt_sourcenote {
+#yqckjgrtnj .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ewjlzslyqc .gt_left {
+#yqckjgrtnj .gt_left {
   text-align: left;
 }
 
-#ewjlzslyqc .gt_center {
+#yqckjgrtnj .gt_center {
   text-align: center;
 }
 
-#ewjlzslyqc .gt_right {
+#yqckjgrtnj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ewjlzslyqc .gt_font_normal {
+#yqckjgrtnj .gt_font_normal {
   font-weight: normal;
 }
 
-#ewjlzslyqc .gt_font_bold {
+#yqckjgrtnj .gt_font_bold {
   font-weight: bold;
 }
 
-#ewjlzslyqc .gt_font_italic {
+#yqckjgrtnj .gt_font_italic {
   font-style: italic;
 }
 
-#ewjlzslyqc .gt_super {
+#yqckjgrtnj .gt_super {
   font-size: 65%;
 }
 
-#ewjlzslyqc .gt_footnote_marks {
+#yqckjgrtnj .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="ewjlzslyqc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="yqckjgrtnj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2270,190 +2383,6 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.6</td>
-      <td class="gt_row gt_right">0.7</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.6</td>
-      <td class="gt_row gt_right">0.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">1.4</td>
-      <td class="gt_row gt_right">1.4</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.60</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.70</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod | Depth:   500</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">2.5</td>
-      <td class="gt_row gt_right">2.5</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">2.3</td>
-      <td class="gt_row gt_right">2.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">4.9</td>
-      <td class="gt_row gt_right">5.0</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">9.70</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">9.80</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod | Depth:  1000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.6</td>
-      <td class="gt_row gt_right">3.7</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.6</td>
-      <td class="gt_row gt_right">3.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">6.5</td>
-      <td class="gt_row gt_right">6.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.70</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.90</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod | Depth: 10000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.3</td>
-      <td class="gt_row gt_right">5.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.6</td>
-      <td class="gt_row gt_right">4.7</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.1</td>
-      <td class="gt_row gt_right">9.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">19.00</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">19.60</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   100</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.6</td>
-      <td class="gt_row gt_right">0.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.6</td>
-      <td class="gt_row gt_right">0.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">1.3</td>
-      <td class="gt_row gt_right">1.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.50</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.50</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   500</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">2.4</td>
-      <td class="gt_row gt_right">2.4</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">2.2</td>
-      <td class="gt_row gt_right">2.2</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">4.9</td>
-      <td class="gt_row gt_right">4.9</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">9.50</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">9.50</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod_truth | Depth:  1000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.2</td>
-      <td class="gt_row gt_right">3.2</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.3</td>
-      <td class="gt_row gt_right">3.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">6.3</td>
-      <td class="gt_row gt_right">6.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">12.80</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">12.80</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">mod_truth | Depth: 10000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.6</td>
-      <td class="gt_row gt_right">3.7</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.0</td>
-      <td class="gt_row gt_right">4.0</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.1</td>
-      <td class="gt_row gt_right">7.2</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.70</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.90</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="3" class="gt_group_heading">obs | Depth:   100</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
       <td class="gt_row gt_right">0.7</td>
       <td class="gt_row gt_right">0.8</td>
     </tr>
@@ -2464,82 +2393,266 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">1.5</td>
-      <td class="gt_row gt_right">1.5</td>
+      <td class="gt_row gt_right">1.6</td>
+      <td class="gt_row gt_right">1.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.80</td>
       <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod | Depth:   500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">2.8</td>
+      <td class="gt_row gt_right">2.8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">2.6</td>
+      <td class="gt_row gt_right">2.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">5.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">11.00</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">11.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod | Depth:  1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">4.0</td>
+      <td class="gt_row gt_right">4.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">4.0</td>
+      <td class="gt_row gt_right">4.0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">7.3</td>
+      <td class="gt_row gt_right">7.4</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.30</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.50</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">5.8</td>
+      <td class="gt_row gt_right">6.0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">5.0</td>
+      <td class="gt_row gt_right">5.2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">10.0</td>
+      <td class="gt_row gt_right">10.3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">21.50</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">0.7</td>
+      <td class="gt_row gt_right">0.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.6</td>
+      <td class="gt_row gt_right">0.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">1.6</td>
+      <td class="gt_row gt_right">1.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.90</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:   500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">2.7</td>
+      <td class="gt_row gt_right">2.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">2.5</td>
+      <td class="gt_row gt_right">2.5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">5.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">10.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">10.90</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth:  1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">3.7</td>
+      <td class="gt_row gt_right">3.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">3.8</td>
+      <td class="gt_row gt_right">3.8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">7.3</td>
+      <td class="gt_row gt_right">7.3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.80</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">mod_truth | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">4.2</td>
+      <td class="gt_row gt_right">4.2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">4.6</td>
+      <td class="gt_row gt_right">4.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">8.2</td>
+      <td class="gt_row gt_right">8.3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">17.00</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">17.10</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="3" class="gt_group_heading">obs | Depth:   100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">0.8</td>
+      <td class="gt_row gt_right">0.9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.7</td>
+      <td class="gt_row gt_right">0.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">1.8</td>
+      <td class="gt_row gt_right">1.8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.30</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth:   500</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">2.8</td>
-      <td class="gt_row gt_right">3.0</td>
+      <td class="gt_row gt_right">3.2</td>
+      <td class="gt_row gt_right">3.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">2.4</td>
-      <td class="gt_row gt_right">2.4</td>
+      <td class="gt_row gt_right">2.7</td>
+      <td class="gt_row gt_right">2.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">5.2</td>
-      <td class="gt_row gt_right">5.2</td>
+      <td class="gt_row gt_right">5.9</td>
+      <td class="gt_row gt_right">5.9</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">10.40</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">10.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">11.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">12.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth:  1000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.2</td>
-      <td class="gt_row gt_right">4.4</td>
+      <td class="gt_row gt_right">4.8</td>
+      <td class="gt_row gt_right">5.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.5</td>
-      <td class="gt_row gt_right">3.5</td>
+      <td class="gt_row gt_right">3.9</td>
+      <td class="gt_row gt_right">3.9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.2</td>
-      <td class="gt_row gt_right">7.3</td>
+      <td class="gt_row gt_right">8.2</td>
+      <td class="gt_row gt_right">8.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">14.90</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">16.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">17.10</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="3" class="gt_group_heading">obs | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.3</td>
-      <td class="gt_row gt_right">6.2</td>
+      <td class="gt_row gt_right">5.3</td>
+      <td class="gt_row gt_right">7.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.4</td>
-      <td class="gt_row gt_right">5.7</td>
+      <td class="gt_row gt_right">5.9</td>
+      <td class="gt_row gt_right">6.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">15.3</td>
-      <td class="gt_row gt_right">15.5</td>
+      <td class="gt_row gt_right">16.4</td>
+      <td class="gt_row gt_right">16.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">25.00</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">27.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">27.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">29.70</td>
     </tr>
   </tbody>
   
@@ -2577,6 +2690,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">81b7c6d</a>
@@ -2716,30 +2840,30 @@ other attached packages:
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 lubridate_1.7.9          gsw_1.0-5               
- [4] webshot_0.5.2            RColorBrewer_1.1-2       httr_1.4.2              
+ [4] RColorBrewer_1.1-2       webshot_0.5.2            httr_1.4.2              
  [7] rprojroot_2.0.2          tools_4.0.3              backports_1.1.10        
-[10] R6_2.5.0                 DBI_1.1.0                colorspace_1.4-1        
-[13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
-[16] git2r_0.27.1             cli_2.1.0                rvest_0.3.6             
-[19] xml2_1.3.2               sass_0.2.0               labeling_0.4.2          
-[22] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.5           
-[25] oce_1.2-0                pkgconfig_2.0.3          htmltools_0.5.0         
-[28] dbplyr_1.4.4             rlang_0.4.10             readxl_1.3.1            
-[31] rstudioapi_0.13          farver_2.0.3             generics_0.0.2          
-[34] jsonlite_1.7.1           magrittr_1.5             Matrix_1.2-18           
-[37] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
-[40] lifecycle_1.0.0          stringi_1.5.3            whisker_0.4             
-[43] yaml_2.2.1               grid_4.0.3               blob_1.2.1              
-[46] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[49] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[52] seacarb_3.2.14           knitr_1.30               pillar_1.4.7            
-[55] reprex_0.3.0             glue_1.4.2               evaluate_0.14           
-[58] RcppArmadillo_0.10.1.2.0 data.table_1.13.2        modelr_0.1.8            
-[61] vctrs_0.3.5              httpuv_1.5.4             testthat_2.3.2          
-[64] cellranger_1.1.0         gtable_0.3.0             assertthat_0.2.1        
-[67] xfun_0.18                broom_0.7.5              RcppEigen_0.3.3.7.0     
-[70] later_1.1.0.1            viridisLite_0.3.0        ellipsis_0.3.1          
-[73] here_0.1                </code></pre>
+[10] utf8_1.1.4               R6_2.5.0                 DBI_1.1.0               
+[13] colorspace_1.4-1         withr_2.3.0              tidyselect_1.1.0        
+[16] compiler_4.0.3           git2r_0.27.1             cli_2.1.0               
+[19] rvest_0.3.6              xml2_1.3.2               sass_0.2.0              
+[22] labeling_0.4.2           checkmate_2.0.0          digest_0.6.27           
+[25] rmarkdown_2.5            oce_1.2-0                pkgconfig_2.0.3         
+[28] htmltools_0.5.0          dbplyr_1.4.4             rlang_0.4.10            
+[31] readxl_1.3.1             rstudioapi_0.13          farver_2.0.3            
+[34] generics_0.0.2           jsonlite_1.7.1           magrittr_1.5            
+[37] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[40] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
+[43] whisker_0.4              yaml_2.2.1               grid_4.0.3              
+[46] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[49] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
+[52] hms_0.5.3                seacarb_3.2.14           knitr_1.30              
+[55] pillar_1.4.7             reprex_0.3.0             glue_1.4.2              
+[58] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.13.2       
+[61] modelr_0.1.8             vctrs_0.3.5              httpuv_1.5.4            
+[64] testthat_2.3.2           cellranger_1.1.0         gtable_0.3.0            
+[67] assertthat_0.2.1         xfun_0.18                broom_0.7.5             
+[70] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
+[73] ellipsis_0.3.1           here_0.1                </code></pre>
 </div>
 </div>
 </div>
