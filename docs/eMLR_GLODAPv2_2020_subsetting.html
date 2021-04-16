@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6e80fb529cbe7ffb415bdb7a1768f29ac3141b88targetblank6e80fb5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6e80fb529cbe7ffb415bdb7a1768f29ac3141b88" target="_blank">6e80fb5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebdd1c8aa67ea100a0808512b15a2138abbf593a5targetblankbdd1c8aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bdd1c8aa67ea100a0808512b15a2138abbf593a5" target="_blank">bdd1c8a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6e80fb529cbe7ffb415bdb7a1768f29ac3141b88targetblank6e80fb5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebdd1c8aa67ea100a0808512b15a2138abbf593a5targetblankbdd1c8aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6e80fb529cbe7ffb415bdb7a1768f29ac3141b88" target="_blank">6e80fb5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bdd1c8aa67ea100a0808512b15a2138abbf593a5" target="_blank">bdd1c8a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -671,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bdd1c8aa67ea100a0808512b15a2138abbf593a5/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">bdd1c8a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+<td>
+use consistent tref
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8387,9 +8421,24 @@ jens-daniel-mueller
   filter(!(cruise %in% cruise_out$cruise))</code></pre>
 </div>
 </div>
+<div id="median-years-tref" class="section level2" number="2.5">
+<h2 number="2.5"><span class="header-section-number">2.5</span> Median years (tref)</h2>
+<p>Median years of each era (tref) were determined as:</p>
+<pre class="r"><code># calculate reference year
+tref &lt;- GLODAP %&gt;%
+  group_by(era) %&gt;%
+  summarise(year = median(year)) %&gt;%
+  ungroup()
+
+tref</code></pre>
+<pre><code># A tibble: 2 x 2
+  era        year
+  &lt;fct&gt;     &lt;dbl&gt;
+1 2000-2009  2006
+2 2010-2019  2014</code></pre>
 </div>
-<div id="manual-cruise-duplication" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Manual cruise duplication</h1>
+<div id="manual-cruise-duplication" class="section level2" number="2.6">
+<h2 number="2.6"><span class="header-section-number">2.6</span> Manual cruise duplication</h2>
 <pre class="r"><code>map +
   geom_raster(data =
                 GLODAP %&gt;%
@@ -8422,6 +8471,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/Manual_cruise_duplication-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/Manual_cruise_duplication-1.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -8443,18 +8503,19 @@ jens-daniel-mueller
 
 GLODAP &lt;- bind_rows(GLODAP, GLODAP_dup)
 rm(GLODAP_dup)</code></pre>
-<div id="create-clean-observations-grid" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Create clean observations grid</h2>
+</div>
+<div id="create-clean-observations-grid" class="section level2" number="2.7">
+<h2 number="2.7"><span class="header-section-number">2.7</span> Create clean observations grid</h2>
 <p>Grid containing all grid cells where at least one observation remains available after cleaning.</p>
 <pre class="r"><code>GLODAP_obs_grid_clean &lt;- GLODAP %&gt;% 
-  count(lat, lon) %&gt;% 
-  select(-n)</code></pre>
+  distinct(lat, lon)</code></pre>
 </div>
-<div id="write-summary-file" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Write summary file</h2>
-<pre class="r"><code>GLODAP_obs_grid_clean  %&gt;%  write_csv(paste(path_version_data,
-                                            &quot;GLODAPv2.2020_clean_obs_grid.csv&quot;,
-                                            sep = &quot;&quot;))
+<div id="write-summary-file" class="section level2" number="2.8">
+<h2 number="2.8"><span class="header-section-number">2.8</span> Write summary file</h2>
+<pre class="r"><code>GLODAP_obs_grid_clean  %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;GLODAPv2.2020_clean_obs_grid.csv&quot;,
+                  sep = &quot;&quot;))
 
 # select relevant columns for further analysis
 GLODAP &lt;- GLODAP %&gt;% 
@@ -8472,13 +8533,17 @@ GLODAP &lt;- GLODAP %&gt;%
 
 GLODAP  %&gt;%  write_csv(paste(path_version_data,
                              &quot;GLODAPv2.2020_clean.csv&quot;,
-                             sep = &quot;&quot;))</code></pre>
+                             sep = &quot;&quot;))
+
+tref  %&gt;%  write_csv(paste(path_version_data,
+                           &quot;tref.csv&quot;,
+                           sep = &quot;&quot;))</code></pre>
 </div>
 </div>
-<div id="overview-plots" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Overview plots</h1>
-<div id="number-of-overservations" class="section level2" number="4.1">
-<h2 number="4.1"><span class="header-section-number">4.1</span> Number of overservations</h2>
+<div id="overview-plots" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Overview plots</h1>
+<div id="number-of-overservations" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Number of overservations</h2>
 <pre class="r"><code>GLODAP %&gt;% 
   group_by(era, basin_AIP) %&gt;% 
   count() %&gt;% 
@@ -8508,6 +8573,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/counts-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/counts-1.png" target="_blank">858c4e6</a>
@@ -8557,8 +8633,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="cleaning-stats" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Cleaning stats</h2>
+<div id="cleaning-stats" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Cleaning stats</h2>
 <p>Number of observations at various steps of data cleaning.</p>
 <pre class="r"><code>GLODAP_stats_long &lt;- GLODAP_stats %&gt;%
   pivot_longer(1:length(GLODAP_stats),
@@ -8910,16 +8986,16 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_stats_long)</code></pre>
 </div>
-<div id="assign-coarse-spatial-grid" class="section level2" number="4.3">
-<h2 number="4.3"><span class="header-section-number">4.3</span> Assign coarse spatial grid</h2>
+<div id="assign-coarse-spatial-grid" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Assign coarse spatial grid</h2>
 <p>For the following plots, the cleaned data set was re-opened and observations were gridded spatially to intervals of:</p>
 <ul>
 <li>5° x 5°</li>
 </ul>
 <pre class="r"><code>GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)</code></pre>
 </div>
-<div id="histogram-zonal-coverage" class="section level2" number="4.4">
-<h2 number="4.4"><span class="header-section-number">4.4</span> Histogram Zonal coverage</h2>
+<div id="histogram-zonal-coverage" class="section level2" number="3.4">
+<h2 number="3.4"><span class="header-section-number">3.4</span> Histogram Zonal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
   group_by(era, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -8956,6 +9032,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_zonal-1.png" target="_blank">858c4e6</a>
@@ -9413,23 +9500,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_histogram_lat)</code></pre>
 </div>
-<div id="median-years-tref" class="section level2" number="4.5">
-<h2 number="4.5"><span class="header-section-number">4.5</span> Median years (tref)</h2>
-<p>Median years of each era (tref) were determined as:</p>
-<pre class="r"><code>era_median_year &lt;- GLODAP %&gt;%
-  group_by(era) %&gt;%
-  summarise(t_ref = median(year)) %&gt;%
-  ungroup()
-
-era_median_year</code></pre>
-<pre><code># A tibble: 2 x 2
-  era       t_ref
-  &lt;fct&gt;     &lt;dbl&gt;
-1 2000-2009  2006
-2 2010-2019  2013</code></pre>
-</div>
-<div id="histogram-temporal-coverage" class="section level2" number="4.6">
-<h2 number="4.6"><span class="header-section-number">4.6</span> Histogram temporal coverage</h2>
+<div id="histogram-temporal-coverage" class="section level2" number="3.5">
+<h2 number="3.5"><span class="header-section-number">3.5</span> Histogram temporal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_year &lt;- GLODAP %&gt;%
   group_by(year, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -9441,8 +9513,8 @@ GLODAP_histogram_year %&gt;%
   geom_col(aes(year, n,
                fill = basin_AIP)) +
   geom_point(
-    data = era_median_year,
-    aes(t_ref, 100, shape = &quot;Median year&quot;),
+    data = tref,
+    aes(year, 100, shape = &quot;tref&quot;),
     size = 2,
     fill = &quot;white&quot;
   ) +
@@ -9479,6 +9551,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">858c4e6</a>
@@ -9937,8 +10020,8 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_histogram_year,
    era_median_year)</code></pre>
 </div>
-<div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="4.7">
-<h2 number="4.7"><span class="header-section-number">4.7</span> Zonal temporal coverage (Hovmoeller)</h2>
+<div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="3.6">
+<h2 number="3.6"><span class="header-section-number">3.6</span> Zonal temporal coverage (Hovmoeller)</h2>
 <pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
   group_by(year, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -9978,6 +10061,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_hovmoeller-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_hovmoeller-1.png" target="_blank">858c4e6</a>
@@ -10424,10 +10518,10 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_hovmoeller_year)</code></pre>
 </div>
-<div id="coverage-maps-by-era" class="section level2" number="4.8">
-<h2 number="4.8"><span class="header-section-number">4.8</span> Coverage maps by era</h2>
-<div id="subsetting-process" class="section level3" number="4.8.1">
-<h3 number="4.8.1"><span class="header-section-number">4.8.1</span> Subsetting process</h3>
+<div id="coverage-maps-by-era" class="section level2" number="3.7">
+<h2 number="3.7"><span class="header-section-number">3.7</span> Coverage maps by era</h2>
+<div id="subsetting-process" class="section level3" number="3.7.1">
+<h3 number="3.7.1"><span class="header-section-number">3.7.1</span> Subsetting process</h3>
 <p>The following plots show the remaining data after <strong>individual cleaning steps</strong>, separately for each era.</p>
 <pre class="r"><code>GLODAP_obs_grid &lt;- GLODAP_obs_grid %&gt;%
   mutate(cleaning_level = factor(
@@ -10860,8 +10954,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="final-input-data" class="section level3" number="4.8.2">
-<h3 number="4.8.2"><span class="header-section-number">4.8.2</span> Final input data</h3>
+<div id="final-input-data" class="section level3" number="3.7.2">
+<h3 number="3.7.2"><span class="header-section-number">3.7.2</span> Final input data</h3>
 <p>The following plots show the remaining data density in each grid cell <strong>after all cleaning steps</strong>, separately for each era.</p>
 <pre class="r"><code>GLODAP_tco2_grid &lt;- GLODAP %&gt;%
   count(lat, lon)
@@ -10898,6 +10992,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_clean-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_maps_era_clean-1.png" target="_blank">858c4e6</a>
@@ -11370,8 +11475,8 @@ jens-daniel-mueller
        width = 5)</code></pre>
 </div>
 </div>
-<div id="model-vs-observation" class="section level2" number="4.9">
-<h2 number="4.9"><span class="header-section-number">4.9</span> Model vs observation</h2>
+<div id="model-vs-observation" class="section level2" number="3.8">
+<h2 number="3.8"><span class="header-section-number">3.8</span> Model vs observation</h2>
 <pre class="r"><code>variables &lt;-
   c(
     &quot;temp&quot;,
@@ -11445,6 +11550,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-1.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-1.png" target="_blank">858c4e6</a>
@@ -11551,6 +11667,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-2.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-2.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -11653,6 +11780,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-3.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-3.png" target="_blank">858c4e6</a>
@@ -11759,6 +11897,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-4.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-4.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -11861,6 +12010,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-5.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-5.png" target="_blank">858c4e6</a>
@@ -11967,6 +12127,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-6.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-6.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -12069,6 +12240,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-7.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-7.png" target="_blank">858c4e6</a>
@@ -12175,6 +12357,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-8.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-8.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -12279,6 +12472,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-9.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-9.png" target="_blank">858c4e6</a>
 </td>
 <td>
@@ -12381,6 +12585,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-10.png" target="_blank">b6fe355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/858c4e654fce91b2c9de791e63d20c5e08b91535/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/model_obs_comparison-10.png" target="_blank">858c4e6</a>
