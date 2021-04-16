@@ -817,7 +817,24 @@ GLODAP <- GLODAP %>%
 
 ```
 
-# Manual cruise duplication
+## Median years (tref)
+
+Median years of each era (tref) were determined as:
+
+```{r calc_tref}
+
+# calculate reference year
+tref <- GLODAP %>%
+  group_by(era) %>%
+  summarise(year = median(year)) %>%
+  ungroup()
+
+tref
+
+```
+
+
+## Manual cruise duplication
 
 ```{r Manual_cruise_duplication, fig.asp=2}
 
@@ -851,20 +868,18 @@ Grid containing all grid cells where at least one observation remains available 
 ```{r create_clean_obs_grid}
 
 GLODAP_obs_grid_clean <- GLODAP %>% 
-  count(lat, lon) %>% 
-  select(-n)
-
+  distinct(lat, lon)
 ```
-
 
 
 ## Write summary file
  
 ```{r write_clean_data_files}
 
-GLODAP_obs_grid_clean  %>%  write_csv(paste(path_version_data,
-                                            "GLODAPv2.2020_clean_obs_grid.csv",
-                                            sep = ""))
+GLODAP_obs_grid_clean  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAPv2.2020_clean_obs_grid.csv",
+                  sep = ""))
 
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
@@ -883,6 +898,10 @@ GLODAP <- GLODAP %>%
 GLODAP  %>%  write_csv(paste(path_version_data,
                              "GLODAPv2.2020_clean.csv",
                              sep = ""))
+
+tref  %>%  write_csv(paste(path_version_data,
+                           "tref.csv",
+                           sep = ""))
 
 
 ```
@@ -964,22 +983,6 @@ rm(GLODAP_histogram_lat)
 
 ```
 
-## Median years (tref)
-
-Median years of each era (tref) were determined as:
-
-```{r calculate_median_years}
-
-era_median_year <- GLODAP %>%
-  group_by(era) %>%
-  summarise(t_ref = median(year)) %>%
-  ungroup()
-
-era_median_year
-
-```
-
-
 
 ## Histogram temporal coverage
 
@@ -996,8 +999,8 @@ GLODAP_histogram_year %>%
   geom_col(aes(year, n,
                fill = basin_AIP)) +
   geom_point(
-    data = era_median_year,
-    aes(t_ref, 100, shape = "Median year"),
+    data = tref,
+    aes(year, 100, shape = "tref"),
     size = 2,
     fill = "white"
   ) +
