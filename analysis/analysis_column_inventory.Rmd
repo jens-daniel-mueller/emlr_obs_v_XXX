@@ -103,7 +103,8 @@ cant_inv_bias <- cant_inv %>%
   select(lat, lon, data_source, cant_pos_inv) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_pos_inv) %>%
-  mutate(cant_pos_bias = mod - mod_truth)
+  mutate(cant_pos_bias = mod - mod_truth) %>% 
+  drop_na()
 
 p_map_cant_inv(
     df = cant_inv_bias,
@@ -136,7 +137,8 @@ cant_inv_bias <- cant_inv %>%
   select(lat, lon, data_source, cant_inv) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_inv) %>%
-  mutate(cant_bias = mod - mod_truth)
+  mutate(cant_bias = mod - mod_truth) %>% 
+  drop_na()
 
 p_map_cant_inv(
     df = cant_inv_bias,

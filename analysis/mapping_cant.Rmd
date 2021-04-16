@@ -106,7 +106,7 @@ lm_best_cant <- lm_best_cant %>%
   mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
 
 # join predictors and MLR
-cant <- full_join(predictors, lm_best_cant)
+cant <- left_join(lm_best_cant, predictors)
 
 rm(predictors, lm_best_cant)
 
