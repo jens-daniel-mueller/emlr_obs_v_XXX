@@ -817,6 +817,25 @@ GLODAP <- GLODAP %>%
 
 ```
 
+# Manual cruise duplication
+
+```{r Manual_cruise_duplication, fig.asp=0.3}
+
+
+GLODAP %>%
+  distinct(year, cruise, lat, lon) %>%
+  group_split(year) %>%
+  map(~ map +
+        geom_raster(data = .x,
+                    aes(lon, lat, fill = as.factor(cruise))) +
+        scale_fill_brewer(palette = "Set1", name="Cruise") +
+        labs(title = paste("Year:", unique(.x$year))))
+  
+
+```
+
+
+
 
 ## Create clean observations grid
 
