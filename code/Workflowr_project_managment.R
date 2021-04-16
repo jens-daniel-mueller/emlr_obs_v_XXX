@@ -31,18 +31,22 @@ wflow_publish(here::here(
     "analysis_MLR_performance.Rmd"
   )
 ),
-message = "overlapping breakpoints",
+message = "corrected tref assignment",
 republish = TRUE)
 
 wflow_publish(here::here(
   "analysis",
   c(
-    "analysis_slab_inventory.Rmd"
+    "index.Rmd",
+    "config_dependencies.Rmd",
+    "config_parameterization_local.Rmd",
+    "eMLR_GLODAPv2_2020_subsetting.Rmd"
   )
 ),
-message = "included model data")
+message = "use consistent tref")
 
 
 # Push latest version to GitHub
 wflow_git_push()
 jens-daniel-mueller
+/
