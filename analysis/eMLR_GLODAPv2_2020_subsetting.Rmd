@@ -869,7 +869,16 @@ GLODAP_dup_era2 <- GLODAP %>%
          year <=2012) %>%
   mutate(era = sort(unique(GLODAP$era))[1])
 
-GLODAP <- bind_rows(GLODAP, GLODAP_dup_era1, GLODAP_dup_era2)
+GLODAP <- bind_rows(GLODAP %>% mutate(duplicate = "no"),
+                    GLODAP_dup_era1 %>% mutate(duplicate = "yes"),
+                    GLODAP_dup_era2 %>% mutate(duplicate = "yes"))
+
+GLODAP_grid_dup <- GLODAP %>%
+  distinct(era, duplicate, lon, lat)
+  
+GLODAP <- GLODAP %>% 
+  select(-duplicate)
+
 rm(GLODAP_dup_era1, GLODAP_dup_era2)
 
 ```
@@ -895,6 +904,11 @@ GLODAP_obs_grid_clean <- GLODAP %>%
 GLODAP_obs_grid_clean  %>%
   write_csv(paste(path_version_data,
                   "GLODAPv2.2020_clean_obs_grid.csv",
+                  sep = ""))
+
+GLODAP_grid_dup  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAPv2.2020_clean_obs_grid_duplicates.csv",
                   sep = ""))
 
 # select relevant columns for further analysis
