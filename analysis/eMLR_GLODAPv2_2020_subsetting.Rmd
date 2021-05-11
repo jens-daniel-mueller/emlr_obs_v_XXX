@@ -675,11 +675,11 @@ Cruises are removed, when the mean offset of the observation from the value pred
 ```{r combine_GLODAP_CANYON_B}
 
 # join data frames
-GLODAP_combined <- left_join(GLODAP,
+GLODAP_combined_raw <- left_join(GLODAP,
                              GLODAP_CB)
 
 # calculate offset by parameter
-GLODAP_combined <- GLODAP_combined %>%
+GLODAP_combined <- GLODAP_combined_raw %>%
   mutate(
     offset_talk = talk - talk_CANYONB,
     offset_tco2 = tco2 - tco2_CANYONB,
@@ -717,6 +717,57 @@ GLODAP_combined %>%
   scale_y_continuous(trans = "log10") +
   facet_grid(basin_AIP ~ parameter, scales = "free_x")
 
+```
+
+### Property-property plots
+
+```{r CANYON_B_property_property, fig.asp=0.6}
+
+# GLODAP_combined_raw <- GLODAP_combined_raw %>%
+#   select(ends_with(c("_CANYONB", "_model")))
+
+variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
+
+for (i_variable in variables) {
+  # i_variable <- variables[1]
+  
+  # calculate equal axis limits and binwidth
+  axis_lims <- GLODAP_combined_raw %>%
+    drop_na() %>% 
+    summarise(max_value = max(c(max(!!sym(
+      paste0(i_variable)
+    )),
+    max(!!sym(
+      paste0(i_variable, "_CANYONB")
+    )))),
+    min_value = min(c(min(!!sym(
+      paste0(i_variable)
+    )),
+    min(!!sym(
+      paste0(i_variable, "_CANYONB")
+    )))))
+  
+  binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 60
+  axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
+  
+  print(
+    ggplot(GLODAP_combined_raw, aes(
+      x = !!sym(paste0(i_variable)),
+      y = !!sym(paste0(i_variable, "_CANYONB"))
+    )) +
+      geom_bin2d(binwidth = binwidth_value) +
+      scale_fill_viridis_c(trans = "log10") +
+      geom_abline(slope = 1, col = 'red') +
+      coord_equal(xlim = axis_lims,
+                  ylim = axis_lims) +
+      facet_wrap( ~ basin_AIP) +
+      labs(title = "All years")
+  ) 
+
+}
+
+rm(variables, GLODAP_combined_raw)
+  
 ```
 
 ### Ranked residuals
