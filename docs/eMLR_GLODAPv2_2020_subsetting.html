@@ -495,7 +495,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020 subsetting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">19 April, 2021</h4>
+<h4 class="date">11 May, 2021</h4>
 
 </div>
 
@@ -520,7 +520,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-04-19
+<strong>Last updated:</strong> 2021-05-11
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee51e059f13a15e2b988ddeda655e47a8f5b894a2targetblanke51e059a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e51e059f13a15e2b988ddeda655e47a8f5b894a2" target="_blank">e51e059</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree01c7a3af9be01fdf66185eb37c4981555bef4b8ftargetblank01c7a3aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/01c7a3af9be01fdf66185eb37c4981555bef4b8f" target="_blank">01c7a3a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee51e059f13a15e2b988ddeda655e47a8f5b894a2targetblanke51e059a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree01c7a3af9be01fdf66185eb37c4981555bef4b8ftargetblank01c7a3aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e51e059f13a15e2b988ddeda655e47a8f5b894a2" target="_blank">e51e059</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/01c7a3af9be01fdf66185eb37c4981555bef4b8f" target="_blank">01c7a3a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -629,6 +629,7 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
 
 Untracked files:
     Untracked:  .Rprofile
@@ -678,6 +679,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/01c7a3af9be01fdf66185eb37c4981555bef4b8f/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">01c7a3a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-11
+</td>
+<td>
+property-property plots for GLODAP added
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7abd5c9f8d372eef4e4a7922057a0ef14682fa79/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">7abd5c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -7299,11 +7334,11 @@ rm(GLODAP_obs_grid_temp)</code></pre>
 <h2 number="2.4"><span class="header-section-number">2.4</span> CANYON-B comparison</h2>
 <p>Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than 3 times the standard deviation of all cruise mean offsets. This critrion is evaluated individually for each variable involved in the eMLR approach.</p>
 <pre class="r"><code># join data frames
-GLODAP_combined &lt;- left_join(GLODAP,
+GLODAP_combined_raw &lt;- left_join(GLODAP,
                              GLODAP_CB)
 
 # calculate offset by parameter
-GLODAP_combined &lt;- GLODAP_combined %&gt;%
+GLODAP_combined &lt;- GLODAP_combined_raw %&gt;%
   mutate(
     offset_talk = talk - talk_CANYONB,
     offset_tco2 = tco2 - tco2_CANYONB,
@@ -7505,8 +7540,55 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="ranked-residuals" class="section level3" number="2.4.2">
-<h3 number="2.4.2"><span class="header-section-number">2.4.2</span> Ranked residuals</h3>
+<div id="property-property-plots" class="section level3" number="2.4.2">
+<h3 number="2.4.2"><span class="header-section-number">2.4.2</span> Property-property plots</h3>
+<pre class="r"><code># GLODAP_combined_raw &lt;- GLODAP_combined_raw %&gt;%
+#   select(ends_with(c(&quot;_CANYONB&quot;, &quot;_model&quot;)))
+
+variables &lt;- c(&quot;talk&quot;, &quot;tco2&quot;, &quot;nitrate&quot;, &quot;phosphate&quot;, &quot;silicate&quot;)
+
+for (i_variable in variables) {
+  # i_variable &lt;- variables[1]
+  
+  # calculate equal axis limits and binwidth
+  axis_lims &lt;- GLODAP_combined_raw %&gt;%
+    drop_na() %&gt;% 
+    summarise(max_value = max(c(max(!!sym(
+      paste0(i_variable)
+    )),
+    max(!!sym(
+      paste0(i_variable, &quot;_CANYONB&quot;)
+    )))),
+    min_value = min(c(min(!!sym(
+      paste0(i_variable)
+    )),
+    min(!!sym(
+      paste0(i_variable, &quot;_CANYONB&quot;)
+    )))))
+  
+  binwidth_value &lt;- (axis_lims$max_value - axis_lims$min_value) / 60
+  axis_lims &lt;- c(axis_lims$min_value, axis_lims$max_value)
+  
+  print(
+    ggplot(GLODAP_combined_raw, aes(
+      x = !!sym(paste0(i_variable)),
+      y = !!sym(paste0(i_variable, &quot;_CANYONB&quot;))
+    )) +
+      geom_bin2d(binwidth = binwidth_value) +
+      scale_fill_viridis_c(trans = &quot;log10&quot;) +
+      geom_abline(slope = 1, col = &#39;red&#39;) +
+      coord_equal(xlim = axis_lims,
+                  ylim = axis_lims) +
+      facet_wrap( ~ basin_AIP) +
+      labs(title = &quot;All years&quot;)
+  ) 
+
+}</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/CANYON_B_property_property-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/CANYON_B_property_property-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/CANYON_B_property_property-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/CANYON_B_property_property-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/CANYON_B_property_property-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(variables, GLODAP_combined_raw)</code></pre>
+</div>
+<div id="ranked-residuals" class="section level3" number="2.4.3">
+<h3 number="2.4.3"><span class="header-section-number">2.4.3</span> Ranked residuals</h3>
 <pre class="r"><code># calculate mean cruise offset by parameter
 cruise_all &lt;- GLODAP_combined %&gt;%
   group_by(cruise, parameter) %&gt;%
@@ -8746,8 +8828,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(i_parameter, i_cruise_all, i_cruise_out)</code></pre>
 </div>
-<div id="remove-cruises" class="section level3" number="2.4.3">
-<h3 number="2.4.3"><span class="header-section-number">2.4.3</span> Remove cruises</h3>
+<div id="remove-cruises" class="section level3" number="2.4.4">
+<h3 number="2.4.4"><span class="header-section-number">2.4.4</span> Remove cruises</h3>
 <pre class="r"><code>GLODAP_out &lt;- GLODAP %&gt;%
   filter(cruise %in% cruise_out$cruise)
 
