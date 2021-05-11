@@ -770,6 +770,34 @@ rm(variables, GLODAP_combined_raw)
   
 ```
 
+### Offset maps
+
+```{r CANYON_B_offset_maps, fig.asp=0.6}
+
+GLODAP_combined_max <- GLODAP_combined %>% 
+  group_by(lat, lon, parameter) %>% 
+  summarise(max_offset = max(offset)) %>% 
+  ungroup()
+
+variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
+
+for (i_variable in variables) {
+
+  print(
+map +
+  geom_raster(data = GLODAP_combined_max %>% filter(parameter == i_variable),
+              aes(lon, lat, fill = max_offset)) +
+  scale_fill_viridis_c(direction = -1) +
+  scale_fill_divergent(name = paste0("offset:\n",i_variable))
+)
+  
+}
+  
+
+```
+
+
+
 ### Ranked residuals
 
 ```{r CANYON_B_ranked_residuals}
