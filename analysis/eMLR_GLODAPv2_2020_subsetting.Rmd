@@ -719,6 +719,7 @@ GLODAP_combined %>%
 
 ```
 
+
 ### Property-property plots
 
 ```{r CANYON_B_property_property, fig.asp=0.6}
@@ -770,29 +771,69 @@ rm(variables, GLODAP_combined_raw)
   
 ```
 
+
+
+### Residual time series
+
+```{r CANYON_B_residual_time_series, fig.asp=1}
+
+GLODAP_combined %>%
+  ggplot(aes(year, offset)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(parameter ~ basin_AIP, scales = "free_y")
+
+```
+
 ### Offset maps
 
-```{r CANYON_B_offset_maps, fig.asp=0.6}
+```{r CANYON_B_offset_map_phosphate, fig.asp=0.6}
 
-GLODAP_combined_max <- GLODAP_combined %>% 
-  group_by(lat, lon, parameter) %>% 
-  summarise(max_offset = max(offset)) %>% 
-  ungroup()
+i_variable <- "phosphate"
+i_offset <- -0.3
 
-variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
-
-for (i_variable in variables) {
-
-  print(
 map +
-  geom_raster(data = GLODAP_combined_max %>% filter(parameter == i_variable),
-              aes(lon, lat, fill = max_offset)) +
-  scale_fill_viridis_c(direction = -1) +
-  scale_fill_divergent(name = paste0("offset:\n",i_variable))
-)
-  
-}
-  
+  geom_raster(data = GLODAP_combined %>% 
+                filter(parameter == i_variable,
+                       offset < i_offset),
+              aes(lon, lat, fill = as.character(i_offset))) +
+  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
+                    values = "red")
+
+
+```
+
+
+```{r CANYON_B_offset_map_nitrate, fig.asp=0.6}
+
+i_variable <- "nitrate"
+i_offset <- -5
+
+map +
+  geom_raster(data = GLODAP_combined %>% 
+                filter(parameter == i_variable,
+                       offset < i_offset),
+              aes(lon, lat, fill = as.character(i_offset))) +
+  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
+                    values = "red")
+
+
+```
+
+
+```{r CANYON_B_offset_map_silicate, fig.asp=0.6}
+
+i_variable <- "silicate"
+i_offset <- -10
+
+map +
+  geom_raster(data = GLODAP_combined %>% 
+                filter(parameter == i_variable,
+                       offset < i_offset),
+              aes(lon, lat, fill = as.character(i_offset))) +
+  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
+                    values = "red")
+
 
 ```
 
