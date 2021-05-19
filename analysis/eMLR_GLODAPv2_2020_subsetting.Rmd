@@ -978,13 +978,13 @@ map +
 # Duplicate overlapping eras manually
 
 GLODAP_dup_era1 <- GLODAP %>%
-  filter(year >=2007,
+  filter(year >=2000,
          year <=2009) %>%
   mutate(era = sort(unique(GLODAP$era))[2])
 
 GLODAP_dup_era2 <- GLODAP %>%
   filter(year >=2010,
-         year <=2012) %>%
+         year <=2020) %>%
   mutate(era = sort(unique(GLODAP$era))[1])
 
 GLODAP <- bind_rows(GLODAP %>% mutate(duplicate = "no"),

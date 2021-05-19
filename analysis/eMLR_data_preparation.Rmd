@@ -529,6 +529,48 @@ rm(lat_section, GLODAP_cruise)
 
 # Isoneutral slabs
 
+```{r density_histograms}
+
+GLODAP %>% 
+  ggplot(aes(gamma)) +
+  geom_histogram() +
+  facet_grid(basin_AIP~data_source)
+
+```
+
+
+```{r density_profiles}
+
+GLODAP %>% 
+  ggplot(aes(gamma, depth)) +
+  geom_bin2d() +
+  geom_smooth(col = "red", orientation = "y") +
+  scale_y_reverse() +
+  scale_fill_viridis_c() +
+  facet_grid(basin_AIP~data_source)
+
+```
+
+```{r density_cuts}
+
+GLODAP <- GLODAP %>% 
+  group_by(basin_AIP) %>% 
+  mutate(gamma_slab = cut_number(gamma, n = 10)) %>% 
+  ungroup()
+
+GLODAP_slab <- GLODAP %>% 
+  count(gamma_slab, basin_AIP, era)
+
+
+GLODAP_slab %>% 
+  ggplot(aes(gamma_slab, n, fill=era)) +
+  geom_col() +
+  facet_grid(.~basin_AIP, scales = "free_x") +
+  theme(axis.text.x = element_text(angle = 90))
+
+```
+
+
 The following boundaries for isoneutral slabs were defined:
 
 - Atlantic: `r params_local$slabs_Atl`
