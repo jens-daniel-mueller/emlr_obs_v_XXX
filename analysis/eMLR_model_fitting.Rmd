@@ -57,6 +57,7 @@ library(broom)
 library(corrr)
 library(GGally)
 library(gt)
+library(tictoc)
 ```
 
 # Required data
@@ -158,6 +159,40 @@ Individual linear regression models were fitted for the chosen target variable:
 
 as a function of each predictor combination. Fitting was performed separately within each basin, era, and slab. Model diagnostics, such as the root mean squared error (RMSE), were calculated for each fitted model.
 
+```{r test_parallel_furrr, eval=FALSE}
+
+library(furrr)
+library(purrr)
+
+map(c("hello", "world"), ~.x)
+future_map(c("hello", "world"), ~.x)
+
+
+
+library(tictoc)
+plan(sequential)
+
+tic()
+nothingness <- future_map(c(2, 2, 2), ~Sys.sleep(.x))
+toc()
+
+plan(multisession, workers = 3)
+
+tic()
+nothingness <- future_map(c(2, 2, 2), ~Sys.sleep(.x))
+toc()
+
+
+future_map_dbl(1:4, function(x){
+  Sys.sleep(1)
+  x^2
+}, .progress = TRUE)
+
+```
+
+
+
+
 ```{r fit_all_models_purrr, results='hide'}
 
 # prepare nested data frame
@@ -167,14 +202,13 @@ GLODAP %>%
 
 GLODAP_nested <- GLODAP %>% 
   # filter(gamma_slab %in% unique(GLODAP$gamma_slab)[c(5,6)]) %>%
-  group_by(gamma_slab, era, basin, data_source) %>% 
-  nest()
+  nest(data = !c(gamma_slab, era, basin, data_source))
 
 # expand with model definitions
 
 GLODAP_nested_lm <- expand_grid(
   GLODAP_nested,
-  lm_all
+  lm_all#[1:3,]
 )
 
 # fit models and extract tidy model output
@@ -190,26 +224,28 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 
 
 # test parallel processing
-# 
+
+# test multidplyr
+
 # library(parallel)
 # library(multidplyr)
 # 
 # n_cores <- detectCores()
 # system.time(
-# cluster <- new_cluster(5)
+# cluster <- new_cluster(n_cores - 2)
 # )
 # 
 # cluster
 # 
 # system.time(
-#   GLODAP_nested_lm <-
-#     expand_grid(GLODAP,
-#                 lm_all) %>%
+#   GLODAP_nested_lm_part <-
+#     GLODAP_nested_lm %>%
 #     group_by(gamma_slab, era, basin, data_source, model, predictors, n) %>%
 #     partition(cluster)
 # )
 # 
-# GLODAP_nested_lm 
+# GLODAP_nested_lm
+# GLODAP_nested_lm_part
 # 
 # cluster %>%
 #   cluster_library(c("tidyverse",
@@ -220,9 +256,9 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 # cluster_call(cluster, search())
 # 
 # system.time(
-# GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
+# GLODAP_nested_lm_fit <- GLODAP_nested_lm_part %>%
 #   mutate(
-#     fit = map2(.x = data, .y = model, 
+#     fit = map2(.x = data, .y = model,
 #                ~ lm(as.formula(.y), data = .x)),
 #     tidied = map(fit, tidy),
 #     glanced = map(fit, glance),
@@ -232,36 +268,34 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 # )
 # 
 # system.time(
-# GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>% 
+# GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>%
 #   collect()
 # )
-# 
-# 
-# 
+
+
+### test furrr
+
 # library(furrr)
 # 
-# plan(sequential)
-# plan(multisession, workers = 5)
+# plan(multisession, workers = 10)
 # 
-# # This does run in parallel!
-# system.time(
-# GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
+# tic()
+# GLODAP_nested_lm_fit_furrr <- GLODAP_nested_lm %>%
 #   mutate(
-#     fit = future_map2(.x = data, .y = model, 
-#                ~ lm(as.formula(.y), data = .x))
-#     # tidied = future_map(fit, tidy),
-#     # glanced = future_map(fit, glance),
-#     # augmented = future_map(fit, augment),
-#     # vif = future_map(fit, ols_vif_tol)
+#     fit = future_map2(.x = data, .y = model,
+#                ~ lm(as.formula(.y), data = .x)),
+#     tidied = future_map(fit, tidy),
+#     glanced = future_map(fit, glance),
+#     augmented = future_map(fit, augment),
+#     vif = future_map(fit, ols_vif_tol)
 #   )
-# )
-
-
+# toc()
+# 
+# plan(sequential)
 
 # print(object.size(GLODAP_nested), units = "MB")
 # print(object.size(GLODAP_nested_lm), units = "MB")
 # print(object.size(GLODAP_nested_lm_fit), units = "MB")
-
 
 ```
 
