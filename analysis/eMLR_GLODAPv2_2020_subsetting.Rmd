@@ -260,6 +260,7 @@ rm(GLODAP_obs)
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2f)
 
+print(
 map +
   geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
   scale_fill_viridis_c(option = "magma",
@@ -267,6 +268,7 @@ map +
                        trans = "log10") +
   facet_grid(era ~ tco2f) +
   theme(legend.position = "top")
+)
 
 rm(GLODAP_obs_grid_temp)
 
