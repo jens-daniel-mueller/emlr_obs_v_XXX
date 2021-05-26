@@ -46,7 +46,7 @@ path_version_data     <-
 path_version_figures  <-
   paste(path_observations,
         params_local$Version_ID,
-        "/figures/",
+        "/figures/GLODAPv2_2020_subsetting/",
         sep = "")
 ```
 
@@ -117,41 +117,14 @@ GLODAP <- expand_grid(
   era_labels
 )
 
-# extract A16 cruise data from 2013/14
-GLODAP_A16_backup <- GLODAP %>% 
-  filter(cruise %in% c(1041, 1042),
-         era == sort(unique(GLODAP$era))[2])
-
 # select data within each era
 GLODAP <- GLODAP %>% 
   filter(year >= start & year <= end)
 
-
-if (params_local$A16_GO_SHIP == "y") {
-  GLODAP <- bind_rows(GLODAP,
-                      GLODAP_A16_backup)
-  
-  map +
-    geom_raster(data = GLODAP_A16_backup %>% distinct(lat, lon, cruise),
-                aes(lon, lat, fill = as.factor(cruise))) +
-    scale_fill_brewer(palette = "Dark2") +
-    labs(
-      title = "Manual adjustment of A16 cruise",
-      subtitle = paste(
-        "For harmonization with Gruber et al. (2019),
-        cruises 1041 (A16N) and 1042 (A16S) were grouped into the",
-        sort(unique(GLODAP$era))[2], "era
-        despite taking place in 2013/14"
-      )
-    ) +
-    theme(legend.title = element_blank())
-  
-}
-
 GLODAP <- GLODAP %>% 
   select(-c(start, end))
 
-rm(era_labels, GLODAP_A16_backup)
+rm(era_labels)
 
 ```
 
@@ -246,6 +219,22 @@ GLODAP_obs_grid <- GLODAP %>%
 
 ```
 
+```{r open_pdf_for_figures}
+
+pdf(
+  file = paste0(
+    path_version_figures,
+    "data_cleaning_maps_",
+    params_local$Version_ID,
+    ".pdf"
+  ),
+  width = 10,
+  height = 5
+)
+
+```
+
+
 ```{r WOA18_basin_mask_GLODAP_observations_map, fig.asp=0.6}
 
 GLODAP_obs <- GLODAP %>% 
@@ -263,7 +252,6 @@ map +
 rm(GLODAP_obs)
 
 ```
-
 
 #### f flag
 
@@ -284,7 +272,6 @@ rm(GLODAP_obs_grid_temp)
 
 GLODAP <- GLODAP %>%
   filter(tco2f %in% params_local$flag_f)
-
 
 ```
 
@@ -553,6 +540,8 @@ GLODAP_obs_grid <-
 
 rm(GLODAP_obs_grid_temp)
 
+dev.off()
+
 ```
 
 
@@ -771,8 +760,6 @@ rm(variables, GLODAP_combined_raw)
   
 ```
 
-
-
 ### Residual time series
 
 ```{r CANYON_B_residual_time_series, fig.asp=1}
@@ -785,61 +772,10 @@ GLODAP_combined %>%
 
 ```
 
-### Offset maps
 
-```{r CANYON_B_offset_map_phosphate, fig.asp=0.6}
+### Residual distribution
 
-i_variable <- "phosphate"
-i_offset <- -0.3
-
-map +
-  geom_raster(data = GLODAP_combined %>% 
-                filter(parameter == i_variable,
-                       offset < i_offset),
-              aes(lon, lat, fill = as.character(i_offset))) +
-  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
-                    values = "red")
-
-
-```
-
-
-```{r CANYON_B_offset_map_nitrate, fig.asp=0.6}
-
-i_variable <- "nitrate"
-i_offset <- -5
-
-map +
-  geom_raster(data = GLODAP_combined %>% 
-                filter(parameter == i_variable,
-                       offset < i_offset),
-              aes(lon, lat, fill = as.character(i_offset))) +
-  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
-                    values = "red")
-
-
-```
-
-
-```{r CANYON_B_offset_map_silicate, fig.asp=0.6}
-
-i_variable <- "silicate"
-i_offset <- -10
-
-map +
-  geom_raster(data = GLODAP_combined %>% 
-                filter(parameter == i_variable,
-                       offset < i_offset),
-              aes(lon, lat, fill = as.character(i_offset))) +
-  scale_fill_manual(name = paste0("offset threshold:\n", i_variable),
-                    values = "red")
-
-
-```
-
-### Ranked residuals
-
-```{r CANYON_B_ranked_residuals}
+```{r CANYON_B_residuals}
 
 # calculate mean cruise offset by parameter
 cruise_all <- GLODAP_combined %>%
@@ -850,7 +786,7 @@ cruise_all <- GLODAP_combined %>%
   ) %>%
   ungroup()
 
-# rank offsets and calculate offset threshols
+# rank offsets and calculate offset thresholds
 cruise_all <- cruise_all %>%
   group_by(parameter) %>%
   mutate(
@@ -864,8 +800,6 @@ cruise_all <- cruise_all %>%
 cruise_out <- cruise_all %>%
   filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>% 
   filter(abs(mean_offset) > threshold_offset)
-
-# length(unique(cruise_out$cruise))
 
 for (i_parameter in unique(cruise_all$parameter)) {
   # i_parameter <- unique(cruise_all$parameter)[1]
@@ -897,11 +831,21 @@ for (i_parameter in unique(cruise_all$parameter)) {
     labs(title = i_parameter)
   )
   
+    print(
+  ggplot() +
+    geom_point(data = i_cruise_all,
+              aes(mean_offset, sd_offset)) +
+    geom_point(data = i_cruise_out,
+               aes(mean_offset, sd_offset, col = cruise)) +
+    labs(title = i_parameter)
+  )
+  
 }
 
 rm(i_parameter, i_cruise_all, i_cruise_out)
 
 ```
+
 
 ### Remove cruises
 
