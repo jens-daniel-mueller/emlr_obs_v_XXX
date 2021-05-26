@@ -219,12 +219,6 @@ GLODAP_obs_grid <- GLODAP %>%
 
 ```
 
-```{r open_pdf_for_figures}
-
-
-
-```
-
 
 ```{r WOA18_basin_mask_GLODAP_observations_map, fig.asp=0.6}
 
@@ -233,25 +227,14 @@ GLODAP_obs <- GLODAP %>%
   summarise(n = n()) %>% 
   ungroup()
 
-pdf(
-  file = paste0(
-    path_version_figures,
-    "data_cleaning_maps_",
-    params_local$Version_ID,
-    ".pdf"
-  ),
-  width = 10,
-  height = 5
-)
-
-map +
+p_tco2 <- map +
   geom_raster(data = basinmask, aes(lon, lat, fill = basin)) +
   geom_raster(data = GLODAP_obs, aes(lon, lat)) +
   scale_fill_brewer(palette = "Dark2") +
   theme(legend.position = "top",
         legend.title = element_blank())
 
-dev.off()
+p_tco2
 
 rm(GLODAP_obs)
 
@@ -264,15 +247,15 @@ rm(GLODAP_obs)
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, tco2f)
 
-print(
-map +
+p_tco2_f <- map +
   geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
   scale_fill_viridis_c(option = "magma",
                        direction = -1,
                        trans = "log10") +
   facet_grid(era ~ tco2f) +
   theme(legend.position = "top")
-)
+
+p_tco2_f
 
 rm(GLODAP_obs_grid_temp)
 
@@ -545,6 +528,27 @@ GLODAP_obs_grid <-
   bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
 
 rm(GLODAP_obs_grid_temp)
+
+```
+
+
+```{r plot_maps_pdf}
+
+pdf(
+  file = paste0(
+    path_version_figures,
+    "data_cleaning_maps_",
+    params_local$Version_ID,
+    ".pdf"
+  ),
+  width = 10,
+  height = 5
+)
+
+p_tco2
+p_tco2_f
+
+dev.off()
 
 ```
 
