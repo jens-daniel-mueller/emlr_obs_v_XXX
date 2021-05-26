@@ -225,8 +225,11 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 
 # test parallel processing
 
-# test multidplyr
+# expand with model definitions
 
+
+# test multidplyr
+ 
 # library(parallel)
 # library(multidplyr)
 # 
@@ -240,18 +243,19 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 # system.time(
 #   GLODAP_nested_lm_part <-
 #     GLODAP_nested_lm %>%
-#     group_by(gamma_slab, era, basin, data_source, model, predictors, n) %>%
+#     #group_by(gamma_slab, era, basin, data_source, model, predictors, n) %>% 
 #     partition(cluster)
 # )
+# 
 # 
 # GLODAP_nested_lm
 # GLODAP_nested_lm_part
 # 
-# cluster %>%
-#   cluster_library(c("tidyverse",
-#                     "broom",
-#                     "olsrr",
-#                     "purrr"))
+# system.time(cluster %>%
+#               cluster_library(c("tidyverse",
+#                                 "broom",
+#                                 "olsrr",
+#                                 "purrr")))
 # 
 # cluster_call(cluster, search())
 # 
@@ -266,6 +270,15 @@ GLODAP_nested_lm_fit <- GLODAP_nested_lm %>%
 #     vif = map(fit, ols_vif_tol)
 #   )
 # )
+# 
+# system.time(
+#   # extract glanced model output (model diagnostics, such as AIC)
+#   GLODAP_glanced <- GLODAP_nested_lm_fit %>%
+#     select(-c(data, fit, tidied, augmented, vif))
+#     # unnest(glanced) %>%
+#     # rename(n_predictors = n)
+# )
+# 
 # 
 # system.time(
 # GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>%
