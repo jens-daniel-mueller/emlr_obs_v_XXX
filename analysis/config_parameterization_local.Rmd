@@ -103,10 +103,125 @@ params_local <-
     dup_era1 = c(2009, 2009),
     # duplicated years from era 2 reused in era 1
     dup_era2 = c(2010, 2010),
-    # ID for basins for MLR fits
+    # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "2",
     # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
     MLR_target = "cstar_tref",
+    # see above
+    MLR_predictors = MLR_predictors,
+    # Maxmimum number of MLR predictors
+    MLR_predictors_max = 5,
+    # Minimum number of MLR predictors
+    MLR_predictors_min = 2,
+    # Total number of MLR fits taken into account
+    MLR_number = 10,
+    # Maximum VIF of fitted MLR models to be included
+    vif_max = 1000,
+    # Criterion to select best MLR fits, either "rmse" or "aic"
+    MLR_criterion = "rmse",
+    # see above
+    slabs_Atl = slabs_Atl,
+    # see above
+    slabs_Ind_Pac = slabs_Ind_Pac,
+    # Stoichiometric ratio of C to P
+    rCP = 117,
+    # Stoichiometric ratio of N to P
+    rNP = 16,
+    # Stoichiometric ratio of P to O (PO4* calculation)
+    rPO = 170,
+    # Offset P to O (PO4* calculation)
+    rPO_offset = 1.95,
+    # Preindustrial atmospheric pCO2
+    preind_atm_pCO2 = 280,
+    # generate a high number of diagnostic plots while running the analysis (y/n)
+    plot_all_figures = "n"
+  )
+
+
+```
+
+```{r define_params_local_manually, eval=FALSE, include=FALSE}
+
+# neutral density thresholds to cut the Atlantic ocean into slabs
+slabs_Atl <-
+  c(
+    -Inf,
+    26.00,
+    26.50,
+    26.75,
+    27.00,
+    27.25,
+    27.50,
+    27.75,
+    27.85,
+    27.95,
+    28.05,
+    28.10,
+    28.15,
+    28.20,
+    Inf
+  )
+
+# neutral density thresholds to cut the Indo-Pacific ocean into slabs
+slabs_Ind_Pac <-
+  c(-Inf,
+    26.00,
+    26.50,
+    26.75,
+    27.00,
+    27.25,
+    27.50,
+    27.75,
+    27.85,
+    27.95,
+    28.05,
+    28.10,
+    28.20,
+    28.30,
+    28.40,
+    Inf)
+
+# Predictors for MLR model
+MLR_predictors <- c(
+                "sal",
+                "temp",
+                "aou",
+                "nitrate",
+                "silicate",
+                "phosphate",
+                "phosphate_star")
+
+params_local <-
+  lst(
+    # ID of current sensitivity run
+    Version_ID = "v_109",
+    # f flags accepted for GLODAP data
+    flag_f = c(2,0),
+    # qc flags accepted for GLODAP data
+    flag_qc = c(1,0),
+    # Shallowest depth for data to be included in MLR fitting
+    depth_min = 150,
+    # Shallowest water depth for data to be included in MLR fitting
+    bottomdepth_min = 0,
+    # Lowest neutral density to map Cant with eMLR approach
+    gamma_min = 26,
+    # CANYON-B offset threshold
+    # (factor applied to standard deviation of all cruise offsets)
+    CANYON_B_max = 10,
+    # break years for eras, numbers indicate the upper end of the respective era
+    c_star_rmse_max = 50,
+    # start years for eras
+    era_start = c(2000, 2010),
+    # end years for eras
+    era_end = c(2009, Inf),
+    # duplicated years from era 1 reused in era 2
+    dup_era1 = c(2009, 2009),
+    # duplicated years from era 2 reused in era 1
+    dup_era2 = c(2010, 2010),
+    # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
+    MLR_basins = "2",
+    # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
+    MLR_target = "cstar",
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
@@ -183,13 +298,18 @@ dir.create(paste(path_root, params_local$Version_ID, "figures/Observations_corre
 
 # Write file
 
-Parameterization criteria are locally stored and used throughout this sensitivty case.
+Parametrisation criteria are locally stored and used throughout this sensitivity case.
 
 ```{r write_params_local}
 
 params_local %>%
   write_rds(here::here("data/auxillary",
                        "params_local.rds"))
+
+```
+
+
+```{r write_params_local_manually, eval=FALSE, include=FALSE}
 
 params_local %>%
   write_rds(file = paste(
