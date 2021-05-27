@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedc8e4e18898513f10427b02dff8cdd0b1edb4603targetblankdc8e4e1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dc8e4e18898513f10427b02dff8cdd0b1edb4603" target="_blank">dc8e4e1</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeee13efb9f75607941dd98eab76f346f5f6fc0268targetblankee13efba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ee13efb9f75607941dd98eab76f346f5f6fc0268" target="_blank">ee13efb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedc8e4e18898513f10427b02dff8cdd0b1edb4603targetblankdc8e4e1a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeee13efb9f75607941dd98eab76f346f5f6fc0268targetblankee13efba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dc8e4e18898513f10427b02dff8cdd0b1edb4603" target="_blank">dc8e4e1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ee13efb9f75607941dd98eab76f346f5f6fc0268" target="_blank">ee13efb</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -671,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee13efb9f75607941dd98eab76f346f5f6fc0268/analysis/eMLR_data_preparation.Rmd" target="_blank">ee13efb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-27
+</td>
+<td>
+optional source of local params fully implemented
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/8c736a6115ef9c47406bc21813619355758fb287/docs/eMLR_data_preparation.html" target="_blank">8c736a6</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3211,8 +3245,12 @@ Initial commit
 </div>
 </div>
 </div>
-<div id="required-data" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Required data</h1>
+<div id="version-id" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Version ID</h1>
+<p>The results displayed on this site correspond to the Version_ID: v_XXX</p>
+</div>
+<div id="required-data" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Required data</h1>
 <p>Required are:</p>
 <ul>
 <li>GLODAPv2.2020
@@ -3261,8 +3299,8 @@ tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;tref.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
-<div id="convert-to-long-format" class="section level2" number="1.1">
-<h2 number="1.1"><span class="header-section-number">1.1</span> Convert to long format</h2>
+<div id="convert-to-long-format" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Convert to long format</h2>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   rename_with(~ gsub(&quot;_model&quot;, &quot;_mod&quot;, .x)) %&gt;% 
   rename_with(.cols = c(temp, sal, gamma, tco2, talk, phosphate,
@@ -3277,10 +3315,10 @@ GLODAP &lt;- GLODAP %&gt;%
   )</code></pre>
 </div>
 </div>
-<div id="po4" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> PO<sub>4</sub>*</h1>
-<div id="calculation" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Calculation</h2>
+<div id="po4" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> PO<sub>4</sub>*</h1>
+<div id="calculation" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Calculation</h2>
 <p>The predictor PO<sub>4</sub>* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.</p>
 <p>Here we use following equation:</p>
 <pre class="r"><code>print(b_phosphate_star)</code></pre>
@@ -3296,24 +3334,24 @@ GLODAP &lt;- GLODAP %&gt;%
 }</code></pre>
 </div>
 </div>
-<div id="c" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> C*</h1>
+<div id="c" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> C*</h1>
 <p>C* serves as a conservative tracer of anthropogenic CO<sub>2</sub> uptake. It is derived from measured DIC by removing the impact of</p>
 <ul>
 <li>organic matter formation and respiration</li>
 <li>calcification and calcium carbonate dissolution</li>
 </ul>
 <p>Contributions of those processes are estimated from phosphate and alkalinity concentrations.</p>
-<div id="stoichiometric-ratios" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Stoichiometric ratios</h2>
+<div id="stoichiometric-ratios" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> Stoichiometric ratios</h2>
 <p>The stoichiometric nutrient ratios for the production and mineralization of organic matter were set to:</p>
 <ul>
 <li>C/P: 117</li>
 <li>N/P: 16</li>
 </ul>
 </div>
-<div id="calculation-1" class="section level2" number="3.2">
-<h2 number="3.2"><span class="header-section-number">3.2</span> Calculation</h2>
+<div id="calculation-1" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Calculation</h2>
 <p>C* was calculated as:</p>
 <pre class="r"><code>print(b_cstar)</code></pre>
 <pre><code>function (tco2, phosphate, talk) 
@@ -3328,14 +3366,14 @@ GLODAP &lt;- GLODAP %&gt;%
          rNP_phosphate_05 = -0.5 * params_local$rNP * phosphate,
          cstar = b_cstar(tco2, phosphate, talk))</code></pre>
 </div>
-<div id="reference-year-adjustment" class="section level2" number="3.3">
-<h2 number="3.3"><span class="header-section-number">3.3</span> Reference year adjustment</h2>
+<div id="reference-year-adjustment" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Reference year adjustment</h2>
 <p>To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the “base line” total cant concentration determined for 1994 by Sabine et al (2004):</p>
 <p>Cant(tref) = S04 + (tref-1994)/13 * G19</p>
 <p>This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.</p>
 <p>For the model data, we perform the adjustment based on the total Cant estimate for 1994, and the delta Cant estimate for 1994 - 2007.</p>
-<div id="join-cant-fields" class="section level3" number="3.3.1">
-<h3 number="3.3.1"><span class="header-section-number">3.3.1</span> Join Cant fields</h3>
+<div id="join-cant-fields" class="section level3" number="4.3.1">
+<h3 number="4.3.1"><span class="header-section-number">4.3.1</span> Join Cant fields</h3>
 <p>Join Cant fields of G19 and S04</p>
 <pre class="r"><code>G19_cant_3d &lt;- G19_cant_3d %&gt;% 
   select(lon, lat, depth, cant_pos_G19 = cant_pos)
@@ -3654,8 +3692,8 @@ rm(m07_cant_3d,
   cant_3d %&gt;% mutate(data_source = &quot;obs&quot;)
 )</code></pre>
 </div>
-<div id="cant-at-tref" class="section level3" number="3.3.2">
-<h3 number="3.3.2"><span class="header-section-number">3.3.2</span> Cant at tref</h3>
+<div id="cant-at-tref" class="section level3" number="4.3.2">
+<h3 number="4.3.2"><span class="header-section-number">4.3.2</span> Cant at tref</h3>
 <p>Calculate Cant at tref by adding G19, scaled for the time since 1994.</p>
 <pre class="r"><code># # calculate reference year
 # tref &lt;- GLODAP %&gt;%
@@ -3676,8 +3714,8 @@ cant_3d &lt;- cant_3d %&gt;%
 cant_3d &lt;- cant_3d %&gt;% 
   select(data_source, lon, lat, depth, era, cant_pos)</code></pre>
 </div>
-<div id="combine-glodap-cant" class="section level3" number="3.3.3">
-<h3 number="3.3.3"><span class="header-section-number">3.3.3</span> Combine GLODAP + Cant</h3>
+<div id="combine-glodap-cant" class="section level3" number="4.3.3">
+<h3 number="4.3.3"><span class="header-section-number">4.3.3</span> Combine GLODAP + Cant</h3>
 <pre class="r"><code># observations grid per era
 GLODAP_obs_grid_era &lt;- GLODAP %&gt;% 
   distinct(lat, lon, era, data_source)
@@ -4176,13 +4214,13 @@ GLODAP &lt;- GLODAP_cant_obs %&gt;%
 
 rm(GLODAP_cant_obs)</code></pre>
 </div>
-<div id="merge-glodap-atm.-pco2" class="section level3" number="3.3.4">
-<h3 number="3.3.4"><span class="header-section-number">3.3.4</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
+<div id="merge-glodap-atm.-pco2" class="section level3" number="4.3.4">
+<h3 number="4.3.4"><span class="header-section-number">4.3.4</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
 <p>GLODAP observations were merged with mean annual atmospheric pCO<sub>2</sub> levels by year.</p>
 <pre class="r"><code>GLODAP &lt;- left_join(GLODAP, co2_atm)</code></pre>
 </div>
-<div id="calculation-2" class="section level3" number="3.3.5">
-<h3 number="3.3.5"><span class="header-section-number">3.3.5</span> Calculation</h3>
+<div id="calculation-2" class="section level3" number="4.3.5">
+<h3 number="4.3.5"><span class="header-section-number">4.3.5</span> Calculation</h3>
 <pre class="r"><code># assign reference year
 GLODAP &lt;- full_join(GLODAP, tref)
 
@@ -4203,8 +4241,8 @@ GLODAP &lt;- GLODAP %&gt;%
     cstar_tref = cstar - cstar_tref_delta)</code></pre>
 </div>
 </div>
-<div id="control-plots" class="section level2" number="3.4">
-<h2 number="3.4"><span class="header-section-number">3.4</span> Control plots</h2>
+<div id="control-plots" class="section level2" number="4.4">
+<h2 number="4.4"><span class="header-section-number">4.4</span> Control plots</h2>
 <pre class="r"><code>GLODAP %&gt;% 
   ggplot(aes(cstar_tref_delta)) +
   geom_histogram(binwidth = 1) +
@@ -5967,8 +6005,8 @@ Jens Müller
 </div>
 </div>
 </div>
-<div id="selected-section-plots" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Selected section plots</h1>
+<div id="selected-section-plots" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Selected section plots</h1>
 <p>A selected section is plotted to demonstrate the magnitude of various parameters and corrections relevant to C*.</p>
 <pre class="r"><code>GLODAP_cruise &lt;- GLODAP %&gt;% 
   filter(cruise %in% params_global$cruises_meridional)</code></pre>
@@ -6006,8 +6044,8 @@ for (i_var in c(&quot;tco2&quot;,
 
 rm(lat_section, GLODAP_cruise)</code></pre>
 </div>
-<div id="isoneutral-slabs" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Isoneutral slabs</h1>
+<div id="isoneutral-slabs" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Isoneutral slabs</h1>
 <pre class="r"><code>GLODAP %&gt;% 
   ggplot(aes(gamma)) +
   geom_histogram() +
@@ -6287,8 +6325,8 @@ GLODAP_cruise %&gt;%
 
 rm(lat_section, GLODAP_cruise, cruises_meridional)</code></pre>
 </div>
-<div id="observations-coverage" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> Observations coverage</h1>
+<div id="observations-coverage" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Observations coverage</h1>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   mutate(gamma_slab = factor(gamma_slab), 
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
@@ -7237,8 +7275,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<div id="histograms" class="section level2" number="6.1">
-<h2 number="6.1"><span class="header-section-number">6.1</span> Histograms</h2>
+<div id="histograms" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Histograms</h2>
 <pre class="r"><code>GLODAP_vars &lt;- GLODAP %&gt;% 
   select(data_source,
          params_local$MLR_target,
@@ -7716,10 +7754,10 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_vars, GLODAP_vars_long)</code></pre>
 </div>
 </div>
-<div id="cruise-quality-check" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Cruise quality check</h1>
-<div id="mlr-models" class="section level2" number="7.1">
-<h2 number="7.1"><span class="header-section-number">7.1</span> MLR models</h2>
+<div id="cruise-quality-check" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Cruise quality check</h1>
+<div id="mlr-models" class="section level2" number="8.1">
+<h2 number="8.1"><span class="header-section-number">8.1</span> MLR models</h2>
 <p>The the following full MLR model was fitted to all GLODAP, irrespective of the sampling era:</p>
 <pre class="r"><code>#define full model
 model &lt;- paste(&quot;cstar&quot;,
@@ -7762,8 +7800,8 @@ GLODAP_augmented &lt;- bind_cols(GLODAP_data,
                               GLODAP_augmented %&gt;% select(.fitted, .resid))
 
 rm(GLODAP_data)</code></pre>
-<div id="residuals" class="section level3" number="7.1.1">
-<h3 number="7.1.1"><span class="header-section-number">7.1.1</span> Residuals</h3>
+<div id="residuals" class="section level3" number="8.1.1">
+<h3 number="8.1.1"><span class="header-section-number">8.1.1</span> Residuals</h3>
 <p>Below, the residuals of C* from the mean C* and from C* predicted with the global model are shown.</p>
 <pre class="r"><code>GLODAP_augmented %&gt;%
   group_by(data_source) %&gt;% 
@@ -8440,8 +8478,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="ranked-rmse" class="section level3" number="7.1.2">
-<h3 number="7.1.2"><span class="header-section-number">7.1.2</span> Ranked RMSE</h3>
+<div id="ranked-rmse" class="section level3" number="8.1.2">
+<h3 number="8.1.2"><span class="header-section-number">8.1.2</span> Ranked RMSE</h3>
 <pre class="r"><code># calculate RMSE from augmented output per cruise
 cruise_all &lt;- GLODAP_augmented %&gt;%
   group_by(cruise, data_source) %&gt;%
@@ -8816,8 +8854,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="removed-cruises" class="section level3" number="7.1.3">
-<h3 number="7.1.3"><span class="header-section-number">7.1.3</span> Removed cruises</h3>
+<div id="removed-cruises" class="section level3" number="8.1.3">
+<h3 number="8.1.3"><span class="header-section-number">8.1.3</span> Removed cruises</h3>
 <p>Following fraction (%) of cruises was removed:</p>
 <pre class="r"><code>nrow(GLODAP_out)/nrow(GLODAP_augmented)*100</code></pre>
 <pre><code>[1] 0</code></pre>
@@ -8835,8 +8873,8 @@ jens-daniel-mueller
 <pre><code>[1] &quot;no cruises removed&quot;</code></pre>
 </div>
 </div>
-<div id="individual-cruise-sections" class="section level2" number="7.2">
-<h2 number="7.2"><span class="header-section-number">7.2</span> Individual cruise sections</h2>
+<div id="individual-cruise-sections" class="section level2" number="8.2">
+<h2 number="8.2"><span class="header-section-number">8.2</span> Individual cruise sections</h2>
 <p>Zonal and meridional section plots are produce for each cruise individually and are available under:</p>
 <p>/nfs/kryo/work/jenmueller/emlr_cant/observations/v_XXX/figures/Cruise_sections_histograms/</p>
 <pre class="r"><code>if (params_local$plot_all_figures == &quot;y&quot;) {
@@ -8996,8 +9034,8 @@ rm(map_plot,
 }</code></pre>
 </div>
 </div>
-<div id="write-files" class="section level1" number="8">
-<h1 number="8"><span class="header-section-number">8</span> Write files</h1>
+<div id="write-files" class="section level1" number="9">
+<h1 number="9"><span class="header-section-number">9</span> Write files</h1>
 <pre class="r"><code># select relevant columns
 GLODAP &lt;- GLODAP %&gt;%
   filter(!(cruise %in% cruise_out$cruise)) %&gt;%
@@ -9027,8 +9065,8 @@ co2_atm_tref %&gt;%  write_csv(paste(path_version_data,
                                   &quot;co2_atm_tref.csv&quot;,
                                   sep = &quot;&quot;))</code></pre>
 </div>
-<div id="spatial-autocorrelation" class="section level1" number="9">
-<h1 number="9"><span class="header-section-number">9</span> Spatial autocorrelation</h1>
+<div id="spatial-autocorrelation" class="section level1" number="10">
+<h1 number="10"><span class="header-section-number">10</span> Spatial autocorrelation</h1>
 <pre class="r"><code>GLODAP_sp &lt;- GLODAP %&gt;% 
   filter(depth == 150)
 
@@ -9188,7 +9226,7 @@ loaded via a namespace (and not attached):
 [22] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.5           
 [25] oce_1.2-0                pkgconfig_2.0.3          htmltools_0.5.0         
 [28] dbplyr_1.4.4             rlang_0.4.10             readxl_1.3.1            
-[31] rstudioapi_0.13          generics_0.0.2           farver_2.0.3            
+[31] rstudioapi_0.11          generics_0.0.2           farver_2.0.3            
 [34] jsonlite_1.7.1           magrittr_1.5             Matrix_1.2-18           
 [37] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
 [40] lifecycle_1.0.0          stringi_1.5.3            whisker_0.4             
