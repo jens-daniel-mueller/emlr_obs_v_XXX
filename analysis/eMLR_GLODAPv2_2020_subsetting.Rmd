@@ -14,7 +14,6 @@ params:
   Version_ID: "v_XXX"
 ---
 
-
 ```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
@@ -23,20 +22,19 @@ params:
 
 ```{r read_params_local, include = FALSE}
 
-# params_local <-
-#   read_rds(here::here("data/auxillary",
-#                        "params_local.rds"))
-
-
-params_local <-
-  read_rds(file = paste(
-    path_root,
-    "observations",
-    params$Version_ID,
-    "data",
-    "params_local.rds",
-    sep = "/"
-  ))
+if (params$Version_ID == "v_XXX") {
+  params_local <-
+    read_rds(here::here("data/auxillary", "params_local.rds"))
+  
+} else {
+  params_local <-
+    read_rds(
+      file = paste(path_root, "observations",
+                   params$Version_ID,
+                   "data/params_local.rds",
+                   sep = "/")
+    )
+  }
 
 ```
 
