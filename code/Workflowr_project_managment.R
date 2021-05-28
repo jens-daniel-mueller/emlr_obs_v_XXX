@@ -31,7 +31,7 @@ wflow_publish(here::here(
     "analysis_MLR_performance.Rmd"
   )
 ),
-message = "optional source of local params fully implemented",
+message = "test run with cstar target variable",
 republish = TRUE)
 
 
@@ -63,6 +63,7 @@ Version_IDs <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
   pattern = "v_1")
 
+Version_IDs <- Version_IDs[9:16]
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
