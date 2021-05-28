@@ -808,7 +808,7 @@ i_binwidth <- 1
 axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
 
 GLODAP_augmented %>%
-  ggplot(aes(cstar_tref, .fitted)) +
+  ggplot(aes(!!sym(params_local$MLR_target), .fitted)) +
   geom_bin2d(binwidth = i_binwidth) +
   scale_fill_viridis_c() +
   geom_abline(slope = 1,
@@ -824,7 +824,7 @@ GLODAP_augmented %>%
 ```{r fitted_vs_actual_best}
 
 GLODAP_augmented_best %>%
-  ggplot(aes(cstar_tref, .fitted)) +
+  ggplot(aes(!!sym(params_local$MLR_target), .fitted)) +
   geom_bin2d(binwidth = i_binwidth) +
   scale_fill_viridis_c() +
   geom_abline(slope = 1,
