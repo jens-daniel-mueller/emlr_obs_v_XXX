@@ -77,7 +77,14 @@ basinmask <- basinmask %>%
 
 # Version ID
 
-The results displayed on this site correspond to the Version_ID: `r params$Version_ID`
+The results displayed on this site correspond to the Version_ID:
+
+```{r print_version_ID}
+
+params$Version_ID
+
+```
+
 
 # Read files
 
@@ -89,11 +96,11 @@ Main data source for this project is the preprocessed version of the `GLODAPv2.2
 
 GLODAP <-
   read_csv(
-    paste(
+    paste0(
       path_preprocessing_model,
-      "GLODAPv2.2020_preprocessed_model_runA_both.csv",
-      sep = ""
-    )
+      "GLODAPv2.",
+      params_local$GLODAPv2_version,
+      "_preprocessed_model_runA_both.csv")
   )
 
 GLODAP <- GLODAP %>%
@@ -101,9 +108,14 @@ GLODAP <- GLODAP %>%
   relocate(row_number)
 
 GLODAP_CB <-
-  read_csv(paste(path_preprocessing,
-                 "GLODAPv2.2020_Canyon-B.csv",
-                 sep = ""))
+  read_csv(
+    paste0(
+      path_preprocessing,
+      "GLODAPv2.",
+      params_local$GLODAPv2_version,
+      "_Canyon-B.csv"
+    )
+  )
 
 ```
 
