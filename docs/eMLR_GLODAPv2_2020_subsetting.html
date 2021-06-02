@@ -611,16 +611,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree12eeaa61d3a159375a46d93d7d8df652077bf5b8targetblank12eeaa6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/12eeaa61d3a159375a46d93d7d8df652077bf5b8" target="_blank">12eeaa6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8164b5eafcc4d0e5af36d260c4eac4b63ab69163targetblank8164b5ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8164b5eafcc4d0e5af36d260c4eac4b63ab69163" target="_blank">8164b5e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree12eeaa61d3a159375a46d93d7d8df652077bf5b8targetblank12eeaa6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8164b5eafcc4d0e5af36d260c4eac4b63ab69163targetblank8164b5ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/12eeaa61d3a159375a46d93d7d8df652077bf5b8" target="_blank">12eeaa6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8164b5eafcc4d0e5af36d260c4eac4b63ab69163" target="_blank">8164b5e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -629,10 +629,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -671,6 +667,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8164b5eafcc4d0e5af36d260c4eac4b63ab69163/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">8164b5e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+<td>
+offset histogram canyon-B for GLODAP prerelease
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/be90356df2057730a6648228ad3bf92bb1501122/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -8121,8 +8151,11 @@ GLODAP_combined &lt;- GLODAP_combined %&gt;%
   )</code></pre>
 <div id="residual-histograms" class="section level3" number="3.4.1">
 <h3 number="3.4.1"><span class="header-section-number">3.4.1</span> Residual histograms</h3>
-<pre class="r"><code>GLODAP_combined %&gt;%
-  ggplot(aes(offset)) +
+<pre class="r"><code>GLODAP_combined &lt;- GLODAP_combined %&gt;% 
+  mutate(cruise_group = if_else(cruise &gt;= 3000, &quot;3XXX&quot;, &quot;&lt;3000&quot;))
+
+GLODAP_combined %&gt;%
+  ggplot(aes(offset, fill=cruise_group)) +
   geom_histogram() +
   scale_y_continuous(trans = &quot;log10&quot;) +
   facet_grid(basin_AIP ~ parameter, scales = &quot;free_x&quot;)</code></pre>
@@ -8329,6 +8362,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>GLODAP_combined &lt;- GLODAP_combined %&gt;% 
+  select(-cruise_group)</code></pre>
 </div>
 <div id="property-property-plots" class="section level3" number="3.4.2">
 <h3 number="3.4.2"><span class="header-section-number">3.4.2</span> Property-property plots</h3>
