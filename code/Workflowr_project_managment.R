@@ -31,7 +31,7 @@ wflow_publish(here::here(
     "analysis_MLR_performance.Rmd"
   )
 ),
-message = "test run with cstar target variable",
+message = "test run with beta version of GLODAPv2.2021",
 republish = TRUE)
 
 
@@ -61,7 +61,7 @@ files <- c(
 
 Version_IDs <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1")
+  pattern = "v_2")
 
 Version_IDs <- Version_IDs[9:16]
 
