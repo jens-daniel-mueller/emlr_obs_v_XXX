@@ -710,11 +710,17 @@ GLODAP_combined <- GLODAP_combined %>%
 
 ```{r CANYON_B_residual_histograms, fig.asp=0.6}
 
+GLODAP_combined <- GLODAP_combined %>% 
+  mutate(cruise_group = if_else(cruise >= 3000, "3XXX", "<3000"))
+
 GLODAP_combined %>%
-  ggplot(aes(offset)) +
+  ggplot(aes(offset, fill=cruise_group)) +
   geom_histogram() +
   scale_y_continuous(trans = "log10") +
   facet_grid(basin_AIP ~ parameter, scales = "free_x")
+
+GLODAP_combined <- GLODAP_combined %>% 
+  select(-cruise_group)
 
 ```
 
