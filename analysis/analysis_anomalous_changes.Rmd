@@ -153,7 +153,8 @@ cant_tref_section <- cant_3d_tref_wide %>%
   unnest(section)
   
 cant_tref_section %>%
-  group_split(data_source, basin_AIP) %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
   map( ~ p_section_zonal(
     df = .x,
     var = "cant_pos_mean",
