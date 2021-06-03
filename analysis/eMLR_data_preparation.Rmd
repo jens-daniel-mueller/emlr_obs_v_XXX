@@ -375,7 +375,7 @@ map +
 cant_3d_obs <- cant_3d_obs %>% 
   select(-n_group)
 
-rm(cant_3d, GLODAP_obs_grid_era)
+rm(GLODAP_obs_grid_era)
 
 GLODAP_cant_obs <- full_join(GLODAP, cant_3d_obs)
 
@@ -1081,6 +1081,10 @@ GLODAP %>% write_csv(paste(
 co2_atm_tref %>%  write_csv(paste(path_version_data,
                                   "co2_atm_tref.csv",
                                   sep = ""))
+
+cant_3d %>%  write_csv(paste(path_version_data,
+                             "cant_3d_tref.csv",
+                             sep = ""))
 
 ```
 
