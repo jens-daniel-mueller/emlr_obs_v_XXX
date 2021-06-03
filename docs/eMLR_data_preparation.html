@@ -458,6 +458,9 @@ div.tocify {
     <li>
       <a href="analysis_MLR_performance.html">MLR performance</a>
     </li>
+    <li>
+      <a href="analysis_anomalous_changes.html">Anomalous changes</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -495,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">02 June, 2021</h4>
+<h4 class="date">03 June, 2021</h4>
 
 </div>
 
@@ -520,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-02
+<strong>Last updated:</strong> 2021-06-03
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -611,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree12eeaa61d3a159375a46d93d7d8df652077bf5b8targetblank12eeaa6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/12eeaa61d3a159375a46d93d7d8df652077bf5b8" target="_blank">12eeaa6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2433ed8ee0ddc1afcc718ae61ea1565c797cb2cftargetblank2433ed8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2433ed8ee0ddc1afcc718ae61ea1565c797cb2cf" target="_blank">2433ed8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree12eeaa61d3a159375a46d93d7d8df652077bf5b8targetblank12eeaa6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2433ed8ee0ddc1afcc718ae61ea1565c797cb2cftargetblank2433ed8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/12eeaa61d3a159375a46d93d7d8df652077bf5b8" target="_blank">12eeaa6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2433ed8ee0ddc1afcc718ae61ea1565c797cb2cf" target="_blank">2433ed8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -630,9 +633,8 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
 
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
+Untracked files:
+    Untracked:  analysis/analysis_anomalous_changes.Rmd
 
 </code></pre>
 <p>
@@ -671,6 +673,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2433ed8ee0ddc1afcc718ae61ea1565c797cb2cf/analysis/eMLR_data_preparation.Rmd" target="_blank">2433ed8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+<td>
+include anomalous changes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/be90356df2057730a6648228ad3bf92bb1501122/docs/eMLR_data_preparation.html" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4262,7 +4298,7 @@ jens-daniel-mueller
 <pre class="r"><code>cant_3d_obs &lt;- cant_3d_obs %&gt;% 
   select(-n_group)
 
-rm(cant_3d, GLODAP_obs_grid_era)
+rm(GLODAP_obs_grid_era)
 
 GLODAP_cant_obs &lt;- full_join(GLODAP, cant_3d_obs)
 
@@ -4363,6 +4399,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">d37a85d</a>
@@ -4960,6 +5007,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">d37a85d</a>
 </td>
 <td>
@@ -5552,6 +5610,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">d37a85d</a>
@@ -7500,6 +7569,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">d37a85d</a>
 </td>
 <td>
@@ -8037,6 +8117,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">be90356</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">d37a85d</a>
@@ -9298,7 +9389,11 @@ GLODAP %&gt;% write_csv(paste(
 
 co2_atm_tref %&gt;%  write_csv(paste(path_version_data,
                                   &quot;co2_atm_tref.csv&quot;,
-                                  sep = &quot;&quot;))</code></pre>
+                                  sep = &quot;&quot;))
+
+cant_3d %&gt;%  write_csv(paste(path_version_data,
+                             &quot;cant_3d_tref.csv&quot;,
+                             sep = &quot;&quot;))</code></pre>
 </div>
 <div id="spatial-autocorrelation" class="section level1" number="10">
 <h1 number="10"><span class="header-section-number">10</span> Spatial autocorrelation</h1>
