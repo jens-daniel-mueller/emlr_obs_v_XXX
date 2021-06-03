@@ -125,7 +125,7 @@ cant_3d_tref_wide <- cant_3d_tref %>%
   pivot_wider(names_from = era,
               values_from = "cant_pos") %>% 
   mutate(cant_pos = `2010-2019` - `2000-2009`) %>% 
-  select(-c(`2010-2019`, `2000-2009`)) %>% 
+  # select(-c(`2010-2019`, `2000-2009`)) %>% 
   drop_na()
 
 
@@ -164,6 +164,63 @@ cant_tref_section %>%
 ```
 
 
+```{r estimate_ss_cant}
+
+# extract atm pCO2 at reference year
+co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
+  select(-year) %>% 
+  rename(pCO2_tref = pCO2)
+
+pCO2_to <- params_local$preind_atm_pCO2
+pCO2_t1 <- co2_atm_tref$pCO2_tref[1]
+pCO2_t2 <- co2_atm_tref$pCO2_tref[2]
+
+delta_pCO2_ratio <- 
+  (pCO2_t2 - pCO2_t1) /
+  (pCO2_t1 - pCO2_to)
+
+rm(pCO2_to)
+rm(pCO2_t1)
+rm(pCO2_t2)
+
+alpha = delta_pCO2_ratio * 0.94 * 0.94
+
+# calculate cstar for reference year
+cant_3d_tref_wide <- cant_3d_tref_wide %>%
+  rename(cant_t1 = `2010-2019`,
+         cant_t2 = `2000-2009`,
+         delta_cant_G19 = cant_pos) %>%
+  mutate(delta_cant_ss = alpha * cant_t1)
+
+cant_tref_section <- cant_3d_tref_wide %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+cant_tref_section_long <- cant_tref_section %>%
+  pivot_longer(cols = c(delta_cant_G19_mean, delta_cant_ss_mean),
+               values_to = "delta_cant",
+               names_to = "estimate",
+               names_prefix = "delta_cant_")
+  
+  
+cant_tref_section_long %>% 
+  group_by(basin_AIP, data_source, estimate) %>%
+  group_split() %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "delta_cant",
+    plot_slabs = "n",
+    subtitle_text = paste(.x$basin_AIP, .x$data_source, .x$estimate)
+  ))
+
+
+```
+
+
+
 ## Calculation
 
 To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
@@ -177,24 +234,6 @@ For the model data, we perform the adjustment based on the total Cant estimate f
 
 ```{r adjust_reference_year, eval=FALSE}
 
-# assign reference year
-GLODAP <- full_join(GLODAP, tref)
-
-# extract atm pCO2 at reference year
-co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
-  select(-year) %>% 
-  rename(pCO2_tref = pCO2)
-
-# merge atm pCO2 at tref with GLODAP
-GLODAP <- full_join(GLODAP, co2_atm_tref)
-rm(co2_atm)
-
-# calculate cstar for reference year
-GLODAP <- GLODAP %>%
-  mutate(
-    cstar_tref_delta =
-      ((pCO2 - pCO2_tref) / (pCO2_tref - params_local$preind_atm_pCO2)) * cant_pos,
-    cstar_tref = cstar - cstar_tref_delta)
 
 ```
 
