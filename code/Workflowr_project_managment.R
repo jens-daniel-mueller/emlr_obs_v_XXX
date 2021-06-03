@@ -28,7 +28,8 @@ wflow_publish(here::here(
     "analysis_column_inventory.Rmd",
     "analysis_zonal_sections.Rmd",
     "analysis_slab_inventory.Rmd",
-    "analysis_MLR_performance.Rmd"
+    "analysis_MLR_performance.Rmd",
+    "analysis_.Rmd"
   )
 ),
 message = "test run with beta version of GLODAPv2.2021",

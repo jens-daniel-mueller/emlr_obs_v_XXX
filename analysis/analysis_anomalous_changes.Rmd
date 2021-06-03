@@ -145,21 +145,6 @@ zonal_mean_section <- function(df) {
 
 }
 
-cant_tref_section <- cant_3d_tref_wide %>% 
-  group_by(data_source) %>% 
-  nest() %>% 
-  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %>% 
-  select(-data) %>% 
-  unnest(section)
-  
-cant_tref_section %>%
-  group_by(basin_AIP, data_source) %>%
-  group_split() %>%
-  map( ~ p_section_zonal(
-    df = .x,
-    var = "cant_pos_mean",
-    plot_slabs = "n"
-  ))
 
 ```
 
@@ -214,6 +199,24 @@ cant_tref_section_long %>%
     var = "delta_cant",
     plot_slabs = "n",
     subtitle_text = paste(.x$basin_AIP, .x$data_source, .x$estimate)
+  ))
+
+
+
+cant_tref_section <- cant_tref_section %>%
+  mutate(delta_cant_anomalous = delta_cant_G19_mean - delta_cant_ss_mean)
+
+
+cant_tref_section %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  map( ~ p_section_zonal(
+    df = .x,
+    col = "divergent",
+    var = "delta_cant_anomalous",
+    plot_slabs = "n",
+    breaks = params_global$breaks_cant_offset,
+    subtitle_text = paste(.x$basin_AIP, .x$data_source)
   ))
 
 
