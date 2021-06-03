@@ -222,6 +222,37 @@ cant_tref_section %>%
 
 ```
 
+```{r anomalous_change_emlr}
+
+cant_3d_anom <- inner_join(cant_3d, cant_3d_tref_wide)
+
+cant_3d_anom <- cant_3d_anom %>% 
+  mutate(delta_cant_emlr_ss = cant_pos - delta_cant_ss)
+
+cant_anom_section <- cant_3d_anom %>%
+  select(lon, lat, depth, basin_AIP, data_source, delta_cant_emlr_ss) %>% 
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+  
+cant_anom_section %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  map( ~ p_section_zonal(
+    df = .x,
+    col = "divergent",
+    var = "delta_cant_emlr_ss_mean",
+    plot_slabs = "n",
+    breaks = params_global$breaks_cant_offset,
+    subtitle_text = paste(.x$basin_AIP, .x$data_source)
+  ))
+
+
+
+```
 
 
 ## Calculation
