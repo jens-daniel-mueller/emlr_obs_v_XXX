@@ -912,9 +912,9 @@ tref
 ```
 
 
-## Manual cruise duplication
+## Cruise overlap
 
-```{r Manual_cruise_duplication, fig.asp=2}
+```{r Manual_cruise_duplication, fig.asp=3}
 
 map +
   geom_raster(data =
@@ -938,13 +938,13 @@ map +
 # Duplicate overlapping eras manually
 
 GLODAP_dup_era1 <- GLODAP %>%
-  filter(year >= params_local$dup_era1[1],
-         year <= params_local$dup_era1[2]) %>%
+  filter(year > min(params_local$dup_era1),
+         year < max(params_local$dup_era1)) %>%
   mutate(era = sort(unique(GLODAP$era))[2])
 
 GLODAP_dup_era2 <- GLODAP %>%
-  filter(year >= params_local$dup_era2[1],
-         year <= params_local$dup_era2[2]) %>%
+  filter(year > min(params_local$dup_era2),
+         year < max(params_local$dup_era2)) %>%
   mutate(era = sort(unique(GLODAP$era))[1])
 
 GLODAP <- bind_rows(GLODAP %>% mutate(duplicate = "no"),

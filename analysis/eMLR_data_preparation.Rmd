@@ -486,6 +486,7 @@ co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>%
 GLODAP <- full_join(GLODAP, co2_atm_tref)
 rm(co2_atm)
 
+
 # calculate cstar for reference year
 GLODAP <- GLODAP %>%
   mutate(
