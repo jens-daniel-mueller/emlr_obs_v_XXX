@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of cant estimates</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">03 June, 2021</h4>
+<h4 class="date">04 June, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-03
+<strong>Last updated:</strong> 2021-06-04
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea81f5787d55dc150555a097e196acc43287c0bc0targetblanka81f578a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a81f5787d55dc150555a097e196acc43287c0bc0" target="_blank">a81f578</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0e89bd25f289be4f72c1c505abb001555181d08dtargetblank0e89bd2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0e89bd25f289be4f72c1c505abb001555181d08d" target="_blank">0e89bd2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea81f5787d55dc150555a097e196acc43287c0bc0targetblanka81f578a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0e89bd25f289be4f72c1c505abb001555181d08dtargetblank0e89bd2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a81f5787d55dc150555a097e196acc43287c0bc0" target="_blank">a81f578</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0e89bd25f289be4f72c1c505abb001555181d08d" target="_blank">0e89bd2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -670,6 +670,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e89bd25f289be4f72c1c505abb001555181d08d/analysis/analysis_anomalous_changes.Rmd" target="_blank">0e89bd2</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-04
+</td>
+<td>
+clean anomalous changes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/analysis_anomalous_changes.html" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -875,7 +909,7 @@ include anomalous changes
 <li><p>Cant from Sabine 2004 (S04)</p></li>
 <li><p>Cant from Gruber 2019 (G19)</p></li>
 <li><p>annual mean atmospheric pCO<sub>2</sub></p></li>
-<li><p>Mean and SD per grid cell (lat, lon, depth)</p></li>
+<li><p>Mean eMLR-Cant per grid cell (lat, lon, depth)</p></li>
 </ul>
 <pre class="r"><code>cant_3d_tref &lt;- read_csv(paste(path_version_data,
                                &quot;cant_3d_tref.csv&quot;,
@@ -895,17 +929,7 @@ tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;tref.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
-<pre class="r"><code>cant_3d_tref_wide &lt;- cant_3d_tref %&gt;%
-  pivot_wider(names_from = era,
-              values_from = &quot;cant_pos&quot;) %&gt;% 
-  mutate(cant_pos = `2010-2019` - `2000-2009`) %&gt;% 
-  # select(-c(`2010-2019`, `2000-2009`)) %&gt;% 
-  drop_na()
-
-
-cant_3d_tref_wide &lt;- inner_join(basinmask, cant_3d_tref_wide)
-
-zonal_mean_section &lt;- function(df) {
+<pre class="r"><code>m_zonal_mean_section &lt;- function(df) {
 
   df_zonal_mean_section &lt;- df %&gt;%
     fselect(-lon) %&gt;% 
@@ -918,15 +942,30 @@ zonal_mean_section &lt;- function(df) {
   return(df_zonal_mean_section)
 
 }</code></pre>
-<pre class="r"><code># extract atm pCO2 at reference year
+</div>
+<div id="calculate-ss-cant" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Calculate ss Cant</h1>
+<pre class="r"><code># calculate delta cant as the difference between total cant at tref
+cant_3d_tref_wide &lt;- cant_3d_tref %&gt;%
+  pivot_wider(names_from = era,
+              values_from = &quot;cant_pos&quot;) %&gt;% 
+  mutate(delta_cant_pos_G19 = `2010-2019` - `2000-2009`) %&gt;% 
+  drop_na()
+
+# join with basinmask
+cant_3d_tref_wide &lt;- inner_join(basinmask, cant_3d_tref_wide)
+
+# extract atm pCO2 at reference year
 co2_atm_tref &lt;- right_join(co2_atm, tref %&gt;% rename(year = median_year)) %&gt;% 
   select(-year) %&gt;% 
   rename(pCO2_tref = pCO2)
 
+# atm pCO2 at tref 1,2,3
 pCO2_to &lt;- params_local$preind_atm_pCO2
 pCO2_t1 &lt;- co2_atm_tref$pCO2_tref[1]
 pCO2_t2 &lt;- co2_atm_tref$pCO2_tref[2]
 
+# ratio of atm pCO2 changes between eras
 delta_pCO2_ratio &lt;- 
   (pCO2_t2 - pCO2_t1) /
   (pCO2_t1 - pCO2_to)
@@ -935,29 +974,36 @@ rm(pCO2_to)
 rm(pCO2_t1)
 rm(pCO2_t2)
 
+# alpha for ss projection
 alpha = delta_pCO2_ratio * 0.94 * 0.94
 
 # calculate cstar for reference year
 cant_3d_tref_wide &lt;- cant_3d_tref_wide %&gt;%
-  rename(cant_t1 = `2010-2019`,
-         cant_t2 = `2000-2009`,
-         delta_cant_G19 = cant_pos) %&gt;%
-  mutate(delta_cant_ss = alpha * cant_t1)
-
+  rename(cant_pos_t1 = `2010-2019`,
+         cant_pos_t2 = `2000-2009`) %&gt;%
+  mutate(delta_cant_pos_ss = alpha * cant_pos_t1)</code></pre>
+</div>
+<div id="zonal-mean-sections" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Zonal mean sections</h1>
+<div id="total-cant" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> total Cant</h2>
+<pre class="r"><code># calculate zonal mean section
 cant_tref_section &lt;- cant_3d_tref_wide %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
-  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %&gt;%
+  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(section)
 
+
 cant_tref_section_long &lt;- cant_tref_section %&gt;%
-  pivot_longer(cols = c(delta_cant_G19_mean, delta_cant_ss_mean),
-               values_to = &quot;delta_cant&quot;,
-               names_to = &quot;estimate&quot;,
-               names_prefix = &quot;delta_cant_&quot;)
-  
-  
+  pivot_longer(
+    cols = c(delta_cant_pos_G19_mean, delta_cant_pos_ss_mean),
+    values_to = &quot;delta_cant&quot;,
+    names_to = &quot;estimate&quot;,
+    names_prefix = &quot;delta_cant_&quot;
+  )
+
 cant_tref_section_long %&gt;% 
   group_by(basin_AIP, data_source, estimate) %&gt;%
   group_split() %&gt;% 
@@ -968,751 +1014,48 @@ cant_tref_section_long %&gt;%
     subtitle_text = paste(.x$basin_AIP, .x$data_source, .x$estimate)
   ))</code></pre>
 <pre><code>[[1]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-1">
-Past versions of estimate_ss_cant-1.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-1.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-1.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-1.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[2]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-2">
-Past versions of estimate_ss_cant-2.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-2.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-2.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-2.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[3]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-3">
-Past versions of estimate_ss_cant-3.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-3.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-3.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-3.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[4]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-4">
-Past versions of estimate_ss_cant-4.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-4.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-4.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-4.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[5]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-5">
-Past versions of estimate_ss_cant-5.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-5.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-5.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-5.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[6]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-6">
-Past versions of estimate_ss_cant-6.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-6" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-6.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-6.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-6.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-6.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[7]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-7.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-7">
-Past versions of estimate_ss_cant-7.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-7" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-7.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-7.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-7.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-7.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[8]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-8.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-8">
-Past versions of estimate_ss_cant-8.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-8" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-8.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-8.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-8.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-8.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[9]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-9.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-9">
-Past versions of estimate_ss_cant-9.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-9" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-9.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-9.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-9.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-9.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[10]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-10.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-10">
-Past versions of estimate_ss_cant-10.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-10" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-10.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-10.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-10.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-10.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[11]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-11.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-11">
-Past versions of estimate_ss_cant-11.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-11" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-11.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-11.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-11.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-11.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[12]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-12.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-12">
-Past versions of estimate_ss_cant-12.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-12" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-12.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-12.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/406d7404a5abe5b5338da2145a1959bc7a011b00/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-12.png" target="_blank">406d740</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_cant_pos-12.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-<pre class="r"><code>cant_tref_section &lt;- cant_tref_section %&gt;%
-  mutate(delta_cant_anomalous = delta_cant_G19_mean - delta_cant_ss_mean)
-
+<div id="delta-cant" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> delta Cant</h2>
+<div id="ss-vs-true" class="section level3" number="4.2.1">
+<h3 number="4.2.1"><span class="header-section-number">4.2.1</span> ss vs true</h3>
+<pre class="r"><code># calculate section of anomalous changes
+cant_tref_section &lt;- cant_tref_section %&gt;%
+  mutate(delta_cant_pos_anomalous = delta_cant_pos_G19_mean - delta_cant_pos_ss_mean)
 
 cant_tref_section %&gt;%
   group_by(basin_AIP, data_source) %&gt;%
@@ -1720,430 +1063,294 @@ cant_tref_section %&gt;%
   map( ~ p_section_zonal(
     df = .x,
     col = &quot;divergent&quot;,
-    var = &quot;delta_cant_anomalous&quot;,
+    var = &quot;delta_cant_pos_anomalous&quot;,
     plot_slabs = &quot;n&quot;,
     breaks = params_global$breaks_cant_offset,
     subtitle_text = paste(.x$basin_AIP, .x$data_source)
   ))</code></pre>
 <pre><code>[[1]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-13.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-13">
-Past versions of estimate_ss_cant-13.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-13" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-13.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-13.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-13.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[2]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-14.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-14">
-Past versions of estimate_ss_cant-14.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-14" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-14.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-14.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-14.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[3]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-15.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-15">
-Past versions of estimate_ss_cant-15.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-15" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-15.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-15.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-15.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[4]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-16.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-16">
-Past versions of estimate_ss_cant-16.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-16" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-16.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-16.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-16.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[5]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-17.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-17">
-Past versions of estimate_ss_cant-17.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-17" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-17.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-17.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-17.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[6]]</code></pre>
-<p><img src="figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-18.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-estimate_ss_cant-18">
-Past versions of estimate_ss_cant-18.png
-</button>
-</p>
-<div id="fig-estimate_ss_cant-18" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-18.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-18.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d612df8662c93baa27b631026ef678f8bbfed758/docs/figure/analysis_anomalous_changes.Rmd/estimate_ss_cant-18.png" target="_blank">d612df8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/analysis_anomalous_changes.Rmd/zonal_section_plots_delta_cant_pos-6.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
+<div id="ss-vs-emlr" class="section level3" number="4.2.2">
+<h3 number="4.2.2"><span class="header-section-number">4.2.2</span> ss vs eMLR</h3>
 <pre class="r"><code>cant_3d_anom &lt;- inner_join(cant_3d, cant_3d_tref_wide)
 
 cant_3d_anom &lt;- cant_3d_anom %&gt;% 
-  mutate(delta_cant_emlr_ss = cant_pos - delta_cant_ss)
+  mutate(delta_cant_pos_emlr_ss = cant_pos - delta_cant_pos_ss)
 
 cant_anom_section &lt;- cant_3d_anom %&gt;%
-  select(lon, lat, depth, basin_AIP, data_source, delta_cant_emlr_ss) %&gt;% 
+  select(lon, lat, depth, basin_AIP, data_source, delta_cant_pos_emlr_ss) %&gt;% 
   group_by(data_source) %&gt;%
   nest() %&gt;%
-  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %&gt;%
+  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(section)
 
-  
 cant_anom_section %&gt;%
   group_by(basin_AIP, data_source) %&gt;%
   group_split() %&gt;%
   map( ~ p_section_zonal(
     df = .x,
     col = &quot;divergent&quot;,
-    var = &quot;delta_cant_emlr_ss_mean&quot;,
+    var = &quot;delta_cant_pos_emlr_ss_mean&quot;,
     plot_slabs = &quot;n&quot;,
     breaks = params_global$breaks_cant_offset,
     subtitle_text = paste(.x$basin_AIP, .x$data_source)
   ))</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-1">
+Past versions of anomalous_change_emlr-1.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-1.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-2">
+Past versions of anomalous_change_emlr-2.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-2.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[3]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-3">
+Past versions of anomalous_change_emlr-3.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-3.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[4]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-4">
+Past versions of anomalous_change_emlr-4.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-4.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[5]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-5">
+Past versions of anomalous_change_emlr-5.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-5.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[6]]</code></pre>
 <p><img src="figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-6.png" width="672" style="display: block; margin: auto;" /></p>
-<div id="calculation" class="section level2" number="2.1">
-<h2 number="2.1"><span class="header-section-number">2.1</span> Calculation</h2>
-<p>To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the “base line” total cant concentration determined for 1994 by Sabine et al (2004):</p>
-<p>Cant(tref) = S04 + (tref-1994)/13 * G19</p>
-<p>This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.</p>
-<p>For the model data, we perform the adjustment based on the total Cant estimate for 1994, and the delta Cant estimate for 1994 - 2007.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-anomalous_change_emlr-6">
+Past versions of anomalous_change_emlr-6.png
+</button>
+</p>
+<div id="fig-anomalous_change_emlr-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e8d8395d543e3c0976ee14a51b51561e93e4e32/docs/figure/analysis_anomalous_changes.Rmd/anomalous_change_emlr-6.png" target="_blank">7e8d839</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2201,6 +1408,7 @@ loaded via a namespace (and not attached):
 [61] parallel_4.0.3           yaml_2.2.1               colorspace_1.4-1        
 [64] isoband_0.2.2            rvest_0.3.6              knitr_1.30              
 [67] haven_2.3.1             </code></pre>
+</div>
 </div>
 </div>
 </div>
