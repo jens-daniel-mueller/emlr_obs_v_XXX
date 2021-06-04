@@ -136,7 +136,7 @@ m_zonal_mean_section <- function(df) {
 
 ```
 
-# Calculate ss Cant
+# Calculate ss delta Cant
 
 ```{r estimate_ss_cant}
 
@@ -159,9 +159,9 @@ cant_3d_tref_wide <- inner_join(basinmask, cant_3d_tref_wide)
 
 ## delta Cant
 
-### G19 and ss projections
+### ss projections
 
-```{r zonal_section_plots_cant_pos}
+```{r zonal_section_plots_delta_cant_pos}
 
 # calculate zonal mean section
 cant_tref_section <- cant_3d_tref_wide %>%
@@ -186,7 +186,7 @@ cant_tref_section %>%
 
 ### ss vs true
 
-```{r zonal_section_plots_delta_cant_pos, eval=FALSE}
+```{r zonal_section_plots_delta_cant_pos_true, eval=FALSE}
 
 # calculate section of anomalous changes
 cant_tref_section <- cant_tref_section %>%
@@ -240,3 +240,32 @@ cant_anom_section %>%
 
 ```
 
+
+
+## total Cant
+
+```{r zonal_section_plots_total_cant_pos}
+
+cant_3d_tref <- inner_join(cant_3d_tref, basinmask)
+
+# calculate zonal mean section
+total_cant_tref_section <- cant_3d_tref %>%
+  group_by(data_source, era) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+
+total_cant_tref_section %>% 
+  group_by(basin_AIP, data_source, era) %>%
+  group_split() %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "cant_pos_mean",
+    plot_slabs = "n",
+    breaks = seq(0,80,5),
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Data:", .x$data_source, "| Era:", .x$era)
+  ))
+
+```
