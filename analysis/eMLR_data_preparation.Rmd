@@ -209,13 +209,15 @@ GLODAP <- GLODAP %>%
 
 ## Reference year adjustment
 
-To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
+To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the total cant concentration at the reference year. We approximate this concentration for tref(1) by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
 
 Cant(tref) = S04 + (tref-1994)/13 * G19
 
-This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.
+This way, we use exactly S04+G19 for tref(1)=2007. For all other tref(1) we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.
 
-For the model data, we perform the adjustment based on the total Cant estimate for 1994, and the delta Cant estimate for 1994 - 2007.
+Therefore, we estimate the total Cant at tref(2) by scaling total cant at tref(1) with alpha, according to Gruber et al. (2019).
+
+For the model data, we perform an analogous adjustment based on the total Cant estimate for 1994 (corresponding to Sabine 2004), and the delta Cant estimate for 1994 - 2007 (corresponding to Gruber 2019).
 
 
 ### Join Cant fields
@@ -316,20 +318,51 @@ Calculate Cant at tref by adding G19, scaled for the time since 1994.
 
 ```{r calculate_cant_tref}
 
-# # calculate reference year
-# tref <- GLODAP %>%
-#   group_by(era) %>%
-#   summarise(year = median(year)) %>%
-#   ungroup()
-
 # join cant with tref
 cant_3d <- expand_grid(cant_3d, tref)
 
+
+# linear scaling of Gruber 2019
 # calculate cant fields for all tref
-cant_3d <- cant_3d %>%
+cant_3d_t1 <- cant_3d %>%
+  filter(median_year == min(tref$median_year)) %>% 
   mutate(cant_pos =
            cant_pos_S04 +
            ((median_year - 1994) / 13 * cant_pos_G19))
+
+
+
+# extract atm pCO2 at reference year
+co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
+  select(-year) %>% 
+  rename(pCO2_tref = pCO2)
+
+# atm pCO2 at tref 1,2,3
+pCO2_to <- params_local$preind_atm_pCO2
+pCO2_t1 <- co2_atm_tref$pCO2_tref[1]
+pCO2_t2 <- co2_atm_tref$pCO2_tref[2]
+
+# ratio of atm pCO2 changes between eras
+delta_pCO2_ratio <- 
+  (pCO2_t2 - pCO2_t1) /
+  (pCO2_t1 - pCO2_to)
+
+rm(pCO2_to)
+rm(pCO2_t1)
+rm(pCO2_t2)
+
+# alpha for ss projection
+alpha = delta_pCO2_ratio * 0.94 * 0.94
+
+
+cant_3d_t2 <- cant_3d %>%
+  filter(median_year == max(tref$median_year)) %>% 
+  mutate(cant_pos =
+           (cant_pos_S04 +
+           ((median_year - 1994) / 13 * cant_pos_G19)) * (1 + alpha))
+
+cant_3d <- bind_rows(cant_3d_t1, cant_3d_t2)
+rm(cant_3d_t1, cant_3d_t2)
 
 # remove columns
 cant_3d <- cant_3d %>% 
