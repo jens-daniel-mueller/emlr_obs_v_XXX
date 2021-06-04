@@ -96,11 +96,11 @@ Required are:
 
 ```{r read_cant_files}
 
-cant_3d_tref <- read_csv(paste(path_version_data,
+cant_3d_ss <- read_csv(paste(path_version_data,
                                "cant_3d_tref.csv",
                                sep = ""))
 
-cant_3d <-
+cant_3d_emlr <-
   read_csv(paste(path_version_data,
                  "cant_3d.csv",
                  sep = ""))
@@ -114,6 +114,19 @@ tref <-
   read_csv(paste(path_version_data,
                  "tref.csv",
                  sep = ""))
+
+
+# cant_model_truth <-
+#   read_csv(paste(path_version_data,
+#                  "cant_3d_mod_truth.csv", sep = ""))
+# 
+# cant_model_truth_zonal <-
+#   read_csv(paste(path_version_data,
+#                  "cant_zonal_mod_truth.csv", sep = ""))
+# 
+# cant_model_truth_inv <-
+#   read_csv(paste(path_version_data,
+#                  "cant_inv_mod_truth.csv", sep = ""))
 
 ```
 
@@ -140,17 +153,17 @@ m_zonal_mean_section <- function(df) {
 
 ```{r estimate_ss_cant}
 
+# join with basinmask
+cant_3d_ss <- inner_join(cant_3d_ss, basinmask)
+
 # calculate delta cant as the difference between total cant at tref
 # this includes the G19 anomaly
-cant_3d_tref_wide <- cant_3d_tref %>%
+cant_3d_ss_wide <- cant_3d_ss %>%
   pivot_wider(names_from = era,
               values_from = "cant_pos") %>% 
   mutate(delta_cant_pos_ss = `2010-2019` - `2000-2009`) %>% 
   select(-c(`2010-2019`, `2000-2009`)) %>% 
   drop_na()
-
-# join with basinmask
-cant_3d_tref_wide <- inner_join(basinmask, cant_3d_tref_wide)
 
 
 ```
@@ -164,7 +177,7 @@ cant_3d_tref_wide <- inner_join(basinmask, cant_3d_tref_wide)
 ```{r zonal_section_plots_delta_cant_pos}
 
 # calculate zonal mean section
-cant_tref_section <- cant_3d_tref_wide %>%
+cant_ss_section <- cant_3d_ss_wide %>%
   group_by(data_source) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
@@ -172,7 +185,7 @@ cant_tref_section <- cant_3d_tref_wide %>%
   unnest(section)
 
 
-cant_tref_section %>% 
+cant_ss_section %>% 
   group_by(basin_AIP, data_source) %>%
   group_split() %>% 
   map( ~ p_section_zonal(
@@ -189,10 +202,10 @@ cant_tref_section %>%
 ```{r zonal_section_plots_delta_cant_pos_true, eval=FALSE}
 
 # calculate section of anomalous changes
-cant_tref_section <- cant_tref_section %>%
+cant_ss_section <- cant_ss_section %>%
   mutate(delta_cant_pos_anomalous = delta_cant_pos_G19_mean - delta_cant_pos_ss_mean)
 
-cant_tref_section %>%
+cant_ss_section %>%
   group_by(basin_AIP, data_source) %>%
   group_split() %>%
   map( ~ p_section_zonal(
@@ -211,7 +224,7 @@ cant_tref_section %>%
 
 ```{r anomalous_change_emlr}
 
-cant_3d_anom <- inner_join(cant_3d, cant_3d_tref_wide)
+cant_3d_anom <- inner_join(cant_3d_emlr, cant_3d_ss_wide)
 
 cant_3d_anom <- cant_3d_anom %>% 
   mutate(delta_cant_pos_emlr_ss = cant_pos - delta_cant_pos_ss)
@@ -246,10 +259,9 @@ cant_anom_section %>%
 
 ```{r zonal_section_plots_total_cant_pos}
 
-cant_3d_tref <- inner_join(cant_3d_tref, basinmask)
 
 # calculate zonal mean section
-total_cant_tref_section <- cant_3d_tref %>%
+total_cant_ss_section <- cant_3d_ss %>%
   group_by(data_source, era) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
@@ -257,7 +269,7 @@ total_cant_tref_section <- cant_3d_tref %>%
   unnest(section)
 
 
-total_cant_tref_section %>% 
+total_cant_ss_section %>% 
   group_by(basin_AIP, data_source, era) %>%
   group_split() %>% 
   map( ~ p_section_zonal(
