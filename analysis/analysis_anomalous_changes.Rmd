@@ -141,6 +141,7 @@ m_zonal_mean_section <- function(df) {
 ```{r estimate_ss_cant}
 
 # calculate delta cant as the difference between total cant at tref
+# this includes the G19 anomaly
 cant_3d_tref_wide <- cant_3d_tref %>%
   pivot_wider(names_from = era,
               values_from = "cant_pos") %>% 
@@ -183,7 +184,9 @@ cant_3d_tref_wide <- cant_3d_tref_wide %>%
 
 # Zonal mean sections
 
-## total Cant
+## delta Cant
+
+### G19 and ss projections
 
 ```{r zonal_section_plots_cant_pos}
 
@@ -201,7 +204,7 @@ cant_tref_section_long <- cant_tref_section %>%
     cols = c(delta_cant_pos_G19_mean, delta_cant_pos_ss_mean),
     values_to = "delta_cant",
     names_to = "estimate",
-    names_prefix = "delta_cant_"
+    names_prefix = "delta_cant_pos_"
   )
 
 cant_tref_section_long %>% 
@@ -211,13 +214,10 @@ cant_tref_section_long %>%
     df = .x,
     var = "delta_cant",
     plot_slabs = "n",
-    subtitle_text = paste(.x$basin_AIP, .x$data_source, .x$estimate)
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Data:", .x$data_source, "| Estimate:", .x$estimate)
   ))
 
 ```
-
-
-## delta Cant
 
 ### ss vs true
 
