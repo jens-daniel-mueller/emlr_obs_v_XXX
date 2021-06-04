@@ -91,7 +91,7 @@ Required are:
 - Cant from Gruber 2019 (G19)
 - annual mean atmospheric pCO~2~ 
 
-- Mean and SD per grid cell (lat, lon, depth)
+- Mean eMLR-Cant per grid cell (lat, lon, depth)
 
 
 ```{r read_cant_files}
@@ -118,20 +118,9 @@ tref <-
 ```
 
 
-```{r compare_cant}
+```{r zonal_mean_section_plot_function}
 
-
-cant_3d_tref_wide <- cant_3d_tref %>%
-  pivot_wider(names_from = era,
-              values_from = "cant_pos") %>% 
-  mutate(cant_pos = `2010-2019` - `2000-2009`) %>% 
-  # select(-c(`2010-2019`, `2000-2009`)) %>% 
-  drop_na()
-
-
-cant_3d_tref_wide <- inner_join(basinmask, cant_3d_tref_wide)
-
-zonal_mean_section <- function(df) {
+m_zonal_mean_section <- function(df) {
 
   df_zonal_mean_section <- df %>%
     fselect(-lon) %>% 
@@ -145,21 +134,33 @@ zonal_mean_section <- function(df) {
 
 }
 
-
 ```
 
+# Calculate ss Cant
 
 ```{r estimate_ss_cant}
+
+# calculate delta cant as the difference between total cant at tref
+cant_3d_tref_wide <- cant_3d_tref %>%
+  pivot_wider(names_from = era,
+              values_from = "cant_pos") %>% 
+  mutate(delta_cant_pos_G19 = `2010-2019` - `2000-2009`) %>% 
+  drop_na()
+
+# join with basinmask
+cant_3d_tref_wide <- inner_join(basinmask, cant_3d_tref_wide)
 
 # extract atm pCO2 at reference year
 co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
   select(-year) %>% 
   rename(pCO2_tref = pCO2)
 
+# atm pCO2 at tref 1,2,3
 pCO2_to <- params_local$preind_atm_pCO2
 pCO2_t1 <- co2_atm_tref$pCO2_tref[1]
 pCO2_t2 <- co2_atm_tref$pCO2_tref[2]
 
+# ratio of atm pCO2 changes between eras
 delta_pCO2_ratio <- 
   (pCO2_t2 - pCO2_t1) /
   (pCO2_t1 - pCO2_to)
@@ -168,29 +169,41 @@ rm(pCO2_to)
 rm(pCO2_t1)
 rm(pCO2_t2)
 
+# alpha for ss projection
 alpha = delta_pCO2_ratio * 0.94 * 0.94
 
 # calculate cstar for reference year
 cant_3d_tref_wide <- cant_3d_tref_wide %>%
-  rename(cant_t1 = `2010-2019`,
-         cant_t2 = `2000-2009`,
-         delta_cant_G19 = cant_pos) %>%
-  mutate(delta_cant_ss = alpha * cant_t1)
+  rename(cant_pos_t1 = `2010-2019`,
+         cant_pos_t2 = `2000-2009`) %>%
+  mutate(delta_cant_pos_ss = alpha * cant_pos_t1)
 
+
+```
+
+# Zonal mean sections
+
+## total Cant
+
+```{r zonal_section_plots_cant_pos}
+
+# calculate zonal mean section
 cant_tref_section <- cant_3d_tref_wide %>%
   group_by(data_source) %>%
   nest() %>%
-  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
   select(-data) %>%
   unnest(section)
 
+
 cant_tref_section_long <- cant_tref_section %>%
-  pivot_longer(cols = c(delta_cant_G19_mean, delta_cant_ss_mean),
-               values_to = "delta_cant",
-               names_to = "estimate",
-               names_prefix = "delta_cant_")
-  
-  
+  pivot_longer(
+    cols = c(delta_cant_pos_G19_mean, delta_cant_pos_ss_mean),
+    values_to = "delta_cant",
+    names_to = "estimate",
+    names_prefix = "delta_cant_"
+  )
+
 cant_tref_section_long %>% 
   group_by(basin_AIP, data_source, estimate) %>%
   group_split() %>% 
@@ -201,11 +214,18 @@ cant_tref_section_long %>%
     subtitle_text = paste(.x$basin_AIP, .x$data_source, .x$estimate)
   ))
 
+```
 
 
+## delta Cant
+
+### ss vs true
+
+```{r zonal_section_plots_delta_cant_pos}
+
+# calculate section of anomalous changes
 cant_tref_section <- cant_tref_section %>%
-  mutate(delta_cant_anomalous = delta_cant_G19_mean - delta_cant_ss_mean)
-
+  mutate(delta_cant_pos_anomalous = delta_cant_pos_G19_mean - delta_cant_pos_ss_mean)
 
 cant_tref_section %>%
   group_by(basin_AIP, data_source) %>%
@@ -213,7 +233,7 @@ cant_tref_section %>%
   map( ~ p_section_zonal(
     df = .x,
     col = "divergent",
-    var = "delta_cant_anomalous",
+    var = "delta_cant_pos_anomalous",
     plot_slabs = "n",
     breaks = params_global$breaks_cant_offset,
     subtitle_text = paste(.x$basin_AIP, .x$data_source)
@@ -221,52 +241,36 @@ cant_tref_section %>%
 
 
 ```
+
+### ss vs eMLR
 
 ```{r anomalous_change_emlr}
 
 cant_3d_anom <- inner_join(cant_3d, cant_3d_tref_wide)
 
 cant_3d_anom <- cant_3d_anom %>% 
-  mutate(delta_cant_emlr_ss = cant_pos - delta_cant_ss)
+  mutate(delta_cant_pos_emlr_ss = cant_pos - delta_cant_pos_ss)
 
 cant_anom_section <- cant_3d_anom %>%
-  select(lon, lat, depth, basin_AIP, data_source, delta_cant_emlr_ss) %>% 
+  select(lon, lat, depth, basin_AIP, data_source, delta_cant_pos_emlr_ss) %>% 
   group_by(data_source) %>%
   nest() %>%
-  mutate(section = map(.x = data, ~zonal_mean_section(.x))) %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
   select(-data) %>%
   unnest(section)
 
-  
 cant_anom_section %>%
   group_by(basin_AIP, data_source) %>%
   group_split() %>%
   map( ~ p_section_zonal(
     df = .x,
     col = "divergent",
-    var = "delta_cant_emlr_ss_mean",
+    var = "delta_cant_pos_emlr_ss_mean",
     plot_slabs = "n",
     breaks = params_global$breaks_cant_offset,
     subtitle_text = paste(.x$basin_AIP, .x$data_source)
   ))
 
-
-
-```
-
-
-## Calculation
-
-To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the cant concentration at the reference year. We approximate this concentration by adding the delta cant signal estimated by Gruber et al (2019) to the "base line" total cant concentration determined for 1994 by Sabine et al (2004):  
-
-Cant(tref) = S04 + (tref-1994)/13 * G19
-
-This way, we use exactly S04+G19 for tref=2007. For all other tref we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.
-
-For the model data, we perform the adjustment based on the total Cant estimate for 1994, and the delta Cant estimate for 1994 - 2007.
-
-
-```{r adjust_reference_year, eval=FALSE}
 
 
 ```
