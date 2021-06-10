@@ -359,8 +359,8 @@ cant_3d_section %>%
     col = "continuous",
     var = "cant_pos_S04_mean",
     plot_slabs = "n",
-    breaks = seq(0,100,10),
-    subtitle_text = paste("1994 estimate:", .x$basin_AIP, .x$data_source)
+    breaks = seq(0,80,10),
+    subtitle_text = paste("pi - 1994 estimate:", .x$basin_AIP, .x$data_source)
   ))
 
 cant_3d_section %>%
@@ -373,13 +373,10 @@ cant_3d_section %>%
     var = "cant_pos_G19_mean",
     plot_slabs = "n",
     breaks = params_global$breaks_cant_pos,
-    subtitle_text = paste("1994 estimate:", .x$basin_AIP, .x$data_source)
+    subtitle_text = paste("1994 - 2007 estimate:", .x$basin_AIP, .x$data_source)
   ))
 
 rm(cant_3d_section)
-
-cant_3d <- cant_3d %>% 
-  select(-basin_AIP)
 
 ```
 
@@ -428,6 +425,10 @@ delta_pCO2_atm <-
 delta_pCO2_atm_ratio <- 
   (pCO2_t2 - pCO2_t1)/(pCO2_t1 - pCO2_to)
 
+print(c("Atm. pCO2 at tref 1 and 2:", co2_atm_tref$pCO2_tref))
+print(c("Delta atm. pCO2 at tref 1 and 2:", delta_pCO2_atm))
+print(c("Delta atm. pCO2 ratio:", delta_pCO2_atm_ratio))
+
 rm(pCO2_to)
 rm(pCO2_t1)
 rm(pCO2_t2)
@@ -435,6 +436,7 @@ rm(pCO2_t2)
 
 # ratio of changes in revelle factor
 rev_fac_ratio <- 0.92
+print(c("Revelle factor ratio (fixed):", rev_fac_ratio))
 
 # changes in disequilibrium
 # OceanSODA <- right_join(OceanSODA,
@@ -509,12 +511,19 @@ delta_pco2_annual <- right_join(delta_pco2_annual,
                                   distinct(year, era)) %>% 
   drop_na()
 
+delta_pco2_annual %>%
+  ggplot(aes(year, delta_pco2)) +
+  geom_path() +
+  geom_point(aes(col = era)) +
+  scale_color_brewer(palette = "Set1")
+
 disequi_pCO2_tref <- delta_pco2_annual %>% 
   group_by(era) %>% 
   summarise(mean_delta_pCO2 = mean(delta_pco2)) %>% 
   ungroup() %>% 
   pull(mean_delta_pCO2)
 
+print(c("Disequilibria per era:", disequi_pCO2_tref))
 disequi_pCO2_tref <-
   c(0, -disequi_pCO2_tref)
 
@@ -523,13 +532,15 @@ disequi_pCO2_change <-
 
 disequi_pCO2_change <- na.omit(disequi_pCO2_change)
 
-
-
 xeta <- (delta_pCO2_atm + disequi_pCO2_change) / delta_pCO2_atm
 xeta_ratio <- xeta[2] / xeta[1]
 
+print(c("xeta per era:", xeta))
+print(c("xeta ratio:", xeta_ratio))
+
 # calculate alpha  
 alpha <- delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio
+print(c("alpha:", alpha))
 
 cant_3d_t2 <- cant_3d %>%
   filter(median_year == max(tref$median_year)) %>%
@@ -542,7 +553,7 @@ rm(cant_3d_t1, cant_3d_t2)
 
 # remove columns
 cant_3d <- cant_3d %>% 
-  select(data_source, lon, lat, depth, era, cant_pos)
+  select(data_source, basin_AIP, lon, lat, depth, era, cant_pos)
 
 cant_3d %>% 
   ggplot(aes(cant_pos, depth)) +
@@ -550,6 +561,30 @@ cant_3d %>%
   facet_grid(era ~ data_source) +
   scale_fill_viridis_c() +
   scale_y_reverse()
+
+cant_3d_section <- cant_3d %>%
+  group_by(data_source, era) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+cant_3d_section %>%
+  group_by(basin_AIP, data_source, era) %>%
+  group_split() %>%
+  # head(1) %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    col = "continuous",
+    var = "cant_pos_mean",
+    plot_slabs = "n",
+    breaks = seq(0,100,10),
+    subtitle_text = paste(.x$era, .x$basin_AIP, .x$data_source)
+  ))
+
+
+cant_3d <- cant_3d %>% 
+  select(-basin_AIP)
 
 ```
 
