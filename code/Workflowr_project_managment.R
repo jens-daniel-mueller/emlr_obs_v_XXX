@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "update anomalous changes")
+wflow_publish(all = TRUE, message = "added zonal mean section control plots")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "rebuild without overlapping eras",
+message = "revised alpha factor based on model disequilibrium",
 republish = TRUE)
 
 

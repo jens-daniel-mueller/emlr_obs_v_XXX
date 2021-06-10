@@ -68,6 +68,17 @@ library(lubridate)
 library(broom)
 ```
 
+
+```{r select_basin_mask, include=FALSE}
+
+basinmask <- basinmask %>% 
+  filter(MLR_basins == params_local$MLR_basins) %>% 
+  select(-c(MLR_basins, basin))
+
+```
+
+
+
 # Version ID
 
 The results displayed on this site correspond to the Version_ID:
@@ -124,10 +135,21 @@ co2_atm <-
                  "co2_atm.csv",
                  sep = ""))
 
-OceanSODA <-
-  read_csv(paste(path_preprocessing,
-                 "OceanSODA.csv",
-                 sep = ""))
+# OceanSODA <-
+#   read_csv(paste(path_preprocessing,
+#                  "OceanSODA.csv",
+#                  sep = ""))
+
+delta_pco2_annual <-
+    read_csv(
+      file = paste(
+        path_preprocessing_model,
+        "surface_ocean_disequilibrium/",
+        "C",
+        "_annual.csv",
+        sep = ""
+      )
+    )
 
 tref <-
   read_csv(paste(path_version_data,
@@ -295,7 +317,8 @@ mod_cant_3d <- full_join(
 
 mod_cant_3d <- mod_cant_3d %>% 
   mutate(cant_pos_G19 = cant_pos_m07 - cant_pos_S04,
-         cant_pos_G19 = if_else(cant_pos_G19 <= 0, 0, cant_pos_G19)) %>% 
+         cant_pos_G19 = if_else(cant_pos_G19 <= 0, 
+                                0, cant_pos_G19)) %>% 
   select(-cant_pos_m07)
 
 rm(m07_cant_3d,
@@ -311,6 +334,52 @@ cant_3d <- bind_rows(
   mod_cant_3d %>% mutate(data_source = "mod"),
   cant_3d %>% mutate(data_source = "obs")
 )
+
+```
+
+Control plots of zonal mean sections
+
+```{r zonal_mean_sections_total_cant}
+
+cant_3d <- inner_join(cant_3d, basinmask)
+
+cant_3d_section <- cant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+cant_3d_section %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  # head(1) %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    col = "continuous",
+    var = "cant_pos_S04_mean",
+    plot_slabs = "n",
+    breaks = seq(0,100,10),
+    subtitle_text = paste("1994 estimate:", .x$basin_AIP, .x$data_source)
+  ))
+
+cant_3d_section %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  # head(1) %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    col = "continuous",
+    var = "cant_pos_G19_mean",
+    plot_slabs = "n",
+    breaks = params_global$breaks_cant_pos,
+    subtitle_text = paste("1994 estimate:", .x$basin_AIP, .x$data_source)
+  ))
+
+rm(cant_3d_section)
+
+cant_3d <- cant_3d %>% 
+  select(-basin_AIP)
 
 ```
 
@@ -368,76 +437,96 @@ rm(pCO2_t2)
 rev_fac_ratio <- 0.92
 
 # changes in disequilibrium
-OceanSODA <- right_join(OceanSODA,
-                       GLODAP %>%
-                         distinct(year, era))
+# OceanSODA <- right_join(OceanSODA,
+#                        GLODAP %>%
+#                          distinct(year, era))
+# 
+# OceanSODA_glob <- OceanSODA %>%
+#   select(year, lat, lon,
+#          pCO2, rev_fac, tco2_over_pCO2,
+#          grid_area, era) %>%
+#   pivot_longer(c(pCO2, rev_fac, tco2_over_pCO2),
+#                names_to = "parameter",
+#                values_to = "value") %>%
+#   mutate(value_area = value * grid_area) %>%
+#   drop_na() %>% 
+#   group_by(year, era, parameter) %>%
+#   summarise(
+#     area_total = sum(grid_area),
+#     value_area_total = sum(value_area),
+#     value_area_ave = value_area_total / area_total
+#   ) %>%
+#   ungroup() %>%
+#   select(-c(area_total,value_area_total))
+# 
+# 
+# OceanSODA_glob %>%
+#   ggplot(aes(year, value_area_ave, col=era)) +
+#   geom_path() +
+#   geom_point() +
+#   facet_grid(parameter~., scales = "free_y")
+# 
+# OceanSODA_glob %>%
+#   filter(parameter == "pCO2") %>% 
+#   ggplot(aes(year, value_area_ave, col="Ocean")) +
+#   geom_path() +
+#   geom_point() +
+#   geom_path(data = co2_atm,
+#             aes(year, pCO2, col = "atmosphere")) +
+#   geom_point(data = co2_atm,
+#             aes(year, pCO2, col = "atmosphere"))
+# 
+# OceanSODA_glob_era <- OceanSODA_glob %>%
+#   group_by(era, parameter) %>%
+#   summarise(mean_value = mean(value_area_ave)) %>%
+#   ungroup()
+# 
+# pCO2_ocean_tref <- OceanSODA_glob_era %>% 
+#   filter(parameter == "pCO2") %>% 
+#   pull(mean_value)
+# 
+# pCO2_atm_tref <- right_join(co2_atm,
+#                             GLODAP %>%
+#                               distinct(year, era))
+# 
+# pCO2_atm_tref <- pCO2_atm_tref %>% 
+#   group_by(era) %>% 
+#   summarise(mean_pCO2 = mean(pCO2)) %>% 
+#   ungroup() %>% 
+#   pull(mean_pCO2)
+#   
+# 
+# disequi_pCO2_tref <-
+#   c(0, pCO2_atm_tref - pCO2_ocean_tref)
+# 
+# disequi_pCO2_change <- 
+#   lead(disequi_pCO2_tref) - disequi_pCO2_tref
+# 
+# disequi_pCO2_change <- na.omit(disequi_pCO2_change)
 
-OceanSODA_glob <- OceanSODA %>%
-  select(year, lat, lon,
-         pCO2, rev_fac, tco2_over_pCO2,
-         grid_area, era) %>%
-  pivot_longer(c(pCO2, rev_fac, tco2_over_pCO2),
-               names_to = "parameter",
-               values_to = "value") %>%
-  mutate(value_area = value * grid_area) %>%
-  drop_na() %>% 
-  group_by(year, era, parameter) %>%
-  summarise(
-    area_total = sum(grid_area),
-    value_area_total = sum(value_area),
-    value_area_ave = value_area_total / area_total
-  ) %>%
-  ungroup() %>%
-  select(-c(area_total,value_area_total))
+delta_pco2_annual <- right_join(delta_pco2_annual,
+                                GLODAP %>%
+                                  distinct(year, era)) %>% 
+  drop_na()
 
-
-OceanSODA_glob %>%
-  ggplot(aes(year, value_area_ave, col=era)) +
-  geom_path() +
-  geom_point() +
-  facet_grid(parameter~., scales = "free_y")
-
-OceanSODA_glob %>%
-  filter(parameter == "pCO2") %>% 
-  ggplot(aes(year, value_area_ave, col="Ocean")) +
-  geom_path() +
-  geom_point() +
-  geom_path(data = co2_atm,
-            aes(year, pCO2, col = "atmosphere")) +
-  geom_point(data = co2_atm,
-            aes(year, pCO2, col = "atmosphere"))
-
-OceanSODA_glob_era <- OceanSODA_glob %>%
-  group_by(era, parameter) %>%
-  summarise(mean_value = mean(value_area_ave)) %>%
-  ungroup()
-
-pCO2_ocean_tref <- OceanSODA_glob_era %>% 
-  filter(parameter == "pCO2") %>% 
-  pull(mean_value)
-
-pCO2_atm_tref <- right_join(co2_atm,
-                            GLODAP %>%
-                              distinct(year, era))
-
-pCO2_atm_tref <- pCO2_atm_tref %>% 
+disequi_pCO2_tref <- delta_pco2_annual %>% 
   group_by(era) %>% 
-  summarise(mean_pCO2 = mean(pCO2)) %>% 
+  summarise(mean_delta_pCO2 = mean(delta_pco2)) %>% 
   ungroup() %>% 
-  pull(mean_pCO2)
-  
+  pull(mean_delta_pCO2)
 
 disequi_pCO2_tref <-
-  c(0, pCO2_atm_tref - pCO2_ocean_tref)
+  c(0, -disequi_pCO2_tref)
 
-disequi_pCO2_change <- 
+disequi_pCO2_change <-
   lead(disequi_pCO2_tref) - disequi_pCO2_tref
 
 disequi_pCO2_change <- na.omit(disequi_pCO2_change)
 
-xeta <- (delta_pCO2_atm - disequi_pCO2_change) / delta_pCO2_atm
-xeta_ratio <- xeta[2] / xeta[1]
 
+
+xeta <- (delta_pCO2_atm + disequi_pCO2_change) / delta_pCO2_atm
+xeta_ratio <- xeta[2] / xeta[1]
 
 # calculate alpha  
 alpha <- delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio
