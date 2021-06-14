@@ -117,7 +117,7 @@ tref <-
                  sep = ""))
 
 
-cant_3d_model_truth <-
+cant_3d_mod_truth <-
   read_csv(paste(path_version_data,
                  "cant_3d_mod_truth.csv", sep = ""))
 
@@ -148,7 +148,7 @@ cant_3d_ss <- cant_3d_ss %>%
 
 ```{r prep_model_truth}
 
-cant_3d_model_truth <- cant_3d_model_truth %>% 
+cant_3d_mod_truth <- cant_3d_mod_truth %>% 
   select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
   mutate(data_source = "mod_truth")
 
@@ -169,10 +169,19 @@ cant_3d_emlr <- cant_3d_emlr %>%
 
 ```{r join_mod_data}
 
-cant_3d_mod <- bind_rows(
-  cant_3d_emlr %>% filter(data_source == "mod") %>% select(-data_source) %>% mutate(estimate = "emlr"),
-  cant_3d_model_truth %>% filter(data_source == "mod_truth") %>% select(-data_source) %>% mutate(estimate = "mod_truth"),
-  cant_3d_ss %>% filter(data_source == "mod") %>% select(-data_source) %>% mutate(estimate = "ss")
+cant_mod_3d <- bind_rows(
+  cant_3d_emlr %>%
+    filter(data_source == "mod") %>%
+    select(-data_source) %>%
+    mutate(estimate = "emlr"),
+  cant_3d_mod_truth %>%
+    filter(data_source == "mod_truth") %>%
+    select(-data_source) %>%
+    mutate(estimate = "mod_truth"),
+  cant_3d_ss %>%
+    filter(data_source == "mod") %>%
+    select(-data_source) %>%
+    mutate(estimate = "ss")
 )
 
 ```
@@ -186,31 +195,93 @@ cant_3d_obs <- bind_rows(
   cant_3d_ss %>% filter(data_source == "obs") %>% select(-data_source) %>% mutate(estimate = "ss")
 )
 
-# cant_3d_mod <- cant_3d_mod %>% 
-#   pivot_wider(names_from = estimate,
-#               values_from = delta_cant_pos)
-# 
-# cant_3d_mod <- cant_3d_mod %>% 
-#   drop_na()
 
 ```
 
 
 
 
-# Zonal mean sections
+# Model
 
-## Model
+## Bias correlation
+
+```{r bias_correlation_mod, fig.asp=0.5}
+
+cant_mod_3d_bias <- cant_mod_3d %>%
+  pivot_wider(names_from = estimate,
+              values_from = delta_cant_pos) %>%
+  drop_na()
+
+
+cant_mod_3d_bias <- cant_mod_3d_bias %>% 
+  mutate(ss_mod_truth = ss -  mod_truth,
+         emlr_mod_truth = emlr - mod_truth,
+         emlr_ss = emlr - ss) %>% 
+  select(-c(emlr:ss))
+
+axis_limit <- cant_mod_3d_bias %>% 
+  pivot_longer(ss_mod_truth:emlr_ss,
+               names_to = "estimate",
+               values_to = "bias") %>% 
+  pull(bias) %>% 
+  abs() %>% 
+  max()
+
+cant_mod_3d_bias %>%
+  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap( ~ basin_AIP)
+
+cant_mod_3d_bias %>% 
+  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap(~ basin_AIP)
+
+cant_mod_3d_bias %>% 
+  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap(~ basin_AIP)
+
+```
+
+
+## Zonal mean sections
 
 ```{r zonal_section_delta_cant_pos_mod}
 
 # calculate zonal mean section
-cant_mod_section <- cant_3d_mod %>%
+cant_mod_section <- cant_mod_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
+
+cant_mod_section %>% 
+  group_by(basin_AIP, estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "delta_cant_pos_mean",
+    plot_slabs = "n",
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
+  ))
 
 
 cant_mod_section_bias <- cant_mod_section %>%
@@ -232,16 +303,6 @@ cant_mod_section_bias_long <- cant_mod_section_bias %>%
                names_to = "estimate")
   
 
-cant_mod_section %>% 
-  group_by(basin_AIP, estimate) %>%
-  group_split() %>% 
-  # head(1) %>% 
-  map( ~ p_section_zonal(
-    df = .x,
-    var = "delta_cant_pos_mean",
-    plot_slabs = "n",
-    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
-  ))
 
 cant_mod_section_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
@@ -256,30 +317,49 @@ cant_mod_section_bias_long %>%
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
 
-cant_mod_section_bias %>% 
+axis_limit <- cant_mod_section_bias %>% 
+  pivot_longer(ss_mod_truth:emlr_ss,
+               names_to = "estimate",
+               values_to = "bias") %>% 
+  pull(bias) %>% 
+  abs() %>% 
+  max()
+
+cant_mod_section_bias %>%
   ggplot(aes(emlr_mod_truth, emlr_ss)) +
-  geom_bin2d() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
-  coord_equal() +
-  facet_wrap(~ basin_AIP)
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap( ~ basin_AIP)
 
 cant_mod_section_bias %>% 
   ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
-  geom_bin2d() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
-  coord_equal() +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
   facet_wrap(~ basin_AIP)
 
 cant_mod_section_bias %>% 
   ggplot(aes(emlr_ss, ss_mod_truth)) +
-  geom_bin2d() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
-  coord_equal() +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
   facet_wrap(~ basin_AIP)
 
 ```
 
-## Observations
+# Observations
+
+## Zonal mean sections
 
 ```{r zonal_section_delta_cant_pos_obs}
 
