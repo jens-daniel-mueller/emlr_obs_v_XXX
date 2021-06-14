@@ -387,16 +387,19 @@ Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time
 
 ```{r calculate_cant_tref1}
 
+
+cant_3d <- cant_3d %>%
+  mutate(cant_pos = cant_pos_S04 +
+           ((min(tref$median_year) - 1994) / 13 * cant_pos_G19))
+
 # join cant with tref
 cant_3d <- expand_grid(cant_3d, tref)
+
 
 # linear scaling of Gruber 2019
 # calculate cant fields for all tref
 cant_3d_t1 <- cant_3d %>%
-  filter(median_year == min(tref$median_year)) %>% 
-  mutate(cant_pos =
-           cant_pos_S04 +
-           ((median_year - 1994) / 13 * cant_pos_G19))
+  filter(median_year == min(tref$median_year))
 
 
 ```
@@ -544,9 +547,7 @@ print(c("alpha:", alpha))
 
 cant_3d_t2 <- cant_3d %>%
   filter(median_year == max(tref$median_year)) %>%
-  mutate(cant_pos =
-           (cant_pos_S04 +
-              ((median_year - 1994) / 13 * cant_pos_G19)) * (1 + alpha))
+  mutate(cant_pos = cant_pos * (1 + alpha))
 
 cant_3d <- bind_rows(cant_3d_t1, cant_3d_t2)
 rm(cant_3d_t1, cant_3d_t2)
