@@ -117,10 +117,10 @@ tref <-
                  sep = ""))
 
 
-# cant_model_truth <-
-#   read_csv(paste(path_version_data,
-#                  "cant_3d_mod_truth.csv", sep = ""))
-#
+cant_3d_model_truth <-
+  read_csv(paste(path_version_data,
+                 "cant_3d_mod_truth.csv", sep = ""))
+
 # cant_model_truth_zonal <-
 #   read_csv(paste(path_version_data,
 #                  "cant_zonal_mod_truth.csv", sep = ""))
@@ -131,154 +131,94 @@ tref <-
 
 ```
 
+# Prepare delta Cant
 
-```{r zonal_mean_section_plot_function}
+## Steady state
 
-m_zonal_mean_section <- function(df) {
-
-  df_zonal_mean_section <- df %>%
-    fselect(-lon) %>% 
-    fgroup_by(lat, depth, basin_AIP) %>% {
-      add_vars(fgroup_vars(.,"unique"),
-               fmean(., keep.group_vars = FALSE) %>% add_stub(pre = FALSE, "_mean"),
-               fsd(., keep.group_vars = FALSE) %>% add_stub(pre = FALSE, "_sd"))
-    }
-  
-  return(df_zonal_mean_section)
-
-}
-
-```
-
-# Calculate ss delta Cant
-
-```{r estimate_ss_cant}
+```{r prep_steady_state}
 
 # join with basinmask
 cant_3d_ss <- inner_join(cant_3d_ss, basinmask)
 
 # calculate delta cant as the difference between total cant at tref
 # this includes the G19 anomaly
-cant_3d_ss_wide <- cant_3d_ss %>%
+cant_3d_ss <- cant_3d_ss %>%
   pivot_wider(names_from = era,
               values_from = "cant_pos") %>% 
-  mutate(delta_cant_pos_ss = `2010-2019` - `2000-2009`) %>% 
+  mutate(delta_cant_pos = `2010-2019` - `2000-2009`) %>% 
   select(-c(`2010-2019`, `2000-2009`)) %>% 
   drop_na()
 
 
 ```
 
+## Model truth
+
+```{r prep_model_truth}
+
+cant_3d_model_truth <- cant_3d_model_truth %>% 
+  select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
+  mutate(data_source = "mod_truth")
+
+```
+
+## eMLR(C*)
+
+```{r prep_emlr}
+
+cant_3d_emlr <- cant_3d_emlr %>% 
+  select(data_source, lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos)
+
+```
+
+# Join data
+
+## Model
+
+```{r join_mod_data}
+
+cant_3d_mod <- bind_rows(
+  cant_3d_emlr %>% filter(data_source == "mod") %>% select(-data_source) %>% mutate(estimate = "emlr"),
+  cant_3d_model_truth %>% filter(data_source == "mod_truth") %>% select(-data_source) %>% mutate(estimate = "mod_truth"),
+  cant_3d_ss %>% filter(data_source == "mod") %>% select(-data_source) %>% mutate(estimate = "ss")
+)
+
+# cant_3d_mod <- cant_3d_mod %>% 
+#   pivot_wider(names_from = estimate,
+#               values_from = delta_cant_pos)
+# 
+# cant_3d_mod <- cant_3d_mod %>% 
+#   drop_na()
+
+```
+
+
+
+
 # Zonal mean sections
 
-## delta Cant
+## Model
 
-### ss projections
-
-```{r zonal_section_plots_delta_cant_pos}
+```{r zonal_section_delta_cant_pos_mod}
 
 # calculate zonal mean section
-cant_ss_section <- cant_3d_ss_wide %>%
-  group_by(data_source) %>%
+cant_mod_section <- cant_3d_mod %>%
+  group_by(estimate) %>%
   nest() %>%
-  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
 
 
-cant_ss_section %>% 
-  group_by(basin_AIP, data_source) %>%
+cant_mod_section %>% 
+  group_by(basin_AIP, estimate) %>%
   group_split() %>% 
+  # head(1) %>% 
   map( ~ p_section_zonal(
     df = .x,
-    var = "delta_cant_pos_ss_mean",
+    var = "delta_cant_pos_mean",
     plot_slabs = "n",
-    subtitle_text = paste("Basin:", .x$basin_AIP, "| Data:", .x$data_source)
-  ))
-
-```
-
-### ss vs true
-
-```{r zonal_section_plots_delta_cant_pos_true, eval=FALSE}
-
-# calculate section of anomalous changes
-cant_ss_section <- cant_ss_section %>%
-  mutate(delta_cant_pos_anomalous = delta_cant_pos_G19_mean - delta_cant_pos_ss_mean)
-
-cant_ss_section %>%
-  group_by(basin_AIP, data_source) %>%
-  group_split() %>%
-  map( ~ p_section_zonal(
-    df = .x,
-    col = "divergent",
-    var = "delta_cant_pos_anomalous",
-    plot_slabs = "n",
-    breaks = params_global$breaks_cant_offset,
-    subtitle_text = paste(.x$basin_AIP, .x$data_source)
-  ))
-
-
-```
-
-### ss vs eMLR
-
-```{r anomalous_change_emlr}
-
-cant_3d_anom <- inner_join(cant_3d_emlr, cant_3d_ss_wide)
-
-cant_3d_anom <- cant_3d_anom %>% 
-  mutate(delta_cant_pos_emlr_ss = cant_pos - delta_cant_pos_ss)
-
-cant_anom_section <- cant_3d_anom %>%
-  select(lon, lat, depth, basin_AIP, data_source, delta_cant_pos_emlr_ss) %>% 
-  group_by(data_source) %>%
-  nest() %>%
-  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
-  select(-data) %>%
-  unnest(section)
-
-cant_anom_section %>%
-  group_by(basin_AIP, data_source) %>%
-  group_split() %>%
-  map( ~ p_section_zonal(
-    df = .x,
-    col = "divergent",
-    var = "delta_cant_pos_emlr_ss_mean",
-    plot_slabs = "n",
-    breaks = params_global$breaks_cant_offset,
-    subtitle_text = paste(.x$basin_AIP, .x$data_source)
-  ))
-
-
-
-```
-
-
-
-## total Cant
-
-```{r zonal_section_plots_total_cant_pos}
-
-
-# calculate zonal mean section
-total_cant_ss_section <- cant_3d_ss %>%
-  group_by(data_source, era) %>%
-  nest() %>%
-  mutate(section = map(.x = data, ~m_zonal_mean_section(.x))) %>%
-  select(-data) %>%
-  unnest(section)
-
-
-total_cant_ss_section %>% 
-  group_by(basin_AIP, data_source, era) %>%
-  group_split() %>% 
-  map( ~ p_section_zonal(
-    df = .x,
-    var = "cant_pos_mean",
-    plot_slabs = "n",
-    breaks = seq(0,100,5),
-    subtitle_text = paste("Basin:", .x$basin_AIP, "| Data:", .x$data_source, "| Era:", .x$era)
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
 
 ```
