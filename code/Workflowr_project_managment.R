@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added zonal mean section control plots")
+wflow_publish(all = TRUE, message = "revised zonal mean section plots for mod data")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,18 +32,8 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "added zonal mean section control plots",
+message = "corrected Cant calculation at tref2",
 republish = TRUE)
-
-wflow_publish(here::here(
-  "analysis",
-  c(
-    "index.Rmd",
-    "eMLR_data_preparation.Rmd"
-  )
-),
-message = "added zonal mean section control plots")
-
 
 # Push latest version to GitHub
 wflow_git_push()

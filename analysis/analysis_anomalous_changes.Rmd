@@ -121,14 +121,6 @@ cant_3d_model_truth <-
   read_csv(paste(path_version_data,
                  "cant_3d_mod_truth.csv", sep = ""))
 
-# cant_model_truth_zonal <-
-#   read_csv(paste(path_version_data,
-#                  "cant_zonal_mod_truth.csv", sep = ""))
-#
-# cant_model_truth_inv <-
-#   read_csv(paste(path_version_data,
-#                  "cant_inv_mod_truth.csv", sep = ""))
-
 ```
 
 # Prepare delta Cant
@@ -183,13 +175,6 @@ cant_3d_mod <- bind_rows(
   cant_3d_ss %>% filter(data_source == "mod") %>% select(-data_source) %>% mutate(estimate = "ss")
 )
 
-# cant_3d_mod <- cant_3d_mod %>% 
-#   pivot_wider(names_from = estimate,
-#               values_from = delta_cant_pos)
-# 
-# cant_3d_mod <- cant_3d_mod %>% 
-#   drop_na()
-
 ```
 
 ## Observations
@@ -228,6 +213,25 @@ cant_mod_section <- cant_3d_mod %>%
   unnest(section)
 
 
+cant_mod_section_bias <- cant_mod_section %>%
+  select(-delta_cant_pos_sd) %>% 
+  pivot_wider(names_from = estimate,
+              values_from = delta_cant_pos_mean) %>% 
+  drop_na()
+
+
+cant_mod_section_bias <- cant_mod_section_bias %>% 
+  mutate(ss_mod_truth = ss -  mod_truth,
+         emlr_mod_truth = emlr - mod_truth,
+         emlr_ss = emlr - ss) %>% 
+  select(-c(emlr:ss))
+
+cant_mod_section_bias_long <- cant_mod_section_bias %>% 
+  pivot_longer(ss_mod_truth:emlr_ss,
+               values_to = "delta_cant_pos_bias",
+               names_to = "estimate")
+  
+
 cant_mod_section %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
@@ -238,6 +242,40 @@ cant_mod_section %>%
     plot_slabs = "n",
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
+
+cant_mod_section_bias_long %>% 
+  group_by(basin_AIP, estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "delta_cant_pos_bias",
+    col = "divergent",
+    breaks = params_global$breaks_cant_offset,
+    plot_slabs = "n",
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
+  ))
+
+cant_mod_section_bias %>% 
+  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal() +
+  facet_wrap(~ basin_AIP)
+
+cant_mod_section_bias %>% 
+  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal() +
+  facet_wrap(~ basin_AIP)
+
+cant_mod_section_bias %>% 
+  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  geom_bin2d() +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal() +
+  facet_wrap(~ basin_AIP)
 
 ```
 
