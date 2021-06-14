@@ -259,6 +259,37 @@ cant_mod_3d_bias %>%
 
 ```
 
+### Control plot
+
+```{r control_plot_bias_section}
+
+# calculate zonal mean section
+cant_mod_3d_bias_section <- cant_mod_3d_bias %>%
+  pivot_longer(ss_mod_truth:emlr_ss,
+               names_to = "estimate",
+               values_to = "delta_cant_pos_bias") %>% 
+  group_by(estimate) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+cant_mod_3d_bias_section %>% 
+  group_by(basin_AIP, estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "delta_cant_pos_bias_mean",
+    col = "divergent",
+    breaks = params_global$breaks_cant_offset,
+    plot_slabs = "n",
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
+  ))
+
+```
+
+
 
 ## Zonal mean sections
 
