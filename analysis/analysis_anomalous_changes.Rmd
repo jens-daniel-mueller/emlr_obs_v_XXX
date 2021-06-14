@@ -192,6 +192,24 @@ cant_3d_mod <- bind_rows(
 
 ```
 
+## Observations
+
+```{r join_obs_data}
+
+cant_3d_obs <- bind_rows(
+  cant_3d_emlr %>% filter(data_source == "obs") %>% select(-data_source) %>% mutate(estimate = "emlr"),
+  cant_3d_ss %>% filter(data_source == "obs") %>% select(-data_source) %>% mutate(estimate = "ss")
+)
+
+# cant_3d_mod <- cant_3d_mod %>% 
+#   pivot_wider(names_from = estimate,
+#               values_from = delta_cant_pos)
+# 
+# cant_3d_mod <- cant_3d_mod %>% 
+#   drop_na()
+
+```
+
 
 
 
@@ -214,6 +232,32 @@ cant_mod_section %>%
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
   # head(1) %>% 
+  map( ~ p_section_zonal(
+    df = .x,
+    var = "delta_cant_pos_mean",
+    plot_slabs = "n",
+    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
+  ))
+
+```
+
+## Observations
+
+```{r zonal_section_delta_cant_pos_obs}
+
+# calculate zonal mean section
+cant_obs_section <- cant_3d_obs %>%
+  group_by(estimate) %>%
+  nest() %>%
+  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(section)
+
+
+cant_obs_section %>% 
+  group_by(basin_AIP, estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
   map( ~ p_section_zonal(
     df = .x,
     var = "delta_cant_pos_mean",
