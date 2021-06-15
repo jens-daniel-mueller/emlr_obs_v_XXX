@@ -319,7 +319,8 @@ alpha_inv <- alpha_inv %>%
 
 
 map +
-  geom_raster(data = alpha_inv %>% filter(inv_depth == params_global$inventory_depth_standard),
+  geom_raster(data = alpha_inv #%>% filter(inv_depth == params_global$inventory_depth_standard)
+              ,
               aes(lon, lat, fill = alpha)) +
   facet_grid(inv_depth ~ .) +
   scale_fill_divergent(
