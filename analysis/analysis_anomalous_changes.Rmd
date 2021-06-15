@@ -66,6 +66,8 @@ path_version_figures  <-
 ```{r load_libraries_specific, include = FALSE}
 
 library(purrr)
+library(marelac)
+library(gt)
 
 ```
 
@@ -474,6 +476,87 @@ cant_mod_inv_bias %>%
 ```
 
 
+## Budgets
+
+```{r calculate_global_inventory}
+
+cant_mod_inv_budget <- cant_mod_inv %>% 
+  mutate(surface_area = earth_surf(lat, lon),
+         # cant_inv_grid = cant_inv*surface_area,
+         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
+  group_by(basin_AIP, estimate, inv_depth) %>% 
+  summarise(#cant_total = sum(cant_inv_grid)*12*1e-15,
+            #cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
+            cant_pos_total = round(cant_pos_total,1)) %>% 
+  ungroup()
+
+duration <- sort(tref$median_year)[2] - sort(tref$median_year)[1]
+
+cant_mod_inv_budget %>%  
+  group_by(estimate, inv_depth) %>% 
+  summarise(#cant_total = sum(cant_total),
+            #cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_total),
+            cant_pos_total = round(cant_pos_total,1),
+            #cant_total_rate = cant_total / duration,
+            cant_pos_total_rate = cant_pos_total / duration) %>% 
+  ungroup()
+
+
+```
+
+### Standard depth
+
+Results integrated over the upper `r params_global$inventory_depth_standard` m
+
+```{r cant_budget_standard_depth}
+
+cant_mod_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col()
+
+cant_mod_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("estimate", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+
+```
+
+### Other depths
+
+Results integrated over the upper `r params_global$inventory_depths` m
+
+```{r cant_budget_other_depth, fig.asp=1}
+
+cant_mod_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(inv_depth ~ ., scales = "free_y")
+
+cant_mod_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("estimate", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+rm(cant_mod_inv_budget)
+
+```
 
 
 # Observations
