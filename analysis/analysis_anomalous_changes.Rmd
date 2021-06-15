@@ -259,39 +259,9 @@ cant_mod_3d_bias %>%
 
 ```
 
-### Control plot
-
-```{r control_plot_bias_section}
-
-# calculate zonal mean section
-cant_mod_3d_bias_section <- cant_mod_3d_bias %>%
-  pivot_longer(ss_mod_truth:emlr_ss,
-               names_to = "estimate",
-               values_to = "delta_cant_pos_bias") %>% 
-  group_by(estimate) %>%
-  nest() %>%
-  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
-  select(-data) %>%
-  unnest(section)
-
-cant_mod_3d_bias_section %>% 
-  group_by(basin_AIP, estimate) %>%
-  group_split() %>% 
-  # head(1) %>%
-  map( ~ p_section_zonal(
-    df = .x,
-    var = "delta_cant_pos_bias_mean",
-    col = "divergent",
-    breaks = params_global$breaks_cant_offset,
-    plot_slabs = "n",
-    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
-  ))
-
-```
-
-
-
 ## Zonal mean sections
+
+### delta Cant
 
 ```{r zonal_section_delta_cant_pos_mod}
 
@@ -314,6 +284,12 @@ cant_mod_section %>%
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
 
+
+```
+
+### Bias
+
+```{r zonal_section_delta_cant_pos_bias_mod}
 
 cant_mod_section_bias <- cant_mod_section %>%
   select(-delta_cant_pos_sd) %>% 
@@ -387,6 +363,118 @@ cant_mod_section_bias %>%
   facet_wrap(~ basin_AIP)
 
 ```
+
+
+## Inventories
+
+### delta Cant
+
+```{r inventory_delta_cant_pos_mod, fig.asp = 0.5}
+
+# calculate zonal mean section
+cant_mod_inv <- cant_mod_3d %>%
+  rename(cant_pos = delta_cant_pos) %>% 
+  mutate(cant = 0,
+         eras = "blank") %>% 
+  group_by(estimate) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_cant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv) %>% 
+  select(-c(cant_inv, eras))
+
+cant_mod_inv %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  group_by(estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_map_cant_inv(
+    df = .x,
+    var = "cant_pos_inv",
+    subtitle_text = paste("Estimate:", .x$estimate)
+  ))
+
+
+```
+
+### Bias
+
+```{r inventory_delta_cant_pos_bias_mod}
+
+cant_mod_inv_bias <- cant_mod_inv %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  select(-inv_depth) %>% 
+  pivot_wider(names_from = estimate,
+              values_from = cant_pos_inv) %>% 
+  drop_na()
+
+
+cant_mod_inv_bias <- cant_mod_inv_bias %>% 
+  mutate(ss_mod_truth = ss -  mod_truth,
+         emlr_mod_truth = emlr - mod_truth,
+         emlr_ss = emlr - ss) %>% 
+  select(-c(emlr:ss))
+
+cant_mod_inv_bias_long <- cant_mod_inv_bias %>% 
+  pivot_longer(ss_mod_truth:emlr_ss,
+               values_to = "cant_pos_inv_bias",
+               names_to = "estimate")
+  
+
+
+cant_mod_inv_bias_long %>% 
+  group_by(estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_map_cant_inv_offset(
+    df = .x,
+    var = "cant_pos_inv_bias",
+    subtitle_text = paste("Estimate:", .x$estimate)
+  ))
+
+
+axis_limit <- cant_mod_inv_bias %>% 
+  pivot_longer(ss_mod_truth:emlr_ss,
+               names_to = "estimate",
+               values_to = "bias") %>% 
+  pull(bias) %>% 
+  abs() %>% 
+  max()
+
+cant_mod_inv_bias %>%
+  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap( ~ basin_AIP)
+
+cant_mod_inv_bias %>% 
+  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap(~ basin_AIP)
+
+cant_mod_inv_bias %>% 
+  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap(~ basin_AIP)
+
+```
+
+
+
 
 # Observations
 

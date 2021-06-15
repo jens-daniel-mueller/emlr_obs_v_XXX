@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "alpha model truth analysed")
+wflow_publish(all = TRUE, message = "anomaly inventory maps added")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,8 +32,9 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "corrected Cant calculation at tref2",
+message = "rerun with post 2000 data",
 republish = TRUE)
+
 
 # Push latest version to GitHub
 wflow_git_push()
