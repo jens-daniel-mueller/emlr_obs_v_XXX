@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0d159f9a2275cdbb96a48bd8cf7f5f46c3d3626etargetblank0d159f9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0d159f9a2275cdbb96a48bd8cf7f5f46c3d3626e" target="_blank">0d159f9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree37f32089f0e1eedc09c45ae40689b7d11757e666targetblank37f3208a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/37f32089f0e1eedc09c45ae40689b7d11757e666" target="_blank">37f3208</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0d159f9a2275cdbb96a48bd8cf7f5f46c3d3626etargetblank0d159f9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree37f32089f0e1eedc09c45ae40689b7d11757e666targetblank37f3208a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0d159f9a2275cdbb96a48bd8cf7f5f46c3d3626e" target="_blank">0d159f9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/37f32089f0e1eedc09c45ae40689b7d11757e666" target="_blank">37f3208</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -634,7 +634,9 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/config_parameterization_local.Rmd
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -673,6 +675,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/37f32089f0e1eedc09c45ae40689b7d11757e666/analysis/analysis_anomalous_changes.Rmd" target="_blank">37f3208</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-15
+</td>
+<td>
+test with pre 2000 and post 2010 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/3cb64bdd8e088c46808afb41a9979301ae1add4f/docs/analysis_anomalous_changes.html" target="_blank">3cb64bd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1494,8 +1530,8 @@ cant_3d_ss &lt;- inner_join(cant_3d_ss, basinmask)
 cant_3d_ss &lt;- cant_3d_ss %&gt;%
   pivot_wider(names_from = era,
               values_from = &quot;cant_pos&quot;) %&gt;% 
-  mutate(delta_cant_pos = `2010-2019` - `2000-2009`) %&gt;% 
-  select(-c(`2010-2019`, `2000-2009`)) %&gt;% 
+  mutate(delta_cant_pos = !!sym(tref$era[2]) - !!sym(tref$era[1])) %&gt;% 
+  select(-c(!!sym(tref$era[2]), !!sym(tref$era[1]))) %&gt;%
   drop_na()</code></pre>
 </div>
 <div id="model-truth" class="section level2" number="3.2">
