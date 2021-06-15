@@ -137,8 +137,8 @@ cant_3d_ss <- inner_join(cant_3d_ss, basinmask)
 cant_3d_ss <- cant_3d_ss %>%
   pivot_wider(names_from = era,
               values_from = "cant_pos") %>% 
-  mutate(delta_cant_pos = `2010-2019` - `2000-2009`) %>% 
-  select(-c(`2010-2019`, `2000-2009`)) %>% 
+  mutate(delta_cant_pos = !!sym(tref$era[2]) - !!sym(tref$era[1])) %>% 
+  select(-c(!!sym(tref$era[2]), !!sym(tref$era[1]))) %>%
   drop_na()
 
 
