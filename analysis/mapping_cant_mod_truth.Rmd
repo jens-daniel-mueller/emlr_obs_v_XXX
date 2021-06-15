@@ -143,18 +143,17 @@ climatology <- climatology %>%
 ```{r calc_model_cant_between_tref}
 
 cant_average <- left_join(cant_tref_1, cant_tref_2) %>%
-  mutate(cant = cant_tref_2 - cant_tref_1) %>%
-  select(-c(cant_tref_1, cant_tref_2))
+  mutate(cant = cant_tref_2 - cant_tref_1)
+
+rm(cant_tref_1, cant_tref_2)
 
 cant_average <- cant_average %>%
   mutate(cant_pos = if_else(cant <= 0, 0, cant))
 
-rm(cant_tref_1, cant_tref_2)
+cant_average <- inner_join(basinmask, cant_average)
 
 cant_average <- full_join(cant_average, climatology)
 rm(climatology)
-
-cant_average <- inner_join(basinmask, cant_average)
 
 cant_average <-
   m_cant_model_average(cant_average %>% mutate(eras = "blank"))
@@ -164,7 +163,7 @@ cant_average <- m_cut_gamma(cant_average, "gamma")
 cant_average <- cant_average %>% 
   mutate(data_source = "mod_truth") %>% 
   select(lon, lat, depth, eras, basin, basin_AIP, data_source,
-            cant, cant_pos, cant_sd, cant_pos_sd,
+            cant_tref_1, cant, cant_pos, cant_sd, cant_pos_sd,
             gamma, gamma_sd, gamma_slab)
 
 ```
@@ -220,10 +219,123 @@ p_map_cant_inv(df = cant_inv,
 
 ```
 
+```{r cant_total_inventories, fig.asp=1}
+
+cant_total_inv <- m_cant_inv_data_source(
+  cant_average %>%
+    select(-c(cant, cant_pos)) %>%
+    rename(cant = cant_tref_1) %>%
+    mutate(cant_pos = if_else(cant <= 0, 0, cant))
+)
+
+p_map_cant_inv(df = cant_total_inv,
+               var = "cant_pos_inv",
+               subtitle_text = "for predefined integration depths",
+               breaks = seq(0,50,5)) +
+  facet_grid(inv_depth ~ data_source)
+
+```
+
+# Alpha
+
+## 3d fields
+
+```{r alpha_3d}
+
+alpha_3d <- cant_average %>% 
+  mutate(alpha = cant / cant_tref_1,
+         alpha = if_else(cant <= 0 | cant_tref_1 <= 0,
+                         NaN, alpha))
+alpha_3d %>%
+  filter(alpha < 1) %>%
+  ggplot(aes(alpha)) +
+  geom_histogram() +
+  facet_grid(basin_AIP ~ .) +
+  scale_x_continuous(breaks = seq(0, 1, 0.1))
+
+median_alpha <- 
+  alpha_3d %>% 
+  group_by(depth, basin_AIP) %>% 
+  summarise(alpha_median = median(alpha, na.rm = TRUE),
+            alpha_mean = weighted.mean(alpha, cant_tref_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+alpha_3d %>%
+  filter(alpha < 1) %>%
+  ggplot(aes(alpha, depth)) +
+  geom_bin2d(binwidth = c(0.01, 200)) +
+  geom_path(data = median_alpha,
+            aes(alpha_median, depth, col="Median")) +
+  geom_path(data = median_alpha,
+            aes(alpha_mean, depth, col="Weighted mean")) +
+  scale_color_manual(name = "Alpha",
+                     values = c("red", "orange")) +
+  scale_y_reverse() +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP~.)
+
+
+print(paste("mean:",
+            round(mean(
+              alpha_3d$alpha, na.rm = TRUE
+            ), 3)))
+
+print(paste("mean, weighted with Cant:",
+            round(
+              weighted.mean(
+                x = alpha_3d$alpha,
+                w = alpha_3d$cant_tref_1,
+                na.rm = TRUE
+              ),
+              3
+            )))
+
+print(paste("median:",
+            round(median(
+              alpha_3d$alpha, na.rm = TRUE
+            ), 3)))
+
+
+```
+
+## Inventory maps
+
+```{r alpha_surface_distribution, fig.asp=1.5}
+
+alpha_inv <- bind_rows(
+  cant_inv %>% mutate(estimate = "delta_cant"),
+  cant_total_inv %>% mutate(estimate = "total_cant")
+)
+
+alpha_inv <- alpha_inv %>%
+  select(lon, lat, cant_inv, inv_depth, estimate) %>%
+  pivot_wider(names_from = estimate,
+              values_from = cant_inv)
+
+alpha_inv <- alpha_inv %>% 
+  mutate(alpha = delta_cant / total_cant)
+
+
+map +
+  geom_raster(data = alpha_inv,
+              aes(lon, lat, fill = alpha)) +
+  facet_grid(inv_depth ~ .) +
+  scale_fill_divergent(
+    midpoint = median(alpha_inv$alpha)
+  )
+
+
+```
+
+
+
 # Write csv
 
 ```{r write_cant_files}
 
+cant_average <- cant_average %>%
+  select(-c(cant_tref_1))
 
 cant_average %>%
   write_csv(paste(path_version_data,
