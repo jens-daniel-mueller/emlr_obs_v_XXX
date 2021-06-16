@@ -231,7 +231,7 @@ cant_mod_3d_bias <- cant_mod_3d_bias %>%
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
          emlr_ss = emlr - ss,
-         nss = mod_truth - mod_truth_cc) %>% 
+         nss = mod_truth_cc - mod_truth) %>% 
   select(-c(emlr:ss))
 
 axis_limit <- cant_mod_3d_bias %>% 
@@ -369,7 +369,7 @@ cant_mod_section_bias <- cant_mod_section_bias %>%
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
          emlr_ss = emlr - ss,
-         nss = mod_truth - mod_truth_cc) %>% 
+         nss = mod_truth_cc - mod_truth) %>% 
   select(-c(emlr:ss))
 
 cant_mod_section_bias_long <- cant_mod_section_bias %>% 
@@ -481,7 +481,7 @@ cant_mod_inv_bias <- cant_mod_inv_bias %>%
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
          emlr_ss = emlr - ss,
-         nss = mod_truth - mod_truth_cc) %>% 
+         nss = mod_truth_cc - mod_truth) %>% 
   select(-c(emlr:ss))
 
 cant_mod_inv_bias_long <- cant_mod_inv_bias %>% 
