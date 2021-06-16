@@ -120,6 +120,44 @@ cant_tref_2 <- cant_tref_2 %>%
 ```
 
 
+
+```{r read_model_cant_files_cc}
+
+cant_cc_tref_1 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_CB",
+      "/cant_",
+      unique(tref$median_year[1]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+cant_cc_tref_1 <- cant_cc_tref_1 %>%
+  rename(cant_tref_1 = cant_total) %>%
+  select(-year)
+
+cant_cc_tref_2 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_CB",
+      "/cant_",
+      unique(tref$median_year[2]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+cant_cc_tref_2 <- cant_cc_tref_2 %>%
+  rename(cant_tref_2 = cant_total) %>%
+  select(-year)
+
+```
+
+
 ```{r select_basin_mask, include=FALSE}
 
 basinmask <- basinmask %>% 
@@ -153,14 +191,13 @@ cant_average <- cant_average %>%
 cant_average <- inner_join(basinmask, cant_average)
 
 cant_average <- full_join(cant_average, climatology)
-rm(climatology)
 
 cant_average <-
   m_cant_model_average(cant_average %>% mutate(eras = "blank"))
 
 cant_average <- m_cut_gamma(cant_average, "gamma")
 
-cant_average <- cant_average %>% 
+cant_average_vc <- cant_average %>% 
   mutate(data_source = "mod_truth") %>% 
   select(lon, lat, depth, eras, basin, basin_AIP, data_source,
             cant_tref_1, cant, cant_pos, cant_sd, cant_pos_sd,
@@ -168,6 +205,49 @@ cant_average <- cant_average %>%
 
 ```
 
+```{r calc_model_cant_between_tref_cc}
+
+cant_average <- left_join(cant_cc_tref_1, cant_cc_tref_2) %>%
+  mutate(cant = cant_tref_2 - cant_tref_1)
+
+rm(cant_cc_tref_1, cant_cc_tref_2)
+
+cant_average <- cant_average %>%
+  mutate(cant_pos = if_else(cant <= 0, 0, cant))
+
+cant_average <- inner_join(basinmask, cant_average)
+
+cant_average <- full_join(cant_average, climatology)
+
+cant_average <-
+  m_cant_model_average(cant_average %>% mutate(eras = "blank"))
+
+cant_average <- m_cut_gamma(cant_average, "gamma")
+
+cant_average_cc <- cant_average %>% 
+  mutate(data_source = "mod_truth_cc") %>% 
+  select(lon, lat, depth, eras, basin, basin_AIP, data_source,
+            cant_tref_1, cant, cant_pos, cant_sd, cant_pos_sd,
+            gamma, gamma_sd, gamma_slab)
+
+rm(climatology, cant_average)
+
+```
+
+```{r join_climate_runs}
+
+cant_average <- bind_rows(
+  cant_average_cc,
+  cant_average_vc
+)
+
+rm(
+  cant_average_cc,
+  cant_average_vc
+)
+
+
+```
 
 
 ## Average model Cant
@@ -175,16 +255,29 @@ cant_average <- cant_average %>%
 
 ```{r cant_deep_climatology_map, fig.asp=0.6}
 
-p_map_climatology(df = cant_average,
-                  var = "cant_pos")
+cant_average %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "cant_pos",
+    subtitle_text = paste("Climate: ", .x$data_source)
+  ))
 
 ```
 
 
 ```{r cant_deep_climatology_sections, fig.asp=1}
 
-p_section_climatology_regular(df = cant_average,
-                              var = "cant_pos")
+
+cant_average %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = "cant_pos",
+    subtitle_text = paste("Climate: ", .x$data_source)
+  ))
 
 ```
 
@@ -246,16 +339,17 @@ alpha_3d <- cant_average %>%
   mutate(alpha = cant / cant_tref_1,
          alpha = if_else(cant <= 0 | cant_tref_1 <= 0,
                          NaN, alpha))
+
 alpha_3d %>%
   filter(alpha < 1) %>%
   ggplot(aes(alpha)) +
   geom_histogram() +
-  facet_grid(basin_AIP ~ .) +
+  facet_grid(basin_AIP ~ data_source) +
   scale_x_continuous(breaks = seq(0, 1, 0.1))
 
 median_alpha <- 
   alpha_3d %>% 
-  group_by(depth, basin_AIP) %>% 
+  group_by(depth, basin_AIP, data_source) %>% 
   summarise(alpha_median = median(alpha, na.rm = TRUE),
             alpha_mean = weighted.mean(alpha, cant_tref_1, na.rm = TRUE)) %>% 
   ungroup()
@@ -274,7 +368,7 @@ alpha_3d %>%
   scale_x_continuous(breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_c(trans = "log10") +
   coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP~.)
+  facet_grid(basin_AIP~data_source)
 
 
 print(paste("mean:",
@@ -310,7 +404,7 @@ alpha_inv <- bind_rows(
 )
 
 alpha_inv <- alpha_inv %>%
-  select(lon, lat, cant_inv, inv_depth, estimate) %>%
+  select(lon, lat, cant_inv, inv_depth, estimate, data_source) %>%
   pivot_wider(names_from = estimate,
               values_from = cant_inv)
 
@@ -322,7 +416,7 @@ map +
   geom_raster(data = alpha_inv #%>% filter(inv_depth == params_global$inventory_depth_standard)
               ,
               aes(lon, lat, fill = alpha)) +
-  facet_grid(inv_depth ~ .) +
+  facet_grid(inv_depth ~ data_source) +
   scale_fill_divergent(
     midpoint = median(alpha_inv$alpha)
   )
@@ -336,20 +430,39 @@ map +
 
 ```{r write_cant_files}
 
+
 cant_average <- cant_average %>%
   select(-c(cant_tref_1))
 
 cant_average %>%
+  filter(data_source == "model_truth") %>%
   write_csv(paste(path_version_data,
                   "cant_3d_mod_truth.csv", sep = ""))
 
+cant_average %>%
+  filter(data_source == "model_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "cant_3d_mod_truth_cc.csv", sep = ""))
+
 cant_average_zonal %>%
+  filter(data_source == "model_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "cant_zonal_mod_truth_cc.csv", sep = ""))
+
+cant_average_zonal %>%
+  filter(data_source == "model_truth") %>%
   write_csv(paste(path_version_data,
                   "cant_zonal_mod_truth.csv", sep = ""))
 
 cant_inv %>%
+  filter(data_source == "model_truth") %>%
   write_csv(paste(path_version_data,
                   "cant_inv_mod_truth.csv", sep = ""))
+
+cant_inv %>%
+  filter(data_source == "model_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "cant_inv_mod_truth_cc.csv", sep = ""))
 
 ```
 

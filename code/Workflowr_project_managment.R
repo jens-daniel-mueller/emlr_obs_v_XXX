@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "vertical bias profile")
+wflow_publish(all = TRUE, message = "cant constant climate model")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -57,7 +57,8 @@ files <- c(
   "analysis_column_inventory.Rmd",
   "analysis_zonal_sections.Rmd",
   "analysis_slab_inventory.Rmd",
-  "analysis_MLR_performance.Rmd"
+  "analysis_MLR_performance.Rmd",
+  "analysis_anomalous_changes.Rmd"
 )
 
 Version_IDs <- list.files(
