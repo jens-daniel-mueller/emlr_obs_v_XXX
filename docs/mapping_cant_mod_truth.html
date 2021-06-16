@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping cant</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">15 June, 2021</h4>
+<h4 class="date">16 June, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-15
+<strong>Last updated:</strong> 2021-06-16
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4461ca2235171801a46660379a5930c39d48935targetblankd4461caa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4461ca2235171801a46660379a5930c39d48935" target="_blank">d4461ca</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb9839eb34a95eb9cc084420348fd0d77cdbcba15targetblankb9839eba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b9839eb34a95eb9cc084420348fd0d77cdbcba15" target="_blank">b9839eb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4461ca2235171801a46660379a5930c39d48935targetblankd4461caa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb9839eb34a95eb9cc084420348fd0d77cdbcba15targetblankb9839eba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4461ca2235171801a46660379a5930c39d48935" target="_blank">d4461ca</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b9839eb34a95eb9cc084420348fd0d77cdbcba15" target="_blank">b9839eb</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -670,6 +670,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b9839eb34a95eb9cc084420348fd0d77cdbcba15/analysis/mapping_cant_mod_truth.Rmd" target="_blank">b9839eb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-16
+</td>
+<td>
+cant constant climate model
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9dca16b822e30af4708f8f0b56645ae63f1d9f73/docs/mapping_cant_mod_truth.html" target="_blank">9dca16b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1622,6 +1656,37 @@ cant_tref_2 &lt;-
 cant_tref_2 &lt;- cant_tref_2 %&gt;%
   rename(cant_tref_2 = cant_total) %&gt;%
   select(-year)</code></pre>
+<pre class="r"><code>cant_cc_tref_1 &lt;-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      &quot;cant_annual_field_CB&quot;,
+      &quot;/cant_&quot;,
+      unique(tref$median_year[1]),
+      &quot;.csv&quot;,
+      sep = &quot;&quot;
+    )
+  )
+
+cant_cc_tref_1 &lt;- cant_cc_tref_1 %&gt;%
+  rename(cant_tref_1 = cant_total) %&gt;%
+  select(-year)
+
+cant_cc_tref_2 &lt;-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      &quot;cant_annual_field_CB&quot;,
+      &quot;/cant_&quot;,
+      unique(tref$median_year[2]),
+      &quot;.csv&quot;,
+      sep = &quot;&quot;
+    )
+  )
+
+cant_cc_tref_2 &lt;- cant_cc_tref_2 %&gt;%
+  rename(cant_tref_2 = cant_total) %&gt;%
+  select(-year)</code></pre>
 <pre class="r"><code>climatology &lt;-
   read_csv(paste(path_model_preprocessing, &quot;climatology_runA_2007.csv&quot;, sep = &quot;&quot;))
 
@@ -1638,23 +1703,62 @@ cant_average &lt;- cant_average %&gt;%
 cant_average &lt;- inner_join(basinmask, cant_average)
 
 cant_average &lt;- full_join(cant_average, climatology)
-rm(climatology)
 
 cant_average &lt;-
   m_cant_model_average(cant_average %&gt;% mutate(eras = &quot;blank&quot;))
 
 cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)
 
-cant_average &lt;- cant_average %&gt;% 
+cant_average_vc &lt;- cant_average %&gt;% 
   mutate(data_source = &quot;mod_truth&quot;) %&gt;% 
   select(lon, lat, depth, eras, basin, basin_AIP, data_source,
             cant_tref_1, cant, cant_pos, cant_sd, cant_pos_sd,
             gamma, gamma_sd, gamma_slab)</code></pre>
+<pre class="r"><code>cant_average &lt;- left_join(cant_cc_tref_1, cant_cc_tref_2) %&gt;%
+  mutate(cant = cant_tref_2 - cant_tref_1)
+
+rm(cant_cc_tref_1, cant_cc_tref_2)
+
+cant_average &lt;- cant_average %&gt;%
+  mutate(cant_pos = if_else(cant &lt;= 0, 0, cant))
+
+cant_average &lt;- inner_join(basinmask, cant_average)
+
+cant_average &lt;- full_join(cant_average, climatology)
+
+cant_average &lt;-
+  m_cant_model_average(cant_average %&gt;% mutate(eras = &quot;blank&quot;))
+
+cant_average &lt;- m_cut_gamma(cant_average, &quot;gamma&quot;)
+
+cant_average_cc &lt;- cant_average %&gt;% 
+  mutate(data_source = &quot;mod_truth_cc&quot;) %&gt;% 
+  select(lon, lat, depth, eras, basin, basin_AIP, data_source,
+            cant_tref_1, cant, cant_pos, cant_sd, cant_pos_sd,
+            gamma, gamma_sd, gamma_slab)
+
+rm(climatology, cant_average)</code></pre>
+<pre class="r"><code>cant_average &lt;- bind_rows(
+  cant_average_cc,
+  cant_average_vc
+)
+
+rm(
+  cant_average_cc,
+  cant_average_vc
+)</code></pre>
 </div>
 <div id="average-model-cant" class="section level2" number="2.2">
 <h2 number="2.2"><span class="header-section-number">2.2</span> Average model Cant</h2>
-<pre class="r"><code>p_map_climatology(df = cant_average,
-                  var = &quot;cant_pos&quot;)</code></pre>
+<pre class="r"><code>cant_average %&gt;%
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map(~ p_map_climatology(
+    df = .x,
+    var = &quot;cant_pos&quot;,
+    subtitle_text = paste(&quot;Climate: &quot;, .x$data_source)
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_cant_mod_truth.Rmd/cant_deep_climatology_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_deep_climatology_map-1">
@@ -1880,8 +1984,18 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_section_climatology_regular(df = cant_average,
-                              var = &quot;cant_pos&quot;)</code></pre>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_cant_mod_truth.Rmd/cant_deep_climatology_map-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cant_average %&gt;%
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = &quot;cant_pos&quot;,
+    subtitle_text = paste(&quot;Climate: &quot;, .x$data_source)
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_cant_mod_truth.Rmd/cant_deep_climatology_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_deep_climatology_sections-1">
@@ -2085,6 +2199,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_cant_mod_truth.Rmd/cant_deep_climatology_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="zonal-mean-sections" class="section level2" number="2.3">
 <h2 number="2.3"><span class="header-section-number">2.3</span> Zonal mean sections</h2>
@@ -2391,11 +2508,12 @@ jens-daniel-mueller
   mutate(alpha = cant / cant_tref_1,
          alpha = if_else(cant &lt;= 0 | cant_tref_1 &lt;= 0,
                          NaN, alpha))
+
 alpha_3d %&gt;%
   filter(alpha &lt; 1) %&gt;%
   ggplot(aes(alpha)) +
   geom_histogram() +
-  facet_grid(basin_AIP ~ .) +
+  facet_grid(basin_AIP ~ data_source) +
   scale_x_continuous(breaks = seq(0, 1, 0.1))</code></pre>
 <p><img src="figure/mapping_cant_mod_truth.Rmd/alpha_3d-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -2437,7 +2555,7 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>median_alpha &lt;- 
   alpha_3d %&gt;% 
-  group_by(depth, basin_AIP) %&gt;% 
+  group_by(depth, basin_AIP, data_source) %&gt;% 
   summarise(alpha_median = median(alpha, na.rm = TRUE),
             alpha_mean = weighted.mean(alpha, cant_tref_1, na.rm = TRUE)) %&gt;% 
   ungroup()
@@ -2456,7 +2574,7 @@ alpha_3d %&gt;%
   scale_x_continuous(breaks = seq(0, 1, 0.1)) +
   scale_fill_viridis_c(trans = &quot;log10&quot;) +
   coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP~.)</code></pre>
+  facet_grid(basin_AIP~data_source)</code></pre>
 <p><img src="figure/mapping_cant_mod_truth.Rmd/alpha_3d-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-alpha_3d-2">
@@ -2510,7 +2628,7 @@ jens-daniel-mueller
             round(mean(
               alpha_3d$alpha, na.rm = TRUE
             ), 3)))</code></pre>
-<pre><code>[1] &quot;mean: 0.498&quot;</code></pre>
+<pre><code>[1] &quot;mean: 0.36&quot;</code></pre>
 <pre class="r"><code>print(paste(&quot;mean, weighted with Cant:&quot;,
             round(
               weighted.mean(
@@ -2520,12 +2638,12 @@ jens-daniel-mueller
               ),
               3
             )))</code></pre>
-<pre><code>[1] &quot;mean, weighted with Cant: 0.168&quot;</code></pre>
+<pre><code>[1] &quot;mean, weighted with Cant: 0.166&quot;</code></pre>
 <pre class="r"><code>print(paste(&quot;median:&quot;,
             round(median(
               alpha_3d$alpha, na.rm = TRUE
             ), 3)))</code></pre>
-<pre><code>[1] &quot;median: 0.173&quot;</code></pre>
+<pre><code>[1] &quot;median: 0.172&quot;</code></pre>
 </div>
 <div id="inventory-maps" class="section level2" number="3.2">
 <h2 number="3.2"><span class="header-section-number">3.2</span> Inventory maps</h2>
@@ -2535,7 +2653,7 @@ jens-daniel-mueller
 )
 
 alpha_inv &lt;- alpha_inv %&gt;%
-  select(lon, lat, cant_inv, inv_depth, estimate) %&gt;%
+  select(lon, lat, cant_inv, inv_depth, estimate, data_source) %&gt;%
   pivot_wider(names_from = estimate,
               values_from = cant_inv)
 
@@ -2547,7 +2665,7 @@ map +
   geom_raster(data = alpha_inv #%&gt;% filter(inv_depth == params_global$inventory_depth_standard)
               ,
               aes(lon, lat, fill = alpha)) +
-  facet_grid(inv_depth ~ .) +
+  facet_grid(inv_depth ~ data_source) +
   scale_fill_divergent(
     midpoint = median(alpha_inv$alpha)
   )</code></pre>
@@ -2574,6 +2692,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9dca16b822e30af4708f8f0b56645ae63f1d9f73/docs/figure/mapping_cant_mod_truth.Rmd/alpha_surface_distribution-1.png" target="_blank">9dca16b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-15
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/993d705e4912883cc444e19b9a4dfbc88f8e4fc2/docs/figure/mapping_cant_mod_truth.Rmd/alpha_surface_distribution-1.png" target="_blank">993d705</a>
@@ -2608,16 +2737,34 @@ jens-daniel-mueller
   select(-c(cant_tref_1))
 
 cant_average %&gt;%
+  filter(data_source == &quot;model_truth&quot;) %&gt;%
   write_csv(paste(path_version_data,
                   &quot;cant_3d_mod_truth.csv&quot;, sep = &quot;&quot;))
 
+cant_average %&gt;%
+  filter(data_source == &quot;model_truth_cc&quot;) %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_3d_mod_truth_cc.csv&quot;, sep = &quot;&quot;))
+
 cant_average_zonal %&gt;%
+  filter(data_source == &quot;model_truth_cc&quot;) %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_zonal_mod_truth_cc.csv&quot;, sep = &quot;&quot;))
+
+cant_average_zonal %&gt;%
+  filter(data_source == &quot;model_truth&quot;) %&gt;%
   write_csv(paste(path_version_data,
                   &quot;cant_zonal_mod_truth.csv&quot;, sep = &quot;&quot;))
 
 cant_inv %&gt;%
+  filter(data_source == &quot;model_truth&quot;) %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;cant_inv_mod_truth.csv&quot;, sep = &quot;&quot;))</code></pre>
+                  &quot;cant_inv_mod_truth.csv&quot;, sep = &quot;&quot;))
+
+cant_inv %&gt;%
+  filter(data_source == &quot;model_truth_cc&quot;) %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;cant_inv_mod_truth_cc.csv&quot;, sep = &quot;&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
