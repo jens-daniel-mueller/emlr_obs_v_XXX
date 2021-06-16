@@ -123,6 +123,10 @@ cant_3d_mod_truth <-
   read_csv(paste(path_version_data,
                  "cant_3d_mod_truth.csv", sep = ""))
 
+cant_3d_mod_truth_cc <-
+  read_csv(paste(path_version_data,
+                 "cant_3d_mod_truth_cc.csv", sep = ""))
+
 ```
 
 # Prepare delta Cant
@@ -154,6 +158,10 @@ cant_3d_mod_truth <- cant_3d_mod_truth %>%
   select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
   mutate(data_source = "mod_truth")
 
+cant_3d_mod_truth_cc <- cant_3d_mod_truth_cc %>% 
+  select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
+  mutate(data_source = "mod_truth_cc")
+
 ```
 
 ## eMLR(C*)
@@ -180,6 +188,10 @@ cant_mod_3d <- bind_rows(
     filter(data_source == "mod_truth") %>%
     select(-data_source) %>%
     mutate(estimate = "mod_truth"),
+  cant_3d_mod_truth_cc %>%
+    filter(data_source == "mod_truth_cc") %>%
+    select(-data_source) %>%
+    mutate(estimate = "mod_truth_cc"),
   cant_3d_ss %>%
     filter(data_source == "mod") %>%
     select(-data_source) %>%
@@ -218,7 +230,8 @@ cant_mod_3d_bias <- cant_mod_3d %>%
 cant_mod_3d_bias <- cant_mod_3d_bias %>% 
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss) %>% 
+         emlr_ss = emlr - ss,
+         nss = mod_truth - mod_truth_cc) %>% 
   select(-c(emlr:ss))
 
 axis_limit <- cant_mod_3d_bias %>% 
@@ -259,6 +272,16 @@ cant_mod_3d_bias %>%
               ylim = c(-axis_limit, axis_limit)) +
   facet_wrap(~ basin_AIP)
 
+cant_mod_3d_bias %>% 
+  ggplot(aes(nss, ss_mod_truth)) +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_bin2d(binwidth = 1) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_equal(xlim = c(-axis_limit, axis_limit),
+              ylim = c(-axis_limit, axis_limit)) +
+  facet_wrap(~ basin_AIP)
+
 ```
 
 ### Vertical patterns
@@ -266,7 +289,7 @@ cant_mod_3d_bias %>%
 ```{r vertical_bias_distribution_basin, fig.asp=0.5}
 
 cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(ss_mod_truth:nss,
                names_to = "estimate",
                values_to = "bias") %>% 
   group_by(depth, estimate, basin_AIP) %>% 
@@ -286,7 +309,7 @@ cant_mod_3d_bias_profile %>%
 ```{r vertical_bias_distribution}
 
 cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(ss_mod_truth:nss,
                names_to = "estimate",
                values_to = "bias") %>% 
   group_by(depth, estimate) %>% 
@@ -345,11 +368,12 @@ cant_mod_section_bias <- cant_mod_section %>%
 cant_mod_section_bias <- cant_mod_section_bias %>% 
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss) %>% 
+         emlr_ss = emlr - ss,
+         nss = mod_truth - mod_truth_cc) %>% 
   select(-c(emlr:ss))
 
 cant_mod_section_bias_long <- cant_mod_section_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(ss_mod_truth:nss,
                values_to = "delta_cant_pos_bias",
                names_to = "estimate")
   
@@ -369,7 +393,7 @@ cant_mod_section_bias_long %>%
   ))
 
 axis_limit <- cant_mod_section_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(ss_mod_truth:nss,
                names_to = "estimate",
                values_to = "bias") %>% 
   pull(bias) %>% 
@@ -456,11 +480,12 @@ cant_mod_inv_bias <- cant_mod_inv %>%
 cant_mod_inv_bias <- cant_mod_inv_bias %>% 
   mutate(ss_mod_truth = ss -  mod_truth,
          emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss) %>% 
+         emlr_ss = emlr - ss,
+         nss = mod_truth - mod_truth_cc) %>% 
   select(-c(emlr:ss))
 
 cant_mod_inv_bias_long <- cant_mod_inv_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(ss_mod_truth:nss,
                values_to = "cant_pos_inv_bias",
                names_to = "estimate")
   
