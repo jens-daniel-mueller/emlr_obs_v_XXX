@@ -441,88 +441,20 @@ rm(pCO2_t2)
 rev_fac_ratio <- 0.92
 print(c("Revelle factor ratio (fixed):", rev_fac_ratio))
 
-# changes in disequilibrium
-# OceanSODA <- right_join(OceanSODA,
-#                        GLODAP %>%
-#                          distinct(year, era))
-# 
-# OceanSODA_glob <- OceanSODA %>%
-#   select(year, lat, lon,
-#          pCO2, rev_fac, tco2_over_pCO2,
-#          grid_area, era) %>%
-#   pivot_longer(c(pCO2, rev_fac, tco2_over_pCO2),
-#                names_to = "parameter",
-#                values_to = "value") %>%
-#   mutate(value_area = value * grid_area) %>%
-#   drop_na() %>% 
-#   group_by(year, era, parameter) %>%
-#   summarise(
-#     area_total = sum(grid_area),
-#     value_area_total = sum(value_area),
-#     value_area_ave = value_area_total / area_total
-#   ) %>%
-#   ungroup() %>%
-#   select(-c(area_total,value_area_total))
-# 
-# 
-# OceanSODA_glob %>%
-#   ggplot(aes(year, value_area_ave, col=era)) +
-#   geom_path() +
-#   geom_point() +
-#   facet_grid(parameter~., scales = "free_y")
-# 
-# OceanSODA_glob %>%
-#   filter(parameter == "pCO2") %>% 
-#   ggplot(aes(year, value_area_ave, col="Ocean")) +
-#   geom_path() +
-#   geom_point() +
-#   geom_path(data = co2_atm,
-#             aes(year, pCO2, col = "atmosphere")) +
-#   geom_point(data = co2_atm,
-#             aes(year, pCO2, col = "atmosphere"))
-# 
-# OceanSODA_glob_era <- OceanSODA_glob %>%
-#   group_by(era, parameter) %>%
-#   summarise(mean_value = mean(value_area_ave)) %>%
-#   ungroup()
-# 
-# pCO2_ocean_tref <- OceanSODA_glob_era %>% 
-#   filter(parameter == "pCO2") %>% 
-#   pull(mean_value)
-# 
-# pCO2_atm_tref <- right_join(co2_atm,
-#                             GLODAP %>%
-#                               distinct(year, era))
-# 
-# pCO2_atm_tref <- pCO2_atm_tref %>% 
-#   group_by(era) %>% 
-#   summarise(mean_pCO2 = mean(pCO2)) %>% 
-#   ungroup() %>% 
-#   pull(mean_pCO2)
-#   
-# 
-# disequi_pCO2_tref <-
-#   c(0, pCO2_atm_tref - pCO2_ocean_tref)
-# 
-# disequi_pCO2_change <- 
-#   lead(disequi_pCO2_tref) - disequi_pCO2_tref
-# 
-# disequi_pCO2_change <- na.omit(disequi_pCO2_change)
-
 delta_pco2_annual <- right_join(delta_pco2_annual,
                                 GLODAP %>%
-                                  distinct(year, era)) %>% 
+                                  distinct(year, era)) %>%
   drop_na()
 
 delta_pco2_annual %>%
-  ggplot(aes(year, delta_pco2)) +
+  ggplot(aes(year, delta_pco2_glob)) +
   geom_path() +
   geom_point(aes(col = era)) +
   scale_color_brewer(palette = "Set1")
 
 disequi_pCO2_tref <- delta_pco2_annual %>% 
   group_by(era) %>% 
-  summarise(mean_delta_pCO2 = mean(delta_pco2)) %>% 
+  summarise(mean_delta_pCO2 = mean(delta_pco2_glob)) %>% 
   ungroup() %>% 
   pull(mean_delta_pCO2)
 

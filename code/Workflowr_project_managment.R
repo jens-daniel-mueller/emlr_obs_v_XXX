@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "reverted nss sign")
+wflow_publish(all = TRUE, message = "adapt variable naming to delta_pco2_glob")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -34,16 +34,6 @@ wflow_publish(here::here(
 ),
 message = "rerun with post 2000 data",
 republish = TRUE)
-
-
-wflow_publish(here::here(
-  "analysis",
-  c(
-    "mapping_cant_mod_truth.Rmd"
-#    "analysis_anomalous_changes.Rmd"
-  )
-),
-message = "write cant files")
 
 
 # Push latest version to GitHub
