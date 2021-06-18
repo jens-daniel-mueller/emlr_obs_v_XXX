@@ -187,15 +187,15 @@ cant_mod_3d <- bind_rows(
   cant_3d_mod_truth %>%
     filter(data_source == "mod_truth") %>%
     select(-data_source) %>%
-    mutate(estimate = "mod_truth"),
+    mutate(estimate = "nss_mod_truth"),
   cant_3d_mod_truth_cc %>%
     filter(data_source == "mod_truth_cc") %>%
     select(-data_source) %>%
-    mutate(estimate = "mod_truth_cc"),
+    mutate(estimate = "ss_mod_truth"),
   cant_3d_ss %>%
     filter(data_source == "mod") %>%
     select(-data_source) %>%
-    mutate(estimate = "ss")
+    mutate(estimate = "ss_tss")
 )
 
 ```
@@ -205,15 +205,17 @@ cant_mod_3d <- bind_rows(
 ```{r join_obs_data}
 
 cant_3d_obs <- bind_rows(
-  cant_3d_emlr %>% filter(data_source == "obs") %>% select(-data_source) %>% mutate(estimate = "emlr"),
-  cant_3d_ss %>% filter(data_source == "obs") %>% select(-data_source) %>% mutate(estimate = "ss")
+  cant_3d_emlr %>% 
+    filter(data_source == "obs") %>% 
+    select(-data_source) %>% 
+    mutate(estimate = "emlr"),
+  cant_3d_ss %>% 
+    filter(data_source == "obs") %>% 
+    select(-data_source) %>% 
+    mutate(estimate = "ss")
 )
 
-
 ```
-
-
-
 
 # Model
 
@@ -228,14 +230,14 @@ cant_mod_3d_bias <- cant_mod_3d %>%
 
 
 cant_mod_3d_bias <- cant_mod_3d_bias %>% 
-  mutate(ss_mod_truth = ss -  mod_truth,
-         emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss,
-         nss = mod_truth_cc - mod_truth) %>% 
-  select(-c(emlr:ss))
+  mutate(emlr_VS_ss_tss = emlr - ss_tss,
+         emlr_VS_nss_mod_truth = emlr - nss_mod_truth,
+         nss_mod_truth_VS_ss_mod_truth = nss_mod_truth - ss_mod_truth,
+         nss_mod_truth_VS_ss_tss = nss_mod_truth - ss_tss) %>% 
+  select(-c(emlr:ss_tss))
 
 axis_limit <- cant_mod_3d_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                names_to = "estimate",
                values_to = "bias") %>% 
   pull(bias) %>% 
@@ -243,43 +245,36 @@ axis_limit <- cant_mod_3d_bias %>%
   max()
 
 cant_mod_3d_bias %>%
-  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  ggplot(aes(emlr_VS_nss_mod_truth, emlr_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
 cant_mod_3d_bias %>% 
-  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  ggplot(aes(emlr_VS_ss_tss, nss_mod_truth_VS_ss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 cant_mod_3d_bias %>% 
-  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  ggplot(aes(nss_mod_truth_VS_ss_mod_truth, nss_mod_truth_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
-  facet_wrap(~ basin_AIP)
-
-cant_mod_3d_bias %>% 
-  ggplot(aes(nss, ss_mod_truth)) +
-  geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0) +
-  geom_bin2d(binwidth = 1) +
-  scale_fill_viridis_c(trans = "log10") +
-  coord_equal(xlim = c(-axis_limit, axis_limit),
-              ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 ```
@@ -289,7 +284,7 @@ cant_mod_3d_bias %>%
 ```{r vertical_bias_distribution_basin, fig.asp=0.5}
 
 cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
-  pivot_longer(ss_mod_truth:nss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                names_to = "estimate",
                values_to = "bias") %>% 
   group_by(depth, estimate, basin_AIP) %>% 
@@ -309,7 +304,7 @@ cant_mod_3d_bias_profile %>%
 ```{r vertical_bias_distribution}
 
 cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
-  pivot_longer(ss_mod_truth:nss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                names_to = "estimate",
                values_to = "bias") %>% 
   group_by(depth, estimate) %>% 
@@ -320,6 +315,7 @@ cant_mod_3d_bias_profile %>%
   ggplot(aes(bias, depth, col=estimate)) +
   geom_path() +
   scale_y_reverse()
+
 rm(cant_mod_3d_bias_profile)
 
 ```
@@ -340,18 +336,6 @@ cant_mod_section <- cant_mod_3d %>%
   select(-data) %>%
   unnest(section)
 
-cant_mod_section %>% 
-  group_by(basin_AIP, estimate) %>%
-  group_split() %>% 
-  # head(1) %>%
-  map( ~ p_section_zonal(
-    df = .x,
-    var = "delta_cant_pos_mean",
-    plot_slabs = "n",
-    subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
-  ))
-
-
 ```
 
 ### Bias
@@ -366,16 +350,16 @@ cant_mod_section_bias <- cant_mod_section %>%
 
 
 cant_mod_section_bias <- cant_mod_section_bias %>% 
-  mutate(ss_mod_truth = ss -  mod_truth,
-         emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss,
-         nss = mod_truth_cc - mod_truth) %>% 
-  select(-c(emlr:ss))
+  mutate(emlr_VS_ss_tss = emlr - ss_tss,
+         emlr_VS_nss_mod_truth = emlr - nss_mod_truth,
+         nss_mod_truth_VS_ss_mod_truth = nss_mod_truth - ss_mod_truth,
+         nss_mod_truth_VS_ss_tss = nss_mod_truth - ss_tss) %>% 
+  select(-c(emlr:ss_tss))
 
 cant_mod_section_bias_long <- cant_mod_section_bias %>% 
-  pivot_longer(ss_mod_truth:nss,
-               values_to = "delta_cant_pos_bias",
-               names_to = "estimate")
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
+               names_to = "estimate",
+               values_to = "delta_cant_pos_bias")
   
 
 
@@ -393,7 +377,7 @@ cant_mod_section_bias_long %>%
   ))
 
 axis_limit <- cant_mod_section_bias %>% 
-  pivot_longer(ss_mod_truth:nss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                names_to = "estimate",
                values_to = "bias") %>% 
   pull(bias) %>% 
@@ -401,33 +385,36 @@ axis_limit <- cant_mod_section_bias %>%
   max()
 
 cant_mod_section_bias %>%
-  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  ggplot(aes(emlr_VS_nss_mod_truth, emlr_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
 cant_mod_section_bias %>% 
-  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  ggplot(aes(emlr_VS_ss_tss, nss_mod_truth_VS_ss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 cant_mod_section_bias %>% 
-  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  ggplot(aes(nss_mod_truth_VS_ss_mod_truth, nss_mod_truth_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 ```
@@ -451,18 +438,6 @@ cant_mod_inv <- cant_mod_3d %>%
   unnest(inv) %>% 
   select(-c(cant_inv, eras))
 
-cant_mod_inv %>% 
-  filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  group_by(estimate) %>%
-  group_split() %>% 
-  # head(1) %>%
-  map( ~ p_map_cant_inv(
-    df = .x,
-    var = "cant_pos_inv",
-    subtitle_text = paste("Estimate:", .x$estimate)
-  ))
-
-
 ```
 
 ### Bias
@@ -478,14 +453,15 @@ cant_mod_inv_bias <- cant_mod_inv %>%
 
 
 cant_mod_inv_bias <- cant_mod_inv_bias %>% 
-  mutate(ss_mod_truth = ss -  mod_truth,
-         emlr_mod_truth = emlr - mod_truth,
-         emlr_ss = emlr - ss,
-         nss = mod_truth_cc - mod_truth) %>% 
-  select(-c(emlr:ss))
+  mutate(emlr_VS_ss_tss = emlr - ss_tss,
+         emlr_VS_nss_mod_truth = emlr - nss_mod_truth,
+         nss_mod_truth_VS_ss_mod_truth = nss_mod_truth - ss_mod_truth,
+         nss_mod_truth_VS_ss_tss = nss_mod_truth - ss_tss) %>% 
+  select(-c(emlr:ss_tss))
+
 
 cant_mod_inv_bias_long <- cant_mod_inv_bias %>% 
-  pivot_longer(ss_mod_truth:nss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                values_to = "cant_pos_inv_bias",
                names_to = "estimate")
   
@@ -503,7 +479,7 @@ cant_mod_inv_bias_long %>%
 
 
 axis_limit <- cant_mod_inv_bias %>% 
-  pivot_longer(ss_mod_truth:emlr_ss,
+  pivot_longer(emlr_VS_ss_tss:nss_mod_truth_VS_ss_tss,
                names_to = "estimate",
                values_to = "bias") %>% 
   pull(bias) %>% 
@@ -511,33 +487,36 @@ axis_limit <- cant_mod_inv_bias %>%
   max()
 
 cant_mod_inv_bias %>%
-  ggplot(aes(emlr_mod_truth, emlr_ss)) +
+  ggplot(aes(emlr_VS_nss_mod_truth, emlr_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
 cant_mod_inv_bias %>% 
-  ggplot(aes(emlr_mod_truth, ss_mod_truth)) +
+  ggplot(aes(emlr_VS_ss_tss, nss_mod_truth_VS_ss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 cant_mod_inv_bias %>% 
-  ggplot(aes(emlr_ss, ss_mod_truth)) +
+  ggplot(aes(nss_mod_truth_VS_ss_mod_truth, nss_mod_truth_VS_ss_tss)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_bin2d(binwidth = 1) +
   scale_fill_viridis_c(trans = "log10") +
   coord_equal(xlim = c(-axis_limit, axis_limit),
               ylim = c(-axis_limit, axis_limit)) +
+  labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
 ```
