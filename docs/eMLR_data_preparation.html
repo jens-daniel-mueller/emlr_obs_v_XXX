@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9a6e1b894e19fabd2a152d6cc76967933a048ae3targetblank9a6e1b8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9a6e1b894e19fabd2a152d6cc76967933a048ae3" target="_blank">9a6e1b8</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5targetblank9d4550ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5" target="_blank">9d4550e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9a6e1b894e19fabd2a152d6cc76967933a048ae3targetblank9a6e1b8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5targetblank9d4550ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9a6e1b894e19fabd2a152d6cc76967933a048ae3" target="_blank">9a6e1b8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5" target="_blank">9d4550e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,9 +632,7 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
+    Ignored:    analysis/figure/
 
 </code></pre>
 <p>
@@ -673,6 +671,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5/analysis/eMLR_data_preparation.Rmd" target="_blank">9d4550e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+<td>
+cleaned disequilibrium computation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/eMLR_data_preparation.html" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -4391,916 +4423,9 @@ rm(m07_cant_3d,
 <pre class="r"><code>cant_3d &lt;- bind_rows(
   mod_cant_3d %&gt;% mutate(data_source = &quot;mod&quot;),
   cant_3d %&gt;% mutate(data_source = &quot;obs&quot;)
-)</code></pre>
-<p>Control plots of zonal mean sections</p>
-<pre class="r"><code>cant_3d &lt;- inner_join(cant_3d, basinmask)
+)
 
-cant_3d_section &lt;- cant_3d %&gt;%
-  group_by(data_source) %&gt;%
-  nest() %&gt;%
-  mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
-  select(-data) %&gt;%
-  unnest(section)
-
-cant_3d_section %&gt;%
-  group_by(basin_AIP, data_source) %&gt;%
-  group_split() %&gt;%
-  # head(1) %&gt;% 
-  map( ~ p_section_zonal(
-    df = .x,
-    col = &quot;continuous&quot;,
-    var = &quot;cant_pos_S04_mean&quot;,
-    plot_slabs = &quot;n&quot;,
-    breaks = seq(0,80,10),
-    subtitle_text = paste(&quot;pi - 1994 estimate:&quot;, .x$basin_AIP, .x$data_source)
-  ))</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-1">
-Past versions of zonal_mean_sections_total_cant-1.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-1.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-1.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-1.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-1.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-2">
-Past versions of zonal_mean_sections_total_cant-2.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-2.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-2.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-2.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-2.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[3]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-3">
-Past versions of zonal_mean_sections_total_cant-3.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-3.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-3.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-3.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-3.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[4]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-4">
-Past versions of zonal_mean_sections_total_cant-4.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-4.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-4.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-4.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-4.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[5]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-5">
-Past versions of zonal_mean_sections_total_cant-5.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-5.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-5.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-5.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-5.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[6]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-6">
-Past versions of zonal_mean_sections_total_cant-6.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-6" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-6.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-6.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-6.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-6.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>cant_3d_section %&gt;%
-  group_by(basin_AIP, data_source) %&gt;%
-  group_split() %&gt;%
-  # head(1) %&gt;% 
-  map( ~ p_section_zonal(
-    df = .x,
-    col = &quot;continuous&quot;,
-    var = &quot;cant_pos_G19_mean&quot;,
-    plot_slabs = &quot;n&quot;,
-    breaks = params_global$breaks_cant_pos,
-    subtitle_text = paste(&quot;1994 - 2007 estimate:&quot;, .x$basin_AIP, .x$data_source)
-  ))</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-7.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-7">
-Past versions of zonal_mean_sections_total_cant-7.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-7" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-7.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-7.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-7.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-7.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-8.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-8">
-Past versions of zonal_mean_sections_total_cant-8.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-8" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-8.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-8.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-8.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-8.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[3]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-9.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-9">
-Past versions of zonal_mean_sections_total_cant-9.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-9" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-9.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-9.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-9.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-9.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[4]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-10.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-10">
-Past versions of zonal_mean_sections_total_cant-10.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-10" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-10.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-10.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-10.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-10.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[5]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-11.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-11">
-Past versions of zonal_mean_sections_total_cant-11.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-11" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-11.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-11.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-11.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-11.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[6]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-12.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections_total_cant-12">
-Past versions of zonal_mean_sections_total_cant-12.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections_total_cant-12" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-12.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-12.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-12.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/zonal_mean_sections_total_cant-12.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>rm(cant_3d_section)</code></pre>
+cant_3d &lt;- inner_join(cant_3d, basinmask)</code></pre>
 </div>
 <div id="cant-at-tref1" class="section level3" number="4.3.2">
 <h3 number="4.3.2"><span class="header-section-number">4.3.2</span> Cant at tref1</h3>
@@ -5326,39 +4451,22 @@ co2_atm_tref &lt;- right_join(co2_atm, tref %&gt;% rename(year = median_year)) %
   select(-year) %&gt;% 
   rename(pCO2_tref = pCO2)
 
+# calculate change in atm pCO2
 co2_atm_tref &lt;- co2_atm_tref %&gt;% 
   mutate(delta_pCO2_atm = pCO2_tref - 
            lag(pCO2_tref, default = params_local$preind_atm_pCO2))
 
-# # atm pCO2 at tref 1,2,3
-# pCO2_to &lt;- params_local$preind_atm_pCO2
-# pCO2_t1 &lt;- co2_atm_tref$pCO2_tref[1]
-# pCO2_t2 &lt;- co2_atm_tref$pCO2_tref[2]
-# 
-# # changes and their ratio of atm. pCO2 changes between trefs
-# delta_pCO2_atm &lt;- 
-#   c((pCO2_t1 - pCO2_to),(pCO2_t2 - pCO2_t1))
-# 
-# delta_pCO2_atm_ratio &lt;- 
-#   (pCO2_t2 - pCO2_t1)/(pCO2_t1 - pCO2_to)
-# 
-# print(c(&quot;Atm. pCO2 at tref 1 and 2:&quot;, co2_atm_tref$pCO2_tref))
-# print(c(&quot;Delta atm. pCO2 at tref 1 and 2:&quot;, delta_pCO2_atm))
-# print(c(&quot;Delta atm. pCO2 ratio:&quot;, delta_pCO2_atm_ratio))
-# 
-# rm(pCO2_to)
-# rm(pCO2_t1)
-# rm(pCO2_t2)
-
-# ratio of changes in revelle factor
+# define ratio of changes in revelle factor
 rev_fac_ratio &lt;- 0.92
 print(c(&quot;Revelle factor ratio (fixed):&quot;, rev_fac_ratio))</code></pre>
 <pre><code>[1] &quot;Revelle factor ratio (fixed):&quot; &quot;0.92&quot;                         </code></pre>
-<pre class="r"><code>delta_pco2_annual &lt;- right_join(delta_pco2_annual,
+<pre class="r"><code># derive change in atm-sea disequilibrium pCO2
+delta_pco2_annual &lt;- right_join(delta_pco2_annual,
                                 GLODAP %&gt;%
                                   distinct(year, era)) %&gt;%
   drop_na()
 
+# plot disequilibrium time series
 delta_pco2_annual %&gt;%
   ggplot(aes(year, delta_pco2_glob)) +
   geom_path(aes(linetype=data_source)) +
@@ -5387,6 +4495,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">77cfc43</a>
@@ -5468,7 +4587,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>disequi_pCO2_pi &lt;- bind_cols(
+<pre class="r"><code># create data frame with preindustrial disequilibrium for model and observations
+disequi_pCO2_pi &lt;- bind_cols(
   era = rep(paste0(&quot;1750-&quot;,tref$median_year[1]),2),
   data_source = c(&quot;mod&quot;, &quot;obs&quot;),
   mean_delta_pCO2 = c(0,3)
@@ -5492,6 +4612,7 @@ disequi_pCO2_tref &lt;- disequi_pCO2_tref %&gt;%
   ungroup() %&gt;% 
   drop_na()
 
+# calculate xeta ratio
 disequi_pCO2_change &lt;- full_join(
   disequi_pCO2_tref,
   co2_atm_tref)
@@ -5504,14 +4625,24 @@ disequi_pCO2_change &lt;- disequi_pCO2_change %&gt;%
          delta_pCO2_atm_ratio = delta_pCO2_atm / lag(delta_pCO2_atm)) %&gt;% 
   ungroup()
 
-disequi_pCO2_change &lt;- disequi_pCO2_change %&gt;% 
-  mutate(alpha = delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio)
 
-alpha_df &lt;- disequi_pCO2_change %&gt;% 
+# determine alpha scaling factor
+disequi_pCO2_change &lt;- disequi_pCO2_change %&gt;% 
+  mutate(alpha = delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio) %&gt;% 
+  select(-c(pCO2_tref, delta_pCO2_atm_ratio))
+
+disequi_pCO2_change</code></pre>
+<pre><code># A tibble: 4 x 8
+  era   data_source mean_delta_pCO2 disequi_pCO2_ch… delta_pCO2_atm  xeta
+  &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+1 2000… mod                   -8.58            -8.58          101.   1.09
+2 2000… obs                   -7.50           -10.5           101.   1.10
+3 2010… mod                   -9.86            -1.28           16.2  1.08
+4 2010… obs                  -10.2             -2.71           16.2  1.17
+# … with 2 more variables: xeta_ratio &lt;dbl&gt;, alpha &lt;dbl&gt;</code></pre>
+<pre class="r"><code>alpha_df &lt;- disequi_pCO2_change %&gt;% 
   select(data_source, alpha) %&gt;% 
   drop_na()
-
-
 
 cant_3d_t2 &lt;- full_join(cant_3d %&gt;% filter(median_year == max(tref$median_year)),
                         alpha_df) %&gt;% 
@@ -5554,6 +4685,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">77cfc43</a>
@@ -5664,1048 +4806,7 @@ jens-daniel-mueller
   select(-data) %&gt;%
   unnest(section)
 
-cant_3d_section %&gt;%
-  group_by(basin_AIP, data_source, era) %&gt;%
-  group_split() %&gt;%
-  # head(1) %&gt;% 
-  map( ~ p_section_zonal(
-    df = .x,
-    col = &quot;continuous&quot;,
-    var = &quot;cant_pos_mean&quot;,
-    plot_slabs = &quot;n&quot;,
-    breaks = seq(0,100,10),
-    subtitle_text = paste(.x$era, .x$basin_AIP, .x$data_source)
-  ))</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-3">
-Past versions of calculate_cant_tref2-3.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/69c79d019afe3637587da96935eb6d7ee440d57d/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-3.png" target="_blank">69c79d0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-4">
-Past versions of calculate_cant_tref2-4.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[3]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-5">
-Past versions of calculate_cant_tref2-5.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-5.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-5.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-5.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[4]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-6">
-Past versions of calculate_cant_tref2-6.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-6" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[5]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-7.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-7">
-Past versions of calculate_cant_tref2-7.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-7" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-7.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-7.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-7.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[6]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-8">
-Past versions of calculate_cant_tref2-8.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-8" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[7]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-9.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-9">
-Past versions of calculate_cant_tref2-9.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-9" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-9.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-9.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-9.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[8]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-10">
-Past versions of calculate_cant_tref2-10.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-10" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[9]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-11.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-11">
-Past versions of calculate_cant_tref2-11.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-11" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-11.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-11.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-11.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[10]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-12">
-Past versions of calculate_cant_tref2-12.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-12" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[11]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-13.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-13">
-Past versions of calculate_cant_tref2-13.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-13" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-13.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-13.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-13.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[12]]</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-14">
-Past versions of calculate_cant_tref2-14.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-14" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>cant_3d &lt;- cant_3d %&gt;% 
+cant_3d &lt;- cant_3d %&gt;% 
   select(-basin_AIP)</code></pre>
 </div>
 <div id="combine-glodap-cant" class="section level3" number="4.3.4">
@@ -7343,6 +5444,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">c6b3da6</a>
@@ -8092,6 +6204,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">77cfc43</a>
@@ -8851,6 +6974,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">77cfc43</a>
@@ -11294,6 +9428,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">c6b3da6</a>
 </td>
 <td>
@@ -11985,6 +10130,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">3b6387f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">77cfc43</a>
@@ -13702,11 +11858,11 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] nlme_3.1-149             fs_1.5.0                 gsw_1.0-5               
  [4] RColorBrewer_1.1-2       httr_1.4.2               rprojroot_2.0.2         
- [7] tools_4.0.3              backports_1.1.10         R6_2.5.0                
-[10] DBI_1.1.0                mgcv_1.8-33              colorspace_1.4-1        
-[13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
-[16] git2r_0.27.1             cli_2.1.0                rvest_0.3.6             
-[19] xml2_1.3.2               isoband_0.2.2            labeling_0.4.2          
+ [7] tools_4.0.3              backports_1.1.10         utf8_1.1.4              
+[10] R6_2.5.0                 DBI_1.1.0                mgcv_1.8-33             
+[13] colorspace_1.4-1         withr_2.3.0              tidyselect_1.1.0        
+[16] compiler_4.0.3           git2r_0.27.1             cli_2.1.0               
+[19] rvest_0.3.6              xml2_1.3.2               labeling_0.4.2          
 [22] scales_1.1.1             checkmate_2.0.0          digest_0.6.27           
 [25] rmarkdown_2.5            oce_1.2-0                pkgconfig_2.0.3         
 [28] htmltools_0.5.0          dbplyr_1.4.4             rlang_0.4.10            
