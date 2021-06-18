@@ -204,7 +204,7 @@ cant_mod_3d <- bind_rows(
 
 ```{r join_obs_data}
 
-cant_3d_obs <- bind_rows(
+cant_obs_3d <- bind_rows(
   cant_3d_emlr %>% 
     filter(data_source == "obs") %>% 
     select(-data_source) %>% 
@@ -212,7 +212,7 @@ cant_3d_obs <- bind_rows(
   cant_3d_ss %>% 
     filter(data_source == "obs") %>% 
     select(-data_source) %>% 
-    mutate(estimate = "ss")
+    mutate(estimate = "ss_tss")
 )
 
 ```
@@ -524,7 +524,7 @@ cant_mod_inv_bias %>%
 
 ## Budgets
 
-```{r calculate_global_inventory}
+```{r calculate_global_inventory_mod}
 
 cant_mod_inv_budget <- cant_mod_inv %>% 
   mutate(surface_area = earth_surf(lat, lon),
@@ -556,7 +556,7 @@ cant_mod_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depth_standard` m
 
-```{r cant_budget_standard_depth}
+```{r cant_budget_standard_depth_mod}
 
 cant_mod_inv_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
@@ -581,7 +581,7 @@ cant_mod_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depths` m
 
-```{r cant_budget_other_depth, fig.asp=1.5}
+```{r cant_budget_other_depth_mod, fig.asp=1.5}
 
 cant_mod_inv_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 
@@ -609,26 +609,195 @@ rm(cant_mod_inv_budget)
 
 ## Zonal mean sections
 
+### delta Cant
+
 ```{r zonal_section_delta_cant_pos_obs}
 
 # calculate zonal mean section
-cant_obs_section <- cant_3d_obs %>%
+cant_obs_section <- cant_obs_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
 
+```
 
-cant_obs_section %>% 
+### Bias
+
+```{r zonal_section_delta_cant_pos_bias_obs}
+
+cant_obs_section_bias <- cant_obs_section %>%
+  select(-delta_cant_pos_sd) %>% 
+  pivot_wider(names_from = estimate,
+              values_from = delta_cant_pos_mean) %>% 
+  drop_na()
+
+
+cant_obs_section_bias <- cant_obs_section_bias %>% 
+  mutate(emlr_VS_ss_tss = emlr - ss_tss) %>% 
+  select(-c(emlr:ss_tss))
+
+cant_obs_section_bias_long <- cant_obs_section_bias %>% 
+  pivot_longer(emlr_VS_ss_tss,
+               names_to = "estimate",
+               values_to = "delta_cant_pos_bias")
+  
+
+
+cant_obs_section_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
   # head(1) %>%
   map( ~ p_section_zonal(
     df = .x,
-    var = "delta_cant_pos_mean",
+    var = "delta_cant_pos_bias",
+    col = "divergent",
+    breaks = params_global$breaks_cant_offset,
     plot_slabs = "n",
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
+```
+
+
+## Inventories
+
+### delta Cant
+
+```{r inventory_delta_cant_pos_obs, fig.asp = 0.5}
+
+# calculate zonal mean section
+cant_obs_inv <- cant_obs_3d %>%
+  rename(cant_pos = delta_cant_pos) %>% 
+  mutate(cant = 0,
+         eras = "blank") %>% 
+  group_by(estimate) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_cant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv) %>% 
+  select(-c(cant_inv, eras))
 
 ```
+
+### Bias
+
+```{r inventory_delta_cant_pos_bias_obs}
+
+cant_obs_inv_bias <- cant_obs_inv %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  select(-inv_depth) %>% 
+  pivot_wider(names_from = estimate,
+              values_from = cant_pos_inv) %>% 
+  drop_na()
+
+
+cant_obs_inv_bias <- cant_obs_inv_bias %>% 
+  mutate(emlr_VS_ss_tss = emlr - ss_tss) %>% 
+  select(-c(emlr:ss_tss))
+
+
+cant_obs_inv_bias_long <- cant_obs_inv_bias %>% 
+  pivot_longer(emlr_VS_ss_tss,
+               values_to = "cant_pos_inv_bias",
+               names_to = "estimate")
+  
+
+
+cant_obs_inv_bias_long %>% 
+  group_by(estimate) %>%
+  group_split() %>% 
+  # head(1) %>%
+  map( ~ p_map_cant_inv_offset(
+    df = .x,
+    var = "cant_pos_inv_bias",
+    subtitle_text = paste("Estimate:", .x$estimate)
+  ))
+
+
+
+```
+
+
+## Budgets
+
+```{r calculate_global_inventory_obs}
+
+cant_obs_inv_budget <- cant_obs_inv %>% 
+  mutate(surface_area = earth_surf(lat, lon),
+         # cant_inv_grid = cant_inv*surface_area,
+         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
+  group_by(basin_AIP, estimate, inv_depth) %>% 
+  summarise(#cant_total = sum(cant_inv_grid)*12*1e-15,
+            #cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
+            cant_pos_total = round(cant_pos_total,1)) %>% 
+  ungroup()
+
+duration <- sort(tref$median_year)[2] - sort(tref$median_year)[1]
+
+cant_obs_inv_budget %>%  
+  group_by(estimate, inv_depth) %>% 
+  summarise(#cant_total = sum(cant_total),
+            #cant_total = round(cant_total,1),
+            cant_pos_total = sum(cant_pos_total),
+            cant_pos_total = round(cant_pos_total,1),
+            #cant_total_rate = cant_total / duration,
+            cant_pos_total_rate = cant_pos_total / duration) %>% 
+  ungroup()
+
+
+```
+
+### Standard depth
+
+Results integrated over the upper `r params_global$inventory_depth_standard` m
+
+```{r cant_budget_standard_depth_obs}
+
+cant_obs_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col()
+
+cant_obs_inv_budget %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("estimate", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+
+```
+
+### Other depths
+
+Results integrated over the upper `r params_global$inventory_depths` m
+
+```{r cant_budget_other_depth_obs, fig.asp=1.5}
+
+cant_obs_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(inv_depth ~ ., scales = "free_y")
+
+cant_obs_inv_budget %>%
+  filter(inv_depth != params_global$inventory_depth_standard) %>% 
+  gt(rowname_col = "basin_AIP",
+     groupname_col = c("estimate", "inv_depth"),
+     row_group.sep = " | Depth: ") %>% 
+  summary_rows(
+    groups = TRUE,
+    fns = list(total = "sum")
+  )
+
+rm(cant_obs_inv_budget)
+
+```
+
