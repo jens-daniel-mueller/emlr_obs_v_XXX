@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">17 June, 2021</h4>
+<h4 class="date">18 June, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-17
+<strong>Last updated:</strong> 2021-06-18
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3f1ef54acb924452420ae264694c54364be3850atargetblank3f1ef54a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3f1ef54acb924452420ae264694c54364be3850a" target="_blank">3f1ef54</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9a6e1b894e19fabd2a152d6cc76967933a048ae3targetblank9a6e1b8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9a6e1b894e19fabd2a152d6cc76967933a048ae3" target="_blank">9a6e1b8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3f1ef54acb924452420ae264694c54364be3850atargetblank3f1ef54a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9a6e1b894e19fabd2a152d6cc76967933a048ae3targetblank9a6e1b8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3f1ef54acb924452420ae264694c54364be3850a" target="_blank">3f1ef54</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9a6e1b894e19fabd2a152d6cc76967933a048ae3" target="_blank">9a6e1b8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,9 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -670,6 +673,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9a6e1b894e19fabd2a152d6cc76967933a048ae3/analysis/eMLR_data_preparation.Rmd" target="_blank">9a6e1b8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+<td>
+rerun with observation specific alpha
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/eMLR_data_preparation.html" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3856,13 +3893,7 @@ co2_atm &lt;-
   read_csv(paste(path_preprocessing,
                  &quot;co2_atm.csv&quot;,
                  sep = &quot;&quot;))
-
-# OceanSODA &lt;-
-#   read_csv(paste(path_preprocessing,
-#                  &quot;OceanSODA.csv&quot;,
-#                  sep = &quot;&quot;))
-
-delta_pco2_annual &lt;-
+delta_pco2_annual_mod &lt;-
     read_csv(
       file = paste(
         path_preprocessing_model,
@@ -3872,6 +3903,22 @@ delta_pco2_annual &lt;-
         sep = &quot;&quot;
       )
     )
+
+delta_pco2_annual_obs &lt;-
+    read_csv(
+      file = paste(
+        path_preprocessing,
+        &quot;OceanSODA_disequilibrium_annual.csv&quot;,
+        sep = &quot;&quot;
+      )
+    )
+
+delta_pco2_annual &lt;- bind_rows(
+  delta_pco2_annual_mod %&gt;% mutate(data_source = &quot;mod&quot;),
+  delta_pco2_annual_obs %&gt;% mutate(data_source = &quot;obs&quot;)
+)
+
+rm(delta_pco2_annual_mod, delta_pco2_annual_obs)
 
 tref &lt;-
   read_csv(paste(path_version_data,
@@ -5279,30 +5326,29 @@ co2_atm_tref &lt;- right_join(co2_atm, tref %&gt;% rename(year = median_year)) %
   select(-year) %&gt;% 
   rename(pCO2_tref = pCO2)
 
-# atm pCO2 at tref 1,2,3
-pCO2_to &lt;- params_local$preind_atm_pCO2
-pCO2_t1 &lt;- co2_atm_tref$pCO2_tref[1]
-pCO2_t2 &lt;- co2_atm_tref$pCO2_tref[2]
+co2_atm_tref &lt;- co2_atm_tref %&gt;% 
+  mutate(delta_pCO2_atm = pCO2_tref - 
+           lag(pCO2_tref, default = params_local$preind_atm_pCO2))
 
-# changes and their ratio of atm. pCO2 changes between trefs
-delta_pCO2_atm &lt;- 
-  c((pCO2_t1 - pCO2_to),(pCO2_t2 - pCO2_t1))
-
-delta_pCO2_atm_ratio &lt;- 
-  (pCO2_t2 - pCO2_t1)/(pCO2_t1 - pCO2_to)
-
-print(c(&quot;Atm. pCO2 at tref 1 and 2:&quot;, co2_atm_tref$pCO2_tref))</code></pre>
-<pre><code>[1] &quot;Atm. pCO2 at tref 1 and 2:&quot; &quot;380.94&quot;                    
-[3] &quot;397.12&quot;                    </code></pre>
-<pre class="r"><code>print(c(&quot;Delta atm. pCO2 at tref 1 and 2:&quot;, delta_pCO2_atm))</code></pre>
-<pre><code>[1] &quot;Delta atm. pCO2 at tref 1 and 2:&quot; &quot;100.94&quot;                          
-[3] &quot;16.18&quot;                           </code></pre>
-<pre class="r"><code>print(c(&quot;Delta atm. pCO2 ratio:&quot;, delta_pCO2_atm_ratio))</code></pre>
-<pre><code>[1] &quot;Delta atm. pCO2 ratio:&quot; &quot;0.160293243510997&quot;     </code></pre>
-<pre class="r"><code>rm(pCO2_to)
-rm(pCO2_t1)
-rm(pCO2_t2)
-
+# # atm pCO2 at tref 1,2,3
+# pCO2_to &lt;- params_local$preind_atm_pCO2
+# pCO2_t1 &lt;- co2_atm_tref$pCO2_tref[1]
+# pCO2_t2 &lt;- co2_atm_tref$pCO2_tref[2]
+# 
+# # changes and their ratio of atm. pCO2 changes between trefs
+# delta_pCO2_atm &lt;- 
+#   c((pCO2_t1 - pCO2_to),(pCO2_t2 - pCO2_t1))
+# 
+# delta_pCO2_atm_ratio &lt;- 
+#   (pCO2_t2 - pCO2_t1)/(pCO2_t1 - pCO2_to)
+# 
+# print(c(&quot;Atm. pCO2 at tref 1 and 2:&quot;, co2_atm_tref$pCO2_tref))
+# print(c(&quot;Delta atm. pCO2 at tref 1 and 2:&quot;, delta_pCO2_atm))
+# print(c(&quot;Delta atm. pCO2 ratio:&quot;, delta_pCO2_atm_ratio))
+# 
+# rm(pCO2_to)
+# rm(pCO2_t1)
+# rm(pCO2_t2)
 
 # ratio of changes in revelle factor
 rev_fac_ratio &lt;- 0.92
@@ -5315,8 +5361,8 @@ print(c(&quot;Revelle factor ratio (fixed):&quot;, rev_fac_ratio))</code></pre>
 
 delta_pco2_annual %&gt;%
   ggplot(aes(year, delta_pco2_glob)) +
-  geom_path() +
-  geom_point(aes(col = era)) +
+  geom_path(aes(linetype=data_source)) +
+  geom_point(aes(col = era, shape=data_source)) +
   scale_color_brewer(palette = &quot;Set1&quot;)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -5341,6 +5387,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">439ee80</a>
@@ -5411,36 +5468,55 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>disequi_pCO2_tref &lt;- delta_pco2_annual %&gt;% 
-  group_by(era) %&gt;% 
+<pre class="r"><code>disequi_pCO2_pi &lt;- bind_cols(
+  era = rep(paste0(&quot;1750-&quot;,tref$median_year[1]),2),
+  data_source = c(&quot;mod&quot;, &quot;obs&quot;),
+  mean_delta_pCO2 = c(0,3)
+)
+
+disequi_pCO2_tref &lt;- delta_pco2_annual %&gt;% 
+  group_by(era, data_source) %&gt;% 
   summarise(mean_delta_pCO2 = mean(delta_pco2_glob)) %&gt;% 
+  ungroup()
+
+disequi_pCO2_tref &lt;- bind_rows(
+  disequi_pCO2_pi,
+  disequi_pCO2_tref
+)
+rm(disequi_pCO2_pi)
+
+disequi_pCO2_tref &lt;- disequi_pCO2_tref %&gt;% 
+  arrange(era) %&gt;% 
+  group_by(data_source) %&gt;% 
+  mutate(disequi_pCO2_change = mean_delta_pCO2 - lag(mean_delta_pCO2)) %&gt;% 
   ungroup() %&gt;% 
-  pull(mean_delta_pCO2)
+  drop_na()
 
-print(c(&quot;Disequilibria per era:&quot;, disequi_pCO2_tref))</code></pre>
-<pre><code>[1] &quot;Disequilibria per era:&quot; &quot;-8.58351195399559&quot;      &quot;-9.85948822472853&quot;     </code></pre>
-<pre class="r"><code>disequi_pCO2_tref &lt;-
-  c(0, -disequi_pCO2_tref)
+disequi_pCO2_change &lt;- full_join(
+  disequi_pCO2_tref,
+  co2_atm_tref)
 
-disequi_pCO2_change &lt;-
-  lead(disequi_pCO2_tref) - disequi_pCO2_tref
+disequi_pCO2_change &lt;- disequi_pCO2_change %&gt;% 
+  mutate(xeta = (delta_pCO2_atm - disequi_pCO2_change) / delta_pCO2_atm) %&gt;% 
+  arrange(era) %&gt;% 
+  group_by(data_source) %&gt;% 
+  mutate(xeta_ratio = xeta / lag(xeta),
+         delta_pCO2_atm_ratio = delta_pCO2_atm / lag(delta_pCO2_atm)) %&gt;% 
+  ungroup()
 
-disequi_pCO2_change &lt;- na.omit(disequi_pCO2_change)
+disequi_pCO2_change &lt;- disequi_pCO2_change %&gt;% 
+  mutate(alpha = delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio)
 
-xeta &lt;- (delta_pCO2_atm - disequi_pCO2_change) / delta_pCO2_atm
-xeta_ratio &lt;- xeta[2] / xeta[1]
+alpha_df &lt;- disequi_pCO2_change %&gt;% 
+  select(data_source, alpha) %&gt;% 
+  drop_na()
 
-print(c(&quot;xeta per era:&quot;, xeta))</code></pre>
-<pre><code>[1] &quot;xeta per era:&quot;     &quot;0.914964216821918&quot; &quot;0.921138673007853&quot;</code></pre>
-<pre class="r"><code>print(c(&quot;xeta ratio:&quot;, xeta_ratio))</code></pre>
-<pre><code>[1] &quot;xeta ratio:&quot;      &quot;1.00674830345539&quot;</code></pre>
-<pre class="r"><code># calculate alpha  
-alpha &lt;- delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio
-print(c(&quot;alpha:&quot;, alpha))</code></pre>
-<pre><code>[1] &quot;alpha:&quot;            &quot;0.148464954883253&quot;</code></pre>
-<pre class="r"><code>cant_3d_t2 &lt;- cant_3d %&gt;%
-  filter(median_year == max(tref$median_year)) %&gt;%
-  mutate(cant_pos = cant_pos * (1 + alpha))
+
+
+cant_3d_t2 &lt;- full_join(cant_3d %&gt;% filter(median_year == max(tref$median_year)),
+                        alpha_df) %&gt;% 
+  mutate(cant_pos = cant_pos * (1 + alpha)) %&gt;% 
+  select(-alpha)
 
 cant_3d &lt;- bind_rows(cant_3d_t1, cant_3d_t2)
 rm(cant_3d_t1, cant_3d_t2)
@@ -5478,6 +5554,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">c6b3da6</a>
@@ -5699,6 +5786,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-4.png" target="_blank">c6b3da6</a>
 </td>
 <td>
@@ -5854,6 +5952,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-6.png" target="_blank">c6b3da6</a>
@@ -6013,6 +6122,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-8.png" target="_blank">c6b3da6</a>
 </td>
 <td>
@@ -6168,6 +6288,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-10.png" target="_blank">c6b3da6</a>
@@ -6327,6 +6458,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-12.png" target="_blank">c6b3da6</a>
 </td>
 <td>
@@ -6482,6 +6624,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-14.png" target="_blank">c6b3da6</a>
@@ -7941,6 +8094,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">c6b3da6</a>
 </td>
 <td>
@@ -8687,6 +8851,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">c6b3da6</a>
@@ -11810,6 +11985,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">77cfc43</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">c6b3da6</a>
