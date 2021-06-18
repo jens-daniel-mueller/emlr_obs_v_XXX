@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "adapt variable naming to delta_pco2_glob")
+wflow_publish(all = TRUE, message = "cleaned disequilibrium computation")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "rerun with post 2000 data",
+message = "rerun with observation specific alpha",
 republish = TRUE)
 
 
