@@ -600,8 +600,6 @@ cant_mod_inv_budget %>%
     fns = list(total = "sum")
   )
 
-rm(cant_mod_inv_budget)
-
 ```
 
 
@@ -797,7 +795,41 @@ cant_obs_inv_budget %>%
     fns = list(total = "sum")
   )
 
-rm(cant_obs_inv_budget)
+
+```
+
+# Write files
+
+```{r write_csv_GLODAP_used_for_fitting}
+
+cant_mod_3d_bias %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_mod_3d_bias.csv"))
+
+cant_mod_section_bias %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_mod_section_bias.csv"))
+
+cant_mod_inv_bias %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_mod_inv_bias.csv"))
+
+cant_mod_inv_budget %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_mod_inv_budget.csv"))
+
+
+cant_obs_section_bias %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_obs_section_bias.csv"))
+
+cant_obs_inv_bias %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_obs_inv_bias.csv"))
+
+cant_obs_inv_budget %>%
+  write_csv(paste0(path_version_data,
+                   "anom_cant_obs_inv_budget.csv"))
 
 ```
 
