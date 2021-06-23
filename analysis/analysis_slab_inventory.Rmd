@@ -154,13 +154,13 @@ cant_gamma_maps %>%
 
 ```{r cant_pos_gamma_slab_maps_bias, fig.asp=0.5}
 
-cant_gamma_maps_bias <- cant_gamma_maps %>% 
+cant_pos_slab_inv_bias <- cant_gamma_maps %>% 
   select(lat, lon, gamma_slab, cant_pos, data_source) %>% 
   pivot_wider(names_from = data_source,
               values_from = cant_pos) %>% 
   mutate(cant_pos_bias = mod - mod_truth)
 
-cant_gamma_maps_bias %>%
+cant_pos_slab_inv_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
   map(~ p_map_cant_slab(
@@ -223,13 +223,13 @@ cant_gamma_maps %>%
 
 ```{r cant_gamma_slab_maps_bias, fig.asp=0.5}
 
-cant_gamma_maps_bias <- cant_gamma_maps %>% 
+cant_slab_inv_bias <- cant_gamma_maps %>% 
   select(lat, lon, gamma_slab, cant, data_source) %>% 
   pivot_wider(names_from = data_source,
               values_from = cant) %>% 
   mutate(cant_bias = mod - mod_truth)
 
-cant_gamma_maps_bias %>%
+cant_slab_inv_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
   map(~ p_map_cant_slab(
@@ -247,52 +247,84 @@ cant_gamma_maps_bias %>%
 
 ```{r calc_slab_inventory}
 
-cant_slab_inv <- m_cant_slab_inv_data_source(cant_3d)
+cant_slab_budget <- m_cant_slab_inv_data_source(cant_3d)
 
-cant_slab_inv %>% 
+cant_slab_budget %>% 
   ggplot(aes(data_source, cant_pos_total, fill = gamma_slab)) +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)
 
-cant_slab_inv %>% 
+cant_slab_budget %>% 
   ggplot(aes(data_source, cant_total, fill = gamma_slab)) +
+  geom_hline(yintercept = 0, col = "red") +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)
 
-cant_slab_bias <- cant_slab_inv %>%
+
+```
+
+```{r cant_pos_slab_inv_bias, fig.asp=1}
+
+cant_slab_budget_bias <- cant_slab_budget %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
   select(basin_AIP, data_source, gamma_slab, cant_pos_total) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_pos_total) %>%
   mutate(cant_pos_bias = mod - mod_truth)
 
-cant_slab_bias %>% 
-  ggplot(aes(gamma_slab, cant_pos_bias, fill = basin_AIP)) +
+cant_slab_budget_bias %>% 
+  ggplot(aes(gamma_slab, cant_pos_bias)) +
   geom_col() +
-  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(basin_AIP ~ ., scales = "free_y") +
   coord_flip()
 
-cant_slab_bias <- cant_slab_inv %>%
+```
+
+```{r cant_slab_budget_bias, fig.asp=1}
+
+cant_slab_budget_bias <- cant_slab_budget %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
   select(basin_AIP, data_source, gamma_slab, cant_total) %>%
   pivot_wider(names_from = data_source,
               values_from = cant_total) %>%
   mutate(cant_bias = mod - mod_truth)
 
-cant_slab_bias %>% 
-  ggplot(aes(gamma_slab, cant_bias, fill = basin_AIP)) +
+cant_slab_budget_bias %>% 
+  ggplot(aes(gamma_slab, cant_bias)) +
   geom_col() +
-  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(basin_AIP ~ ., scales = "free_y") +
   coord_flip()
+
+```
+
+# Write files
+
+```{r write_csv}
+
+cant_slab_budget_bias %>%
+  write_csv(paste0(path_version_data,
+                   "cant_slab_budget_bias.csv"))
+
+cant_slab_budget %>%
+  write_csv(paste0(path_version_data,
+                   "cant_slab_budget.csv"))
+
+cant_slab_inv_bias %>%
+  write_csv(paste0(path_version_data,
+                   "cant_slab_inv_bias.csv"))
+
+cant_pos_slab_inv_bias %>%
+  write_csv(paste0(path_version_data,
+                   "cant_slab_inv_bias_pos.csv"))
 
 ```
 
 
 # Slab boundary depth
 
-```{r gamma_slab_boundary_depth, eval=FALSE,fig.asp=2.5}
+```{r gamma_slab_boundary_depth, eval=FALSE, fig.asp=2.5}
 
 # gamma field in Atl
 predictors_gamma_Atl <- cant_3d %>%
@@ -387,7 +419,7 @@ rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)
 
 ```
 
-```{r calculate_slab_thickness, eval=FALSE,fig.asp=2.5}
+```{r calculate_slab_thickness, eval=FALSE, fig.asp=2.5}
  
 # slabs_ex <- slabs %>% 
 #   filter(lat == 0.5,
