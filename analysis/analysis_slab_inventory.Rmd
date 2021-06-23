@@ -139,11 +139,35 @@ Please note that:
 
 cant_gamma_maps %>%
   group_split(gamma_slab, data_source) %>%
+  # head(1) %>% 
   map(
     ~ p_map_cant_slab(
     df = .x,
     subtitle_text = paste("data_source:", unique(.x$data_source),
                           "| Neutral density:", unique(.x$gamma_slab))
+  ))
+
+
+```
+
+## Bias
+
+```{r cant_pos_gamma_slab_maps_bias, fig.asp=0.5}
+
+cant_gamma_maps_bias <- cant_gamma_maps %>% 
+  select(lat, lon, gamma_slab, cant_pos, data_source) %>% 
+  pivot_wider(names_from = data_source,
+              values_from = cant_pos) %>% 
+  mutate(cant_pos_bias = mod - mod_truth)
+
+cant_gamma_maps_bias %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(~ p_map_cant_slab(
+    df = .x,
+    var = "cant_pos_bias",
+    col = "divergent",
+    subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
   ))
 
 
@@ -194,6 +218,30 @@ cant_gamma_maps %>%
 
 
 ```
+
+## Bias
+
+```{r cant_gamma_slab_maps_bias, fig.asp=0.5}
+
+cant_gamma_maps_bias <- cant_gamma_maps %>% 
+  select(lat, lon, gamma_slab, cant, data_source) %>% 
+  pivot_wider(names_from = data_source,
+              values_from = cant) %>% 
+  mutate(cant_bias = mod - mod_truth)
+
+cant_gamma_maps_bias %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(~ p_map_cant_slab(
+    df = .x,
+    var = "cant_bias",
+    col = "divergent",
+    subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
+  ))
+
+
+```
+
 
 # Slab inventories
 
