@@ -834,6 +834,61 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 ```
 
 
+
+## Rarefication
+
+```{r rarefication, fig.asp=2}
+
+if (params_local$rarefication == "coarse_grid") {
+
+GLODAP <- m_grid_horizontal_coarse(GLODAP)
+
+GLODAP_grid <- GLODAP %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  count() %>% 
+  ungroup()
+
+map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon_grid, lat_grid, fill = n)) +
+  facet_grid(gamma_slab ~ era) +
+  scale_fill_viridis_c() +
+  labs(title = "All data")
+
+GLODAP_grid %>% 
+  filter(n < 100) %>%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 1)
+
+GLODAP <- GLODAP %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  slice_sample(n = 25) %>% 
+  ungroup()
+
+GLODAP_grid <- GLODAP %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  count() %>% 
+  ungroup()
+
+map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon_grid, lat_grid, fill = n)) +
+  facet_grid(gamma_slab ~ era) +
+  scale_fill_viridis_c() +
+  labs(title = "Rarefication")
+
+GLODAP <- GLODAP %>% 
+  select(-c(lat_grid, lon_grid))
+
+rm(GLODAP_grid)
+
+} else {print("No rarefication applied")}
+
+```
+
+
+
+
 # Observations coverage
 
 ```{r obs_gamma_slab, fig.asp=0.8}
