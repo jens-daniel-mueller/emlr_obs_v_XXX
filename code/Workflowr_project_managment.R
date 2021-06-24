@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised slab bias and write files")
+wflow_publish(all = TRUE, message = "add observation grid to map")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -65,7 +65,7 @@ Version_IDs <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
   pattern = "v_2")
 
-Version_IDs <- Version_IDs[1:4]
+# Version_IDs <- Version_IDs[5:8]
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {

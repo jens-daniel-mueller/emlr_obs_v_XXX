@@ -109,6 +109,9 @@ GLODAP <-
     sep = ""
   ))
 
+GLODAP_grid <- GLODAP %>% 
+  distinct(lon, lat, gamma_slab)
+
 ```
 
 
@@ -139,13 +142,21 @@ Please note that:
 
 cant_gamma_maps %>%
   group_split(gamma_slab, data_source) %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ p_map_cant_slab(
-    df = .x,
-    subtitle_text = paste("data_source:", unique(.x$data_source),
-                          "| Neutral density:", unique(.x$gamma_slab))
-  ))
+      df = .x,
+      subtitle_text = paste(
+        "data_source:",
+        unique(.x$data_source),
+        "| Neutral density:",
+        unique(.x$gamma_slab)
+      )
+    ) +
+      geom_raster(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+                  aes(lon, lat),
+                  fill="grey70")
+  )
 
 
 ```
@@ -163,12 +174,19 @@ cant_pos_slab_inv_bias <- cant_gamma_maps %>%
 cant_pos_slab_inv_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
-  map(~ p_map_cant_slab(
-    df = .x,
-    var = "cant_pos_bias",
-    col = "divergent",
-    subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
-  ))
+  map(
+    ~ p_map_cant_slab(
+      df = .x,
+      var = "cant_pos_bias",
+      col = "divergent",
+      subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
+    ) +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+        aes(lon, lat),
+        fill = "grey30"
+      )
+  )
 
 
 ```
@@ -208,12 +226,22 @@ cant_gamma_maps %>%
   group_split(gamma_slab, data_source) %>%
   map(
     ~ p_map_cant_slab(
-    df = .x,
-    var = "cant",
-    col = "divergent",
-    subtitle_text = paste("data_source:", unique(.x$data_source),
-                          "| Neutral density:", unique(.x$gamma_slab))
-  ))
+      df = .x,
+      var = "cant",
+      col = "divergent",
+      subtitle_text = paste(
+        "data_source:",
+        unique(.x$data_source),
+        "| Neutral density:",
+        unique(.x$gamma_slab)
+      )
+    ) +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+        aes(lon, lat),
+        fill = "grey70"
+      )
+  )
 
 
 
@@ -229,15 +257,23 @@ cant_slab_inv_bias <- cant_gamma_maps %>%
               values_from = cant) %>% 
   mutate(cant_bias = mod - mod_truth)
 
+
 cant_slab_inv_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
-  map(~ p_map_cant_slab(
-    df = .x,
-    var = "cant_bias",
-    col = "divergent",
-    subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
-  ))
+  map(
+    ~ p_map_cant_slab(
+      df = .x,
+      var = "cant_bias",
+      col = "divergent",
+      subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
+    ) +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+        aes(lon, lat),
+        fill = "grey30"
+      )
+  )
 
 
 ```
