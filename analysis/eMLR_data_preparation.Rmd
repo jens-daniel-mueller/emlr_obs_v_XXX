@@ -835,11 +835,9 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 
 
-## Rarefication
+# Rarefication
 
 ```{r rarefication, fig.asp=2}
-
-if (params_local$rarefication == "coarse_grid") {
 
 GLODAP <- m_grid_horizontal_coarse(GLODAP)
 
@@ -853,17 +851,22 @@ map +
               aes(lon_grid, lat_grid, fill = n)) +
   facet_grid(gamma_slab ~ era) +
   scale_fill_viridis_c() +
-  labs(title = "All data")
+  labs(title = "Before rarefication")
 
-GLODAP_grid %>% 
-  filter(n < 100) %>%
-  ggplot(aes(n)) +
-  geom_histogram(binwidth = 1)
+# GLODAP_grid %>% 
+#   filter(n < 100) %>%
+#   ggplot(aes(n)) +
+#   geom_histogram(binwidth = 1)
+
+if (params_local$rarefication == "coarse_grid") {
 
 GLODAP <- GLODAP %>% 
   group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
-  slice_sample(n = 25) %>% 
+  slice_sample(n = params_local$rarefication_threshold) %>% 
   ungroup()
+
+} else {print("No rarefication applied")}
+
 
 GLODAP_grid <- GLODAP %>% 
   group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
@@ -875,14 +878,12 @@ map +
               aes(lon_grid, lat_grid, fill = n)) +
   facet_grid(gamma_slab ~ era) +
   scale_fill_viridis_c() +
-  labs(title = "Rarefication")
+  labs(title = "After rarefication")
 
 GLODAP <- GLODAP %>% 
   select(-c(lat_grid, lon_grid))
 
 rm(GLODAP_grid)
-
-} else {print("No rarefication applied")}
 
 ```
 

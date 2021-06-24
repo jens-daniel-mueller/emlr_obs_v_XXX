@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "add observation grid to map")
+wflow_publish(all = TRUE, message = "test coarse grid rarefication")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "rerun with observation specific alpha",
+message = "test coarse grid rarefication",
 republish = TRUE)
 
 
