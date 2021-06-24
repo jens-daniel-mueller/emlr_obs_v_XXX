@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">18 June, 2021</h4>
+<h4 class="date">24 June, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-18
+<strong>Last updated:</strong> 2021-06-24
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5targetblank9d4550ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5" target="_blank">9d4550e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeee48dee07ecb365ef5ad14f2ff97e7d9da0d276dtargetblankee48deea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ee48dee07ecb365ef5ad14f2ff97e7d9da0d276d" target="_blank">ee48dee</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5targetblank9d4550ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeee48dee07ecb365ef5ad14f2ff97e7d9da0d276dtargetblankee48deea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9d4550eb4a53e6b58091ef2705bd72d9ac7fb9e5" target="_blank">9d4550e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ee48dee07ecb365ef5ad14f2ff97e7d9da0d276d" target="_blank">ee48dee</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,7 +632,10 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -671,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ee48dee07ecb365ef5ad14f2ff97e7d9da0d276d/analysis/eMLR_data_preparation.Rmd" target="_blank">ee48dee</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-24
+</td>
+<td>
+test coarse grid rarefication
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/4e1006c4375c230f2cda70f49b6fd2eb3c030fd9/docs/eMLR_data_preparation.html" target="_blank">4e1006c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8278,6 +8315,53 @@ GLODAP_cruise %&gt;%
   geom_histogram()
 
 rm(lat_section, GLODAP_cruise, cruises_meridional)</code></pre>
+<div id="rarefication" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Rarefication</h2>
+<pre class="r"><code>if (params_local$rarefication == &quot;coarse_grid&quot;) {
+
+GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)
+
+GLODAP_grid &lt;- GLODAP %&gt;% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %&gt;% 
+  count() %&gt;% 
+  ungroup()
+
+map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon_grid, lat_grid, fill = n)) +
+  facet_grid(gamma_slab ~ era) +
+  scale_fill_viridis_c() +
+  labs(title = &quot;All data&quot;)
+
+GLODAP_grid %&gt;% 
+  filter(n &lt; 100) %&gt;%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 1)
+
+GLODAP &lt;- GLODAP %&gt;% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %&gt;% 
+  slice_sample(n = 25) %&gt;% 
+  ungroup()
+
+GLODAP_grid &lt;- GLODAP %&gt;% 
+  group_by(lat_grid, lon_grid, gamma_slab, era) %&gt;% 
+  count() %&gt;% 
+  ungroup()
+
+map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon_grid, lat_grid, fill = n)) +
+  facet_grid(gamma_slab ~ era) +
+  scale_fill_viridis_c() +
+  labs(title = &quot;Rarefication&quot;)
+
+GLODAP &lt;- GLODAP %&gt;% 
+  select(-c(lat_grid, lon_grid))
+
+rm(GLODAP_grid)
+
+} else {print(&quot;No rarefication applied&quot;)}</code></pre>
+</div>
 </div>
 <div id="observations-coverage" class="section level1" number="7">
 <h1 number="7"><span class="header-section-number">7</span> Observations coverage</h1>
