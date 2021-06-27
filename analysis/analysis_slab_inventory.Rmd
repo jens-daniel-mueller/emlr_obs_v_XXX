@@ -144,7 +144,7 @@ Please note that:
 - gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
 
 
-```{r cant_pos_gamma_slab_maps, fig.asp=0.5}
+```{r cant_pos_gamma_slab_maps}
 
 cant_gamma_maps %>%
   group_split(gamma_slab, data_source) %>%
@@ -160,7 +160,7 @@ cant_gamma_maps %>%
       )
     ) +
       geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label)) +
+                  aes(lon, lat, col=era_label), size=0.5) +
       scale_color_manual(values = c("grey", "white", "green"))
   )
 
@@ -169,7 +169,7 @@ cant_gamma_maps %>%
 
 ## Bias
 
-```{r cant_pos_gamma_slab_maps_bias, fig.asp=0.5}
+```{r cant_pos_gamma_slab_maps_bias}
 
 cant_pos_slab_inv_bias <- cant_gamma_maps %>% 
   select(lat, lon, gamma_slab, cant_pos, data_source) %>% 
@@ -188,7 +188,7 @@ cant_pos_slab_inv_bias %>%
       subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
     ) +
       geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label)) +
+                  aes(lon, lat, col=era_label), size=0.5) +
       scale_color_manual(values = c("orange", "yellow", "green"))
   )
 
@@ -224,7 +224,7 @@ Please note that:
 - gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
 
 
-```{r cant_all_gamma_slab_maps, fig.asp=0.5}
+```{r cant_all_gamma_slab_maps}
 
 cant_gamma_maps %>%
   group_split(gamma_slab, data_source) %>%
@@ -241,7 +241,7 @@ cant_gamma_maps %>%
       )
     ) +
       geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label)) +
+                  aes(lon, lat, col=era_label), size=0.5) +
       scale_color_manual(values = c("grey", "white", "green"))
   )
 
@@ -251,7 +251,7 @@ cant_gamma_maps %>%
 
 ## Bias
 
-```{r cant_gamma_slab_maps_bias, fig.asp=0.5}
+```{r cant_gamma_slab_maps_bias}
 
 cant_slab_inv_bias <- cant_gamma_maps %>% 
   select(lat, lon, gamma_slab, cant, data_source) %>% 
@@ -271,7 +271,7 @@ cant_slab_inv_bias %>%
       subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
     ) +
       geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label)) +
+                  aes(lon, lat, col=era_label), size=0.5) +
       scale_color_manual(values = c("orange", "yellow", "green"))
   )
 
