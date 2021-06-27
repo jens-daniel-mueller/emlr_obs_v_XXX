@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "test coarse grid rarefication")
+wflow_publish(all = TRUE, message = "plot obs grid per era")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "test coarse grid rarefication",
+message = "test with merged slabs",
 republish = TRUE)
 
 
@@ -65,7 +65,7 @@ Version_IDs <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
   pattern = "v_2")
 
-# Version_IDs <- Version_IDs[5:8]
+Version_IDs <- Version_IDs[13:16]
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {

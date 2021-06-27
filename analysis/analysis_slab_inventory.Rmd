@@ -110,7 +110,13 @@ GLODAP <-
   ))
 
 GLODAP_grid <- GLODAP %>% 
-  distinct(lon, lat, gamma_slab)
+  distinct(lon, lat, gamma_slab, era)
+
+GLODAP_grid <- GLODAP_grid %>% 
+  group_by(lat, lon, gamma_slab) %>% 
+  mutate(n = n()) %>% 
+  ungroup() %>% 
+  mutate(era_label = if_else(n==1, era, "both"))
 
 ```
 
@@ -153,9 +159,9 @@ cant_gamma_maps %>%
         unique(.x$gamma_slab)
       )
     ) +
-      geom_raster(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat),
-                  fill="grey70")
+      geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+                  aes(lon, lat, col=era_label)) +
+      scale_color_manual(values = c("grey", "white", "green"))
   )
 
 
@@ -181,11 +187,9 @@ cant_pos_slab_inv_bias %>%
       col = "divergent",
       subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
     ) +
-      geom_raster(
-        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-        aes(lon, lat),
-        fill = "grey30"
-      )
+      geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+                  aes(lon, lat, col=era_label)) +
+      scale_color_manual(values = c("orange", "yellow", "green"))
   )
 
 
@@ -236,11 +240,9 @@ cant_gamma_maps %>%
         unique(.x$gamma_slab)
       )
     ) +
-      geom_raster(
-        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-        aes(lon, lat),
-        fill = "grey70"
-      )
+      geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+                  aes(lon, lat, col=era_label)) +
+      scale_color_manual(values = c("grey", "white", "green"))
   )
 
 
@@ -268,11 +270,9 @@ cant_slab_inv_bias %>%
       col = "divergent",
       subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
     ) +
-      geom_raster(
-        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
-        aes(lon, lat),
-        fill = "grey30"
-      )
+      geom_point(data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab)),
+                  aes(lon, lat, col=era_label)) +
+      scale_color_manual(values = c("orange", "yellow", "green"))
   )
 
 
