@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of cant estimates</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">27 June, 2021</h4>
+<h4 class="date">29 June, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-06-27
+<strong>Last updated:</strong> 2021-06-29
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec7771e27361481d678b5fb102aeb3ff152bcbcb7targetblankc7771e2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c7771e27361481d678b5fb102aeb3ff152bcbcb7" target="_blank">c7771e2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb1ddea073b42d0ebcee7ccff476672482f469141targetblankb1ddea0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b1ddea073b42d0ebcee7ccff476672482f469141" target="_blank">b1ddea0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec7771e27361481d678b5fb102aeb3ff152bcbcb7targetblankc7771e2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb1ddea073b42d0ebcee7ccff476672482f469141targetblankb1ddea0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c7771e27361481d678b5fb102aeb3ff152bcbcb7" target="_blank">c7771e2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b1ddea073b42d0ebcee7ccff476672482f469141" target="_blank">b1ddea0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -670,6 +670,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b1ddea073b42d0ebcee7ccff476672482f469141/analysis/analysis_slab_inventory.Rmd" target="_blank">b1ddea0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-29
+</td>
+<td>
+revised plot obs grid per era
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/analysis_slab_inventory.html" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1873,7 +1907,12 @@ cant_3d_mod_truth &lt;-
                  sep = &quot;&quot;))
 
 cant_3d &lt;- bind_rows(cant_3d,
-                     cant_3d_mod_truth)</code></pre>
+                     cant_3d_mod_truth)
+
+tref &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;tref.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
 <p>Cleaned GLODAPv2_2020 file as used in this sensitivity case</p>
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(
@@ -1910,16 +1949,24 @@ cant_gamma_maps &lt;- cant_gamma_maps %&gt;%
   map(
     ~ p_map_cant_slab(
       df = .x,
-      subtitle_text = paste(
-        &quot;data_source:&quot;,
-        unique(.x$data_source),
-        &quot;| Neutral density:&quot;,
-        unique(.x$gamma_slab)
-      )
-    ) +
-      geom_point(data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label), size=0.5) +
-      scale_color_manual(values = c(&quot;grey&quot;, &quot;white&quot;, &quot;green&quot;))
+      subtitle_text = paste(&quot;data_source:&quot;, unique(.x$data_source),
+                            &quot;| Neutral density:&quot;, unique(.x$gamma_slab))) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;red&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
   )</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1945,6 +1992,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-1.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-1.png" target="_blank">e578ffa</a>
@@ -2427,6 +2485,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-2.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-2.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -2729,6 +2798,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-3.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-3.png" target="_blank">e578ffa</a>
@@ -3220,6 +3300,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-4.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-4.png" target="_blank">e578ffa</a>
@@ -3724,6 +3815,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-5.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-5.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -4026,6 +4128,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-6.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-6.png" target="_blank">e578ffa</a>
@@ -4517,6 +4630,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-7.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-7.png" target="_blank">e578ffa</a>
@@ -5021,6 +5145,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-8.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-8.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -5323,6 +5458,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-9.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-9.png" target="_blank">e578ffa</a>
@@ -5814,6 +5960,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-10.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-10.png" target="_blank">e578ffa</a>
@@ -6318,6 +6475,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-11.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-11.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -6620,6 +6788,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-12.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-12.png" target="_blank">e578ffa</a>
@@ -7111,6 +7290,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-13.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-13.png" target="_blank">e578ffa</a>
@@ -7615,6 +7805,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-14.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-14.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -7917,6 +8118,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-15.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-15.png" target="_blank">e578ffa</a>
@@ -8408,6 +8620,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-16.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-16.png" target="_blank">e578ffa</a>
@@ -8912,6 +9135,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-17.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-17.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -9214,6 +9448,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-18.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-18.png" target="_blank">e578ffa</a>
@@ -9707,6 +9952,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-19.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-19.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -10198,6 +10454,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-20.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-20.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -10489,6 +10756,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-21.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-21.png" target="_blank">e578ffa</a>
@@ -10980,6 +11258,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-22.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-22.png" target="_blank">e578ffa</a>
@@ -11484,6 +11773,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-23.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-23.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -11786,6 +12086,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-24.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-24.png" target="_blank">e578ffa</a>
@@ -12277,6 +12588,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-25.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-25.png" target="_blank">e578ffa</a>
@@ -12781,6 +13103,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-26.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-26.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -13072,6 +13405,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-27.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-27.png" target="_blank">e578ffa</a>
@@ -13565,6 +13909,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-28.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-28.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -14056,6 +14411,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-29.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-29.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -14358,6 +14724,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-30.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-30.png" target="_blank">e578ffa</a>
@@ -14829,6 +15206,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-31.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-31.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -15276,6 +15664,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-32.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-32.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -15523,6 +15922,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-33.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-33.png" target="_blank">e578ffa</a>
@@ -15948,6 +16358,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-34.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-34.png" target="_blank">e578ffa</a>
@@ -16408,6 +16829,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-35.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-35.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -16677,6 +17109,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-36.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-36.png" target="_blank">e578ffa</a>
@@ -17091,6 +17534,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-37.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-37.png" target="_blank">e578ffa</a>
@@ -17551,6 +18005,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-38.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-38.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -17820,6 +18285,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-39.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-39.png" target="_blank">e578ffa</a>
@@ -18236,6 +18712,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-40.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-40.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -18562,6 +19049,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-41.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-41.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -18820,6 +19318,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-42.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-42.png" target="_blank">e578ffa</a>
@@ -19225,6 +19734,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-43.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-43.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -19483,6 +20003,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-44.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-44.png" target="_blank">e578ffa</a>
@@ -19754,6 +20285,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-45.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-45.png" target="_blank">e578ffa</a>
@@ -20126,6 +20668,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-46.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-46.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -20441,6 +20994,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-47.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-47.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -20655,6 +21219,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-48.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-48.png" target="_blank">e578ffa</a>
@@ -21027,6 +21602,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-49.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-49.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -21309,6 +21895,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-50.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-50.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -21523,6 +22120,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-51.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-51.png" target="_blank">e578ffa</a>
@@ -21851,6 +22459,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-52.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-52.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22056,6 +22675,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-53.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-53.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22239,6 +22869,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-54.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-54.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22356,6 +22997,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-55.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-55.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22407,6 +23059,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-56.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps-56.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22448,10 +23111,23 @@ cant_pos_slab_inv_bias %&gt;%
       var = &quot;cant_pos_bias&quot;,
       col = &quot;divergent&quot;,
       subtitle_text = paste(&quot;| Neutral density:&quot;, unique(.x$gamma_slab))
-    ) +
-      geom_point(data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label), size=0.5) +
-      scale_color_manual(values = c(&quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;))
+    )  +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;red&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
   )</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -22477,6 +23153,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-1.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-1.png" target="_blank">e578ffa</a>
@@ -22563,6 +23250,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-2.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-2.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22645,6 +23343,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-3.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-3.png" target="_blank">e578ffa</a>
@@ -22731,6 +23440,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-4.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-4.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22813,6 +23533,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-5.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-5.png" target="_blank">e578ffa</a>
@@ -22899,6 +23630,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-6.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-6.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -22981,6 +23723,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-7.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-7.png" target="_blank">e578ffa</a>
@@ -23067,6 +23820,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-8.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-8.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23149,6 +23913,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-9.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-9.png" target="_blank">e578ffa</a>
@@ -23235,6 +24010,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-10.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-10.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23317,6 +24103,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-11.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-11.png" target="_blank">e578ffa</a>
@@ -23403,6 +24200,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-12.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-12.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23485,6 +24293,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-13.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-13.png" target="_blank">e578ffa</a>
@@ -23571,6 +24390,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-14.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-14.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23653,6 +24483,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-15.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-15.png" target="_blank">e578ffa</a>
@@ -23739,6 +24580,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-16.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-16.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23821,6 +24673,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-17.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-17.png" target="_blank">e578ffa</a>
@@ -23907,6 +24770,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-18.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-18.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -23980,6 +24854,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-19.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_pos_gamma_slab_maps_bias-19.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -24039,10 +24924,23 @@ map +
         &quot;| Neutral density:&quot;,
         unique(.x$gamma_slab)
       )
-    ) +
-      geom_point(data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label), size=0.5) +
-      scale_color_manual(values = c(&quot;grey&quot;, &quot;white&quot;, &quot;green&quot;))
+    )  +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;red&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
   )</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -24068,6 +24966,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-1.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-1.png" target="_blank">e578ffa</a>
@@ -24550,6 +25459,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-2.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-2.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -24852,6 +25772,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-3.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-3.png" target="_blank">e578ffa</a>
@@ -25343,6 +26274,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-4.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-4.png" target="_blank">e578ffa</a>
@@ -25847,6 +26789,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-5.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-5.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -26149,6 +27102,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-6.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-6.png" target="_blank">e578ffa</a>
@@ -26640,6 +27604,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-7.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-7.png" target="_blank">e578ffa</a>
@@ -27144,6 +28119,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-8.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-8.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -27446,6 +28432,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-9.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-9.png" target="_blank">e578ffa</a>
@@ -27937,6 +28934,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-10.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-10.png" target="_blank">e578ffa</a>
@@ -28441,6 +29449,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-11.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-11.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -28743,6 +29762,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-12.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-12.png" target="_blank">e578ffa</a>
@@ -29234,6 +30264,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-13.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-13.png" target="_blank">e578ffa</a>
@@ -29738,6 +30779,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-14.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-14.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -30040,6 +31092,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-15.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-15.png" target="_blank">e578ffa</a>
@@ -30531,6 +31594,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-16.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-16.png" target="_blank">e578ffa</a>
@@ -31035,6 +32109,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-17.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-17.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -31337,6 +32422,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-18.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-18.png" target="_blank">e578ffa</a>
@@ -31828,6 +32924,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-19.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-19.png" target="_blank">e578ffa</a>
@@ -32332,6 +33439,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-20.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-20.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -32634,6 +33752,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-21.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-21.png" target="_blank">e578ffa</a>
@@ -33125,6 +34254,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-22.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-22.png" target="_blank">e578ffa</a>
@@ -33629,6 +34769,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-23.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-23.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -33931,6 +35082,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-24.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-24.png" target="_blank">e578ffa</a>
@@ -34422,6 +35584,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-25.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-25.png" target="_blank">e578ffa</a>
@@ -34926,6 +36099,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-26.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-26.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -35217,6 +36401,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-27.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-27.png" target="_blank">e578ffa</a>
@@ -35710,6 +36905,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-28.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-28.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -36201,6 +37407,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-29.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-29.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -36503,6 +37720,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-30.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-30.png" target="_blank">e578ffa</a>
@@ -36974,6 +38202,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-31.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-31.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -37421,6 +38660,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-32.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-32.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -37668,6 +38918,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-33.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-33.png" target="_blank">e578ffa</a>
@@ -38104,6 +39365,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-34.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-34.png" target="_blank">e578ffa</a>
@@ -38564,6 +39836,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-35.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-35.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -38833,6 +40116,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-36.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-36.png" target="_blank">e578ffa</a>
@@ -39258,6 +40552,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-37.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-37.png" target="_blank">e578ffa</a>
@@ -39718,6 +41023,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-38.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-38.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -39987,6 +41303,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-39.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-39.png" target="_blank">e578ffa</a>
@@ -40436,6 +41763,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-40.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-40.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -40883,6 +42221,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-41.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-41.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -41141,6 +42490,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-42.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-42.png" target="_blank">e578ffa</a>
@@ -41579,6 +42939,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-43.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-43.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -41960,6 +43331,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-44.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-44.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -42207,6 +43589,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-45.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-45.png" target="_blank">e578ffa</a>
@@ -42579,6 +43972,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-46.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-46.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -42927,6 +44331,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-47.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-47.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -43141,6 +44556,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-48.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-48.png" target="_blank">e578ffa</a>
@@ -43513,6 +44939,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-49.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-49.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -43861,6 +45298,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-50.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-50.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -44075,6 +45523,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-51.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-51.png" target="_blank">e578ffa</a>
@@ -44414,6 +45873,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-52.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-52.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -44619,6 +46089,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-53.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-53.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -44791,6 +46272,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-54.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-54.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -44908,6 +46400,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-55.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-55.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -44959,6 +46462,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-56.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_all_gamma_slab_maps-56.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45001,10 +46515,23 @@ cant_slab_inv_bias %&gt;%
       var = &quot;cant_bias&quot;,
       col = &quot;divergent&quot;,
       subtitle_text = paste(&quot;| Neutral density:&quot;, unique(.x$gamma_slab))
-    ) +
-      geom_point(data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab)),
-                  aes(lon, lat, col=era_label), size=0.5) +
-      scale_color_manual(values = c(&quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;))
+    )  +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;red&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
   )</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -45030,6 +46557,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-1.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-1.png" target="_blank">e578ffa</a>
@@ -45116,6 +46654,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-2.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-2.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45198,6 +46747,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-3.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-3.png" target="_blank">e578ffa</a>
@@ -45284,6 +46844,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-4.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-4.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45366,6 +46937,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-5.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-5.png" target="_blank">e578ffa</a>
@@ -45452,6 +47034,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-6.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-6.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45534,6 +47127,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-7.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-7.png" target="_blank">e578ffa</a>
@@ -45620,6 +47224,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-8.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-8.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45702,6 +47317,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-9.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-9.png" target="_blank">e578ffa</a>
@@ -45788,6 +47414,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-10.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-10.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -45870,6 +47507,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-11.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-11.png" target="_blank">e578ffa</a>
@@ -45956,6 +47604,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-12.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-12.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -46038,6 +47697,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-13.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-13.png" target="_blank">e578ffa</a>
@@ -46124,6 +47794,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-14.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-14.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -46206,6 +47887,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-15.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-15.png" target="_blank">e578ffa</a>
@@ -46292,6 +47984,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-16.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-16.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -46374,6 +48077,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-17.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-17.png" target="_blank">e578ffa</a>
@@ -46460,6 +48174,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-18.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-18.png" target="_blank">e578ffa</a>
 </td>
 <td>
@@ -46531,6 +48256,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f60afba450e48cc5063e689b2d964a1a9fd6331/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-19.png" target="_blank">9f60afb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e578ffa51e86560314cde2602ea7088de332c537/docs/figure/analysis_slab_inventory.Rmd/cant_gamma_slab_maps_bias-19.png" target="_blank">e578ffa</a>
