@@ -158,7 +158,8 @@ cant_gamma_maps %>%
     ~ p_map_cant_slab(
       df = .x,
       subtitle_text = paste("data_source:", unique(.x$data_source),
-                            "| Neutral density:", unique(.x$gamma_slab))) +
+                            "| Neutral density:", unique(.x$gamma_slab))
+      ) +
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
@@ -168,7 +169,7 @@ cant_gamma_maps %>%
           gamma_slab == unique(.x$gamma_slab),
           era_label == unique(tref$era)[1]
         ),
-        aes(lon, lat), fill = "grey") +
+        aes(lon, lat), fill = "grey50") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -198,7 +199,7 @@ cant_pos_slab_inv_bias %>%
       df = .x,
       var = "cant_pos_bias",
       col = "divergent",
-      subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
+      subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
     )  +
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
@@ -209,7 +210,7 @@ cant_pos_slab_inv_bias %>%
           gamma_slab == unique(.x$gamma_slab),
           era_label == unique(tref$era)[1]
         ),
-        aes(lon, lat), fill = "grey") +
+        aes(lon, lat), fill = "grey50") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -275,7 +276,7 @@ cant_gamma_maps %>%
           gamma_slab == unique(.x$gamma_slab),
           era_label == unique(tref$era)[1]
         ),
-        aes(lon, lat), fill = "grey") +
+        aes(lon, lat), fill = "grey50") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -307,7 +308,7 @@ cant_slab_inv_bias %>%
       df = .x,
       var = "cant_bias",
       col = "divergent",
-      subtitle_text = paste("| Neutral density:", unique(.x$gamma_slab))
+      subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
     )  +
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
@@ -318,7 +319,7 @@ cant_slab_inv_bias %>%
           gamma_slab == unique(.x$gamma_slab),
           era_label == unique(tref$era)[1]
         ),
-        aes(lon, lat), fill = "grey") +
+        aes(lon, lat), fill = "grey50") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
