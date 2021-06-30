@@ -849,7 +849,8 @@ GLODAP_grid <- GLODAP %>%
 GLODAP_grid %>%
   # filter(n < 100) %>%
   ggplot(aes(n)) +
-  geom_histogram(binwidth = 1)
+  geom_histogram(binwidth = 1) +
+  labs(title = "Observations per era, grid cell and slab")
 
 ```
 
@@ -860,7 +861,7 @@ map +
   geom_raster(data = GLODAP_grid,
               aes(lon_grid, lat_grid, fill = n)) +
   facet_grid(gamma_slab ~ era) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(trans = "log10") +
   labs(title = "Before rarefication")
 
 if (params_local$rarefication == "coarse_grid") {
@@ -882,7 +883,7 @@ map +
   geom_raster(data = GLODAP_grid,
               aes(lon_grid, lat_grid, fill = n)) +
   facet_grid(gamma_slab ~ era) +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(trans = "log10") +
   labs(title = "After rarefication")
 
 GLODAP <- GLODAP %>% 
