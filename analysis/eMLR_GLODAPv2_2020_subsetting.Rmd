@@ -100,7 +100,7 @@ GLODAP <-
       path_preprocessing_model,
       "GLODAPv2.",
       params_local$GLODAPv2_version,
-      "_preprocessed_model_runA_both.csv")
+      "_preprocessed_model_runA_both_NA_filled.csv")
   )
 
 GLODAP <- GLODAP %>%
@@ -199,6 +199,24 @@ GLODAP <- GLODAP %>%
   filter(bottomdepth >= params_local$bottomdepth_min)
 
 ```
+
+## Gap filling
+
+```{r GLODAP_gap_filling}
+
+GLODAP <- left_join(GLODAP,
+                    GLODAP_CB)
+
+GLODAP <- GLODAP %>% 
+  mutate(nitrate = if_else(is.na(nitrate), nitrate_CANYONB, nitrate),
+         phosphate = if_else(is.na(phosphate), phosphate_CANYONB, phosphate),
+         silicate = if_else(is.na(silicate), silicate_CANYONB, silicate),
+         talk = if_else(is.na(talk), talk_CANYONB, talk))
+
+
+```
+
+
 
 ## Flags and missing data
 
