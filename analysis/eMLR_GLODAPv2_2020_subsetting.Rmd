@@ -213,6 +213,9 @@ GLODAP <- GLODAP %>%
          silicate = if_else(is.na(silicate), silicate_CANYONB, silicate),
          talk = if_else(is.na(talk), talk_CANYONB, talk))
 
+GLODAP <- GLODAP %>% 
+  select(-ends_with("_CANYONB"))
+
 
 ```
 
