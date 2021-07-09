@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -132,6 +132,7 @@ plot_fun <- function(df){
 GLODAP %>%
   slice_sample(n = 5e3) %>% 
   group_split(basin, data_source) %>%
+  # head(1) %>% 
   map(plot_fun)
 
 GLODAP <- GLODAP %>%

@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -122,7 +122,7 @@ GLODAP_CB <-
 
 # Data preparation
 
-## Reference eras
+## Filter eras
 
 Samples were assigned to following eras:
 
@@ -202,19 +202,82 @@ GLODAP <- GLODAP %>%
 
 ## Gap filling
 
-```{r GLODAP_gap_filling}
+```{r GLODAP_gap_filling, fig.asp=1}
 
+if (params_local$gap_filling == "CANYON-B") {
+  
 GLODAP <- left_join(GLODAP,
                     GLODAP_CB)
 
+# label rows with missing values that should be filled
+GLODAP <- GLODAP %>%
+  mutate(
+    fill_nitrate = if_else(is.na(nitrate), "filled", "measured"),
+    fill_phosphate = if_else(is.na(phosphate), "filled", "measured"),
+    fill_silicate = if_else(is.na(silicate), "filled", "measured"),
+    fill_talk = if_else(is.na(talk), "filled", "measured")
+  )
+
+# fill missing values with CANYON-B estimate, if available
 GLODAP <- GLODAP %>% 
   mutate(nitrate = if_else(is.na(nitrate), nitrate_CANYONB, nitrate),
          phosphate = if_else(is.na(phosphate), phosphate_CANYONB, phosphate),
          silicate = if_else(is.na(silicate), silicate_CANYONB, silicate),
          talk = if_else(is.na(talk), talk_CANYONB, talk))
 
+# label rows with remaining missing values that could not be filled
+GLODAP <- GLODAP %>%
+  mutate(
+    fill_nitrate = if_else(is.na(nitrate), "missing", fill_nitrate),
+    fill_phosphate = if_else(is.na(phosphate), "missing", fill_phosphate),
+    fill_silicate = if_else(is.na(silicate), "missing", fill_silicate),
+    fill_talk = if_else(is.na(talk), "missing", fill_talk)
+  )
+
+GLODAP_filling_long <- GLODAP %>% 
+  select(lon, lat, era, fill_nitrate, fill_phosphate, fill_silicate, fill_talk) %>% 
+  pivot_longer(fill_nitrate:fill_talk,
+               names_to = "parameter",
+               values_to = "filling",
+               names_prefix = "fill_") %>% 
+  count(lon, lat, era, parameter, filling)
+
+GLODAP_filling_wide <- GLODAP_filling_long %>% 
+  pivot_wider(names_from = filling,
+              values_from = n,
+              values_fill = 0) %>% 
+  mutate(total = measured + filled + missing,
+         filled_ratio = 100*filled/total,
+         missing_ratio = 100*missing/total)
+
+map + 
+  geom_raster(data = GLODAP_filling_wide,
+              aes(lon, lat, fill = filled_ratio)) +
+  facet_grid(parameter ~ era) +
+  scale_fill_viridis_c(direction = -1)
+
+map + 
+  geom_raster(data = GLODAP_filling_wide,
+              aes(lon, lat, fill = missing_ratio)) +
+  facet_grid(parameter ~ era) +
+  scale_fill_viridis_c(direction = -1)
+
+GLODAP_filling_long %>% 
+  group_by(era, parameter, filling) %>% 
+  summarise(n = sum(n)) %>% 
+  ggplot(aes(parameter, n, fill = filling)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_viridis_d()
+
 GLODAP <- GLODAP %>% 
-  select(-ends_with("_CANYONB"))
+  select(!ends_with("_CANYONB")) %>% 
+  select(!starts_with("fill_"))
+
+rm(GLODAP_filling_long, GLODAP_filling_wide)
+
+}
 
 
 ```
@@ -750,47 +813,15 @@ GLODAP_combined <- GLODAP_combined %>%
 
 ```{r CANYON_B_property_property, fig.asp=0.6}
 
-# GLODAP_combined_raw <- GLODAP_combined_raw %>%
-#   select(ends_with(c("_CANYONB", "_model")))
-
 variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
 
 for (i_variable in variables) {
-  # i_variable <- variables[1]
-  
-  # calculate equal axis limits and binwidth
-  axis_lims <- GLODAP_combined_raw %>%
-    drop_na() %>% 
-    summarise(max_value = max(c(max(!!sym(
-      paste0(i_variable)
-    )),
-    max(!!sym(
-      paste0(i_variable, "_CANYONB")
-    )))),
-    min_value = min(c(min(!!sym(
-      paste0(i_variable)
-    )),
-    min(!!sym(
-      paste0(i_variable, "_CANYONB")
-    )))))
-  
-  binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 60
-  axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
-  
-  print(
-    ggplot(GLODAP_combined_raw, aes(
-      x = !!sym(paste0(i_variable)),
-      y = !!sym(paste0(i_variable, "_CANYONB"))
-    )) +
-      geom_bin2d(binwidth = binwidth_value) +
-      scale_fill_viridis_c(trans = "log10") +
-      geom_abline(slope = 1, col = 'red') +
-      coord_equal(xlim = axis_lims,
-                  ylim = axis_lims) +
-      facet_wrap( ~ basin_AIP) +
-      labs(title = "All years")
-  ) 
-
+  # i_variable <- variables[2]
+  p_prop_prop(
+    df = GLODAP_combined_raw,
+    var1 = i_variable,
+    var2 = paste0(i_variable, "_CANYONB")
+  )
 }
 
 rm(variables, GLODAP_combined_raw)
@@ -835,7 +866,7 @@ cruise_all <- cruise_all %>%
   arrange(parameter, rank_offset)
 
 cruise_out <- cruise_all %>%
-  filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>% 
+  filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>%
   filter(abs(mean_offset) > threshold_offset)
 
 for (i_parameter in unique(cruise_all$parameter)) {
@@ -848,33 +879,35 @@ for (i_parameter in unique(cruise_all$parameter)) {
     filter(parameter == i_parameter)
   
   print(
-  ggplot() +
-    geom_hline(data = i_cruise_all,
-               aes(yintercept = c(-1, 1) * threshold_offset),
-               lty = 2) +
-    geom_ribbon(
-      data = i_cruise_all,
-      aes(
-        x = rank_offset,
-        ymax = mean_offset + sd_offset,
-        ymin = mean_offset-+sd_offset
-      ),
-      alpha = 0.3
-    ) +
-    geom_path(data = i_cruise_all,
-              aes(rank_offset, mean_offset)) +
-    geom_point(data = i_cruise_out,
-               aes(rank_offset, mean_offset, col = cruise)) +
-    labs(title = i_parameter)
+    ggplot() +
+      geom_hline(
+        data = i_cruise_all,
+        aes(yintercept = c(-1, 1) * threshold_offset),
+        lty = 2
+      ) +
+      geom_ribbon(
+        data = i_cruise_all,
+        aes(
+          x = rank_offset,
+          ymax = mean_offset + sd_offset,
+          ymin = mean_offset-+sd_offset
+        ),
+        alpha = 0.3
+      ) +
+      geom_path(data = i_cruise_all,
+                aes(rank_offset, mean_offset)) +
+      geom_point(data = i_cruise_out,
+                 aes(rank_offset, mean_offset, col = cruise)) +
+      labs(title = i_parameter)
   )
   
-    print(
-  ggplot() +
-    geom_point(data = i_cruise_all,
-              aes(mean_offset, sd_offset)) +
-    geom_point(data = i_cruise_out,
-               aes(mean_offset, sd_offset, col = cruise)) +
-    labs(title = i_parameter)
+  print(
+    ggplot() +
+      geom_point(data = i_cruise_all,
+                 aes(mean_offset, sd_offset)) +
+      geom_point(data = i_cruise_out,
+                 aes(mean_offset, sd_offset, col = cruise)) +
+      labs(title = i_parameter)
   )
   
 }
@@ -893,11 +926,11 @@ GLODAP_out <- GLODAP %>%
 
 if (nrow(GLODAP_out) > 0) {
   map +
-  geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
-              aes(lon, lat)) +
-  facet_wrap( ~ era, ncol = 1) +
-  labs(title = "Maps of removed cruises")
-
+    geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
+                aes(lon, lat)) +
+    facet_wrap(~ era, ncol = 1) +
+    labs(title = "Maps of removed cruises")
+  
 } else {
   print("no cruises removed")
   
@@ -916,7 +949,9 @@ GLODAP <- GLODAP %>%
 
 ```
 
-## Median years (tref)
+## Reference years (tref)
+
+### Median years
 
 Median years of each era (tref) were determined as:
 
@@ -932,58 +967,36 @@ tref
 
 ```
 
+### Fixed tref
 
-## Cruise overlap
+tref were manually set to:
 
-```{r Manual_cruise_duplication, fig.asp=3}
+```{r set_predefined_tref}
 
-map +
-  geom_raster(data =
-                GLODAP %>%
-                distinct(year, lat, lon, basin_AIP),
-              aes(lon, lat, fill=basin_AIP)) +
-  scale_fill_brewer(palette = "Set1") +
-  facet_wrap(~ year, ncol = 3)
+tref <- tref %>%
+  arrange(median_year)
 
-# Duplicate Indian ocean cruises manually
+tref1 <- tref %>%
+  head(1)
 
-# GLODAP_dup <- GLODAP %>% 
-#   filter(basin_AIP == "Indian",
-#          year >=2007,
-#          year <=2009) %>% 
-#   mutate(era = sort(unique(GLODAP$era))[2])
-# 
-# GLODAP <- bind_rows(GLODAP, GLODAP_dup)
-# rm(GLODAP_dup)
+tref2 <- tref %>%
+  tail(1)
 
-# Duplicate overlapping eras manually
+if (!is.null(params_local$tref1)) {
+  tref1 <- tref1 %>%
+    mutate(median_year = params_local$tref1)
+}
 
-GLODAP_dup_era1 <- GLODAP %>%
-  filter(year > min(params_local$dup_era1),
-         year < max(params_local$dup_era1)) %>%
-  mutate(era = sort(unique(GLODAP$era))[2])
+if (!is.null(params_local$tref2)) {
+  tref2 <- tref2 %>%
+    mutate(median_year = params_local$tref2)
+}
 
-GLODAP_dup_era2 <- GLODAP %>%
-  filter(year > min(params_local$dup_era2),
-         year < max(params_local$dup_era2)) %>%
-  mutate(era = sort(unique(GLODAP$era))[1])
+tref <- bind_rows(tref1, tref2)
 
-GLODAP <- bind_rows(GLODAP %>% mutate(duplicate = "no"),
-                    GLODAP_dup_era1 %>% mutate(duplicate = "yes"),
-                    GLODAP_dup_era2 %>% mutate(duplicate = "yes"))
-
-GLODAP_grid_dup <- GLODAP %>%
-  distinct(era, duplicate, lon, lat)
-  
-GLODAP <- GLODAP %>% 
-  select(-duplicate)
-
-rm(GLODAP_dup_era1, GLODAP_dup_era2)
+tref
 
 ```
-
-
-
 
 ## Create clean observations grid
 
@@ -993,6 +1006,7 @@ Grid containing all grid cells where at least one observation remains available 
 
 GLODAP_obs_grid_clean <- GLODAP %>% 
   distinct(lat, lon)
+
 ```
 
 
@@ -1003,11 +1017,6 @@ GLODAP_obs_grid_clean <- GLODAP %>%
 GLODAP_obs_grid_clean  %>%
   write_csv(paste(path_version_data,
                   "GLODAPv2.2020_clean_obs_grid.csv",
-                  sep = ""))
-
-GLODAP_grid_dup  %>%
-  write_csv(paste(path_version_data,
-                  "GLODAPv2.2020_clean_obs_grid_duplicates.csv",
                   sep = ""))
 
 # select relevant columns for further analysis
@@ -1251,38 +1260,10 @@ variables <-
 for (i_var in variables) {
   #  i_var <- variables[1]
   
-  # calculate equal axis limits and binwidth
-  axis_lims <- GLODAP %>%
-    summarise(max_value = max(c(max(!!sym(
-      i_var
-    )),
-    max(!!sym(
-      paste0(i_var, "_model")
-    )))),
-    min_value = min(c(min(!!sym(
-      i_var
-    )),
-    min(!!sym(
-      paste0(i_var, "_model")
-    )))))
+  p_prop_prop(df = GLODAP,
+              var1 = i_var,
+              var2 = paste0(i_var, "_model"))
   
-  binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 40
-  axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
-  
-  # obs-model plot (season)
-  print(
-    ggplot(GLODAP, aes(
-      x = !!sym(i_var),
-      y = !!sym(paste0(i_var, "_model"))
-    )) +
-      geom_bin2d(binwidth = binwidth_value) +
-      scale_fill_viridis_c() +
-      geom_abline(slope = 1,
-                  col = 'red') +
-      coord_equal(xlim = axis_lims,
-                  ylim = axis_lims) +
-      labs(x = "observation", y = "model", title = i_var)
-  )
 }
 
 ```

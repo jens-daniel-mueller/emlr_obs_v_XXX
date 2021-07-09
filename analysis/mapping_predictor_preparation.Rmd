@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -315,6 +315,7 @@ Plots below are generated to control successful merging of data sets.
 
 predictors %>%
   group_split(data_source) %>%
+  # head(1) %>% 
   map(~ p_map_climatology(
     df = .x,
     var = "phosphate",
@@ -552,6 +553,7 @@ map +
 ```{r all_predictor_sections, fig.asp=1.2}
 
 for (i_var in params_local$MLR_predictors) {
+  # i_var <- params_local$MLR_predictors[1]
   print(predictors %>%
           group_split(data_source) %>%
           map(

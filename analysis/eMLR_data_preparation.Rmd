@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -108,12 +108,12 @@ GLODAP <-
 
 S04_cant_3d <-
   read_csv(paste(path_preprocessing,
-                 "S04_cant_3d.csv",
+                 "S04_tcant_3d.csv",
                  sep = ""))
 
 G19_cant_3d <-
   read_csv(paste(path_preprocessing,
-                 "G19_cant_3d.csv",
+                 "G19_dcant_3d.csv",
                  sep = ""))
 
 m94_cant_3d <-
@@ -191,9 +191,7 @@ GLODAP <- GLODAP %>%
 
 
 
-# PO~4~*
-
-## Calculation 
+# PO~4~* calculation 
 
 The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.  
 
@@ -230,19 +228,52 @@ The stoichiometric nutrient ratios for the production and mineralization of orga
 
 ## Calculation
 
-C* was calculated as:  
+C* can optionally be calculated based on phosphate or nitrate. 
 
 ```{r calculate_cstar}
 
-print(b_cstar)
-
-GLODAP <- GLODAP %>% 
-  mutate(rCP_phosphate = -params_local$rCP * phosphate,
-         talk_05 = -0.5 * talk,
-         rNP_phosphate_05 = -0.5 * params_local$rNP * phosphate,
-         cstar = b_cstar(tco2, phosphate, talk))
+if("phosphate" %in% names(GLODAP) &
+   "nitrate" %in% names(GLODAP)) {
+  GLODAP <- GLODAP %>%
+    mutate(
+      cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk),
+      cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)
+    )
+  
+  
+  p_prop_prop(df = GLODAP,
+              var1 = "cstar_phosphate",
+              var2 = "cstar_nitrate")
+  
+}
 
 ```
+
+C* was actually calculated as: 
+
+```{r cstar_selection}
+
+if (params_local$cstar_nutrient == "phosphate") {
+  
+  print(b_cstar_phosphate)
+  
+  GLODAP <- GLODAP %>%
+    rename(cstar = cstar_phosphate) %>%
+    select(-cstar_nitrate)
+}
+
+if (params_local$cstar_nutrient == "nitrate") {
+  
+  print(b_cstar_nitrate)
+  
+  GLODAP <- GLODAP %>%
+    rename(cstar = cstar_nitrate) %>%
+    select(-cstar_phosphate)
+}
+
+```
+
+
 
 ## Reference year adjustment
 
@@ -259,16 +290,17 @@ For the model data, we perform an analogous adjustment based on the total Cant e
 
 ### Join Cant fields
 
-Join Cant fields of G19 and S04
+Join observation-based Cant fields of G19 and S04
 
-```{r join_cant_estimates, fig.asp=0.5}
+```{r join_cant_estimates_observations, fig.asp=0.5}
 
 G19_cant_3d <- G19_cant_3d %>% 
-  select(lon, lat, depth, cant_pos_G19 = cant_pos)
+  select(lon, lat, depth, cant_pos_G19 = dcant_pos)
 
 S04_cant_3d <- S04_cant_3d %>% 
-  select(lon, lat, depth, cant_pos_S04 = cant_pos)
+  select(lon, lat, depth, cant_pos_S04 = tcant_pos)
 
+# check regional coverage of both data sets
 cant_3d_coverage <- full_join(
   S04_cant_3d %>% distinct(lat, lon),
   G19_cant_3d %>% distinct(lat, lon)
@@ -299,6 +331,8 @@ map +
 
 rm(cant_3d_coverage)
 
+
+# join data sets
 cant_3d <- full_join(S04_cant_3d, G19_cant_3d)
 
 cant_3d <- cant_3d %>%
@@ -312,6 +346,7 @@ Join model Cant fields of 1994 and 2007
 
 ```{r join_cant_estimates_model, fig.asp=0.5}
 
+# define positive cant
 m94_cant_3d <- m94_cant_3d %>% 
   mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
   select(lon, lat, depth, cant_pos_S04 = cant_pos)
@@ -320,11 +355,13 @@ m07_cant_3d <- m07_cant_3d %>%
   mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
   select(lon, lat, depth, cant_pos_m07 = cant_pos)
 
+# join data sets
 mod_cant_3d <- full_join(
   m94_cant_3d,
   m07_cant_3d
 )
 
+# calculate the delta cant signal, i.e. the analogue to G19
 mod_cant_3d <- mod_cant_3d %>% 
   mutate(cant_pos_G19 = cant_pos_m07 - cant_pos_S04,
          cant_pos_G19 = if_else(cant_pos_G19 <= 0, 
@@ -348,35 +385,37 @@ cant_3d <- bind_rows(
 cant_3d <- inner_join(cant_3d, basinmask)
 
 ```
-### Cant at tref1
 
-Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time since 1994.
+### tcant at tref1
+
+Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time since 1994. Note: For tref1 close to 1994, this should be a marginal change compared to taking SO4 directly.
 
 ```{r calculate_cant_tref1}
 
-
-cant_3d <- cant_3d %>%
-  mutate(cant_pos = cant_pos_S04 +
+tcant_3d <- cant_3d %>%
+  mutate(tcant_pos = cant_pos_S04 +
            ((min(tref$median_year) - 1994) / 13 * cant_pos_G19))
 
+rm(cant_3d)
+
 # join cant with tref
-cant_3d <- expand_grid(cant_3d, tref)
+tcant_3d <- expand_grid(tcant_3d, tref)
 
 
 # linear scaling of Gruber 2019
 # calculate cant fields for all tref
-cant_3d_t1 <- cant_3d %>%
+tcant_3d_t1 <- tcant_3d %>%
   filter(median_year == min(tref$median_year))
 
 
 ```
 
 
-### Cant at tref2
+### tcant at tref2
 
-Calculate Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.
+Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.
 
-```{r calculate_cant_tref2}
+```{r calc_alpha}
 
 # extract atm pCO2 at reference years
 co2_atm_tref <- right_join(co2_atm, tref %>% rename(year = median_year)) %>% 
@@ -455,39 +494,44 @@ alpha_df <- disequi_pCO2_change %>%
   select(data_source, alpha) %>% 
   drop_na()
 
-cant_3d_t2 <- full_join(cant_3d %>% filter(median_year == max(tref$median_year)),
+
+```
+
+```{r calc_cant_tref1}
+
+tcant_3d_t2 <- full_join(tcant_3d %>% filter(median_year == max(tref$median_year)),
                         alpha_df) %>% 
-  mutate(cant_pos = cant_pos * (1 + alpha)) %>% 
+  mutate(tcant_pos = tcant_pos * (1 + alpha)) %>% 
   select(-alpha)
 
-cant_3d <- bind_rows(cant_3d_t1, cant_3d_t2)
-rm(cant_3d_t1, cant_3d_t2)
+tcant_3d <- bind_rows(tcant_3d_t1, tcant_3d_t2)
+rm(tcant_3d_t1, tcant_3d_t2)
 
 # remove columns
-cant_3d <- cant_3d %>% 
-  select(data_source, basin_AIP, lon, lat, depth, era, cant_pos)
+tcant_3d <- tcant_3d %>% 
+  select(data_source, basin_AIP, lon, lat, depth, era, tcant_pos)
 
-cant_3d %>% 
-  ggplot(aes(cant_pos, depth)) +
+tcant_3d %>% 
+  ggplot(aes(tcant_pos, depth)) +
   geom_bin2d() +
   facet_grid(era ~ data_source) +
   scale_fill_viridis_c() +
   scale_y_reverse()
 
-cant_3d_section <- cant_3d %>%
+tcant_zonal <- tcant_3d %>%
   group_by(data_source, era) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
 
-cant_3d <- cant_3d %>% 
+tcant_3d <- tcant_3d %>% 
   select(-basin_AIP)
 
 ```
 
 
-### Combine GLODAP + Cant
+### Combine GLODAP + tcant
 
 ```{r merge_cstar_cant, fig.asp=0.8}
 
@@ -496,16 +540,16 @@ GLODAP_obs_grid_era <- GLODAP %>%
   distinct(lat, lon, era, data_source)
 
 # cant data at observations grid
-cant_3d_obs <- left_join(
+tcant_3d_obs <- left_join(
   GLODAP_obs_grid_era,
-  cant_3d)
+  tcant_3d)
 
-cant_3d_obs <- cant_3d_obs %>%
-  mutate(cant_pos = replace_na(cant_pos, 0),
+tcant_3d_obs <- tcant_3d_obs %>%
+  mutate(tcant_pos = replace_na(tcant_pos, 0),
          depth = replace_na(depth, 0))
 
 # calculate number of cant data points per grid cell
-cant_3d_obs <- cant_3d_obs %>%
+tcant_3d_obs <- tcant_3d_obs %>%
   group_by(lon, lat, era, data_source) %>% 
   mutate(n = n(),
          n_group = if_else(n > 1, "n > 1", "n <= 1")) %>% 
@@ -513,7 +557,7 @@ cant_3d_obs <- cant_3d_obs %>%
 
 # GLODAP observations with only one Cant value
 map +
-  geom_raster(data = cant_3d_obs,
+  geom_raster(data = tcant_3d_obs,
              aes(lon, lat, fill = n_group)) +
   scale_fill_brewer(palette = "Set1", name="n") +
   facet_grid(data_source ~ era) +
@@ -521,17 +565,17 @@ map +
        subtitle = "available per latxlon grid cell")
 
 
-cant_3d_obs <- cant_3d_obs %>% 
+tcant_3d_obs <- tcant_3d_obs %>% 
   select(-n_group)
 
 rm(GLODAP_obs_grid_era)
 
-GLODAP_cant_obs <- full_join(GLODAP, cant_3d_obs)
+GLODAP_tcant_obs <- full_join(GLODAP, tcant_3d_obs)
 
-rm(GLODAP, cant_3d_obs)
+rm(GLODAP, tcant_3d_obs)
 
 # fill number of cant data points per grid cell to all observations
-GLODAP_cant_obs <- GLODAP_cant_obs %>%
+GLODAP_tcant_obs <- GLODAP_tcant_obs %>%
   group_by(lon, lat, era, data_source) %>% 
   fill(n, .direction = "updown") %>% 
   ungroup()
@@ -546,32 +590,32 @@ The mapped Cant product was merged with GLODAP observation by:
 ```{r cant_interpolation_to_observations}
 
 # interpolate cant to observation depth
-GLODAP_cant_obs_int <- GLODAP_cant_obs %>%
+GLODAP_tcant_obs_int <- GLODAP_tcant_obs %>%
   filter(n > 1) %>% 
   group_by(lat, lon, era, data_source) %>%
   arrange(depth) %>%
-  mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %>%
+  mutate(tcant_pos_int = approxfun(depth, tcant_pos, rule = 2)(depth)) %>%
   ungroup()
 
 # set cant for observation depth if only one cant available
-GLODAP_cant_obs_set <- GLODAP_cant_obs %>%
+GLODAP_tcant_obs_set <- GLODAP_tcant_obs %>%
   filter(n == 1) %>%
   group_by(lat, lon, era, data_source) %>%
-  mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %>%
+  mutate(tcant_pos_int = mean(tcant_pos, na.rm = TRUE)) %>%
   ungroup()
 
 # bin data sets with interpolated and set cant
-GLODAP_cant_obs <- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
-rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
+GLODAP_tcant_obs <- bind_rows(GLODAP_tcant_obs_int, GLODAP_tcant_obs_set)
+rm(GLODAP_tcant_obs_int, GLODAP_tcant_obs_set)
 
 
 # remove cant data at grid cells without observations
-GLODAP <- GLODAP_cant_obs %>%
+GLODAP <- GLODAP_tcant_obs %>%
   filter(!is.na(cstar)) %>%
-  mutate(cant_pos = cant_pos_int) %>%
-  select(-cant_pos_int, n)
+  mutate(tcant_pos = tcant_pos_int) %>%
+  select(-tcant_pos_int, n)
 
-rm(GLODAP_cant_obs)
+rm(GLODAP_tcant_obs)
 
 ```
 
@@ -607,7 +651,7 @@ rm(co2_atm)
 GLODAP <- GLODAP %>%
   mutate(
     cstar_tref_delta =
-      ((pCO2 - pCO2_tref) / (pCO2_tref - params_local$preind_atm_pCO2)) * cant_pos,
+      ((pCO2 - pCO2_tref) / (pCO2_tref - params_local$preind_atm_pCO2)) * tcant_pos,
     cstar_tref = cstar - cstar_tref_delta)
 
 ```
@@ -629,7 +673,7 @@ GLODAP %>%
 
 GLODAP %>% 
   sample_n(1e4) %>% 
-  ggplot(aes(year, cstar_tref_delta, col = cant_pos)) +
+  ggplot(aes(year, cstar_tref_delta, col = tcant_pos)) +
   geom_point() +
   scale_color_viridis_c() +
   labs(title = "Time series of random subsample 1e4") +
@@ -660,7 +704,7 @@ GLODAP_cruise <- GLODAP %>%
 ```
 
 
-```{r meridional_sections, eval=FALSE,fig.asp=0.5}
+```{r meridional_sections}
 
 map +
   geom_path(data = GLODAP_cruise %>%
@@ -682,9 +726,6 @@ GLODAP_cruise %>%
   facet_wrap(~ data_source)
 
 for (i_var in c("tco2",
-                "rCP_phosphate",
-                "talk_05",
-                "rNP_phosphate_05",
                 "cstar",
                 "cstar_tref")) {
   print(lat_section +
@@ -716,7 +757,6 @@ GLODAP %>%
 GLODAP %>% 
   ggplot(aes(gamma, depth)) +
   geom_bin2d() +
-  geom_smooth(col = "red", orientation = "y") +
   scale_y_reverse() +
   scale_fill_viridis_c() +
   facet_grid(basin_AIP~data_source)
@@ -756,7 +796,7 @@ GLODAP <- m_cut_gamma(GLODAP, "gamma")
 
 ```
 
-```{r meridional_sections_isoneutral_slabs, eval=FALSE, fig.asp=0.6}
+```{r meridional_sections_isoneutral_slabs, fig.asp=0.6}
 
 GLODAP_cruise <- GLODAP %>% 
   filter(cruise %in% params_global$cruises_meridional)
@@ -847,10 +887,15 @@ GLODAP_grid <- GLODAP %>%
   ungroup()
 
 GLODAP_grid %>%
-  # filter(n < 100) %>%
   ggplot(aes(n)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "Observations per era, grid cell and slab")
+  labs(title = "Observations per era, grid cell and slab, all data")
+
+GLODAP_grid %>%
+  filter(n <= quantile(n, 0.9)) %>%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Observations per era, grid cell and slab, 90th quantile")
 
 ```
 
@@ -1294,131 +1339,12 @@ co2_atm_tref %>%  write_csv(paste(path_version_data,
                                   "co2_atm_tref.csv",
                                   sep = ""))
 
-cant_3d %>%  write_csv(paste(path_version_data,
-                             "cant_3d_tref.csv",
+tcant_3d %>%  write_csv(paste(path_version_data,
+                             "projected_tcant_3d_tref.csv",
+                             sep = ""))
+
+tcant_zonal %>%  write_csv(paste(path_version_data,
+                             "projected_tcant_zonal_tref.csv",
                              sep = ""))
 
 ```
-
-# Spatial autocorrelation
-
-```{r spatial_autocorrelation, eval=FALSE}
-
-GLODAP_sp <- GLODAP %>% 
-  filter(depth == 150)
-
-map +
-  geom_raster(data = GLODAP_sp,
-              aes(lon, lat, fill = temp)) +
-  scale_fill_viridis_c()
-
-class(GLODAP_sp)
-
-GLODAP_sp <- GLODAP_sp %>% 
-  mutate(lon = if_else(lon > 180, lon - 360, lon))
-
-ggplot() +
-  geom_raster(data = GLODAP_sp,
-              aes(lon, lat, fill = temp)) +
-  scale_fill_viridis_c() +
-  coord_quickmap()
-
-GLODAP_sp <- as.data.frame(GLODAP_sp)
-
-library(sp)
-coordinates(GLODAP_sp) = ~lon+lat
-class(GLODAP_sp)
-
-summary(GLODAP_sp)
-
-is.projected(GLODAP_sp)
-proj4string(GLODAP_sp) <-
-  CRS("+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
-
-
-GLODAP_sp_grid <- GLODAP_sp
-
-gridded(GLODAP_sp_grid) <- TRUE
-
-
-spplot(GLODAP_sp,
-       zcol = "temp")
-
-spplot(GLODAP_sp_grid,
-       zcol = "temp")
-
-library(sf)
-library(stars)
-GLODAP_sf <- st_as_sf(GLODAP_sp_grid)
-GLODAP_stars <- st_as_stars(GLODAP_sp_grid)
-class(GLODAP_stars)
-
-plot(GLODAP_stars)
-
-ggplot() +
-  geom_stars(data = GLODAP_stars,
-             aes(x, y, fill = temp)) +
-  scale_fill_viridis_c(na.value = "transparent") +
-  coord_quickmap(expand = 0)
-
-library(rnaturalearth)
-coastlines <- ne_coastline(scale = "small", returnclass = "sf")
-
-ggplot() +
-  geom_sf(data = GLODAP_sf,
-             aes(col = temp)) +
-  scale_fill_viridis_c(na.value = "transparent") +
-  geom_sf(data = st_wrap_dateline(coastlines),
-          colour = "black") +
-  coord_sf(crs = st_crs('ESRI:54030')) +
-  theme_bw()
-
-summary(GLODAP_sp)
-
-library(gstat)
-vg_temp <- variogram(temp~1,
-                     data = GLODAP_sp_grid,
-                     cutoff = 1e4)
-fit_temp <- fit.variogram(vg_temp, vgm("Sph"))
-
-plot(vg_temp, fit_temp)
-
-vg_temp <- variogram(temp~1,
-                     data = GLODAP_sp_grid,
-                     alpha = c(0,90),
-                     cutoff = 1e4)
-plot(vg_temp)
-
-
-vg <- gstat(id = params_local$MLR_target,
-            formula = as.formula(paste(sym(
-              params_local$MLR_target
-            ), "~ 1")),
-            data = GLODAP_sp_grid)
-
-for (i_var in params_local$MLR_predictors) {
-  #i_var <- params_local$MLR_predictors[1]
-  vg <- gstat(vg,
-            id = i_var,
-            formula = as.formula(paste(sym(
-              i_var
-            ), "~ 1")),
-            data = GLODAP_sp_grid)
-}
-
-
-
-plot(variogram(vg, cutoff = 1e4))
-
-# ### kriging
-# 
-# lzn.kr1 = krige(formula = temp~1,
-#                 GLODAP_sp,
-#                 GLODAP_sp_grid,
-#                 model = fit_temp)
-# #> [using universal kriging]
-# plot(lzn.kr1[1])
-
-```
-
-
