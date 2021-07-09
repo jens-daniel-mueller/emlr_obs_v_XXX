@@ -1,0 +1,460 @@
+---
+title: "Mapping cant"
+author: "Jens Daniel Müller"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  workflowr::wflow_html:
+    number_sections: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+editor_options:
+  chunk_output_type: console
+params:
+  Version_ID: "v_XXX"
+---
+
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+
+if (params$Version_ID == "v_XXX") {
+  params_local <-
+    read_rds(here::here("data/auxillary", "params_local.rds"))
+  
+} else {
+  params_local <-
+    read_rds(
+      file = paste(path_root, "observations",
+                   params$Version_ID,
+                   "data/params_local.rds",
+                   sep = "/")
+    )
+}
+
+
+```
+
+```{r define_paths, include = FALSE}
+
+# only path_observations needs to be changed to model
+path_observations <-
+  paste(path_root, "/observations/", sep = "")
+
+path_preprocessing    <-
+  paste(path_observations, "preprocessing/", sep = "")
+
+path_model_preprocessing    <-
+  paste(path_root, "/model/preprocessing/", sep = "")
+
+path_version_data     <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/data/",
+        sep = "")
+
+path_version_figures  <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/figures/",
+        sep = "")
+```
+
+# Version ID
+
+The results displayed on this site correspond to the Version_ID: `r params$Version_ID`
+
+# Required data
+
+## Predictor fields
+
+```{r read_model_tcant_files}
+
+tref  <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
+tcant_tref_1 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_AD",
+      "/cant_",
+      unique(tref$median_year[1]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_tref_1 <- tcant_tref_1 %>%
+  rename(tcant_tref_1 = cant_total) %>%
+  select(-year)
+
+tcant_tref_2 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_AD",
+      "/cant_",
+      unique(tref$median_year[2]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_tref_2 <- tcant_tref_2 %>%
+  rename(tcant_tref_2 = cant_total) %>%
+  select(-year)
+
+```
+
+
+
+```{r read_model_cant_files_cc}
+
+tcant_cc_tref_1 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_CB",
+      "/cant_",
+      unique(tref$median_year[1]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_cc_tref_1 <- tcant_cc_tref_1 %>%
+  rename(tcant_tref_1 = cant_total) %>%
+  select(-year)
+
+tcant_cc_tref_2 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_CB",
+      "/cant_",
+      unique(tref$median_year[2]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
+  rename(tcant_tref_2 = cant_total) %>%
+  select(-year)
+
+```
+
+
+```{r select_basin_mask, include=FALSE, eval=FALSE}
+
+basinmask <- basinmask %>% 
+  filter(MLR_basins == params_local$MLR_basins) %>% 
+  select(-c(MLR_basins, basin_AIP))
+
+```
+
+
+```{r load_model_gamma_climatology}
+
+climatology <-
+  read_csv(paste(path_model_preprocessing, "climatology_runA_2007.csv", sep = ""))
+
+climatology <- climatology %>%
+  select(lon,lat,depth, gamma)
+
+```
+
+
+```{r calc_model_cant_between_tref}
+
+dcant_3d <- left_join(tcant_tref_1, tcant_tref_2) %>%
+  mutate(dcant = tcant_tref_2 - tcant_tref_1)
+
+rm(tcant_tref_1, tcant_tref_2)
+
+dcant_3d <- dcant_3d %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_3d <- full_join(dcant_3d, climatology)
+
+dcant_3d <- m_cut_gamma(dcant_3d, "gamma")
+
+dcant_3d_vc <- dcant_3d %>% 
+  mutate(data_source = "mod_truth") %>% 
+  select(lon, lat, depth, basin_AIP, data_source,
+            tcant_tref_1, dcant, dcant_pos,
+            gamma, gamma_slab)
+
+```
+
+```{r calc_model_cant_between_tref_cc}
+
+dcant_3d <- left_join(tcant_cc_tref_1, tcant_cc_tref_2) %>%
+  mutate(dcant = tcant_tref_2 - tcant_tref_1)
+
+rm(tcant_cc_tref_1, tcant_cc_tref_2)
+
+dcant_3d <- dcant_3d %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_3d <- full_join(dcant_3d, climatology)
+
+dcant_3d <- m_cut_gamma(dcant_3d, "gamma")
+
+dcant_3d_cc <- dcant_3d %>% 
+  mutate(data_source = "mod_truth_cc") %>% 
+  select(lon, lat, depth, basin_AIP, data_source,
+            tcant_tref_1, dcant, dcant_pos,
+            gamma, gamma_slab)
+
+rm(climatology, dcant_3d)
+
+```
+
+```{r join_climate_runs}
+
+dcant_3d <- bind_rows(
+  dcant_3d_cc,
+  dcant_3d_vc
+)
+
+rm(
+  dcant_3d_cc,
+  dcant_3d_vc
+)
+
+
+```
+
+
+## Model dcant
+
+```{r cant_deep_climatology_map, fig.asp=0.6}
+
+dcant_3d %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "dcant_pos",
+    subtitle_text = paste("Climate: ", .x$data_source)
+  ))
+
+```
+
+
+```{r cant_deep_climatology_sections, fig.asp=1}
+
+dcant_3d %>%
+  group_split(data_source) %>%
+  head(1) %>%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = "dcant_pos",
+    subtitle_text = paste("Climate: ", .x$data_source)
+  ))
+
+```
+
+
+## Zonal mean sections
+
+```{r calc_cant_zonal_mean_sections}
+
+dcant_zonal <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+
+dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
+
+```
+
+## Inventory calculation
+
+To calculate Cant column inventories, we:  
+
+1. Convert Cant concentrations to volumetric units
+2. Multiply layer thickness with volumetric Cant concentration to get a layer inventory
+3. For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (`r params_global$inventory_depths` m)
+
+Step 2 is performed separately for all Cant and positive Cant values only.
+
+```{r calc_dcant_inventories, fig.asp=1}
+
+dcant_inv <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(df = dcant_inv,
+               var = "dcant_pos",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ data_source)
+
+```
+
+```{r cant_total_inventories, fig.asp=1}
+
+tcant_inv <- dcant_3d %>%
+  rename(tcant = tcant_tref_1) %>%
+  mutate(tcant_pos = if_else(tcant <= 0, 0, tcant)) %>% 
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_tcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(df = tcant_inv,
+               var = "tcant_pos",
+               breaks = seq(0,70,10),
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ data_source)
+
+```
+
+# Alpha
+
+## 3d fields
+
+```{r alpha_3d}
+
+alpha_3d <- dcant_3d %>%
+  mutate(
+    alpha = dcant / tcant_tref_1,
+    alpha = if_else(dcant <= 0 | tcant_tref_1 <= 0,
+                    NaN, alpha)
+  )
+
+alpha_3d %>%
+  filter(alpha < 1) %>%
+  ggplot(aes(alpha)) +
+  geom_histogram() +
+  facet_grid(basin_AIP ~ data_source) +
+  scale_x_continuous(breaks = seq(0, 1, 0.1))
+
+median_alpha <- 
+  alpha_3d %>% 
+  group_by(depth, basin_AIP, data_source) %>% 
+  summarise(alpha_median = median(alpha, na.rm = TRUE),
+            alpha_mean = weighted.mean(alpha, tcant_tref_1, na.rm = TRUE)) %>% 
+  ungroup()
+
+alpha_3d %>%
+  filter(alpha < 1) %>%
+  ggplot(aes(alpha, depth)) +
+  geom_bin2d(binwidth = c(0.01, 200)) +
+  geom_path(data = median_alpha,
+            aes(alpha_median, depth, col="Median")) +
+  geom_path(data = median_alpha,
+            aes(alpha_mean, depth, col="Weighted mean")) +
+  scale_color_manual(name = "Alpha",
+                     values = c("red", "orange")) +
+  scale_y_reverse() +
+  scale_x_continuous(breaks = seq(0, 1, 0.1),
+                     limits = c(0,1)) +
+  scale_fill_viridis_c(trans = "log10") +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP~data_source)
+
+
+print(paste("mean:",
+            round(mean(
+              alpha_3d$alpha, na.rm = TRUE
+            ), 3)))
+
+print(paste("mean, weighted with Cant:",
+            round(
+              weighted.mean(
+                x = alpha_3d$alpha,
+                w = alpha_3d$tcant_tref_1,
+                na.rm = TRUE
+              ),
+              3
+            )))
+
+print(paste("median:",
+            round(median(
+              alpha_3d$alpha, na.rm = TRUE
+            ), 3)))
+
+
+```
+
+## Inventory maps
+
+```{r alpha_surface_distribution, fig.asp=1.5}
+
+alpha_inv <- full_join(
+  dcant_inv,
+  tcant_inv)
+
+alpha_inv <- alpha_inv %>% 
+  mutate(alpha = dcant / tcant)
+
+
+map +
+  geom_raster(data = alpha_inv,
+              aes(lon, lat, fill = alpha)) +
+  facet_grid(inv_depth ~ data_source) +
+  scale_fill_divergent(
+    midpoint = median(alpha_inv$alpha)
+  )
+
+
+```
+
+
+
+# Write csv
+
+```{r write_cant_files}
+
+dcant_3d <- dcant_3d %>%
+  select(-c(tcant_tref_1))
+
+dcant_3d %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_3d_mod_truth.csv", sep = ""))
+
+dcant_3d %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_3d_mod_truth_cc.csv", sep = ""))
+
+dcant_zonal %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_mod_truth.csv", sep = ""))
+
+dcant_zonal %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_mod_truth_cc.csv", sep = ""))
+
+dcant_inv %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_mod_truth.csv", sep = ""))
+
+dcant_inv %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_mod_truth_cc.csv", sep = ""))
+
+```
+
+
