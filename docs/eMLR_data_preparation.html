@@ -429,10 +429,10 @@ div.tocify {
       <a href="mapping_predictor_preparation.html">Predictor preparation</a>
     </li>
     <li>
-      <a href="mapping_cant.html">Cant calculation</a>
+      <a href="mapping_dcant_eMLR.html">dcant eMLR</a>
     </li>
     <li>
-      <a href="mapping_cant_mod_truth.html">Cant model_truth</a>
+      <a href="mapping_dcant_mod_truth.html">dcant model_truth</a>
     </li>
   </ul>
 </li>
@@ -498,7 +498,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">02 July, 2021</h4>
+<h4 class="date">09 July, 2021</h4>
 
 </div>
 
@@ -523,7 +523,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-07-02
+<strong>Last updated:</strong> 2021-07-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d5f3508e0d35e9572a9db48cd8567898733b210targetblank3d5f350a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d5f3508e0d35e9572a9db48cd8567898733b210" target="_blank">3d5f350</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree795a3b096db8066b1dc216953fda969b24c6503ftargetblank795a3b0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/795a3b096db8066b1dc216953fda969b24c6503f" target="_blank">795a3b0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d5f3508e0d35e9572a9db48cd8567898733b210targetblank3d5f350a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree795a3b096db8066b1dc216953fda969b24c6503ftargetblank795a3b0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d5f3508e0d35e9572a9db48cd8567898733b210" target="_blank">3d5f350</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/795a3b096db8066b1dc216953fda969b24c6503f" target="_blank">795a3b0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -633,7 +633,22 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
 
+Untracked files:
+    Untracked:  analysis/mapping_dcant_eMLR.Rmd
+    Untracked:  analysis/mapping_dcant_mod_truth.Rmd
+    Untracked:  code/previous_script_versions/parallel_model_fitting.R
+    Untracked:  code/previous_script_versions/spatial_autocorrelation.R
+
 Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/analysis_MLR_performance.Rmd
+    Modified:   analysis/analysis_anomalous_changes.Rmd
+    Modified:   analysis/analysis_budgets.Rmd
+    Modified:   analysis/analysis_column_inventory.Rmd
+    Modified:   analysis/analysis_slab_inventory.Rmd
+    Modified:   analysis/analysis_zonal_sections.Rmd
+    Deleted:    analysis/mapping_cant.Rmd
+    Deleted:    analysis/mapping_cant_mod_truth.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -674,6 +689,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/795a3b096db8066b1dc216953fda969b24c6503f/analysis/eMLR_data_preparation.Rmd" target="_blank">795a3b0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-09
+</td>
+<td>
+complete revision
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/eMLR_data_preparation.html" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4123,12 +4172,12 @@ Initial commit
 
 S04_cant_3d &lt;-
   read_csv(paste(path_preprocessing,
-                 &quot;S04_cant_3d.csv&quot;,
+                 &quot;S04_tcant_3d.csv&quot;,
                  sep = &quot;&quot;))
 
 G19_cant_3d &lt;-
   read_csv(paste(path_preprocessing,
-                 &quot;G19_cant_3d.csv&quot;,
+                 &quot;G19_dcant_3d.csv&quot;,
                  sep = &quot;&quot;))
 
 m94_cant_3d &lt;-
@@ -4196,10 +4245,8 @@ GLODAP &lt;- GLODAP %&gt;%
   )</code></pre>
 </div>
 </div>
-<div id="po4" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> PO<sub>4</sub>*</h1>
-<div id="calculation" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Calculation</h2>
+<div id="po4-calculation" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> PO<sub>4</sub>* calculation</h1>
 <p>The predictor PO<sub>4</sub>* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.</p>
 <p>Here we use following equation:</p>
 <pre class="r"><code>print(b_phosphate_star)</code></pre>
@@ -4213,7 +4260,6 @@ GLODAP &lt;- GLODAP %&gt;%
 GLODAP &lt;- GLODAP %&gt;% 
   mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
 }</code></pre>
-</div>
 </div>
 <div id="c" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> C*</h1>
@@ -4231,21 +4277,47 @@ GLODAP &lt;- GLODAP %&gt;%
 <li>N/P: 16</li>
 </ul>
 </div>
-<div id="calculation-1" class="section level2" number="4.2">
+<div id="calculation" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> Calculation</h2>
-<p>C* was calculated as:</p>
-<pre class="r"><code>print(b_cstar)</code></pre>
+<p>C* can optionally be calculated based on phosphate or nitrate.</p>
+<pre class="r"><code>if(&quot;phosphate&quot; %in% names(GLODAP) &amp;
+   &quot;nitrate&quot; %in% names(GLODAP)) {
+  GLODAP &lt;- GLODAP %&gt;%
+    mutate(
+      cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk),
+      cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)
+    )
+  
+  
+  p_prop_prop(df = GLODAP,
+              var1 = &quot;cstar_phosphate&quot;,
+              var2 = &quot;cstar_nitrate&quot;)
+  
+}</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cstar-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>C* was actually calculated as:</p>
+<pre class="r"><code>if (params_local$cstar_nutrient == &quot;phosphate&quot;) {
+  
+  print(b_cstar_phosphate)
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    rename(cstar = cstar_phosphate) %&gt;%
+    select(-cstar_nitrate)
+}</code></pre>
 <pre><code>function (tco2, phosphate, talk) 
 {
     cstar = tco2 - (params_local$rCP * phosphate) - 0.5 * (talk - 
         (params_local$rNP * phosphate))
     return(cstar)
 }</code></pre>
-<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
-  mutate(rCP_phosphate = -params_local$rCP * phosphate,
-         talk_05 = -0.5 * talk,
-         rNP_phosphate_05 = -0.5 * params_local$rNP * phosphate,
-         cstar = b_cstar(tco2, phosphate, talk))</code></pre>
+<pre class="r"><code>if (params_local$cstar_nutrient == &quot;nitrate&quot;) {
+  
+  print(b_cstar_nitrate)
+  
+  GLODAP &lt;- GLODAP %&gt;%
+    rename(cstar = cstar_nitrate) %&gt;%
+    select(-cstar_phosphate)
+}</code></pre>
 </div>
 <div id="reference-year-adjustment" class="section level2" number="4.3">
 <h2 number="4.3"><span class="header-section-number">4.3</span> Reference year adjustment</h2>
@@ -4256,13 +4328,14 @@ GLODAP &lt;- GLODAP %&gt;%
 <p>For the model data, we perform an analogous adjustment based on the total Cant estimate for 1994 (corresponding to Sabine 2004), and the delta Cant estimate for 1994 - 2007 (corresponding to Gruber 2019).</p>
 <div id="join-cant-fields" class="section level3" number="4.3.1">
 <h3 number="4.3.1"><span class="header-section-number">4.3.1</span> Join Cant fields</h3>
-<p>Join Cant fields of G19 and S04</p>
+<p>Join observation-based Cant fields of G19 and S04</p>
 <pre class="r"><code>G19_cant_3d &lt;- G19_cant_3d %&gt;% 
-  select(lon, lat, depth, cant_pos_G19 = cant_pos)
+  select(lon, lat, depth, cant_pos_G19 = dcant_pos)
 
 S04_cant_3d &lt;- S04_cant_3d %&gt;% 
-  select(lon, lat, depth, cant_pos_S04 = cant_pos)
+  select(lon, lat, depth, cant_pos_S04 = tcant_pos)
 
+# check regional coverage of both data sets
 cant_3d_coverage &lt;- full_join(
   S04_cant_3d %&gt;% distinct(lat, lon),
   G19_cant_3d %&gt;% distinct(lat, lon)
@@ -4290,361 +4363,19 @@ map +
   geom_raster(data = GLODAP %&gt;% distinct(lat, lon),
               aes(lon, lat)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-join_cant_estimates-1">
-Past versions of join_cant_estimates-1.png
-</button>
-</p>
-<div id="fig-join_cant_estimates-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">1cbf907</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9480f94c9000dbb816e8ba50aa3cf4812f6e0c1a/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">9480f94</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594ed9ae3d8963d783944873c913ae1f5c25cb42/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">594ed9a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/db7df0e12e9e0b7d120efa2ca3c01848c62c7723/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">db7df0e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">d37a85d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-31
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/25bd183bcad9ee32d58ce0947484428a9e9390f3/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">25bd183</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">52e7583</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/969e631cefba5c3de4548e64f39eb20894ce498b/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">969e631</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">c0a47df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">50290e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">9f31fe3</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">338dd3c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">a79ca2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">eb827c9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">857bad3</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">03b6009</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/555750fec9d8ced327850c2fa8a74792d097acff/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">555750f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a1d52ff78a78b51913b89c5e0172e7966dbbdb91/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">a1d52ff</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0bade3b99e8d7ea3a292371f4628611f388aae35/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">0bade3b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27c1f4bde53ae3344e9f0631e10b06f0c7494886/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">27c1f4b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af75ebf0ed2b8bc1792cbe361bc6bbb6d7afd68e/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">af75ebf</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50177095186ec196d54d90cc618e8e2922be2727/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">5017709</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/85a5ed256cf76a725d13abcf73be56c016477771/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">85a5ed2</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3c2ec339ad2a2636369540185ee732d993b50b4c/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">3c2ec33</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-05
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/af70b945d751756feb713a1b3762429391fd126a/docs/figure/eMLR_data_preparation.Rmd/join_cant_estimates-1.png" target="_blank">af70b94</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-03-04
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/eMLR_data_preparation.Rmd/join_cant_estimates_observations-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>rm(cant_3d_coverage)
 
+
+# join data sets
 cant_3d &lt;- full_join(S04_cant_3d, G19_cant_3d)
 
 cant_3d &lt;- cant_3d %&gt;%
   mutate(cant_pos_S04 = replace_na(cant_pos_S04, 0),
          cant_pos_G19 = replace_na(cant_pos_G19, 0))</code></pre>
 <p>Join model Cant fields of 1994 and 2007</p>
-<pre class="r"><code>m94_cant_3d &lt;- m94_cant_3d %&gt;% 
+<pre class="r"><code># define positive cant
+m94_cant_3d &lt;- m94_cant_3d %&gt;% 
   mutate(cant_pos = if_else(cant_total &lt;= 0, 0, cant_total)) %&gt;% 
   select(lon, lat, depth, cant_pos_S04 = cant_pos)
 
@@ -4652,11 +4383,13 @@ m07_cant_3d &lt;- m07_cant_3d %&gt;%
   mutate(cant_pos = if_else(cant_total &lt;= 0, 0, cant_total)) %&gt;% 
   select(lon, lat, depth, cant_pos_m07 = cant_pos)
 
+# join data sets
 mod_cant_3d &lt;- full_join(
   m94_cant_3d,
   m07_cant_3d
 )
 
+# calculate the delta cant signal, i.e. the analogue to G19
 mod_cant_3d &lt;- mod_cant_3d %&gt;% 
   mutate(cant_pos_G19 = cant_pos_m07 - cant_pos_S04,
          cant_pos_G19 = if_else(cant_pos_G19 &lt;= 0, 
@@ -4673,25 +4406,27 @@ rm(m07_cant_3d,
 
 cant_3d &lt;- inner_join(cant_3d, basinmask)</code></pre>
 </div>
-<div id="cant-at-tref1" class="section level3" number="4.3.2">
-<h3 number="4.3.2"><span class="header-section-number">4.3.2</span> Cant at tref1</h3>
-<p>Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time since 1994.</p>
-<pre class="r"><code>cant_3d &lt;- cant_3d %&gt;%
-  mutate(cant_pos = cant_pos_S04 +
+<div id="tcant-at-tref1" class="section level3" number="4.3.2">
+<h3 number="4.3.2"><span class="header-section-number">4.3.2</span> tcant at tref1</h3>
+<p>Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time since 1994. Note: For tref1 close to 1994, this should be a marginal change compared to taking SO4 directly.</p>
+<pre class="r"><code>tcant_3d &lt;- cant_3d %&gt;%
+  mutate(tcant_pos = cant_pos_S04 +
            ((min(tref$median_year) - 1994) / 13 * cant_pos_G19))
 
+rm(cant_3d)
+
 # join cant with tref
-cant_3d &lt;- expand_grid(cant_3d, tref)
+tcant_3d &lt;- expand_grid(tcant_3d, tref)
 
 
 # linear scaling of Gruber 2019
 # calculate cant fields for all tref
-cant_3d_t1 &lt;- cant_3d %&gt;%
+tcant_3d_t1 &lt;- tcant_3d %&gt;%
   filter(median_year == min(tref$median_year))</code></pre>
 </div>
-<div id="cant-at-tref2" class="section level3" number="4.3.3">
-<h3 number="4.3.3"><span class="header-section-number">4.3.3</span> Cant at tref2</h3>
-<p>Calculate Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.</p>
+<div id="tcant-at-tref2" class="section level3" number="4.3.3">
+<h3 number="4.3.3"><span class="header-section-number">4.3.3</span> tcant at tref2</h3>
+<p>Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.</p>
 <pre class="r"><code># extract atm pCO2 at reference years
 co2_atm_tref &lt;- right_join(co2_atm, tref %&gt;% rename(year = median_year)) %&gt;% 
   select(-year) %&gt;% 
@@ -4718,121 +4453,7 @@ delta_pco2_annual %&gt;%
   geom_path(aes(linetype=data_source)) +
   geom_point(aes(col = era, shape=data_source)) +
   scale_color_brewer(palette = &quot;Set1&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-1">
-Past versions of calculate_cant_tref2-1.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">3b6387f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/177290392858f03833092bce740ec20b67727c98/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-1.png" target="_blank">1772903</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-07
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/eMLR_data_preparation.Rmd/calc_alpha-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># create data frame with preindustrial disequilibrium for model and observations
 disequi_pCO2_pi &lt;- bind_cols(
   era = rep(paste0(&quot;1750-&quot;,tref$median_year[1]),2),
@@ -4881,208 +4502,60 @@ disequi_pCO2_change</code></pre>
 <pre><code># A tibble: 4 x 8
   era   data_source mean_delta_pCO2 disequi_pCO2_ch… delta_pCO2_atm  xeta
   &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
-1 2000… mod                   -8.58            -8.58           98.8  1.09
-2 2000… obs                   -7.50           -10.5            98.8  1.11
-3 2010… mod                   -9.86            -1.28           18.3  1.07
-4 2010… obs                  -10.2             -2.71           18.3  1.15
+1 2000… mod                   -8.58            -8.58           96.8  1.09
+2 2000… obs                   -7.50           -10.5            96.8  1.11
+3 2010… mod                   -9.86            -1.28           20.3  1.06
+4 2010… obs                  -10.2             -2.71           20.3  1.13
 # … with 2 more variables: xeta_ratio &lt;dbl&gt;, alpha &lt;dbl&gt;</code></pre>
 <pre class="r"><code>alpha_df &lt;- disequi_pCO2_change %&gt;% 
   select(data_source, alpha) %&gt;% 
-  drop_na()
-
-cant_3d_t2 &lt;- full_join(cant_3d %&gt;% filter(median_year == max(tref$median_year)),
+  drop_na()</code></pre>
+<pre class="r"><code>tcant_3d_t2 &lt;- full_join(tcant_3d %&gt;% filter(median_year == max(tref$median_year)),
                         alpha_df) %&gt;% 
-  mutate(cant_pos = cant_pos * (1 + alpha)) %&gt;% 
+  mutate(tcant_pos = tcant_pos * (1 + alpha)) %&gt;% 
   select(-alpha)
 
-cant_3d &lt;- bind_rows(cant_3d_t1, cant_3d_t2)
-rm(cant_3d_t1, cant_3d_t2)
+tcant_3d &lt;- bind_rows(tcant_3d_t1, tcant_3d_t2)
+rm(tcant_3d_t1, tcant_3d_t2)
 
 # remove columns
-cant_3d &lt;- cant_3d %&gt;% 
-  select(data_source, basin_AIP, lon, lat, depth, era, cant_pos)
+tcant_3d &lt;- tcant_3d %&gt;% 
+  select(data_source, basin_AIP, lon, lat, depth, era, tcant_pos)
 
-cant_3d %&gt;% 
-  ggplot(aes(cant_pos, depth)) +
+tcant_3d %&gt;% 
+  ggplot(aes(tcant_pos, depth)) +
   geom_bin2d() +
   facet_grid(era ~ data_source) +
   scale_fill_viridis_c() +
   scale_y_reverse()</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calculate_cant_tref2-2">
-Past versions of calculate_cant_tref2-2.png
-</button>
-</p>
-<div id="fig-calculate_cant_tref2-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">1cbf907</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3b6387fce7e6d4a4820e712982af7cfbae6b1aac/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">3b6387f</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77cfc43e1e16ca4dfbc0023ae8f7daab221fb679/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">77cfc43</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-17
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/439ee801edb5bf8024748255183c7ed9f38d30e7/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">439ee80</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-11
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ffcab3ed4f02e16aa526d06ff54e8d6b0fb49b/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">33ffcab</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ed82630a4b6bfc27733bdf9157e34555ebd67152/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">ed82630</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c5aaa558574390a4a256c35a57456af9de2f60f4/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">c5aaa55</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/69c79d019afe3637587da96935eb6d7ee440d57d/docs/figure/eMLR_data_preparation.Rmd/calculate_cant_tref2-2.png" target="_blank">69c79d0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>cant_3d_section &lt;- cant_3d %&gt;%
+<p><img src="figure/eMLR_data_preparation.Rmd/calc_cant_tref1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tcant_zonal &lt;- tcant_3d %&gt;%
   group_by(data_source, era) %&gt;%
   nest() %&gt;%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(section)
 
-cant_3d &lt;- cant_3d %&gt;% 
+tcant_3d &lt;- tcant_3d %&gt;% 
   select(-basin_AIP)</code></pre>
 </div>
-<div id="combine-glodap-cant" class="section level3" number="4.3.4">
-<h3 number="4.3.4"><span class="header-section-number">4.3.4</span> Combine GLODAP + Cant</h3>
+<div id="combine-glodap-tcant" class="section level3" number="4.3.4">
+<h3 number="4.3.4"><span class="header-section-number">4.3.4</span> Combine GLODAP + tcant</h3>
 <pre class="r"><code># observations grid per era
 GLODAP_obs_grid_era &lt;- GLODAP %&gt;% 
   distinct(lat, lon, era, data_source)
 
 # cant data at observations grid
-cant_3d_obs &lt;- left_join(
+tcant_3d_obs &lt;- left_join(
   GLODAP_obs_grid_era,
-  cant_3d)
+  tcant_3d)
 
-cant_3d_obs &lt;- cant_3d_obs %&gt;%
-  mutate(cant_pos = replace_na(cant_pos, 0),
+tcant_3d_obs &lt;- tcant_3d_obs %&gt;%
+  mutate(tcant_pos = replace_na(tcant_pos, 0),
          depth = replace_na(depth, 0))
 
 # calculate number of cant data points per grid cell
-cant_3d_obs &lt;- cant_3d_obs %&gt;%
+tcant_3d_obs &lt;- tcant_3d_obs %&gt;%
   group_by(lon, lat, era, data_source) %&gt;% 
   mutate(n = n(),
          n_group = if_else(n &gt; 1, &quot;n &gt; 1&quot;, &quot;n &lt;= 1&quot;)) %&gt;% 
@@ -5090,7 +4563,7 @@ cant_3d_obs &lt;- cant_3d_obs %&gt;%
 
 # GLODAP observations with only one Cant value
 map +
-  geom_raster(data = cant_3d_obs,
+  geom_raster(data = tcant_3d_obs,
              aes(lon, lat, fill = n_group)) +
   scale_fill_brewer(palette = &quot;Set1&quot;, name=&quot;n&quot;) +
   facet_grid(data_source ~ era) +
@@ -5119,6 +4592,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/merge_cstar_cant-1.png" target="_blank">1cbf907</a>
@@ -5618,17 +5102,17 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>cant_3d_obs &lt;- cant_3d_obs %&gt;% 
+<pre class="r"><code>tcant_3d_obs &lt;- tcant_3d_obs %&gt;% 
   select(-n_group)
 
 rm(GLODAP_obs_grid_era)
 
-GLODAP_cant_obs &lt;- full_join(GLODAP, cant_3d_obs)
+GLODAP_tcant_obs &lt;- full_join(GLODAP, tcant_3d_obs)
 
-rm(GLODAP, cant_3d_obs)
+rm(GLODAP, tcant_3d_obs)
 
 # fill number of cant data points per grid cell to all observations
-GLODAP_cant_obs &lt;- GLODAP_cant_obs %&gt;%
+GLODAP_tcant_obs &lt;- GLODAP_tcant_obs %&gt;%
   group_by(lon, lat, era, data_source) %&gt;% 
   fill(n, .direction = &quot;updown&quot;) %&gt;% 
   ungroup()</code></pre>
@@ -5638,39 +5122,39 @@ GLODAP_cant_obs &lt;- GLODAP_cant_obs %&gt;%
 <li>linear interpolation of C<sub>ant</sub> from standard to sampling depth</li>
 </ul>
 <pre class="r"><code># interpolate cant to observation depth
-GLODAP_cant_obs_int &lt;- GLODAP_cant_obs %&gt;%
+GLODAP_tcant_obs_int &lt;- GLODAP_tcant_obs %&gt;%
   filter(n &gt; 1) %&gt;% 
   group_by(lat, lon, era, data_source) %&gt;%
   arrange(depth) %&gt;%
-  mutate(cant_pos_int = approxfun(depth, cant_pos, rule = 2)(depth)) %&gt;%
+  mutate(tcant_pos_int = approxfun(depth, tcant_pos, rule = 2)(depth)) %&gt;%
   ungroup()
 
 # set cant for observation depth if only one cant available
-GLODAP_cant_obs_set &lt;- GLODAP_cant_obs %&gt;%
+GLODAP_tcant_obs_set &lt;- GLODAP_tcant_obs %&gt;%
   filter(n == 1) %&gt;%
   group_by(lat, lon, era, data_source) %&gt;%
-  mutate(cant_pos_int = mean(cant_pos, na.rm = TRUE)) %&gt;%
+  mutate(tcant_pos_int = mean(tcant_pos, na.rm = TRUE)) %&gt;%
   ungroup()
 
 # bin data sets with interpolated and set cant
-GLODAP_cant_obs &lt;- bind_rows(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
-rm(GLODAP_cant_obs_int, GLODAP_cant_obs_set)
+GLODAP_tcant_obs &lt;- bind_rows(GLODAP_tcant_obs_int, GLODAP_tcant_obs_set)
+rm(GLODAP_tcant_obs_int, GLODAP_tcant_obs_set)
 
 
 # remove cant data at grid cells without observations
-GLODAP &lt;- GLODAP_cant_obs %&gt;%
+GLODAP &lt;- GLODAP_tcant_obs %&gt;%
   filter(!is.na(cstar)) %&gt;%
-  mutate(cant_pos = cant_pos_int) %&gt;%
-  select(-cant_pos_int, n)
+  mutate(tcant_pos = tcant_pos_int) %&gt;%
+  select(-tcant_pos_int, n)
 
-rm(GLODAP_cant_obs)</code></pre>
+rm(GLODAP_tcant_obs)</code></pre>
 </div>
 <div id="merge-glodap-atm.-pco2" class="section level3" number="4.3.5">
 <h3 number="4.3.5"><span class="header-section-number">4.3.5</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
 <p>GLODAP observations were merged with mean annual atmospheric pCO<sub>2</sub> levels by year.</p>
 <pre class="r"><code>GLODAP &lt;- left_join(GLODAP, co2_atm)</code></pre>
 </div>
-<div id="calculation-2" class="section level3" number="4.3.6">
+<div id="calculation-1" class="section level3" number="4.3.6">
 <h3 number="4.3.6"><span class="header-section-number">4.3.6</span> Calculation</h3>
 <pre class="r"><code># assign reference year
 GLODAP &lt;- full_join(GLODAP, tref)
@@ -5689,7 +5173,7 @@ rm(co2_atm)
 GLODAP &lt;- GLODAP %&gt;%
   mutate(
     cstar_tref_delta =
-      ((pCO2 - pCO2_tref) / (pCO2_tref - params_local$preind_atm_pCO2)) * cant_pos,
+      ((pCO2 - pCO2_tref) / (pCO2_tref - params_local$preind_atm_pCO2)) * tcant_pos,
     cstar_tref = cstar - cstar_tref_delta)</code></pre>
 </div>
 </div>
@@ -5723,6 +5207,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_histogram-1.png" target="_blank">1cbf907</a>
@@ -6466,7 +5961,7 @@ Jens Müller
 </div>
 <pre class="r"><code>GLODAP %&gt;% 
   sample_n(1e4) %&gt;% 
-  ggplot(aes(year, cstar_tref_delta, col = cant_pos)) +
+  ggplot(aes(year, cstar_tref_delta, col = tcant_pos)) +
   geom_point() +
   scale_color_viridis_c() +
   labs(title = &quot;Time series of random subsample 1e4&quot;) +
@@ -6494,6 +5989,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_cant-1.png" target="_blank">1cbf907</a>
@@ -7288,6 +6794,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/cstar_reference_year_adjustment_vs_time_counts-1.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -8076,9 +7593,277 @@ Jens Müller
              aes(lon, lat, col = date)) +
   scale_color_viridis_c(trans = &quot;date&quot;) +
   labs(title = paste(&quot;Cruise year:&quot;, mean(GLODAP_cruise$year))) +
-  facet_wrap(~ data_source)
-
-lat_section &lt;- 
+  facet_wrap(~ data_source)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-1">
+Past versions of meridional_sections-1.png
+</button>
+</p>
+<div id="fig-meridional_sections-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">52e7583</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/969e631cefba5c3de4548e64f39eb20894ce498b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">969e631</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">c0a47df</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">50290e8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">eb827c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">857bad3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">03b6009</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">7b672f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">33ba23c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">318609d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">9d0b2d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">158fe26</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-1.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>lat_section &lt;- 
 GLODAP_cruise %&gt;%
   ggplot(aes(lat, depth)) +
   scale_y_reverse() +
@@ -8087,9 +7872,6 @@ GLODAP_cruise %&gt;%
   facet_wrap(~ data_source)
 
 for (i_var in c(&quot;tco2&quot;,
-                &quot;rCP_phosphate&quot;,
-                &quot;talk_05&quot;,
-                &quot;rNP_phosphate_05&quot;,
                 &quot;cstar&quot;,
                 &quot;cstar_tref&quot;)) {
   print(lat_section +
@@ -8097,9 +7879,870 @@ for (i_var in c(&quot;tco2&quot;,
           scale_fill_viridis_c(name = i_var)
         )
   
-}
-
-rm(lat_section, GLODAP_cruise)</code></pre>
+}</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-2">
+Past versions of meridional_sections-2.png
+</button>
+</p>
+<div id="fig-meridional_sections-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">52e7583</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">c0a47df</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">50290e8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">eb827c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">857bad3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">03b6009</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">7b672f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">33ba23c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">318609d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">9d0b2d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">158fe26</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">7d82772</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3c8a83c545110cf43c4c864ea1484b44df067a96/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">3c8a83c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-04
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-2.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-3">
+Past versions of meridional_sections-3.png
+</button>
+</p>
+<div id="fig-meridional_sections-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">52e7583</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">c0a47df</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">50290e8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">eb827c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">857bad3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">03b6009</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7b672f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">33ba23c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">318609d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">9d0b2d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">158fe26</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7d82772</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3c8a83c545110cf43c4c864ea1484b44df067a96/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">3c8a83c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-04
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-3.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections-4">
+Past versions of meridional_sections-4.png
+</button>
+</p>
+<div id="fig-meridional_sections-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">52e7583</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">c0a47df</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">50290e8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">eb827c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">857bad3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">03b6009</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7b672f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">33ba23c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">318609d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">9d0b2d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">158fe26</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a9a4cbb296938ded706c7eccb2e41869a39bf13/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7a9a4cb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d827723016938befca90b1edf5866ab728333ac/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7d82772</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3c8a83c545110cf43c4c864ea1484b44df067a96/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">3c8a83c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-04
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/090e4d55a5aea6b05f8e06649d5801fdda94d161/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">090e4d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections-4.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(lat_section, GLODAP_cruise)</code></pre>
 </div>
 <div id="isoneutral-slabs" class="section level1" number="6">
 <h1 number="6"><span class="header-section-number">6</span> Isoneutral slabs</h1>
@@ -8130,6 +8773,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/density_histograms-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/density_histograms-1.png" target="_blank">1cbf907</a>
@@ -8258,7 +8912,6 @@ jens-daniel-mueller
 <pre class="r"><code>GLODAP %&gt;% 
   ggplot(aes(gamma, depth)) +
   geom_bin2d() +
-  geom_smooth(col = &quot;red&quot;, orientation = &quot;y&quot;) +
   scale_y_reverse() +
   scale_fill_viridis_c() +
   facet_grid(basin_AIP~data_source)</code></pre>
@@ -8285,6 +8938,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/density_profiles-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/density_profiles-1.png" target="_blank">1cbf907</a>
@@ -8460,6 +9124,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/density_cuts-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/density_cuts-1.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -8613,9 +9288,277 @@ GLODAP_cruise %&gt;%
 
 lat_section +
   geom_point(aes(col = gamma_slab)) +
-  scale_color_viridis_d()
-
-rm(lat_section, GLODAP_cruise)</code></pre>
+  scale_color_viridis_d()</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-meridional_sections_isoneutral_slabs-1">
+Past versions of meridional_sections_isoneutral_slabs-1.png
+</button>
+</p>
+<div id="fig-meridional_sections_isoneutral_slabs-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">52e7583</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-05-12
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">c0a47df</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">50290e8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/338dd3cb24f6b3690e50d2323ea6322f23ac3c45/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">338dd3c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a79ca2ce8727b8c54af0f3688f5b1f5133114200/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">a79ca2c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/eb827c9cba52aa39d45c7c6bf4acb1c285c84995/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">eb827c9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-04-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/857bad312609a02f169a9fc0b68f878b24e0ac5b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">857bad3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/03b6009cc0381d4c81070bf7a4b7e479fde722b7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">03b6009</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/83a13dee49338c30966eb0bde780917c3cc511a9/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">83a13de</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-20
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/cf98c6d2bcaec21304069c8d3a17db72cc4ba9dd/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">cf98c6d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-03-16
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7b672f753fe9b5106268f8f57102ed08db93b79d/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">7b672f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-11
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/33ba23cab522f2d28dd1c0ba613d36d230f5914a/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">33ba23c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-01-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/318609d5d8db2e2804f5dd96a4357936b4c4b6b0/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">318609d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9d0b2d0ffe4714fd3f2a970725cc0f728f5e44d1/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">9d0b2d0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0aa2b501854f295c412ad6235caab057641134a5/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">0aa2b50</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-23
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2886da0c86db1afc8a22425554a0cbd96df3d439/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">2886da0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02f0ee9c2fac3722cd73fd61a2171a63444e39e7/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">02f0ee9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-18
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/158fe26a5de32cf1b8689abe35d7ba282e83d4b3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">158fe26</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-15
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/755535567864e4b7ba9e2966906eea49df4790dc/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">7555355</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/143d6faace367b0efa2bd0b883c4dabb43adde50/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">143d6fa</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/196be51afab642ee2db1c3282ce6c51c44b502c3/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">196be51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc61ce3a2dd99a7d27876d2374edc9fbdab4684b/docs/figure/eMLR_data_preparation.Rmd/meridional_sections_isoneutral_slabs-1.png" target="_blank">bc61ce3</a>
+</td>
+<td>
+Jens Müller
+</td>
+<td>
+2020-11-30
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(lat_section, GLODAP_cruise)</code></pre>
 <pre class="r"><code># this section was only used to calculate gamma locally, and compare it to the value provided in GLODAP data set
 
 GLODAP_cruise &lt;- GLODAP %&gt;% 
@@ -8678,10 +9621,9 @@ GLODAP_grid &lt;- GLODAP %&gt;%
   ungroup()
 
 GLODAP_grid %&gt;%
-  # filter(n &lt; 100) %&gt;%
   ggplot(aes(n)) +
   geom_histogram(binwidth = 1) +
-  labs(title = &quot;Observations per era, grid cell and slab&quot;)</code></pre>
+  labs(title = &quot;Observations per era, grid cell and slab, all data&quot;)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/coarse_grid-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-coarse_grid-1">
@@ -8705,6 +9647,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-1.png" target="_blank">1cbf907</a>
@@ -8742,6 +9695,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>GLODAP_grid %&gt;%
+  filter(n &lt;= quantile(n, 0.9)) %&gt;%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = &quot;Observations per era, grid cell and slab, 90th quantile&quot;)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/coarse_grid-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>map +
   geom_raster(data = GLODAP_grid,
               aes(lon_grid, lat_grid, fill = n)) +
@@ -8771,6 +9730,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/rarefication-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/rarefication-1.png" target="_blank">1cbf907</a>
@@ -8885,6 +9855,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/rarefication-2.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/rarefication-2.png" target="_blank">1cbf907</a>
@@ -9010,6 +9991,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">1cbf907</a>
@@ -9587,6 +10579,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">1cbf907</a>
@@ -10210,6 +11213,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-3.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-3.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -10398,6 +11412,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">1cbf907</a>
@@ -11159,6 +12184,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -11731,6 +12767,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-2.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-2.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -12248,6 +13295,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_data_preparation.Rmd/ranked_cstar_rmse-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_data_preparation.Rmd/ranked_cstar_rmse-1.png" target="_blank">1cbf907</a>
@@ -12926,126 +13984,13 @@ co2_atm_tref %&gt;%  write_csv(paste(path_version_data,
                                   &quot;co2_atm_tref.csv&quot;,
                                   sep = &quot;&quot;))
 
-cant_3d %&gt;%  write_csv(paste(path_version_data,
-                             &quot;cant_3d_tref.csv&quot;,
+tcant_3d %&gt;%  write_csv(paste(path_version_data,
+                             &quot;projected_tcant_3d_tref.csv&quot;,
+                             sep = &quot;&quot;))
+
+tcant_zonal %&gt;%  write_csv(paste(path_version_data,
+                             &quot;projected_tcant_zonal_tref.csv&quot;,
                              sep = &quot;&quot;))</code></pre>
-</div>
-<div id="spatial-autocorrelation" class="section level1" number="11">
-<h1 number="11"><span class="header-section-number">11</span> Spatial autocorrelation</h1>
-<pre class="r"><code>GLODAP_sp &lt;- GLODAP %&gt;% 
-  filter(depth == 150)
-
-map +
-  geom_raster(data = GLODAP_sp,
-              aes(lon, lat, fill = temp)) +
-  scale_fill_viridis_c()
-
-class(GLODAP_sp)
-
-GLODAP_sp &lt;- GLODAP_sp %&gt;% 
-  mutate(lon = if_else(lon &gt; 180, lon - 360, lon))
-
-ggplot() +
-  geom_raster(data = GLODAP_sp,
-              aes(lon, lat, fill = temp)) +
-  scale_fill_viridis_c() +
-  coord_quickmap()
-
-GLODAP_sp &lt;- as.data.frame(GLODAP_sp)
-
-library(sp)
-coordinates(GLODAP_sp) = ~lon+lat
-class(GLODAP_sp)
-
-summary(GLODAP_sp)
-
-is.projected(GLODAP_sp)
-proj4string(GLODAP_sp) &lt;-
-  CRS(&quot;+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0&quot;)
-
-
-GLODAP_sp_grid &lt;- GLODAP_sp
-
-gridded(GLODAP_sp_grid) &lt;- TRUE
-
-
-spplot(GLODAP_sp,
-       zcol = &quot;temp&quot;)
-
-spplot(GLODAP_sp_grid,
-       zcol = &quot;temp&quot;)
-
-library(sf)
-library(stars)
-GLODAP_sf &lt;- st_as_sf(GLODAP_sp_grid)
-GLODAP_stars &lt;- st_as_stars(GLODAP_sp_grid)
-class(GLODAP_stars)
-
-plot(GLODAP_stars)
-
-ggplot() +
-  geom_stars(data = GLODAP_stars,
-             aes(x, y, fill = temp)) +
-  scale_fill_viridis_c(na.value = &quot;transparent&quot;) +
-  coord_quickmap(expand = 0)
-
-library(rnaturalearth)
-coastlines &lt;- ne_coastline(scale = &quot;small&quot;, returnclass = &quot;sf&quot;)
-
-ggplot() +
-  geom_sf(data = GLODAP_sf,
-             aes(col = temp)) +
-  scale_fill_viridis_c(na.value = &quot;transparent&quot;) +
-  geom_sf(data = st_wrap_dateline(coastlines),
-          colour = &quot;black&quot;) +
-  coord_sf(crs = st_crs(&#39;ESRI:54030&#39;)) +
-  theme_bw()
-
-summary(GLODAP_sp)
-
-library(gstat)
-vg_temp &lt;- variogram(temp~1,
-                     data = GLODAP_sp_grid,
-                     cutoff = 1e4)
-fit_temp &lt;- fit.variogram(vg_temp, vgm(&quot;Sph&quot;))
-
-plot(vg_temp, fit_temp)
-
-vg_temp &lt;- variogram(temp~1,
-                     data = GLODAP_sp_grid,
-                     alpha = c(0,90),
-                     cutoff = 1e4)
-plot(vg_temp)
-
-
-vg &lt;- gstat(id = params_local$MLR_target,
-            formula = as.formula(paste(sym(
-              params_local$MLR_target
-            ), &quot;~ 1&quot;)),
-            data = GLODAP_sp_grid)
-
-for (i_var in params_local$MLR_predictors) {
-  #i_var &lt;- params_local$MLR_predictors[1]
-  vg &lt;- gstat(vg,
-            id = i_var,
-            formula = as.formula(paste(sym(
-              i_var
-            ), &quot;~ 1&quot;)),
-            data = GLODAP_sp_grid)
-}
-
-
-
-plot(variogram(vg, cutoff = 1e4))
-
-# ### kriging
-# 
-# lzn.kr1 = krige(formula = temp~1,
-#                 GLODAP_sp,
-#                 GLODAP_sp_grid,
-#                 model = fit_temp)
-# #&gt; [using universal kriging]
-# plot(lzn.kr1[1])</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -13075,35 +14020,35 @@ attached base packages:
 
 other attached packages:
  [1] broom_0.7.5     lubridate_1.7.9 marelac_2.1.10  shape_1.4.5    
- [5] metR_0.9.0      scico_1.2.0     patchwork_1.1.1 collapse_1.5.0 
- [9] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4    
-[13] readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.3  
-[17] tidyverse_1.3.0 workflowr_1.6.2
+ [5] ggforce_0.3.3   metR_0.9.0      scico_1.2.0     patchwork_1.1.1
+ [9] collapse_1.5.0  forcats_0.5.0   stringr_1.4.0   dplyr_1.0.5    
+[13] purrr_0.3.4     readr_1.4.0     tidyr_1.1.2     tibble_3.0.4   
+[17] ggplot2_3.3.3   tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] nlme_3.1-149             fs_1.5.0                 gsw_1.0-5               
- [4] RColorBrewer_1.1-2       httr_1.4.2               rprojroot_2.0.2         
- [7] tools_4.0.3              backports_1.1.10         utf8_1.1.4              
-[10] R6_2.5.0                 DBI_1.1.0                mgcv_1.8-33             
-[13] colorspace_1.4-1         withr_2.3.0              tidyselect_1.1.0        
-[16] compiler_4.0.3           git2r_0.27.1             cli_2.1.0               
-[19] rvest_0.3.6              xml2_1.3.2               labeling_0.4.2          
-[22] scales_1.1.1             checkmate_2.0.0          digest_0.6.27           
-[25] rmarkdown_2.5            oce_1.2-0                pkgconfig_2.0.3         
-[28] htmltools_0.5.0          dbplyr_1.4.4             rlang_0.4.10            
-[31] readxl_1.3.1             rstudioapi_0.11          generics_0.0.2          
-[34] farver_2.0.3             jsonlite_1.7.1           magrittr_1.5            
-[37] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
-[40] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
-[43] whisker_0.4              yaml_2.2.1               grid_4.0.3              
-[46] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
-[49] crayon_1.3.4             lattice_0.20-41          splines_4.0.3           
-[52] haven_2.3.1              hms_0.5.3                seacarb_3.2.14          
-[55] knitr_1.30               pillar_1.4.7             reprex_0.3.0            
-[58] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
-[61] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
-[64] httpuv_1.5.4             testthat_2.3.2           cellranger_1.1.0        
-[67] gtable_0.3.0             assertthat_0.2.1         xfun_0.18               
+ [1] fs_1.5.0                 gsw_1.0-5                RColorBrewer_1.1-2      
+ [4] httr_1.4.2               rprojroot_2.0.2          tools_4.0.3             
+ [7] backports_1.1.10         utf8_1.1.4               R6_2.5.0                
+[10] DBI_1.1.0                colorspace_1.4-1         withr_2.3.0             
+[13] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
+[16] cli_2.1.0                rvest_0.3.6              xml2_1.3.2              
+[19] labeling_0.4.2           scales_1.1.1             checkmate_2.0.0         
+[22] digest_0.6.27            rmarkdown_2.5            oce_1.2-0               
+[25] pkgconfig_2.0.3          htmltools_0.5.0          dbplyr_1.4.4            
+[28] rlang_0.4.10             readxl_1.3.1             rstudioapi_0.11         
+[31] farver_2.0.3             generics_0.0.2           jsonlite_1.7.1          
+[34] magrittr_1.5             Matrix_1.2-18            Rcpp_1.0.5              
+[37] munsell_0.5.0            fansi_0.4.1              lifecycle_1.0.0         
+[40] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
+[43] MASS_7.3-53              grid_4.0.3               blob_1.2.1              
+[46] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
+[49] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
+[52] seacarb_3.2.14           knitr_1.30               pillar_1.4.7            
+[55] reprex_0.3.0             glue_1.4.2               evaluate_0.14           
+[58] RcppArmadillo_0.10.1.2.0 data.table_1.13.2        modelr_0.1.8            
+[61] vctrs_0.3.5              tweenr_1.0.2             httpuv_1.5.4            
+[64] testthat_2.3.2           cellranger_1.1.0         gtable_0.3.0            
+[67] polyclip_1.10-0          assertthat_0.2.1         xfun_0.18               
 [70] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
 [73] ellipsis_0.3.1           here_0.1                </code></pre>
 </div>

@@ -431,10 +431,10 @@ div.tocify {
       <a href="mapping_predictor_preparation.html">Predictor preparation</a>
     </li>
     <li>
-      <a href="mapping_cant.html">Cant calculation</a>
+      <a href="mapping_dcant_eMLR.html">dcant eMLR</a>
     </li>
     <li>
-      <a href="mapping_cant_mod_truth.html">Cant model_truth</a>
+      <a href="mapping_dcant_mod_truth.html">dcant model_truth</a>
     </li>
   </ul>
 </li>
@@ -500,7 +500,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR - assumption testing</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">02 July, 2021</h4>
+<h4 class="date">09 July, 2021</h4>
 
 </div>
 
@@ -525,7 +525,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-07-02
+<strong>Last updated:</strong> 2021-07-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -616,16 +616,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d5f3508e0d35e9572a9db48cd8567898733b210targetblank3d5f350a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d5f3508e0d35e9572a9db48cd8567898733b210" target="_blank">3d5f350</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree795a3b096db8066b1dc216953fda969b24c6503ftargetblank795a3b0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/795a3b096db8066b1dc216953fda969b24c6503f" target="_blank">795a3b0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3d5f3508e0d35e9572a9db48cd8567898733b210targetblank3d5f350a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree795a3b096db8066b1dc216953fda969b24c6503ftargetblank795a3b0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3d5f3508e0d35e9572a9db48cd8567898733b210" target="_blank">3d5f350</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/795a3b096db8066b1dc216953fda969b24c6503f" target="_blank">795a3b0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -635,7 +635,22 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
 
+Untracked files:
+    Untracked:  analysis/mapping_dcant_eMLR.Rmd
+    Untracked:  analysis/mapping_dcant_mod_truth.Rmd
+    Untracked:  code/previous_script_versions/parallel_model_fitting.R
+    Untracked:  code/previous_script_versions/spatial_autocorrelation.R
+
 Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/analysis_MLR_performance.Rmd
+    Modified:   analysis/analysis_anomalous_changes.Rmd
+    Modified:   analysis/analysis_budgets.Rmd
+    Modified:   analysis/analysis_column_inventory.Rmd
+    Modified:   analysis/analysis_slab_inventory.Rmd
+    Modified:   analysis/analysis_zonal_sections.Rmd
+    Deleted:    analysis/mapping_cant.Rmd
+    Deleted:    analysis/mapping_cant_mod_truth.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -676,6 +691,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/795a3b096db8066b1dc216953fda969b24c6503f/analysis/eMLR_assumption_testing.Rmd" target="_blank">795a3b0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-09
+</td>
+<td>
+complete revision
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/eMLR_assumption_testing.html" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -3167,6 +3216,7 @@ Initial commit
 GLODAP %&gt;%
   slice_sample(n = 5e3) %&gt;% 
   group_split(basin, data_source) %&gt;%
+  # head(1) %&gt;% 
   map(plot_fun)</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -3192,6 +3242,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-1.png" target="_blank">1cbf907</a>
@@ -3971,6 +4032,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-2.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-2.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -4737,6 +4809,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-3.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-3.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -5360,6 +5443,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-4.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-4.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -5884,6 +5978,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-5.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-5.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -6010,6 +6115,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-6.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/predictor_correlation_per_basin-6.png" target="_blank">1cbf907</a>
@@ -6284,6 +6400,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictor_pairs-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictor_pairs-1.png" target="_blank">1cbf907</a>
@@ -25569,6 +25696,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictors-1.png" target="_blank">910d64a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-02
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/eMLR_assumption_testing.Rmd/correlation_predictors-1.png" target="_blank">1cbf907</a>
 </td>
 <td>
@@ -26492,13 +26630,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.5258288
+0.5302108
 </td>
 <td style="text-align:right;">
-0.4536301
+0.4627560
 </td>
 <td style="text-align:right;">
-0.5980275
+0.5976656
 </td>
 </tr>
 <tr>
@@ -26512,13 +26650,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.0132614
+0.0152450
 </td>
 <td style="text-align:right;">
--0.1117463
+-0.1115428
 </td>
 <td style="text-align:right;">
-0.1382690
+0.1420329
 </td>
 </tr>
 <tr>
@@ -26532,13 +26670,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.4026567
+-0.4010592
 </td>
 <td style="text-align:right;">
--0.4107942
+-0.4106009
 </td>
 <td style="text-align:right;">
--0.3945192
+-0.3915175
 </td>
 </tr>
 <tr>
@@ -26552,13 +26690,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.3292710
+-0.3273552
 </td>
 <td style="text-align:right;">
--0.3792949
+-0.3756754
 </td>
 <td style="text-align:right;">
--0.2792471
+-0.2790351
 </td>
 </tr>
 <tr>
@@ -26572,13 +26710,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.2458229
+-0.2432945
 </td>
 <td style="text-align:right;">
--0.2921809
+-0.2872249
 </td>
 <td style="text-align:right;">
--0.1994648
+-0.1993640
 </td>
 </tr>
 <tr>
@@ -26592,13 +26730,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.3737192
+-0.3716781
 </td>
 <td style="text-align:right;">
--0.4399218
+-0.4358645
 </td>
 <td style="text-align:right;">
--0.3075166
+-0.3074916
 </td>
 </tr>
 <tr>
@@ -26612,13 +26750,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.7262688
+-0.7255499
 </td>
 <td style="text-align:right;">
--0.7434481
+-0.7419928
 </td>
 <td style="text-align:right;">
--0.7090895
+-0.7091070
 </td>
 </tr>
 <tr>
@@ -26632,13 +26770,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.8812667
+-0.8806549
 </td>
 <td style="text-align:right;">
--0.9106412
+-0.9106389
 </td>
 <td style="text-align:right;">
--0.8518922
+-0.8506708
 </td>
 </tr>
 <tr>
@@ -26652,13 +26790,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.8873351
+-0.8867048
 </td>
 <td style="text-align:right;">
--0.8995876
+-0.8995708
 </td>
 <td style="text-align:right;">
--0.8750825
+-0.8738388
 </td>
 </tr>
 <tr>
@@ -26672,13 +26810,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.8393096
+-0.8386689
 </td>
 <td style="text-align:right;">
--0.8483317
+-0.8483468
 </td>
 <td style="text-align:right;">
--0.8302875
+-0.8289911
 </td>
 </tr>
 <tr>
@@ -26692,13 +26830,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.8366117
+-0.8366301
 </td>
 <td style="text-align:right;">
--0.8396867
+-0.8397215
 </td>
 <td style="text-align:right;">
--0.8335368
+-0.8335387
 </td>
 </tr>
 <tr>
@@ -26712,13 +26850,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
--0.8470464
+-0.8472084
 </td>
 <td style="text-align:right;">
--0.8765929
+-0.8765885
 </td>
 <td style="text-align:right;">
--0.8174999
+-0.8178284
 </td>
 </tr>
 <tr>
@@ -26732,13 +26870,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
--0.8983300
+-0.8984475
 </td>
 <td style="text-align:right;">
--0.9063284
+-0.9063288
 </td>
 <td style="text-align:right;">
--0.8903316
+-0.8905661
 </td>
 </tr>
 <tr>
@@ -26752,13 +26890,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
--0.8613088
+-0.8611908
 </td>
 <td style="text-align:right;">
--0.8738957
+-0.8738698
 </td>
 <td style="text-align:right;">
--0.8487219
+-0.8485117
 </td>
 </tr>
 <tr>
@@ -26772,13 +26910,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.7714176
+-0.7687145
 </td>
 <td style="text-align:right;">
--0.9161625
+-0.9161484
 </td>
 <td style="text-align:right;">
--0.6266727
+-0.6212807
 </td>
 </tr>
 <tr>
@@ -26792,13 +26930,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.9319574
+-0.9314795
 </td>
 <td style="text-align:right;">
--0.9611407
+-0.9611448
 </td>
 <td style="text-align:right;">
--0.9027742
+-0.9018142
 </td>
 </tr>
 <tr>
@@ -26812,13 +26950,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8673281
+-0.8664938
 </td>
 <td style="text-align:right;">
--0.9304690
+-0.9305085
 </td>
 <td style="text-align:right;">
--0.8041871
+-0.8024791
 </td>
 </tr>
 <tr>
@@ -26832,13 +26970,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.5387150
+-0.5343326
 </td>
 <td style="text-align:right;">
--0.6954929
+-0.6955697
 </td>
 <td style="text-align:right;">
--0.3819372
+-0.3730955
 </td>
 </tr>
 <tr>
@@ -26852,13 +26990,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.0445069
+0.0484654
 </td>
 <td style="text-align:right;">
--0.1965984
+-0.1972247
 </td>
 <td style="text-align:right;">
-0.2856122
+0.2941556
 </td>
 </tr>
 <tr>
@@ -26872,13 +27010,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.4836368
+0.4903166
 </td>
 <td style="text-align:right;">
-0.4028792
+0.4027724
 </td>
 <td style="text-align:right;">
-0.5643945
+0.5778608
 </td>
 </tr>
 <tr>
@@ -26892,13 +27030,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.4437316
+0.4494325
 </td>
 <td style="text-align:right;">
-0.3657541
+0.3669029
 </td>
 <td style="text-align:right;">
-0.5217091
+0.5319621
 </td>
 </tr>
 <tr>
@@ -26912,13 +27050,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.1181165
+0.1237134
 </td>
 <td style="text-align:right;">
--0.0691899
+-0.0671719
 </td>
 <td style="text-align:right;">
-0.3054229
+0.3145986
 </td>
 </tr>
 <tr>
@@ -26932,13 +27070,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.0707481
+0.0771409
 </td>
 <td style="text-align:right;">
--0.0832463
+-0.0828973
 </td>
 <td style="text-align:right;">
-0.2247425
+0.2371791
 </td>
 </tr>
 <tr>
@@ -26952,13 +27090,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.0480786
+0.0531275
 </td>
 <td style="text-align:right;">
--0.0873087
+-0.0882650
 </td>
 <td style="text-align:right;">
-0.1834660
+0.1945200
 </td>
 </tr>
 <tr>
@@ -26972,13 +27110,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.0572569
+-0.0543799
 </td>
 <td style="text-align:right;">
--0.0894163
+-0.0902121
 </td>
 <td style="text-align:right;">
--0.0250974
+-0.0185477
 </td>
 </tr>
 <tr>
@@ -26992,13 +27130,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.1185341
+0.1196624
 </td>
 <td style="text-align:right;">
-0.0843874
+0.0874820
 </td>
 <td style="text-align:right;">
-0.1526808
+0.1518428
 </td>
 </tr>
 <tr>
@@ -27012,13 +27150,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.0683863
+0.0709829
 </td>
 <td style="text-align:right;">
-0.0418034
+0.0466967
 </td>
 <td style="text-align:right;">
-0.0949693
+0.0952691
 </td>
 </tr>
 <tr>
@@ -27032,13 +27170,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.0104467
+-0.0080504
 </td>
 <td style="text-align:right;">
--0.1052577
+-0.0997483
 </td>
 <td style="text-align:right;">
-0.0843643
+0.0836475
 </td>
 </tr>
 <tr>
@@ -27072,13 +27210,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2735984
+-0.2708013
 </td>
 <td style="text-align:right;">
--0.3664706
+-0.3664520
 </td>
 <td style="text-align:right;">
--0.1807261
+-0.1751506
 </td>
 </tr>
 <tr>
@@ -27092,13 +27230,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.7038048
+-0.7026233
 </td>
 <td style="text-align:right;">
--0.7559586
+-0.7559245
 </td>
 <td style="text-align:right;">
--0.6516510
+-0.6493220
 </td>
 </tr>
 <tr>
@@ -27112,13 +27250,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.5830639
+-0.5808942
 </td>
 <td style="text-align:right;">
--0.6724720
+-0.6725045
 </td>
 <td style="text-align:right;">
--0.4936557
+-0.4892839
 </td>
 </tr>
 <tr>
@@ -27132,13 +27270,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.6069498
+-0.6022358
 </td>
 <td style="text-align:right;">
--0.6940222
+-0.6940626
 </td>
 <td style="text-align:right;">
--0.5198774
+-0.5104090
 </td>
 </tr>
 <tr>
@@ -27152,13 +27290,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.0643020
+0.0743304
 </td>
 <td style="text-align:right;">
--0.0183710
+-0.0182043
 </td>
 <td style="text-align:right;">
-0.1469749
+0.1668652
 </td>
 </tr>
 <tr>
@@ -27172,13 +27310,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.5807850
+0.5850834
 </td>
 <td style="text-align:right;">
-0.5548500
+0.5549019
 </td>
 <td style="text-align:right;">
-0.6067201
+0.6152650
 </td>
 </tr>
 <tr>
@@ -27192,13 +27330,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.7278950
+0.7291938
 </td>
 <td style="text-align:right;">
-0.7036435
+0.7036789
 </td>
 <td style="text-align:right;">
-0.7521465
+0.7547087
 </td>
 </tr>
 <tr>
@@ -27212,13 +27350,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.7857827
+0.7863601
 </td>
 <td style="text-align:right;">
-0.7512268
+0.7512893
 </td>
 <td style="text-align:right;">
-0.8203387
+0.8214308
 </td>
 </tr>
 <tr>
@@ -27232,13 +27370,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.7712652
+0.7720045
 </td>
 <td style="text-align:right;">
-0.7503647
+0.7504579
 </td>
 <td style="text-align:right;">
-0.7921657
+0.7935512
 </td>
 </tr>
 <tr>
@@ -27252,13 +27390,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.5305440
+0.5314983
 </td>
 <td style="text-align:right;">
-0.5004446
+0.5004722
 </td>
 <td style="text-align:right;">
-0.5606434
+0.5625245
 </td>
 </tr>
 <tr>
@@ -27272,13 +27410,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.3283004
+0.3293101
 </td>
 <td style="text-align:right;">
-0.3282209
+0.3283833
 </td>
 <td style="text-align:right;">
-0.3283798
+0.3302370
 </td>
 </tr>
 <tr>
@@ -27292,13 +27430,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.3084668
+0.3090817
 </td>
 <td style="text-align:right;">
-0.2628692
+0.2642527
 </td>
 <td style="text-align:right;">
-0.3540644
+0.3539107
 </td>
 </tr>
 <tr>
@@ -27312,13 +27450,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.0062289
+0.0084620
 </td>
 <td style="text-align:right;">
--0.0171303
+-0.0134082
 </td>
 <td style="text-align:right;">
-0.0295882
+0.0303322
 </td>
 </tr>
 <tr>
@@ -27332,13 +27470,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.4587624
+-0.4536958
 </td>
 <td style="text-align:right;">
--0.7251537
+-0.7253338
 </td>
 <td style="text-align:right;">
--0.1923711
+-0.1820578
 </td>
 </tr>
 <tr>
@@ -27352,13 +27490,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
--0.3179757
+-0.3270423
 </td>
 <td style="text-align:right;">
--0.3179757
+-0.3270423
 </td>
 <td style="text-align:right;">
--0.3179757
+-0.3270423
 </td>
 </tr>
 <tr>
@@ -27372,13 +27510,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.2045967
+0.2097616
 </td>
 <td style="text-align:right;">
-0.1778202
+0.1885700
 </td>
 <td style="text-align:right;">
-0.2313732
+0.2309531
 </td>
 </tr>
 <tr>
@@ -27392,13 +27530,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.3130067
+-0.3110227
 </td>
 <td style="text-align:right;">
--0.4400838
+-0.4398806
 </td>
 <td style="text-align:right;">
--0.1859297
+-0.1821648
 </td>
 </tr>
 <tr>
@@ -27412,13 +27550,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.6232261
+-0.6218040
 </td>
 <td style="text-align:right;">
--0.6595739
+-0.6594139
 </td>
 <td style="text-align:right;">
--0.5868783
+-0.5841941
 </td>
 </tr>
 <tr>
@@ -27432,13 +27570,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.6566544
+-0.6552687
 </td>
 <td style="text-align:right;">
--0.6807352
+-0.6781251
 </td>
 <td style="text-align:right;">
--0.6325735
+-0.6324124
 </td>
 </tr>
 <tr>
@@ -27452,13 +27590,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.7611839
+-0.7597014
 </td>
 <td style="text-align:right;">
--0.7901009
+-0.7872027
 </td>
 <td style="text-align:right;">
--0.7322669
+-0.7322001
 </td>
 </tr>
 <tr>
@@ -27472,13 +27610,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.8883933
+-0.8875077
 </td>
 <td style="text-align:right;">
--0.9053592
+-0.9036104
 </td>
 <td style="text-align:right;">
--0.8714273
+-0.8714050
 </td>
 </tr>
 <tr>
@@ -27492,13 +27630,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.9636176
+-0.9635330
 </td>
 <td style="text-align:right;">
--0.9644824
+-0.9643160
 </td>
 <td style="text-align:right;">
--0.9627529
+-0.9627499
 </td>
 </tr>
 <tr>
@@ -27512,13 +27650,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.9597396
+-0.9597315
 </td>
 <td style="text-align:right;">
--0.9598055
+-0.9597971
 </td>
 <td style="text-align:right;">
--0.9596738
+-0.9596659
 </td>
 </tr>
 <tr>
@@ -27532,13 +27670,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.9345779
+-0.9346527
 </td>
 <td style="text-align:right;">
--0.9353400
+-0.9353302
 </td>
 <td style="text-align:right;">
--0.9338158
+-0.9339752
 </td>
 </tr>
 <tr>
@@ -27552,13 +27690,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.8912137
+-0.8912856
 </td>
 <td style="text-align:right;">
--0.8997625
+-0.8997830
 </td>
 <td style="text-align:right;">
--0.8826648
+-0.8827882
 </td>
 </tr>
 <tr>
@@ -27572,13 +27710,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.8803026
+-0.8806847
 </td>
 <td style="text-align:right;">
--0.8836431
+-0.8836440
 </td>
 <td style="text-align:right;">
--0.8769621
+-0.8777253
 </td>
 </tr>
 <tr>
@@ -27592,13 +27730,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
--0.8700689
+-0.8703688
 </td>
 <td style="text-align:right;">
--0.8984477
+-0.8984422
 </td>
 <td style="text-align:right;">
--0.8416900
+-0.8422955
 </td>
 </tr>
 <tr>
@@ -27612,13 +27750,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
--0.9246713
+-0.9248025
 </td>
 <td style="text-align:right;">
--0.9273818
+-0.9273803
 </td>
 <td style="text-align:right;">
--0.9219608
+-0.9222246
 </td>
 </tr>
 <tr>
@@ -27632,13 +27770,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
--0.9757968
+-0.9757493
 </td>
 <td style="text-align:right;">
--0.9770576
+-0.9769794
 </td>
 <td style="text-align:right;">
--0.9745361
+-0.9745193
 </td>
 </tr>
 <tr>
@@ -27652,13 +27790,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.7420592
+-0.7391201
 </td>
 <td style="text-align:right;">
--0.8813220
+-0.8813346
 </td>
 <td style="text-align:right;">
--0.6027964
+-0.5969055
 </td>
 </tr>
 <tr>
@@ -27672,13 +27810,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.9110907
+-0.9104871
 </td>
 <td style="text-align:right;">
--0.9126331
+-0.9114289
 </td>
 <td style="text-align:right;">
--0.9095484
+-0.9095453
 </td>
 </tr>
 <tr>
@@ -27692,13 +27830,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8948983
+-0.8942122
 </td>
 <td style="text-align:right;">
--0.9078662
+-0.9078398
 </td>
 <td style="text-align:right;">
--0.8819303
+-0.8805846
 </td>
 </tr>
 <tr>
@@ -27712,13 +27850,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7511107
+-0.7479128
 </td>
 <td style="text-align:right;">
--0.8044326
+-0.8044730
 </td>
 <td style="text-align:right;">
--0.6977888
+-0.6913526
 </td>
 </tr>
 <tr>
@@ -27732,13 +27870,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.3776636
+-0.3739906
 </td>
 <td style="text-align:right;">
--0.4575262
+-0.4578049
 </td>
 <td style="text-align:right;">
--0.2978011
+-0.2901764
 </td>
 </tr>
 <tr>
@@ -27752,13 +27890,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.2949732
+0.3021486
 </td>
 <td style="text-align:right;">
-0.2914454
+0.2984925
 </td>
 <td style="text-align:right;">
-0.2985011
+0.3058047
 </td>
 </tr>
 <tr>
@@ -27772,13 +27910,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.3951814
+0.3986580
 </td>
 <td style="text-align:right;">
-0.3360112
+0.3368292
 </td>
 <td style="text-align:right;">
-0.4543516
+0.4604868
 </td>
 </tr>
 <tr>
@@ -27792,13 +27930,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.0244881
+-0.0232621
 </td>
 <td style="text-align:right;">
--0.1932406
+-0.1917715
 </td>
 <td style="text-align:right;">
-0.1442645
+0.1452473
 </td>
 </tr>
 <tr>
@@ -27812,13 +27950,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.1454806
+-0.1427060
 </td>
 <td style="text-align:right;">
--0.2670373
+-0.2668632
 </td>
 <td style="text-align:right;">
--0.0239238
+-0.0185488
 </td>
 </tr>
 <tr>
@@ -27832,13 +27970,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.3355684
+-0.3336053
 </td>
 <td style="text-align:right;">
--0.3625971
+-0.3631207
 </td>
 <td style="text-align:right;">
--0.3085397
+-0.3040899
 </td>
 </tr>
 <tr>
@@ -27852,13 +27990,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.2774760
+-0.2765417
 </td>
 <td style="text-align:right;">
--0.3232640
+-0.3209688
 </td>
 <td style="text-align:right;">
--0.2316880
+-0.2321145
 </td>
 </tr>
 <tr>
@@ -27872,13 +28010,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.1329946
+-0.1330046
 </td>
 <td style="text-align:right;">
--0.2265993
+-0.2260047
 </td>
 <td style="text-align:right;">
--0.0393899
+-0.0400045
 </td>
 </tr>
 <tr>
@@ -27892,13 +28030,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.3230784
+-0.3227355
 </td>
 <td style="text-align:right;">
--0.3591412
+-0.3596642
 </td>
 <td style="text-align:right;">
--0.2870156
+-0.2858068
 </td>
 </tr>
 <tr>
@@ -27912,13 +28050,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.3993799
+-0.3973879
 </td>
 <td style="text-align:right;">
--0.4051261
+-0.4008121
 </td>
 <td style="text-align:right;">
--0.3936337
+-0.3939638
 </td>
 </tr>
 <tr>
@@ -27952,13 +28090,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2936088
+-0.2906018
 </td>
 <td style="text-align:right;">
--0.3691437
+-0.3691386
 </td>
 <td style="text-align:right;">
--0.2180740
+-0.2120650
 </td>
 </tr>
 <tr>
@@ -27972,13 +28110,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.8150374
+-0.8136098
 </td>
 <td style="text-align:right;">
--0.8714306
+-0.8714144
 </td>
 <td style="text-align:right;">
--0.7586442
+-0.7558052
 </td>
 </tr>
 <tr>
@@ -27992,13 +28130,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.7600638
+-0.7583116
 </td>
 <td style="text-align:right;">
--0.8051524
+-0.8051926
 </td>
 <td style="text-align:right;">
--0.7149753
+-0.7114307
 </td>
 </tr>
 <tr>
@@ -28012,13 +28150,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7219102
+-0.7188476
 </td>
 <td style="text-align:right;">
--0.7600376
+-0.7600787
 </td>
 <td style="text-align:right;">
--0.6837827
+-0.6776165
 </td>
 </tr>
 <tr>
@@ -28032,13 +28170,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.0256048
+0.0342860
 </td>
 <td style="text-align:right;">
--0.0486300
+-0.0484849
 </td>
 <td style="text-align:right;">
-0.0998397
+0.1170569
 </td>
 </tr>
 <tr>
@@ -28052,13 +28190,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.5063813
+0.5104362
 </td>
 <td style="text-align:right;">
-0.4797476
+0.4797858
 </td>
 <td style="text-align:right;">
-0.5330150
+0.5410867
 </td>
 </tr>
 <tr>
@@ -28072,13 +28210,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.6579753
+0.6591841
 </td>
 <td style="text-align:right;">
-0.6375473
+0.6375607
 </td>
 <td style="text-align:right;">
-0.6784033
+0.6808075
 </td>
 </tr>
 <tr>
@@ -28092,13 +28230,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.7401454
+0.7406613
 </td>
 <td style="text-align:right;">
-0.7111981
+0.7112310
 </td>
 <td style="text-align:right;">
-0.7690926
+0.7700915
 </td>
 </tr>
 <tr>
@@ -28112,13 +28250,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.7312208
+0.7319741
 </td>
 <td style="text-align:right;">
-0.7145255
+0.7145977
 </td>
 <td style="text-align:right;">
-0.7479161
+0.7493505
 </td>
 </tr>
 <tr>
@@ -28132,13 +28270,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.4959041
+0.4969555
 </td>
 <td style="text-align:right;">
-0.4703696
+0.4704147
 </td>
 <td style="text-align:right;">
-0.5214385
+0.5234963
 </td>
 </tr>
 <tr>
@@ -28152,13 +28290,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.2974602
+0.2985358
 </td>
 <td style="text-align:right;">
-0.2964223
+0.2964347
 </td>
 <td style="text-align:right;">
-0.2984980
+0.3006369
 </td>
 </tr>
 <tr>
@@ -28172,13 +28310,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.2747351
+0.2753728
 </td>
 <td style="text-align:right;">
-0.2199382
+0.2213508
 </td>
 <td style="text-align:right;">
-0.3295320
+0.3293947
 </td>
 </tr>
 <tr>
@@ -28192,13 +28330,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.2346368
+-0.2342004
 </td>
 <td style="text-align:right;">
--0.4133282
+-0.4120646
 </td>
 <td style="text-align:right;">
--0.0559454
+-0.0563362
 </td>
 </tr>
 <tr>
@@ -28212,13 +28350,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.5635862
+-0.5601902
 </td>
 <td style="text-align:right;">
--0.6096903
+-0.6103966
 </td>
 <td style="text-align:right;">
--0.5174821
+-0.5099838
 </td>
 </tr>
 <tr>
@@ -28232,13 +28370,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
-0.5836413
+0.5678985
 </td>
 <td style="text-align:right;">
-0.5836413
+0.5678985
 </td>
 <td style="text-align:right;">
-0.5836413
+0.5678985
 </td>
 </tr>
 <tr>
@@ -28252,13 +28390,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2252945
+-0.2253595
 </td>
 <td style="text-align:right;">
--0.3037740
+-0.3039478
 </td>
 <td style="text-align:right;">
--0.1468151
+-0.1467713
 </td>
 </tr>
 <tr>
@@ -28272,13 +28410,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.5552533
+-0.5548426
 </td>
 <td style="text-align:right;">
--0.6623025
+-0.6620982
 </td>
 <td style="text-align:right;">
--0.4482042
+-0.4475871
 </td>
 </tr>
 <tr>
@@ -28292,13 +28430,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.7346239
+-0.7334937
 </td>
 <td style="text-align:right;">
--0.7738838
+-0.7737389
 </td>
 <td style="text-align:right;">
--0.6953641
+-0.6932485
 </td>
 </tr>
 <tr>
@@ -28312,13 +28450,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7631327
+-0.7619683
 </td>
 <td style="text-align:right;">
--0.7779610
+-0.7757796
 </td>
 <td style="text-align:right;">
--0.7483043
+-0.7481571
 </td>
 </tr>
 <tr>
@@ -28332,13 +28470,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.8423308
+-0.8410670
 </td>
 <td style="text-align:right;">
--0.8587748
+-0.8563099
 </td>
 <td style="text-align:right;">
--0.8258867
+-0.8258241
 </td>
 </tr>
 <tr>
@@ -28352,13 +28490,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.9319880
+-0.9312231
 </td>
 <td style="text-align:right;">
--0.9402765
+-0.9387698
 </td>
 <td style="text-align:right;">
--0.9236995
+-0.9236764
 </td>
 </tr>
 <tr>
@@ -28372,13 +28510,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.9760685
+-0.9759132
 </td>
 <td style="text-align:right;">
--0.9773072
+-0.9770013
 </td>
 <td style="text-align:right;">
--0.9748298
+-0.9748252
 </td>
 </tr>
 <tr>
@@ -28392,13 +28530,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.9668607
+-0.9668815
 </td>
 <td style="text-align:right;">
--0.9691733
+-0.9692232
 </td>
 <td style="text-align:right;">
--0.9645481
+-0.9645398
 </td>
 </tr>
 <tr>
@@ -28412,13 +28550,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.9404335
+-0.9405504
 </td>
 <td style="text-align:right;">
--0.9421486
+-0.9423894
 </td>
 <td style="text-align:right;">
--0.9387184
+-0.9387113
 </td>
 </tr>
 <tr>
@@ -28432,13 +28570,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.9021110
+-0.9022426
 </td>
 <td style="text-align:right;">
--0.9063401
+-0.9063625
 </td>
 <td style="text-align:right;">
--0.8978820
+-0.8981228
 </td>
 </tr>
 <tr>
@@ -28452,13 +28590,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.8852337
+-0.8856973
 </td>
 <td style="text-align:right;">
--0.8866395
+-0.8866454
 </td>
 <td style="text-align:right;">
--0.8838278
+-0.8847492
 </td>
 </tr>
 <tr>
@@ -28472,13 +28610,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
--0.8718220
+-0.8721747
 </td>
 <td style="text-align:right;">
--0.9020208
+-0.9020174
 </td>
 <td style="text-align:right;">
--0.8416232
+-0.8423319
 </td>
 </tr>
 <tr>
@@ -28492,13 +28630,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
--0.9281056
+-0.9282532
 </td>
 <td style="text-align:right;">
--0.9302845
+-0.9302880
 </td>
 <td style="text-align:right;">
--0.9259266
+-0.9262185
 </td>
 </tr>
 <tr>
@@ -28512,13 +28650,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
--0.9813404
+-0.9812998
 </td>
 <td style="text-align:right;">
--0.9824888
+-0.9824207
 </td>
 <td style="text-align:right;">
--0.9801920
+-0.9801789
 </td>
 </tr>
 <tr>
@@ -28532,13 +28670,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.7653032
+-0.7624301
 </td>
 <td style="text-align:right;">
--0.9121255
+-0.9121065
 </td>
 <td style="text-align:right;">
--0.6184810
+-0.6127537
 </td>
 </tr>
 <tr>
@@ -28552,13 +28690,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.9431924
+-0.9426737
 </td>
 <td style="text-align:right;">
--0.9723765
+-0.9723856
 </td>
 <td style="text-align:right;">
--0.9140083
+-0.9129619
 </td>
 </tr>
 <tr>
@@ -28572,13 +28710,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.9175841
+-0.9170011
 </td>
 <td style="text-align:right;">
--0.9551642
+-0.9552104
 </td>
 <td style="text-align:right;">
--0.8800041
+-0.8787918
 </td>
 </tr>
 <tr>
@@ -28592,13 +28730,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7615428
+-0.7583685
 </td>
 <td style="text-align:right;">
--0.8304330
+-0.8305315
 </td>
 <td style="text-align:right;">
--0.6926525
+-0.6862055
 </td>
 </tr>
 <tr>
@@ -28612,13 +28750,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.3877384
+-0.3840578
 </td>
 <td style="text-align:right;">
--0.4880134
+-0.4884896
 </td>
 <td style="text-align:right;">
--0.2874634
+-0.2796260
 </td>
 </tr>
 <tr>
@@ -28632,13 +28770,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.2483284
+0.2557010
 </td>
 <td style="text-align:right;">
-0.2213043
+0.2211987
 </td>
 <td style="text-align:right;">
-0.2753526
+0.2902033
 </td>
 </tr>
 <tr>
@@ -28652,13 +28790,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.3093480
+0.3142064
 </td>
 <td style="text-align:right;">
-0.2491418
+0.2500524
 </td>
 <td style="text-align:right;">
-0.3695541
+0.3783603
 </td>
 </tr>
 <tr>
@@ -28672,13 +28810,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.0783536
+-0.0751078
 </td>
 <td style="text-align:right;">
--0.2205322
+-0.2187652
 </td>
 <td style="text-align:right;">
-0.0638250
+0.0685496
 </td>
 </tr>
 <tr>
@@ -28692,13 +28830,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.2059191
+-0.2020578
 </td>
 <td style="text-align:right;">
--0.3187734
+-0.3183409
 </td>
 <td style="text-align:right;">
--0.0930649
+-0.0857746
 </td>
 </tr>
 <tr>
@@ -28712,13 +28850,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.3759211
+-0.3732699
 </td>
 <td style="text-align:right;">
--0.3943815
+-0.3948750
 </td>
 <td style="text-align:right;">
--0.3574606
+-0.3516648
 </td>
 </tr>
 <tr>
@@ -28732,13 +28870,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.3321320
+-0.3309700
 </td>
 <td style="text-align:right;">
--0.3920416
+-0.3892555
 </td>
 <td style="text-align:right;">
--0.2722224
+-0.2726845
 </td>
 </tr>
 <tr>
@@ -28752,13 +28890,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.2454430
+-0.2454468
 </td>
 <td style="text-align:right;">
--0.3559399
+-0.3552967
 </td>
 <td style="text-align:right;">
--0.1349461
+-0.1355969
 </td>
 </tr>
 <tr>
@@ -28772,13 +28910,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.6366389
+-0.6359814
 </td>
 <td style="text-align:right;">
--0.6566331
+-0.6571760
 </td>
 <td style="text-align:right;">
--0.6166448
+-0.6147868
 </td>
 </tr>
 <tr>
@@ -28792,13 +28930,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.6058690
+-0.6041187
 </td>
 <td style="text-align:right;">
--0.6173576
+-0.6176766
 </td>
 <td style="text-align:right;">
--0.5943804
+-0.5905609
 </td>
 </tr>
 <tr>
@@ -28832,13 +28970,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2917284
+-0.2889554
 </td>
 <td style="text-align:right;">
--0.3536161
+-0.3535985
 </td>
 <td style="text-align:right;">
--0.2298408
+-0.2243123
 </td>
 </tr>
 <tr>
@@ -28852,13 +28990,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.8465316
+-0.8456950
 </td>
 <td style="text-align:right;">
--0.8866299
+-0.8866087
 </td>
 <td style="text-align:right;">
--0.8064332
+-0.8047813
 </td>
 </tr>
 <tr>
@@ -28872,13 +29010,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8079803
+-0.8066319
 </td>
 <td style="text-align:right;">
--0.8497716
+-0.8497959
 </td>
 <td style="text-align:right;">
--0.7661891
+-0.7634678
 </td>
 </tr>
 <tr>
@@ -28892,13 +29030,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7558391
+-0.7530203
 </td>
 <td style="text-align:right;">
--0.7891110
+-0.7891591
 </td>
 <td style="text-align:right;">
--0.7225673
+-0.7168814
 </td>
 </tr>
 <tr>
@@ -28912,13 +29050,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.0018927
+0.0104649
 </td>
 <td style="text-align:right;">
--0.0784403
+-0.0783105
 </td>
 <td style="text-align:right;">
-0.0822256
+0.0992402
 </td>
 </tr>
 <tr>
@@ -28932,13 +29070,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.4985454
+0.5025513
 </td>
 <td style="text-align:right;">
-0.4644000
+0.4644354
 </td>
 <td style="text-align:right;">
-0.5326908
+0.5406671
 </td>
 </tr>
 <tr>
@@ -28952,13 +29090,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.6326147
+0.6338500
 </td>
 <td style="text-align:right;">
-0.6087344
+0.6087540
 </td>
 <td style="text-align:right;">
-0.6564949
+0.6589460
 </td>
 </tr>
 <tr>
@@ -28972,13 +29110,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.7021618
+0.7027548
 </td>
 <td style="text-align:right;">
-0.6729096
+0.6729562
 </td>
 <td style="text-align:right;">
-0.7314140
+0.7325533
 </td>
 </tr>
 <tr>
@@ -28992,13 +29130,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.6908057
+0.6916290
 </td>
 <td style="text-align:right;">
-0.6759687
+0.6760535
 </td>
 <td style="text-align:right;">
-0.7056427
+0.7072045
 </td>
 </tr>
 <tr>
@@ -29012,13 +29150,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.4173252
+0.4183729
 </td>
 <td style="text-align:right;">
-0.4089384
+0.4089869
 </td>
 <td style="text-align:right;">
-0.4257120
+0.4277588
 </td>
 </tr>
 <tr>
@@ -29032,13 +29170,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.1878028
+0.1888715
 </td>
 <td style="text-align:right;">
-0.1602078
+0.1623284
 </td>
 <td style="text-align:right;">
-0.2153979
+0.2154147
 </td>
 </tr>
 <tr>
@@ -29052,13 +29190,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.1627998
+0.1634731
 </td>
 <td style="text-align:right;">
-0.0906840
+0.0921619
 </td>
 <td style="text-align:right;">
-0.2349156
+0.2347842
 </td>
 </tr>
 <tr>
@@ -29072,13 +29210,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.7047332
+-0.7041058
 </td>
 <td style="text-align:right;">
--0.7697752
+-0.7681737
 </td>
 <td style="text-align:right;">
--0.6396912
+-0.6400379
 </td>
 </tr>
 <tr>
@@ -29092,13 +29230,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.7848817
+-0.7828190
 </td>
 <td style="text-align:right;">
--0.8288986
+-0.8294411
 </td>
 <td style="text-align:right;">
--0.7408648
+-0.7361970
 </td>
 </tr>
 <tr>
@@ -29112,13 +29250,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
-0.3628563
+0.3535889
 </td>
 <td style="text-align:right;">
-0.3628563
+0.3535889
 </td>
 <td style="text-align:right;">
-0.3628563
+0.3535889
 </td>
 </tr>
 <tr>
@@ -29132,13 +29270,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.5540490
+-0.5574850
 </td>
 <td style="text-align:right;">
--0.6692783
+-0.6691543
 </td>
 <td style="text-align:right;">
--0.4388197
+-0.4458158
 </td>
 </tr>
 <tr>
@@ -29152,13 +29290,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.7611743
+-0.7620101
 </td>
 <td style="text-align:right;">
--0.8352856
+-0.8351490
 </td>
 <td style="text-align:right;">
--0.6870630
+-0.6888712
 </td>
 </tr>
 <tr>
@@ -29172,13 +29310,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8601930
+-0.8598831
 </td>
 <td style="text-align:right;">
--0.8926372
+-0.8925945
 </td>
 <td style="text-align:right;">
--0.8277487
+-0.8271717
 </td>
 </tr>
 <tr>
@@ -29192,13 +29330,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.9213856
+-0.9215957
 </td>
 <td style="text-align:right;">
--0.9217094
+-0.9221259
 </td>
 <td style="text-align:right;">
--0.9210619
+-0.9210655
 </td>
 </tr>
 <tr>
@@ -29212,13 +29350,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.9357096
+-0.9362311
 </td>
 <td style="text-align:right;">
--0.9378832
+-0.9389139
 </td>
 <td style="text-align:right;">
--0.9335360
+-0.9335484
 </td>
 </tr>
 <tr>
@@ -29232,13 +29370,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.9211387
+-0.9216224
 </td>
 <td style="text-align:right;">
--0.9242647
+-0.9252401
 </td>
 <td style="text-align:right;">
--0.9180127
+-0.9180047
 </td>
 </tr>
 <tr>
@@ -29252,13 +29390,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.9111044
+-0.9113838
 </td>
 <td style="text-align:right;">
--0.9154942
+-0.9160686
 </td>
 <td style="text-align:right;">
--0.9067146
+-0.9066990
 </td>
 </tr>
 <tr>
@@ -29272,13 +29410,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.8835125
+-0.8840898
 </td>
 <td style="text-align:right;">
--0.8854973
+-0.8866643
 </td>
 <td style="text-align:right;">
--0.8815278
+-0.8815154
 </td>
 </tr>
 <tr>
@@ -29292,13 +29430,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.8283893
+-0.8292765
 </td>
 <td style="text-align:right;">
--0.8331796
+-0.8349488
 </td>
 <td style="text-align:right;">
--0.8235989
+-0.8236042
 </td>
 </tr>
 <tr>
@@ -29312,13 +29450,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.8291388
+-0.8299812
 </td>
 <td style="text-align:right;">
--0.8392364
+-0.8392638
 </td>
 <td style="text-align:right;">
--0.8190411
+-0.8206986
 </td>
 </tr>
 <tr>
@@ -29332,13 +29470,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.8513833
+-0.8522956
 </td>
 <td style="text-align:right;">
--0.8523425
+-0.8541574
 </td>
 <td style="text-align:right;">
--0.8504241
+-0.8504338
 </td>
 </tr>
 <tr>
@@ -29352,13 +29490,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
--0.8451587
+-0.8457331
 </td>
 <td style="text-align:right;">
--0.8743518
+-0.8743503
 </td>
 <td style="text-align:right;">
--0.8159656
+-0.8171158
 </td>
 </tr>
 <tr>
@@ -29372,13 +29510,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
--0.9156720
+-0.9158764
 </td>
 <td style="text-align:right;">
--0.9183729
+-0.9183812
 </td>
 <td style="text-align:right;">
--0.9129711
+-0.9133717
 </td>
 </tr>
 <tr>
@@ -29392,13 +29530,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
--0.9707111
+-0.9707285
 </td>
 <td style="text-align:right;">
--0.9721500
+-0.9721953
 </td>
 <td style="text-align:right;">
--0.9692722
+-0.9692618
 </td>
 </tr>
 <tr>
@@ -29412,13 +29550,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.6787279
+-0.6753833
 </td>
 <td style="text-align:right;">
--0.8544523
+-0.8544421
 </td>
 <td style="text-align:right;">
--0.5030035
+-0.4963245
 </td>
 </tr>
 <tr>
@@ -29432,13 +29570,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.9081027
+-0.9074624
 </td>
 <td style="text-align:right;">
--0.9542616
+-0.9542897
 </td>
 <td style="text-align:right;">
--0.8619438
+-0.8606351
 </td>
 </tr>
 <tr>
@@ -29452,13 +29590,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8896001
+-0.8899113
 </td>
 <td style="text-align:right;">
--0.9122553
+-0.9123004
 </td>
 <td style="text-align:right;">
--0.8669450
+-0.8675222
 </td>
 </tr>
 <tr>
@@ -29472,13 +29610,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.7460667
+-0.7479104
 </td>
 <td style="text-align:right;">
--0.8465756
+-0.8502058
 </td>
 <td style="text-align:right;">
--0.6455578
+-0.6456149
 </td>
 </tr>
 <tr>
@@ -29492,13 +29630,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.6763180
+-0.6777754
 </td>
 <td style="text-align:right;">
--0.8491723
+-0.8527881
 </td>
 <td style="text-align:right;">
--0.5034636
+-0.5027627
 </td>
 </tr>
 <tr>
@@ -29512,13 +29650,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.6446266
+-0.6479695
 </td>
 <td style="text-align:right;">
--0.7497762
+-0.7566130
 </td>
 <td style="text-align:right;">
--0.5394770
+-0.5393260
 </td>
 </tr>
 <tr>
@@ -29532,13 +29670,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.4733625
+-0.4792524
 </td>
 <td style="text-align:right;">
--0.5588380
+-0.5692793
 </td>
 <td style="text-align:right;">
--0.3878869
+-0.3892255
 </td>
 </tr>
 <tr>
@@ -29552,13 +29690,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.3161178
+-0.3231982
 </td>
 <td style="text-align:right;">
--0.4809289
+-0.4932446
 </td>
 <td style="text-align:right;">
--0.1513067
+-0.1531518
 </td>
 </tr>
 <tr>
@@ -29572,13 +29710,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.3722262
+-0.3790048
 </td>
 <td style="text-align:right;">
--0.4446683
+-0.4581838
 </td>
 <td style="text-align:right;">
--0.2997842
+-0.2998257
 </td>
 </tr>
 <tr>
@@ -29592,13 +29730,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.5959282
+-0.6001396
 </td>
 <td style="text-align:right;">
--0.6625807
+-0.6720284
 </td>
 <td style="text-align:right;">
--0.5292756
+-0.5282508
 </td>
 </tr>
 <tr>
@@ -29612,13 +29750,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.5963589
+-0.5986796
 </td>
 <td style="text-align:right;">
--0.6787932
+-0.6842413
 </td>
 <td style="text-align:right;">
--0.5139245
+-0.5131180
 </td>
 </tr>
 <tr>
@@ -29632,13 +29770,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.6371751
+-0.6386892
 </td>
 <td style="text-align:right;">
--0.6613217
+-0.6648395
 </td>
 <td style="text-align:right;">
--0.6130285
+-0.6125388
 </td>
 </tr>
 <tr>
@@ -29652,13 +29790,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.5474557
+-0.5493027
 </td>
 <td style="text-align:right;">
--0.5764830
+-0.5771527
 </td>
 <td style="text-align:right;">
--0.5184284
+-0.5214527
 </td>
 </tr>
 <tr>
@@ -29672,13 +29810,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.4087383
+-0.4104909
 </td>
 <td style="text-align:right;">
--0.5331886
+-0.5325648
 </td>
 <td style="text-align:right;">
--0.2842880
+-0.2884171
 </td>
 </tr>
 <tr>
@@ -29712,13 +29850,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.0579889
+-0.0559119
 </td>
 <td style="text-align:right;">
--0.0787417
+-0.0787581
 </td>
 <td style="text-align:right;">
--0.0372361
+-0.0330657
 </td>
 </tr>
 <tr>
@@ -29732,13 +29870,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.8304633
+-0.8302579
 </td>
 <td style="text-align:right;">
--0.8625161
+-0.8625303
 </td>
 <td style="text-align:right;">
--0.7984105
+-0.7979855
 </td>
 </tr>
 <tr>
@@ -29752,13 +29890,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.7826419
+-0.7833437
 </td>
 <td style="text-align:right;">
--0.7987152
+-0.8001141
 </td>
 <td style="text-align:right;">
--0.7665686
+-0.7665733
 </td>
 </tr>
 <tr>
@@ -29772,13 +29910,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.6222868
+-0.6248162
 </td>
 <td style="text-align:right;">
--0.6746720
+-0.6796905
 </td>
 <td style="text-align:right;">
--0.5699017
+-0.5699419
 </td>
 </tr>
 <tr>
@@ -29792,13 +29930,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.1169482
+-0.1229888
 </td>
 <td style="text-align:right;">
--0.1211637
+-0.1246810
 </td>
 <td style="text-align:right;">
--0.1127327
+-0.1212967
 </td>
 </tr>
 <tr>
@@ -29812,13 +29950,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.3564826
+-0.3608355
 </td>
 <td style="text-align:right;">
--0.3715378
+-0.3716564
 </td>
 <td style="text-align:right;">
--0.3414275
+-0.3500147
 </td>
 </tr>
 <tr>
@@ -29832,13 +29970,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.6000022
+-0.6015852
 </td>
 <td style="text-align:right;">
--0.6200132
+-0.6230827
 </td>
 <td style="text-align:right;">
--0.5799913
+-0.5800877
 </td>
 </tr>
 <tr>
@@ -29852,13 +29990,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.7218996
+-0.7224572
 </td>
 <td style="text-align:right;">
--0.7894788
+-0.7904355
 </td>
 <td style="text-align:right;">
--0.6543204
+-0.6544789
 </td>
 </tr>
 <tr>
@@ -29872,13 +30010,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.5496807
+-0.5497145
 </td>
 <td style="text-align:right;">
--0.6112724
+-0.6111872
 </td>
 <td style="text-align:right;">
--0.4880890
+-0.4882418
 </td>
 </tr>
 <tr>
@@ -29892,13 +30030,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.3024377
+-0.3018136
 </td>
 <td style="text-align:right;">
--0.3899670
+-0.3888359
 </td>
 <td style="text-align:right;">
--0.2149085
+-0.2147914
 </td>
 </tr>
 <tr>
@@ -29912,13 +30050,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.2894958
+-0.2886589
 </td>
 <td style="text-align:right;">
--0.3919743
+-0.3903671
 </td>
 <td style="text-align:right;">
--0.1870173
+-0.1869506
 </td>
 </tr>
 <tr>
@@ -29932,13 +30070,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.4934892
+-0.4930482
 </td>
 <td style="text-align:right;">
--0.6030386
+-0.6022310
 </td>
 <td style="text-align:right;">
--0.3839399
+-0.3838654
 </td>
 </tr>
 <tr>
@@ -29952,13 +30090,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.5116921
+-0.5125534
 </td>
 <td style="text-align:right;">
--0.6532613
+-0.6540260
 </td>
 <td style="text-align:right;">
--0.3701230
+-0.3710808
 </td>
 </tr>
 <tr>
@@ -29972,13 +30110,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.0393060
+-0.0440733
 </td>
 <td style="text-align:right;">
--0.3224463
+-0.3316619
 </td>
 <td style="text-align:right;">
-0.2438344
+0.2435153
 </td>
 </tr>
 <tr>
@@ -29992,13 +30130,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
-0.4075306
+0.4097158
 </td>
 <td style="text-align:right;">
-0.4075306
+0.4097158
 </td>
 <td style="text-align:right;">
-0.4075306
+0.4097158
 </td>
 </tr>
 <tr>
@@ -30012,13 +30150,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.4677855
+0.4706604
 </td>
 <td style="text-align:right;">
-0.2836061
+0.2894469
 </td>
 <td style="text-align:right;">
-0.6519649
+0.6518739
 </td>
 </tr>
 <tr>
@@ -30032,13 +30170,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.7083146
+0.7097605
 </td>
 <td style="text-align:right;">
-0.6087776
+0.6118203
 </td>
 <td style="text-align:right;">
-0.8078516
+0.8077008
 </td>
 </tr>
 <tr>
@@ -30052,13 +30190,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.7983081
+0.7982261
 </td>
 <td style="text-align:right;">
-0.7472663
+0.7471547
 </td>
 <td style="text-align:right;">
-0.8493499
+0.8492975
 </td>
 </tr>
 <tr>
@@ -30072,13 +30210,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.8753108
+0.8756588
 </td>
 <td style="text-align:right;">
-0.8702119
+0.8702075
 </td>
 <td style="text-align:right;">
-0.8804097
+0.8811101
 </td>
 </tr>
 <tr>
@@ -30092,13 +30230,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.8852355
+0.8857178
 </td>
 <td style="text-align:right;">
-0.8804285
+0.8813851
 </td>
 <td style="text-align:right;">
-0.8900424
+0.8900505
 </td>
 </tr>
 <tr>
@@ -30112,13 +30250,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.8520041
+0.8524969
 </td>
 <td style="text-align:right;">
-0.8280692
+0.8290522
 </td>
 <td style="text-align:right;">
-0.8759389
+0.8759416
 </td>
 </tr>
 <tr>
@@ -30132,13 +30270,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.8233530
+0.8235486
 </td>
 <td style="text-align:right;">
-0.8074956
+0.8078961
 </td>
 <td style="text-align:right;">
-0.8392104
+0.8392011
 </td>
 </tr>
 <tr>
@@ -30152,13 +30290,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.7165890
+0.7171369
 </td>
 <td style="text-align:right;">
-0.6931551
+0.6942685
 </td>
 <td style="text-align:right;">
-0.7400228
+0.7400054
 </td>
 </tr>
 <tr>
@@ -30172,13 +30310,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.6227105
+0.6237267
 </td>
 <td style="text-align:right;">
-0.5989919
+0.6010212
 </td>
 <td style="text-align:right;">
-0.6464292
+0.6464322
 </td>
 </tr>
 <tr>
@@ -30192,13 +30330,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.6458478
+0.6470788
 </td>
 <td style="text-align:right;">
-0.6110927
+0.6135294
 </td>
 <td style="text-align:right;">
-0.6806029
+0.6806283
 </td>
 </tr>
 <tr>
@@ -30212,13 +30350,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.7044908
+0.7060041
 </td>
 <td style="text-align:right;">
-0.6942750
+0.6972945
 </td>
 <td style="text-align:right;">
-0.7147066
+0.7147137
 </td>
 </tr>
 <tr>
@@ -30232,13 +30370,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
-0.7184480
+0.7194353
 </td>
 <td style="text-align:right;">
-0.6782500
+0.6802278
 </td>
 <td style="text-align:right;">
-0.7586461
+0.7586429
 </td>
 </tr>
 <tr>
@@ -30252,13 +30390,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
-0.8311099
+0.8315045
 </td>
 <td style="text-align:right;">
-0.8217204
+0.8217416
 </td>
 <td style="text-align:right;">
-0.8404995
+0.8412674
 </td>
 </tr>
 <tr>
@@ -30272,13 +30410,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
-0.9503120
+0.9503785
 </td>
 <td style="text-align:right;">
-0.9450303
+0.9451775
 </td>
 <td style="text-align:right;">
-0.9555938
+0.9555795
 </td>
 </tr>
 <tr>
@@ -30292,13 +30430,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.5940117
+0.5917572
 </td>
 <td style="text-align:right;">
-0.4626535
+0.4628335
 </td>
 <td style="text-align:right;">
-0.7253699
+0.7206809
 </td>
 </tr>
 <tr>
@@ -30312,13 +30450,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.6528644
+0.6521291
 </td>
 <td style="text-align:right;">
-0.4995388
+0.4995309
 </td>
 <td style="text-align:right;">
-0.8061901
+0.8047274
 </td>
 </tr>
 <tr>
@@ -30332,13 +30470,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.3762076
+0.3768394
 </td>
 <td style="text-align:right;">
-0.0722873
+0.0721085
 </td>
 <td style="text-align:right;">
-0.6801280
+0.6815702
 </td>
 </tr>
 <tr>
@@ -30352,13 +30490,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.2419454
+0.2449228
 </td>
 <td style="text-align:right;">
--0.1272298
+-0.1273882
 </td>
 <td style="text-align:right;">
-0.6111205
+0.6172339
 </td>
 </tr>
 <tr>
@@ -30372,13 +30510,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.3201041
+0.3229247
 </td>
 <td style="text-align:right;">
--0.0179050
+-0.0187852
 </td>
 <td style="text-align:right;">
-0.6581132
+0.6646347
 </td>
 </tr>
 <tr>
@@ -30392,13 +30530,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.4480823
+0.4538982
 </td>
 <td style="text-align:right;">
-0.2636204
+0.2633983
 </td>
 <td style="text-align:right;">
-0.6325443
+0.6443982
 </td>
 </tr>
 <tr>
@@ -30412,13 +30550,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.3939355
+0.3997787
 </td>
 <td style="text-align:right;">
-0.2261265
+0.2272817
 </td>
 <td style="text-align:right;">
-0.5617446
+0.5722757
 </td>
 </tr>
 <tr>
@@ -30432,13 +30570,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.1507173
+0.1573626
 </td>
 <td style="text-align:right;">
--0.0652119
+-0.0629320
 </td>
 <td style="text-align:right;">
-0.3666464
+0.3776572
 </td>
 </tr>
 <tr>
@@ -30452,13 +30590,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.1925679
+0.2000991
 </td>
 <td style="text-align:right;">
-0.0159406
+0.0165675
 </td>
 <td style="text-align:right;">
-0.3691952
+0.3836306
 </td>
 </tr>
 <tr>
@@ -30472,13 +30610,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.4111544
+0.4164933
 </td>
 <td style="text-align:right;">
-0.2738009
+0.2727721
 </td>
 <td style="text-align:right;">
-0.5485078
+0.5602146
 </td>
 </tr>
 <tr>
@@ -30492,13 +30630,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.3408878
+0.3445077
 </td>
 <td style="text-align:right;">
-0.1697647
+0.1684054
 </td>
 <td style="text-align:right;">
-0.5120109
+0.5206100
 </td>
 </tr>
 <tr>
@@ -30512,13 +30650,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.3172028
+0.3199062
 </td>
 <td style="text-align:right;">
-0.2654446
+0.2643100
 </td>
 <td style="text-align:right;">
-0.3689609
+0.3755024
 </td>
 </tr>
 <tr>
@@ -30532,13 +30670,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.2778595
+0.2803079
 </td>
 <td style="text-align:right;">
-0.1946785
+0.1993472
 </td>
 <td style="text-align:right;">
-0.3610405
+0.3612685
 </td>
 </tr>
 <tr>
@@ -30552,13 +30690,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
-0.0062126
+0.0085179
 </td>
 <td style="text-align:right;">
--0.0704638
+-0.0647758
 </td>
 <td style="text-align:right;">
-0.0828890
+0.0818116
 </td>
 </tr>
 <tr>
@@ -30592,13 +30730,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.0678093
+-0.0688296
 </td>
 <td style="text-align:right;">
--0.0723742
+-0.0722220
 </td>
 <td style="text-align:right;">
--0.0632444
+-0.0654373
 </td>
 </tr>
 <tr>
@@ -30612,13 +30750,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.4639328
+0.4635215
 </td>
 <td style="text-align:right;">
-0.4300320
+0.4291161
 </td>
 <td style="text-align:right;">
-0.4978336
+0.4979270
 </td>
 </tr>
 <tr>
@@ -30632,13 +30770,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.4404122
+0.4409105
 </td>
 <td style="text-align:right;">
-0.3840315
+0.3840672
 </td>
 <td style="text-align:right;">
-0.4967928
+0.4977537
 </td>
 </tr>
 <tr>
@@ -30652,13 +30790,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.3264037
+0.3289974
 </td>
 <td style="text-align:right;">
-0.2395845
+0.2396131
 </td>
 <td style="text-align:right;">
-0.4132229
+0.4183817
 </td>
 </tr>
 <tr>
@@ -30672,13 +30810,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.4145999
+-0.4090394
 </td>
 <td style="text-align:right;">
--0.4206963
+-0.4096645
 </td>
 <td style="text-align:right;">
--0.4085036
+-0.4084142
 </td>
 </tr>
 <tr>
@@ -30692,13 +30830,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.4936902
+-0.4885717
 </td>
 <td style="text-align:right;">
--0.5027642
+-0.4926311
 </td>
 <td style="text-align:right;">
--0.4846162
+-0.4845122
 </td>
 </tr>
 <tr>
@@ -30712,13 +30850,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.3104836
+-0.3076618
 </td>
 <td style="text-align:right;">
--0.3557751
+-0.3502255
 </td>
 <td style="text-align:right;">
--0.2651921
+-0.2650980
 </td>
 </tr>
 <tr>
@@ -30732,13 +30870,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.4094232
+-0.4083184
 </td>
 <td style="text-align:right;">
--0.5738621
+-0.5718257
 </td>
 <td style="text-align:right;">
--0.2449843
+-0.2448111
 </td>
 </tr>
 <tr>
@@ -30752,13 +30890,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.4107872
+-0.4101172
 </td>
 <td style="text-align:right;">
--0.5364407
+-0.5352797
 </td>
 <td style="text-align:right;">
--0.2851336
+-0.2849547
 </td>
 </tr>
 <tr>
@@ -30772,13 +30910,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.2459489
+-0.2463451
 </td>
 <td style="text-align:right;">
--0.3057286
+-0.3064780
 </td>
 <td style="text-align:right;">
--0.1861693
+-0.1862122
 </td>
 </tr>
 <tr>
@@ -30792,13 +30930,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.1797670
+-0.1807463
 </td>
 <td style="text-align:right;">
--0.1920801
+-0.1921634
 </td>
 <td style="text-align:right;">
--0.1674538
+-0.1693291
 </td>
 </tr>
 <tr>
@@ -30812,13 +30950,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.1920368
+-0.1926782
 </td>
 <td style="text-align:right;">
--0.2367089
+-0.2366604
 </td>
 <td style="text-align:right;">
--0.1473646
+-0.1486960
 </td>
 </tr>
 <tr>
@@ -30832,13 +30970,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.0097851
+0.0125417
 </td>
 <td style="text-align:right;">
--0.0335902
+-0.0323999
 </td>
 <td style="text-align:right;">
-0.0531604
+0.0574834
 </td>
 </tr>
 <tr>
@@ -30852,13 +30990,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.2932972
+-0.2879270
 </td>
 <td style="text-align:right;">
--0.5462308
+-0.5458152
 </td>
 <td style="text-align:right;">
--0.0403636
+-0.0300388
 </td>
 </tr>
 <tr>
@@ -30872,13 +31010,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
--0.7690185
+-0.7565985
 </td>
 <td style="text-align:right;">
--0.7690185
+-0.7565985
 </td>
 <td style="text-align:right;">
--0.7690185
+-0.7565985
 </td>
 </tr>
 <tr>
@@ -30892,13 +31030,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2607539
+-0.2621217
 </td>
 <td style="text-align:right;">
--0.3494787
+-0.3497480
 </td>
 <td style="text-align:right;">
--0.1720291
+-0.1744953
 </td>
 </tr>
 <tr>
@@ -30912,13 +31050,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.5164502
+-0.5155757
 </td>
 <td style="text-align:right;">
--0.6413398
+-0.6411741
 </td>
 <td style="text-align:right;">
--0.3915605
+-0.3899774
 </td>
 </tr>
 <tr>
@@ -30932,13 +31070,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.6490921
+-0.6467611
 </td>
 <td style="text-align:right;">
--0.7019810
+-0.7018023
 </td>
 <td style="text-align:right;">
--0.5962031
+-0.5917198
 </td>
 </tr>
 <tr>
@@ -30952,13 +31090,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.6557983
+-0.6542191
 </td>
 <td style="text-align:right;">
--0.6815365
+-0.6785388
 </td>
 <td style="text-align:right;">
--0.6300601
+-0.6298993
 </td>
 </tr>
 <tr>
@@ -30972,13 +31110,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.7576454
+-0.7561510
 </td>
 <td style="text-align:right;">
--0.7729090
+-0.7699853
 </td>
 <td style="text-align:right;">
--0.7423818
+-0.7423168
 </td>
 </tr>
 <tr>
@@ -30992,13 +31130,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.8506569
+-0.8502451
 </td>
 <td style="text-align:right;">
--0.8826692
+-0.8818523
 </td>
 <td style="text-align:right;">
--0.8186447
+-0.8186380
 </td>
 </tr>
 <tr>
@@ -31012,13 +31150,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.8432777
+-0.8434751
 </td>
 <td style="text-align:right;">
--0.8652393
+-0.8656402
 </td>
 <td style="text-align:right;">
--0.8213161
+-0.8213100
 </td>
 </tr>
 <tr>
@@ -31032,13 +31170,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.8715861
+-0.8719168
 </td>
 <td style="text-align:right;">
--0.8756841
+-0.8763485
 </td>
 <td style="text-align:right;">
--0.8674882
+-0.8674851
 </td>
 </tr>
 <tr>
@@ -31052,13 +31190,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.8693740
+-0.8697845
 </td>
 <td style="text-align:right;">
--0.8789099
+-0.8797331
 </td>
 <td style="text-align:right;">
--0.8598380
+-0.8598359
 </td>
 </tr>
 <tr>
@@ -31072,13 +31210,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.8464320
+-0.8465970
 </td>
 <td style="text-align:right;">
--0.8464635
+-0.8467059
 </td>
 <td style="text-align:right;">
--0.8464005
+-0.8464881
 </td>
 </tr>
 <tr>
@@ -31092,13 +31230,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.8478114
+-0.8482411
 </td>
 <td style="text-align:right;">
--0.8508163
+-0.8516737
 </td>
 <td style="text-align:right;">
--0.8448066
+-0.8448085
 </td>
 </tr>
 <tr>
@@ -31112,13 +31250,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
--0.8506793
+-0.8509731
 </td>
 <td style="text-align:right;">
--0.8792027
+-0.8791962
 </td>
 <td style="text-align:right;">
--0.8221558
+-0.8227500
 </td>
 </tr>
 <tr>
@@ -31132,13 +31270,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
--0.9167539
+-0.9168051
 </td>
 <td style="text-align:right;">
--0.9183564
+-0.9184619
 </td>
 <td style="text-align:right;">
--0.9151513
+-0.9151483
 </td>
 </tr>
 <tr>
@@ -31152,13 +31290,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
--0.9619266
+-0.9618300
 </td>
 <td style="text-align:right;">
--0.9663612
+-0.9663431
 </td>
 <td style="text-align:right;">
--0.9574921
+-0.9573168
 </td>
 </tr>
 <tr>
@@ -31172,13 +31310,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.7203887
+-0.7176546
 </td>
 <td style="text-align:right;">
--0.8268287
+-0.8269183
 </td>
 <td style="text-align:right;">
--0.6139488
+-0.6083909
 </td>
 </tr>
 <tr>
@@ -31192,13 +31330,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.9137126
+-0.9132405
 </td>
 <td style="text-align:right;">
--0.9259727
+-0.9260009
 </td>
 <td style="text-align:right;">
--0.9014525
+-0.9004800
 </td>
 </tr>
 <tr>
@@ -31212,13 +31350,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.8785535
+-0.8777136
 </td>
 <td style="text-align:right;">
--0.9319229
+-0.9319156
 </td>
 <td style="text-align:right;">
--0.8251840
+-0.8235115
 </td>
 </tr>
 <tr>
@@ -31232,13 +31370,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.5923846
+-0.5883671
 </td>
 <td style="text-align:right;">
--0.7266310
+-0.7266758
 </td>
 <td style="text-align:right;">
--0.4581383
+-0.4500584
 </td>
 </tr>
 <tr>
@@ -31252,13 +31390,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.1868102
+-0.1825827
 </td>
 <td style="text-align:right;">
--0.3451142
+-0.3454431
 </td>
 <td style="text-align:right;">
--0.0285061
+-0.0197224
 </td>
 </tr>
 <tr>
@@ -31272,13 +31410,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.4134134
+0.4209567
 </td>
 <td style="text-align:right;">
-0.4074475
+0.4195345
 </td>
 <td style="text-align:right;">
-0.4193792
+0.4223788
 </td>
 </tr>
 <tr>
@@ -31292,13 +31430,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.5790698
+0.5839274
 </td>
 <td style="text-align:right;">
-0.5541943
+0.5631216
 </td>
 <td style="text-align:right;">
-0.6039454
+0.6047332
 </td>
 </tr>
 <tr>
@@ -31312,13 +31450,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.1771226
+0.1810473
 </td>
 <td style="text-align:right;">
-0.0913748
+0.0934276
 </td>
 <td style="text-align:right;">
-0.2628705
+0.2686671
 </td>
 </tr>
 <tr>
@@ -31332,13 +31470,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.0075575
+-0.0033722
 </td>
 <td style="text-align:right;">
--0.1161018
+-0.1154749
 </td>
 <td style="text-align:right;">
-0.1009867
+0.1087306
 </td>
 </tr>
 <tr>
@@ -31352,13 +31490,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.1485120
+-0.1447608
 </td>
 <td style="text-align:right;">
--0.1960355
+-0.1965644
 </td>
 <td style="text-align:right;">
--0.1009884
+-0.0929572
 </td>
 </tr>
 <tr>
@@ -31372,13 +31510,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.1739139
+-0.1716190
 </td>
 <td style="text-align:right;">
--0.1782226
+-0.1788359
 </td>
 <td style="text-align:right;">
--0.1696052
+-0.1644021
 </td>
 </tr>
 <tr>
@@ -31392,13 +31530,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
--0.0884474
+-0.0869743
 </td>
 <td style="text-align:right;">
--0.1396182
+-0.1359147
 </td>
 <td style="text-align:right;">
--0.0372766
+-0.0380339
 </td>
 </tr>
 <tr>
@@ -31412,13 +31550,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.2483782
+-0.2461760
 </td>
 <td style="text-align:right;">
--0.3412919
+-0.3418853
 </td>
 <td style="text-align:right;">
--0.1554644
+-0.1504667
 </td>
 </tr>
 <tr>
@@ -31432,13 +31570,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.3057206
+-0.3020435
 </td>
 <td style="text-align:right;">
--0.3090451
+-0.3091781
 </td>
 <td style="text-align:right;">
--0.3023962
+-0.2949090
 </td>
 </tr>
 <tr>
@@ -31472,13 +31610,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.2431904
+-0.2405403
 </td>
 <td style="text-align:right;">
--0.3150213
+-0.3150837
 </td>
 <td style="text-align:right;">
--0.1713595
+-0.1659970
 </td>
 </tr>
 <tr>
@@ -31492,13 +31630,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
--0.7074377
+-0.7056776
 </td>
 <td style="text-align:right;">
--0.7344923
+-0.7345244
 </td>
 <td style="text-align:right;">
--0.6803830
+-0.6768308
 </td>
 </tr>
 <tr>
@@ -31512,13 +31650,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
--0.6239008
+-0.6224440
 </td>
 <td style="text-align:right;">
--0.6255275
+-0.6225841
 </td>
 <td style="text-align:right;">
--0.6222740
+-0.6223040
 </td>
 </tr>
 <tr>
@@ -31532,13 +31670,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
--0.5059161
+-0.5042333
 </td>
 <td style="text-align:right;">
--0.5199679
+-0.5165561
 </td>
 <td style="text-align:right;">
--0.4918643
+-0.4919104
 </td>
 </tr>
 <tr>
@@ -31552,13 +31690,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.3159627
+0.3226225
 </td>
 <td style="text-align:right;">
-0.2550657
+0.2551696
 </td>
 <td style="text-align:right;">
-0.3768596
+0.3900754
 </td>
 </tr>
 <tr>
@@ -31572,13 +31710,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.7916329
+0.7942218
 </td>
 <td style="text-align:right;">
-0.7731487
+0.7731651
 </td>
 <td style="text-align:right;">
-0.8101170
+0.8152786
 </td>
 </tr>
 <tr>
@@ -31592,13 +31730,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.8655753
+0.8665327
 </td>
 <td style="text-align:right;">
-0.8565097
+0.8565296
 </td>
 <td style="text-align:right;">
-0.8746409
+0.8765358
 </td>
 </tr>
 <tr>
@@ -31612,13 +31750,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.8265032
+0.8271213
 </td>
 <td style="text-align:right;">
-0.8055319
+0.8055837
 </td>
 <td style="text-align:right;">
-0.8474745
+0.8486589
 </td>
 </tr>
 <tr>
@@ -31632,13 +31770,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.7698522
+0.7707138
 </td>
 <td style="text-align:right;">
-0.7500374
+0.7501222
 </td>
 <td style="text-align:right;">
-0.7896671
+0.7913054
 </td>
 </tr>
 <tr>
@@ -31652,13 +31790,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.4928326
+0.4938496
 </td>
 <td style="text-align:right;">
-0.4582992
+0.4583608
 </td>
 <td style="text-align:right;">
-0.5273660
+0.5293385
 </td>
 </tr>
 <tr>
@@ -31672,13 +31810,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.2851419
+0.2862315
 </td>
 <td style="text-align:right;">
-0.2846678
+0.2846786
 </td>
 <td style="text-align:right;">
-0.2856160
+0.2877844
 </td>
 </tr>
 <tr>
@@ -31692,13 +31830,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.2715345
+0.2723304
 </td>
 <td style="text-align:right;">
-0.2425741
+0.2442584
 </td>
 <td style="text-align:right;">
-0.3004948
+0.3004023
 </td>
 </tr>
 <tr>
@@ -31712,13 +31850,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
--0.2034880
+-0.2027279
 </td>
 <td style="text-align:right;">
--0.2235028
+-0.2218634
 </td>
 <td style="text-align:right;">
--0.1834731
+-0.1835924
 </td>
 </tr>
 <tr>
@@ -31732,13 +31870,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.5901426
+-0.5859443
 </td>
 <td style="text-align:right;">
--0.7187352
+-0.7190189
 </td>
 <td style="text-align:right;">
--0.4615500
+-0.4528697
 </td>
 </tr>
 <tr>
@@ -31752,13 +31890,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
-0.2912623
+0.2765553
 </td>
 <td style="text-align:right;">
-0.2912623
+0.2765553
 </td>
 <td style="text-align:right;">
-0.2912623
+0.2765553
 </td>
 </tr>
 <tr>
@@ -31772,13 +31910,13 @@ Atlantic
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.2781779
+0.2805178
 </td>
 <td style="text-align:right;">
-0.1053111
+0.1101572
 </td>
 <td style="text-align:right;">
-0.4510447
+0.4508784
 </td>
 </tr>
 <tr>
@@ -31792,13 +31930,13 @@ Atlantic
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.6789189
+0.6796146
 </td>
 <td style="text-align:right;">
-0.6069670
+0.6084935
 </td>
 <td style="text-align:right;">
-0.7508708
+0.7507358
 </td>
 </tr>
 <tr>
@@ -31812,13 +31950,13 @@ Atlantic
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.7830403
+0.7826658
 </td>
 <td style="text-align:right;">
-0.7174526
+0.7167395
 </td>
 <td style="text-align:right;">
-0.8486280
+0.8485921
 </td>
 </tr>
 <tr>
@@ -31832,13 +31970,13 @@ Atlantic
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.8322203
+0.8325049
 </td>
 <td style="text-align:right;">
-0.8254496
+0.8254481
 </td>
 <td style="text-align:right;">
-0.8389911
+0.8395618
 </td>
 </tr>
 <tr>
@@ -31852,13 +31990,13 @@ Atlantic
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.8366787
+0.8372015
 </td>
 <td style="text-align:right;">
-0.8260945
+0.8271292
 </td>
 <td style="text-align:right;">
-0.8472629
+0.8472739
 </td>
 </tr>
 <tr>
@@ -31872,13 +32010,13 @@ Atlantic
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.8047264
+0.8051559
 </td>
 <td style="text-align:right;">
-0.7684286
+0.7692896
 </td>
 <td style="text-align:right;">
-0.8410242
+0.8410222
 </td>
 </tr>
 <tr>
@@ -31892,13 +32030,13 @@ Atlantic
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.7756597
+0.7759474
 </td>
 <td style="text-align:right;">
-0.7632143
+0.7637962
 </td>
 <td style="text-align:right;">
-0.7881052
+0.7880985
 </td>
 </tr>
 <tr>
@@ -31912,13 +32050,13 @@ Atlantic
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.7063821
+0.7070850
 </td>
 <td style="text-align:right;">
-0.6951018
+0.6965195
 </td>
 <td style="text-align:right;">
-0.7176624
+0.7176504
 </td>
 </tr>
 <tr>
@@ -31932,13 +32070,13 @@ Atlantic
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.6029066
+0.6039841
 </td>
 <td style="text-align:right;">
-0.5845004
+0.5866455
 </td>
 <td style="text-align:right;">
-0.6213129
+0.6213227
 </td>
 </tr>
 <tr>
@@ -31952,13 +32090,13 @@ Atlantic
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.6072161
+0.6081996
 </td>
 <td style="text-align:right;">
-0.5835064
+0.5854453
 </td>
 <td style="text-align:right;">
-0.6309257
+0.6309539
 </td>
 </tr>
 <tr>
@@ -31972,13 +32110,13 @@ Atlantic
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.6313878
+0.6330189
 </td>
 <td style="text-align:right;">
-0.6250044
+0.6282518
 </td>
 <td style="text-align:right;">
-0.6377711
+0.6377860
 </td>
 </tr>
 <tr>
@@ -31992,13 +32130,13 @@ Atlantic
 (28.1,28.15]
 </td>
 <td style="text-align:right;">
-0.5850860
+0.5863365
 </td>
 <td style="text-align:right;">
-0.5169426
+0.5194399
 </td>
 <td style="text-align:right;">
-0.6532294
+0.6532331
 </td>
 </tr>
 <tr>
@@ -32012,13 +32150,13 @@ Atlantic
 (28.15,28.2]
 </td>
 <td style="text-align:right;">
-0.3751281
+0.3756890
 </td>
 <td style="text-align:right;">
-0.1457760
+0.1468718
 </td>
 <td style="text-align:right;">
-0.6044801
+0.6045062
 </td>
 </tr>
 <tr>
@@ -32032,13 +32170,13 @@ Atlantic
 (28.2, Inf]
 </td>
 <td style="text-align:right;">
-0.3037740
+0.3039069
 </td>
 <td style="text-align:right;">
-0.2871731
+0.2871189
 </td>
 <td style="text-align:right;">
-0.3203749
+0.3206950
 </td>
 </tr>
 <tr>
@@ -32052,13 +32190,13 @@ Indian
 (-Inf,26]
 </td>
 <td style="text-align:right;">
-0.0199557
+0.0163124
 </td>
 <td style="text-align:right;">
--0.0781004
+-0.0854731
 </td>
 <td style="text-align:right;">
-0.1180118
+0.1180979
 </td>
 </tr>
 <tr>
@@ -32072,13 +32210,13 @@ Indian
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.4483748
+0.4474895
 </td>
 <td style="text-align:right;">
-0.3448605
+0.3449452
 </td>
 <td style="text-align:right;">
-0.5518891
+0.5500338
 </td>
 </tr>
 <tr>
@@ -32092,13 +32230,13 @@ Indian
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.3097089
+0.3104553
 </td>
 <td style="text-align:right;">
-0.0647190
+0.0646375
 </td>
 <td style="text-align:right;">
-0.5546989
+0.5562731
 </td>
 </tr>
 <tr>
@@ -32112,13 +32250,13 @@ Indian
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.3810747
+0.3833591
 </td>
 <td style="text-align:right;">
-0.0845623
+0.0844397
 </td>
 <td style="text-align:right;">
-0.6775871
+0.6822784
 </td>
 </tr>
 <tr>
@@ -32132,13 +32270,13 @@ Indian
 (27,27.25]
 </td>
 <td style="text-align:right;">
-0.4912135
+0.4930166
 </td>
 <td style="text-align:right;">
-0.2147552
+0.2138784
 </td>
 <td style="text-align:right;">
-0.7676718
+0.7721547
 </td>
 </tr>
 <tr>
@@ -32152,13 +32290,13 @@ Indian
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
-0.5252353
+0.5285946
 </td>
 <td style="text-align:right;">
-0.3801298
+0.3798305
 </td>
 <td style="text-align:right;">
-0.6703408
+0.6773588
 </td>
 </tr>
 <tr>
@@ -32172,13 +32310,13 @@ Indian
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
-0.2584234
+0.2639908
 </td>
 <td style="text-align:right;">
-0.1714160
+0.1726420
 </td>
 <td style="text-align:right;">
-0.3454309
+0.3553397
 </td>
 </tr>
 <tr>
@@ -32192,13 +32330,13 @@ Indian
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
-0.0834733
+0.0904175
 </td>
 <td style="text-align:right;">
--0.1115876
+-0.1095945
 </td>
 <td style="text-align:right;">
-0.2785342
+0.2904296
 </td>
 </tr>
 <tr>
@@ -32212,13 +32350,13 @@ Indian
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
-0.1461535
+0.1536288
 </td>
 <td style="text-align:right;">
-0.0211873
+0.0214654
 </td>
 <td style="text-align:right;">
-0.2711197
+0.2857922
 </td>
 </tr>
 <tr>
@@ -32232,13 +32370,13 @@ Indian
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
-0.3252708
+0.3308561
 </td>
 <td style="text-align:right;">
-0.1965741
+0.1953588
 </td>
 <td style="text-align:right;">
-0.4539675
+0.4663534
 </td>
 </tr>
 <tr>
@@ -32252,13 +32390,13 @@ Indian
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
-0.2546202
+0.2592244
 </td>
 <td style="text-align:right;">
-0.1030600
+0.1016917
 </td>
 <td style="text-align:right;">
-0.4061804
+0.4167571
 </td>
 </tr>
 <tr>
@@ -32272,13 +32410,13 @@ Indian
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.2845805
+0.2876799
 </td>
 <td style="text-align:right;">
-0.2532295
+0.2519929
 </td>
 <td style="text-align:right;">
-0.3159315
+0.3233668
 </td>
 </tr>
 <tr>
@@ -32292,13 +32430,13 @@ Indian
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.2638253
+0.2661076
 </td>
 <td style="text-align:right;">
-0.2034365
+0.2074085
 </td>
 <td style="text-align:right;">
-0.3242141
+0.3248068
 </td>
 </tr>
 <tr>
@@ -32312,13 +32450,13 @@ Indian
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
-0.0425616
+0.0452359
 </td>
 <td style="text-align:right;">
--0.0822914
+-0.0762072
 </td>
 <td style="text-align:right;">
-0.1674146
+0.1666789
 </td>
 </tr>
 <tr>
@@ -32352,13 +32490,13 @@ Pacific
 (-Inf,26]
 </td>
 <td style="text-align:right;">
--0.3879672
+-0.3894520
 </td>
 <td style="text-align:right;">
--0.4022373
+-0.4021738
 </td>
 <td style="text-align:right;">
--0.3736971
+-0.3767303
 </td>
 </tr>
 <tr>
@@ -32372,13 +32510,13 @@ Pacific
 (26,26.5]
 </td>
 <td style="text-align:right;">
-0.5052166
+0.5046293
 </td>
 <td style="text-align:right;">
-0.4718261
+0.4705951
 </td>
 <td style="text-align:right;">
-0.5386071
+0.5386635
 </td>
 </tr>
 <tr>
@@ -32392,13 +32530,13 @@ Pacific
 (26.5,26.75]
 </td>
 <td style="text-align:right;">
-0.4612560
+0.4618620
 </td>
 <td style="text-align:right;">
-0.4062320
+0.4062549
 </td>
 <td style="text-align:right;">
-0.5162801
+0.5174692
 </td>
 </tr>
 <tr>
@@ -32412,13 +32550,13 @@ Pacific
 (26.75,27]
 </td>
 <td style="text-align:right;">
-0.3658365
+0.3684542
 </td>
 <td style="text-align:right;">
-0.2797580
+0.2797827
 </td>
 <td style="text-align:right;">
-0.4519150
+0.4571258
 </td>
 </tr>
 <tr>
@@ -32432,13 +32570,13 @@ Pacific
 (27,27.25]
 </td>
 <td style="text-align:right;">
--0.2681666
+-0.2633177
 </td>
 <td style="text-align:right;">
--0.2710388
+-0.2652238
 </td>
 <td style="text-align:right;">
--0.2652944
+-0.2614116
 </td>
 </tr>
 <tr>
@@ -32452,13 +32590,13 @@ Pacific
 (27.25,27.5]
 </td>
 <td style="text-align:right;">
--0.4674748
+-0.4634542
 </td>
 <td style="text-align:right;">
--0.4936177
+-0.4856765
 </td>
 <td style="text-align:right;">
--0.4413320
+-0.4412318
 </td>
 </tr>
 <tr>
@@ -32472,13 +32610,13 @@ Pacific
 (27.5,27.75]
 </td>
 <td style="text-align:right;">
--0.3713227
+-0.3695506
 </td>
 <td style="text-align:right;">
--0.4635140
+-0.4600498
 </td>
 <td style="text-align:right;">
--0.2791314
+-0.2790513
 </td>
 </tr>
 <tr>
@@ -32492,13 +32630,13 @@ Pacific
 (27.75,27.85]
 </td>
 <td style="text-align:right;">
--0.3771902
+-0.3760132
 </td>
 <td style="text-align:right;">
--0.5679019
+-0.5657317
 </td>
 <td style="text-align:right;">
--0.1864786
+-0.1862947
 </td>
 </tr>
 <tr>
@@ -32512,13 +32650,13 @@ Pacific
 (27.85,27.95]
 </td>
 <td style="text-align:right;">
--0.3527390
+-0.3516433
 </td>
 <td style="text-align:right;">
--0.5175958
+-0.5156547
 </td>
 <td style="text-align:right;">
--0.1878823
+-0.1876318
 </td>
 </tr>
 <tr>
@@ -32532,13 +32670,13 @@ Pacific
 (27.95,28.05]
 </td>
 <td style="text-align:right;">
--0.1525111
+-0.1519471
 </td>
 <td style="text-align:right;">
--0.2656558
+-0.2644878
 </td>
 <td style="text-align:right;">
--0.0393664
+-0.0394065
 </td>
 </tr>
 <tr>
@@ -32552,13 +32690,13 @@ Pacific
 (28.05,28.1]
 </td>
 <td style="text-align:right;">
--0.0481380
+-0.0477993
 </td>
 <td style="text-align:right;">
--0.0938961
+-0.0931164
 </td>
 <td style="text-align:right;">
--0.0023800
+-0.0024822
 </td>
 </tr>
 <tr>
@@ -32572,13 +32710,13 @@ Pacific
 (28.1,28.2]
 </td>
 <td style="text-align:right;">
-0.2309372
+0.2316594
 </td>
 <td style="text-align:right;">
-0.1732506
+0.1748458
 </td>
 <td style="text-align:right;">
-0.2886238
+0.2884731
 </td>
 </tr>
 <tr>
@@ -32592,13 +32730,13 @@ Pacific
 (28.2,28.3]
 </td>
 <td style="text-align:right;">
-0.0954234
+0.0967861
 </td>
 <td style="text-align:right;">
-0.0520961
+0.0533031
 </td>
 <td style="text-align:right;">
-0.1387507
+0.1402691
 </td>
 </tr>
 <tr>
@@ -32612,13 +32750,13 @@ Pacific
 (28.3,28.4]
 </td>
 <td style="text-align:right;">
--0.5111678
+-0.5062285
 </td>
 <td style="text-align:right;">
--0.7020302
+-0.7023085
 </td>
 <td style="text-align:right;">
--0.3203054
+-0.3101485
 </td>
 </tr>
 <tr>
@@ -32632,13 +32770,13 @@ Pacific
 (28.4, Inf]
 </td>
 <td style="text-align:right;">
--0.3112240
+-0.3270283
 </td>
 <td style="text-align:right;">
--0.3112240
+-0.3270283
 </td>
 <td style="text-align:right;">
--0.3112240
+-0.3270283
 </td>
 </tr>
 </tbody>
@@ -32674,11 +32812,11 @@ attached base packages:
 
 other attached packages:
  [1] corrr_0.4.3      broom_0.7.5      kableExtra_1.3.1 knitr_1.30      
- [5] olsrr_0.5.3      GGally_2.0.0     lubridate_1.7.9  metR_0.9.0      
- [9] scico_1.2.0      patchwork_1.1.1  collapse_1.5.0   forcats_0.5.0   
-[13] stringr_1.4.0    dplyr_1.0.5      purrr_0.3.4      readr_1.4.0     
-[17] tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.3    tidyverse_1.3.0 
-[21] workflowr_1.6.2 
+ [5] olsrr_0.5.3      GGally_2.0.0     lubridate_1.7.9  ggforce_0.3.3   
+ [9] metR_0.9.0       scico_1.2.0      patchwork_1.1.1  collapse_1.5.0  
+[13] forcats_0.5.0    stringr_1.4.0    dplyr_1.0.5      purrr_0.3.4     
+[17] readr_1.4.0      tidyr_1.1.2      tibble_3.0.4     ggplot2_3.3.3   
+[21] tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 webshot_0.5.2            RColorBrewer_1.1-2      
@@ -32698,16 +32836,17 @@ loaded via a namespace (and not attached):
 [43] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
 [46] abind_1.4-5              lifecycle_1.0.0          stringi_1.5.3           
 [49] whisker_0.4              yaml_2.2.1               carData_3.0-4           
-[52] plyr_1.8.6               grid_4.0.3               blob_1.2.1              
-[55] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[58] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[61] pillar_1.4.7             reprex_0.3.0             glue_1.4.2              
-[64] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.13.2       
-[67] modelr_0.1.8             vctrs_0.3.5              httpuv_1.5.4            
-[70] cellranger_1.1.0         gtable_0.3.0             reshape_0.8.8           
-[73] assertthat_0.2.1         xfun_0.18                openxlsx_4.2.3          
-[76] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
-[79] ellipsis_0.3.1           here_0.1                </code></pre>
+[52] MASS_7.3-53              plyr_1.8.6               grid_4.0.3              
+[55] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[58] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
+[61] hms_0.5.3                pillar_1.4.7             reprex_0.3.0            
+[64] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[67] data.table_1.13.2        modelr_0.1.8             vctrs_0.3.5             
+[70] tweenr_1.0.2             httpuv_1.5.4             cellranger_1.1.0        
+[73] gtable_0.3.0             polyclip_1.10-0          reshape_0.8.8           
+[76] assertthat_0.2.1         openxlsx_4.2.3           xfun_0.18               
+[79] RcppEigen_0.3.3.7.0      later_1.1.0.1            viridisLite_0.3.0       
+[82] ellipsis_0.3.1           here_0.1                </code></pre>
 </div>
 </div>
 </div>
