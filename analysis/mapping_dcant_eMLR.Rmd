@@ -1,0 +1,696 @@
+---
+title: "Mapping dcant eMLR"
+author: "Jens Daniel Müller"
+date:  "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  workflowr::wflow_html:
+    number_sections: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+editor_options:
+  chunk_output_type: console
+params:
+  Version_ID: "v_XXX"
+---
+
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+# this chunk runs the code stored in setup.Rmd
+# if required, please refer to instructions given here:
+# https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
+```
+
+```{r read_params_local, include = FALSE}
+
+if (params$Version_ID == "v_XXX") {
+  params_local <-
+    read_rds(here::here("data/auxillary", "params_local.rds"))
+  
+} else {
+  params_local <-
+    read_rds(
+      file = paste(path_root, "observations",
+                   params$Version_ID,
+                   "data/params_local.rds",
+                   sep = "/")
+    )
+}
+
+
+```
+
+```{r define_paths, include = FALSE}
+
+# only path_observations needs to be changed to model
+path_observations <-
+  paste(path_root, "/observations/", sep = "")
+
+path_preprocessing    <-
+  paste(path_observations, "preprocessing/", sep = "")
+
+path_version_data     <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/data/",
+        sep = "")
+
+path_version_figures  <-
+  paste(path_observations,
+        params_local$Version_ID,
+        "/figures/",
+        sep = "")
+```
+
+```{r load_libraries_specific, include=FALSE}
+library(seacarb)
+library(marelac)
+```
+
+# Version ID
+
+The results displayed on this site correspond to the Version_ID: `r params$Version_ID`
+
+# Required data
+
+## Predictor fields
+
+Currently, we use following combined predictor fields:
+
+- WOA18: S, T, and derived variables
+- GLODAP16: Oxygen, PO4, NO3, Silicate, and derived variables
+
+```{r read_predictor_files}
+
+predictors <-
+  read_csv(paste(path_version_data,
+                 "W18_st_G16_opsn.csv",
+                 sep = ""))
+
+predictors_surface <-
+  read_csv(paste(path_version_data,
+                 "W18_st_G16_opsn_surface.csv",
+                 sep = ""))
+
+```
+
+## Atm. pCO2
+
+Required only to estimate the change of Cant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.
+
+```{r read_atm_pCO2}
+
+co2_atm_tref <-
+  read_csv(paste(path_version_data,
+                 "co2_atm_tref.csv",
+                 sep = ""))
+
+```
+
+## MLR models
+
+```{r load_eMLR_models}
+
+lm_best_dcant <-
+  read_csv(paste(path_version_data,
+                 "lm_best_dcant.csv",
+                 sep = ""))
+```
+
+
+# Join MLRs + climatologies
+
+```{r merge_model_coeff_predictor_climatology}
+
+# remove predictor variable from model
+lm_best_dcant <- lm_best_dcant %>% 
+  mutate(model = str_remove(model, paste(params_local$MLR_target, "~ ")))
+
+# join predictors and MLR
+dcant <- left_join(lm_best_dcant, predictors)
+
+rm(predictors, lm_best_dcant)
+
+```
+
+# Map dcant
+
+## Deep water
+
+### Apply MLRs to predictor
+
+```{r calculate_cant}
+
+dcant <- b_dcant(dcant)
+
+```
+
+
+### Sections by model
+
+Zonal section plots are produced for every 20° longitude, each era and for all models individually. Plots can be accessed here:  
+
+- `r paste(path_version_figures, "Cant_model_sections/", sep = "")`
+
+```{r cant_section_by_model_eras_lon}
+
+
+if (params_local$plot_all_figures == "y") {
+  for (i_eras in unique(cant$eras)) {
+    # i_eras <- unique(cant$eras)[2]
+    cant_eras <- cant %>%
+      filter(eras == i_eras)
+    
+    for (i_lon in params_global$longitude_sections_regular) {
+      # i_lon <- params_global$longitude_sections_regular[7]
+      cant_eras_lon <- cant_eras %>%
+        filter(lon == i_lon)
+      
+      limits = max(abs(cant_eras_lon$cant)) * c(-1, 1)
+      
+      cant_eras_lon %>%
+        ggplot(aes(lat, depth, z = cant)) +
+        stat_summary_2d(
+          fun = "mean",
+          na.rm = TRUE,
+          bins = 20,
+          col = "grey"
+        ) +
+        scale_fill_scico(name = "Cant",
+                         palette = "vik",
+                         limit = limits) +
+        scale_y_reverse(limits = c(params_global$plotting_depth, NA)) +
+        scale_x_continuous(limits = c(-85, 85)) +
+        labs(title = paste(
+          "eras:",
+          i_eras,
+          "| lon:",
+          i_lon,
+          "|",
+          params_local$Version_ID
+        )) +
+        facet_wrap(~ model, ncol = 5)
+      
+      ggsave(
+        paste(
+          path_version_figures,
+          "Cant_model_sections/",
+          paste("Cant_model",
+                i_eras,
+                "lon",
+                i_lon,
+                "section.png",
+                sep = "_"),
+          sep = ""
+        ),
+        width = 17,
+        height = 9
+      )
+      
+    }
+  }
+}
+
+```
+
+
+## Surface water
+
+As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate Cant in surface waters, assuming that the CO~2~ system in these waters has followed the increase in atmospheric CO~2~ closely. 
+
+Using eq 10.2.16 from OBD, the change in anthropogenic CO~2~ in the upper ocean was computed as:
+
+$\Delta$~t~C~ant,eq~(t2 − t1) = 1∕$\gamma$ ⋅ DIC/pCO~2~ ⋅ (pCO~2,atm~ (t2)− pCO~2,atm~(t1))
+
+, where DIC and pCO~2~ are the in situ values, where $\gamma$ is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Luecker constants using the climatological values for temperature, salinity, DIC and Alk.
+
+### pCO~2~ climatology
+
+Plots below show the calculated climatolofical pCO~2~ values.
+
+```{r calc_pCO2_climatology}
+
+# calculate pCO2 from talk and tco2 climatology
+predictors_surface <- predictors_surface %>%
+  mutate(
+    pCO2 = carb(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2 * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = "l"
+    )$pCO2
+  )
+
+```
+
+
+```{r pCO2_climatology_map, fig.asp=0.6}
+
+predictors_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "pCO2",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+
+```{r pCO2_climatology_sections, fig.asp=1}
+
+predictors_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "pCO2",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+### Revelle factor
+
+Plots below show the calculated climatolofical Revelle factor values.
+
+```{r calc_revelle_factor_climatology}
+
+predictors_surface <- predictors_surface %>%
+  mutate(
+    rev_fac = buffer(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2 * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = "l"
+    )$BetaD
+  )
+
+```
+
+
+```{r revelle_factor_climatology_map, fig.asp=0.6}
+
+predictors_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "rev_fac",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+
+```{r revelle_factor_climatology_sections, fig.asp=1}
+
+predictors_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "rev_fac",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+
+### dcant calculation
+
+```{r calc_dcant_surface}
+
+# calculate increase in atm pCO2 between eras
+co2_atm_tref <- co2_atm_tref %>%
+  arrange(pCO2_tref) %>%
+  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref),
+         eras = paste(lag(era), era, sep = " --> ")) %>%
+  drop_na() %>%
+  select(eras, d_pCO2_tref)
+
+dcant_surface <- full_join(predictors_surface, co2_atm_tref,
+                           by = character())
+
+# calculate cant
+dcant_surface <- dcant_surface %>%
+  mutate(dcant = (1 / rev_fac) * (TCO2 / pCO2) * d_pCO2_tref)
+
+# calculate positive cant
+dcant_surface <- dcant_surface %>%
+  mutate(dcant_pos = if_else(dcant < 0, 0, dcant))
+
+```
+
+### Control plots
+
+```{r dcant_surface_climatology_map, fig.asp=0.6}
+
+dcant_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "dcant",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+
+```{r dcant_surface_climatology_sections, fig.asp=1}
+
+dcant_surface %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map( ~
+         p_section_climatology_regular(
+           df = .x,
+           var = "dcant",
+           surface = "y",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+
+```
+
+
+## Average model dcant
+
+Mean and sd are calculated across `r params_local$MLR_number` models for Cant in each grid cell (XYZ), basin and era combination. Calculations are performed for all cant values vs positive values only.
+
+### Deep water averaging
+
+```{r calc_dcant_model_mean}
+
+dcant_average <- m_dcant_3d_MLR_average(dcant)
+dcant_average <- m_cut_gamma(dcant_average, "gamma")
+
+# split data set for individual predictor contributions and total cant
+dcant_predictor_3d <- dcant_average %>% 
+  select(-c("dcant", "dcant_pos", ends_with("_sd")))
+
+dcant_average <- dcant_average %>%
+  select(
+    lon,
+    lat,
+    depth,
+    basin_AIP,
+    data_source,
+    dcant,
+    dcant_pos,
+    dcant_sd,
+    dcant_pos_sd,
+    gamma,
+    gamma_sd,
+    gamma_slab
+  )
+
+```
+
+
+```{r cant_deep_climatology_map, fig.asp=0.6}
+
+dcant_average %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map(~ p_map_climatology(
+    df = .x,
+    var = "dcant_pos",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+
+```
+
+
+```{r cant_deep_climatology_sections, fig.asp=1}
+
+dcant_average %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map(~ p_section_climatology_regular(
+    df = .x,
+    surface = "n",
+    var = "dcant_pos",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+```
+
+
+
+### Surface water averaging
+
+The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
+
+```{r calc_cant_mean_surface}
+
+dcant_surface_average <-
+  m_dcant_3d_MLR_average(dcant_surface)
+
+dcant_surface_average <- m_cut_gamma(dcant_surface_average, "gamma")
+rm(dcant_surface)
+
+```
+
+
+### Join surface and deep water
+
+```{r join_surface_deep_cant}
+
+dcant_3d <-
+  full_join(
+    dcant_average %>% mutate(estimate = "equilibrium"),
+    dcant_surface_average %>%  mutate(estimate = "eMLR")
+  )
+
+rm(dcant_surface_average)
+
+```
+
+
+## Zonal mean sections
+
+For each basin and era combination, the zonal mean cant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r calc_cant_zonal_mean_sections}
+
+dcant_zonal <- m_zonal_mean_sd(dcant_3d)
+dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
+
+```
+
+## Mean dcant sections by coefficient
+
+For each basin and era combination, the zonal mean is calculated for the term of each predictor.
+
+```{r calc_cant_predictor_mean_sections}
+
+dcant_predictor_zonal <-
+  m_zonal_mean_sd(dcant_predictor_3d)
+
+dcant_predictor_zonal <-
+  m_cut_gamma(dcant_predictor_zonal, "gamma_mean")
+
+```
+
+## Inventory calculation
+
+To calculate Cant column inventories, we:  
+
+1. Convert Cant concentrations to volumetric units
+2. Multiply layer thickness with volumetric Cant concentration to get a layer inventory
+3. For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (`r params_global$inventory_depths` m)
+
+Step 2 is performed separately for all Cant and positive Cant values only.
+
+```{r cant_inventories, fig.asp=1}
+
+dcant_inv <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(df = dcant_inv,
+               var = "dcant_pos",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ data_source)
+
+
+```
+
+
+## Budgets
+
+Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
+
+```{r calculate_budget_per_grid_cell}
+
+molC_to_PgC <- 12*1e-15
+
+dcant_budget <- dcant_inv %>% 
+  mutate(surface_area = earth_surf(lat, lon),
+         dcant_grid = dcant*surface_area*molC_to_PgC,
+         dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
+```
+
+```{r budget_global}
+
+dcant_budget_global <- dcant_budget %>%
+  group_by(data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+
+```{r budget_basin_AIP}
+
+dcant_budget_basin_AIP <- dcant_budget %>% 
+  group_by(basin_AIP, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_basin_AIP %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+
+```{r budget_MLR_regions, fig.asp=1}
+
+dcant_budget_basin_MLR <-
+  full_join(dcant_budget, basinmask) %>% 
+  group_by(basin, MLR_basins, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_basin_MLR %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(MLR_basins, value, fill=basin)) +
+  geom_col() +
+  facet_grid(estimate~data_source)
+
+```
+
+
+```{r budget_lat_grid, fig.asp=1}
+
+dcant_budget_lat_grid <- 
+  dcant_budget %>% 
+  m_grid_horizontal_coarse() %>%
+  group_by(lat_grid, basin_AIP, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_lat_grid %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(lat_grid, value, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip() +
+  facet_grid(estimate ~ data_source)
+
+```
+
+
+
+# Write csv
+
+```{r write_cant_files}
+
+dcant_3d %>%
+  write_csv(paste(path_version_data,
+                  "dcant_3d.csv", sep = ""))
+
+dcant_predictor_3d %>%
+  write_csv(paste(path_version_data,
+                  "dcant_predictor_3d.csv", sep = ""))
+
+dcant_zonal %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal.csv", sep = ""))
+
+dcant_predictor_zonal %>%
+  write_csv(paste(path_version_data,
+                  "dcant_predictor_zonal.csv", sep = ""))
+
+dcant_inv %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv.csv", sep = ""))
+
+dcant_budget_global %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global.csv", sep = ""))
+
+dcant_budget_basin_AIP %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP.csv", sep = ""))
+
+dcant_budget_basin_MLR %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR.csv", sep = ""))
+
+dcant_budget_lat_grid %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_lat_grid.csv", sep = ""))
+
+
+```
+
+
