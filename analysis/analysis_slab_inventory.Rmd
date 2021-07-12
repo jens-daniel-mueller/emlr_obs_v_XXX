@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant estimates"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -73,27 +73,27 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Data sources
 
-Cant estimates from this sensitivity case:
+dcant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 - Inventories (lat, lon)
 
 
-```{r read_cant_files}
+```{r read_dcant_files}
 
-cant_3d <-
+dcant_3d <-
   read_csv(paste(path_version_data,
-                 "cant_3d.csv",
+                 "dcant_3d.csv",
                  sep = ""))
 
-cant_3d_mod_truth <-
+dcant_3d_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_3d_mod_truth.csv",
+                 "dcant_3d_mod_truth.csv",
                  sep = ""))
 
-cant_3d <- bind_rows(cant_3d,
-                     cant_3d_mod_truth)
+dcant_3d <- bind_rows(dcant_3d,
+                     dcant_3d_mod_truth)
 
 tref <-
   read_csv(paste(path_version_data,
@@ -128,20 +128,28 @@ GLODAP_grid <- GLODAP_grid %>%
 
 ```{r calculate_gamma_slab_maps}
 
-cant_gamma_maps <- m_cant_slab_data_source(cant_3d)
+dcant_slab_layer <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(slab = map(.x = data, ~ m_dcant_slab_concentration(.x))) %>%
+  select(-data) %>%
+  unnest(slab)
 
-cant_gamma_maps <- cant_gamma_maps %>% 
+dcant_slab <- dcant_slab_layer %>% 
+  select(-c("layer_thickness", "layer_volume"))
+
+dcant_slab <- dcant_slab %>% 
   arrange(gamma_slab, data_source)
 
 ```
 
 
 
-# Cant - positive
+# dcant - positive
 
-In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a first series of plots we explore the distribution of dcant, taking only positive estimates into account (positive here refers to the mean dcant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 
-Mean of positive cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+Mean of positive dcant within each horizontal grid cell (lon x lat) per isoneutral slab.
 
 Please note that:
 
@@ -149,13 +157,14 @@ Please note that:
 - gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
 
 
-```{r cant_pos_gamma_slab_maps}
+```{r dcant_pos_gamma_slab_maps}
 
-cant_gamma_maps %>%
-  group_split(gamma_slab, data_source) %>%
+dcant_slab %>%
+  group_by(gamma_slab, data_source) %>%
+  group_split() %>% 
   # head(1) %>%
   map(
-    ~ p_map_cant_slab(
+    ~ p_map_dcant_slab(
       df = .x,
       subtitle_text = paste("data_source:", unique(.x$data_source),
                             "| Neutral density:", unique(.x$gamma_slab))
@@ -183,21 +192,22 @@ cant_gamma_maps %>%
 
 ## Bias
 
-```{r cant_pos_gamma_slab_maps_bias}
+```{r dcant_pos_gamma_slab_maps_bias}
 
-cant_pos_slab_inv_bias <- cant_gamma_maps %>% 
-  select(lat, lon, gamma_slab, cant_pos, data_source) %>% 
+dcant_slab_bias <- dcant_slab %>% 
   pivot_wider(names_from = data_source,
-              values_from = cant_pos) %>% 
-  mutate(cant_pos_bias = mod - mod_truth)
+              values_from = c("dcant", "dcant_pos")) %>% 
+  mutate(dcant_bias = dcant_mod - dcant_mod_truth,
+         dcant_pos_bias = dcant_pos_mod - dcant_pos_mod_truth) %>% 
+  select(c(lat, lon, gamma_slab, ends_with("bias")))
 
-cant_pos_slab_inv_bias %>%
+dcant_slab_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
   map(
-    ~ p_map_cant_slab(
+    ~ p_map_dcant_slab(
       df = .x,
-      var = "cant_pos_bias",
+      var = "dcant_pos_bias",
       col = "divergent",
       subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
     )  +
@@ -222,28 +232,11 @@ cant_pos_slab_inv_bias %>%
 
 ```
 
-```{r test_inventory_map, eval=FALSE}
+# dcant - all
 
-i_gamma_slab <- unique(cant_3d$gamma_slab)[2]
-i_data_source <- unique(cant_3d$data_source)[2]
+In a second series of plots we explore the distribution of all dcant, taking positive and negative estimates into account.
 
-map +
-  geom_contour_filled(
-    data = cant_gamma_maps %>%
-      filter(data_source == i_data_source,
-             gamma_slab == i_gamma_slab),
-    aes(lon, lat, z = cant)
-  ) +
-  scale_fill_viridis_d()
-
-```
-
-
-# Cant - all
-
-In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
-
-Mean of all Cant within each horizontal grid cell (lon x lat) per isoneutral slab.
+Mean of all dcant within each horizontal grid cell (lon x lat) per isoneutral slab.
 
 Please note that:
 
@@ -251,15 +244,17 @@ Please note that:
 - gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping
 
 
-```{r cant_all_gamma_slab_maps}
+```{r dcant_all_gamma_slab_maps}
 
-cant_gamma_maps %>%
-  group_split(gamma_slab, data_source) %>%
+dcant_slab %>%
+  group_by(gamma_slab, data_source) %>%
+  group_split() %>% 
+  # head(1) %>%
   map(
-    ~ p_map_cant_slab(
+    ~ p_map_dcant_slab(
       df = .x,
-      var = "cant",
-      col = "divergent",
+      var = "dcant",
+      col = "continuous",
       subtitle_text = paste(
         "data_source:",
         unique(.x$data_source),
@@ -291,22 +286,15 @@ cant_gamma_maps %>%
 
 ## Bias
 
-```{r cant_gamma_slab_maps_bias}
+```{r dcant_gamma_slab_maps_bias}
 
-cant_slab_inv_bias <- cant_gamma_maps %>% 
-  select(lat, lon, gamma_slab, cant, data_source) %>% 
-  pivot_wider(names_from = data_source,
-              values_from = cant) %>% 
-  mutate(cant_bias = mod - mod_truth)
-
-
-cant_slab_inv_bias %>%
+dcant_slab_bias %>%
   group_split(gamma_slab) %>%
   # head(1) %>%
   map(
-    ~ p_map_cant_slab(
+    ~ p_map_dcant_slab(
       df = .x,
-      var = "cant_bias",
+      var = "dcant_bias",
       col = "divergent",
       subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
     )  +
@@ -332,59 +320,61 @@ cant_slab_inv_bias %>%
 ```
 
 
-# Slab inventories
+# Slab Budgets
 
 ```{r calc_slab_inventory}
 
-cant_slab_budget <- m_cant_slab_inv_data_source(cant_3d)
+dcant_slab_budget <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(slab_budget = map(.x = data, ~ m_dcant_slab_budget(.x))) %>%
+  select(-data) %>%
+  unnest(slab_budget)
 
-cant_slab_budget %>% 
-  ggplot(aes(data_source, cant_pos_total, fill = gamma_slab)) +
+dcant_slab_budget %>% 
+  ggplot(aes(data_source, dcant_pos, fill = gamma_slab)) +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)
 
-cant_slab_budget %>% 
-  ggplot(aes(data_source, cant_total, fill = gamma_slab)) +
+dcant_slab_budget %>% 
+  ggplot(aes(data_source, dcant, fill = gamma_slab)) +
   geom_hline(yintercept = 0, col = "red") +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)
 
+dcant_slab_budget %>% 
+  ggplot(aes(data_source, dcant, fill = basin_AIP)) +
+  geom_hline(yintercept = 0, col = "red") +
+  geom_col() +
+  scale_fill_viridis_d(direction = -1)
 
 ```
 
-```{r cant_pos_slab_inv_bias, fig.asp=1}
+```{r dcant_slab_budget_bias, fig.asp=1}
 
-cant_slab_budget_bias <- cant_slab_budget %>%
+dcant_slab_budget_bias <- dcant_slab_budget %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(basin_AIP, data_source, gamma_slab, cant_pos_total) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_pos_total) %>%
-  mutate(cant_pos_bias = mod - mod_truth)
+              values_from = c("dcant", "dcant_pos")) %>%
+  mutate(dcant_bias = dcant_mod - dcant_mod_truth,
+         dcant_pos_bias = dcant_pos_mod - dcant_pos_mod_truth) %>% 
+  select(c(basin_AIP, gamma_slab, ends_with("bias")))
 
-cant_slab_budget_bias %>% 
-  ggplot(aes(gamma_slab, cant_pos_bias)) +
+
+dcant_slab_budget_bias %>% 
+  ggplot(aes(gamma_slab, dcant_pos_bias)) +
   geom_col() +
   facet_grid(basin_AIP ~ ., scales = "free_y") +
   coord_flip()
 
-```
-
-```{r cant_slab_budget_bias, fig.asp=1}
-
-cant_slab_budget_bias <- cant_slab_budget %>%
-  filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(basin_AIP, data_source, gamma_slab, cant_total) %>%
-  pivot_wider(names_from = data_source,
-              values_from = cant_total) %>%
-  mutate(cant_bias = mod - mod_truth)
-
-cant_slab_budget_bias %>% 
-  ggplot(aes(gamma_slab, cant_bias)) +
+dcant_slab_budget_bias %>% 
+  ggplot(aes(gamma_slab, dcant_bias)) +
   geom_col() +
   facet_grid(basin_AIP ~ ., scales = "free_y") +
   coord_flip()
+
 
 ```
 
@@ -392,31 +382,48 @@ cant_slab_budget_bias %>%
 
 ```{r write_csv}
 
-cant_slab_budget_bias %>%
+dcant_slab_budget_bias %>%
   write_csv(paste0(path_version_data,
-                   "cant_slab_budget_bias.csv"))
+                   "dcant_slab_budget_bias.csv"))
 
-cant_slab_budget %>%
+dcant_slab_budget %>%
   write_csv(paste0(path_version_data,
-                   "cant_slab_budget.csv"))
+                   "dcant_slab_budget.csv"))
 
-cant_slab_inv_bias %>%
+dcant_slab_bias %>%
   write_csv(paste0(path_version_data,
-                   "cant_slab_inv_bias.csv"))
+                   "dcant_slab_bias.csv"))
 
-cant_pos_slab_inv_bias %>%
+dcant_slab %>%
   write_csv(paste0(path_version_data,
-                   "cant_slab_inv_bias_pos.csv"))
+                   "dcant_slab.csv"))
 
 ```
 
 
 # Slab boundary depth
 
+```{r slab_thickness}
+
+dcant_slab_layer %>%
+  group_by(gamma_slab, data_source) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(~ map  +
+        geom_raster(data = .x,
+                    aes(lon, lat, fill = layer_thickness)) +
+        scale_fill_viridis_c() +
+        labs(title = paste("Slab:", .x$gamma_slab,
+                           "| Data source:", .x$data_source))
+  )
+
+```
+
+
 ```{r gamma_slab_boundary_depth, eval=FALSE, fig.asp=2.5}
 
 # gamma field in Atl
-predictors_gamma_Atl <- cant_3d %>%
+predictors_gamma_Atl <- dcant_3d %>%
   select(data_source, basin_AIP, lat, lon, depth, gamma) %>% 
   filter(basin_AIP == "Atlantic") %>% 
   distinct()
@@ -453,7 +460,7 @@ slabs_Atl_int <- slabs_Atl_int %>%
 #### Indo-Pacific
 
 # gamma field in Pac
-predictors_gamma_Ind_Pac <- cant_3d %>%
+predictors_gamma_Ind_Pac <- dcant_3d %>%
   select(data_source, basin_AIP, lat, lon, depth, gamma) %>% 
   filter(basin_AIP %in% c("Indian", "Pacific")) %>% 
   distinct()
