@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant estimates"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -73,26 +73,26 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Data sources
 
-Cant estimates from this sensitivity case:
+dcant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 - Inventories (lat, lon)
 
 
-```{r read_cant_files}
+```{r read_dcant_files}
 
-cant_inv <-
+dcant_inv <-
   read_csv(paste(path_version_data,
-                 "cant_inv.csv",
+                 "dcant_inv.csv",
                  sep = ""))
 
-cant_inv_mod_truth <-
+dcant_inv_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_inv_mod_truth.csv",
+                 "dcant_inv_mod_truth.csv",
                  sep = ""))
 
-cant_inv <- bind_rows(cant_inv, cant_inv_mod_truth)
+dcant_inv <- bind_rows(dcant_inv, dcant_inv_mod_truth)
 
 ```
 
@@ -100,75 +100,77 @@ The following analysis is restricted to the standard inventory depth of `r param
 
 ```{r filter_standard_inventory_depth}
 
-cant_inv <- cant_inv %>%
+dcant_inv <- dcant_inv %>%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 ```
 
 
 
-# Cant - positive
+# dcant - positive
 
-In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a first series of plots we explore the distribution of dcant, taking only positive estimates into account (positive here refers to the mean dcant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 
-Column inventory of positive cant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
+Column inventory of positive dcant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
-```{r cant_pos_inventory_map, fig.asp=0.5}
+```{r dcant_pos_inventory_map, fig.asp=0.5}
 
-cant_inv_bias <- cant_inv %>%
+dcant_inv_bias <- dcant_inv %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, lon, data_source, cant_pos_inv) %>%
+  select(lat, lon, data_source, dcant_pos) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_pos_inv) %>%
-  mutate(cant_pos_bias = mod - mod_truth) %>% 
+              values_from = dcant_pos) %>%
+  mutate(dcant_pos_bias = mod - mod_truth) %>% 
   drop_na()
 
 p_map_cant_inv(
-    df = cant_inv_bias,
-    var = "cant_pos_bias",
-    col = "divergent",
+    df = dcant_inv_bias,
+    var = "dcant_pos_bias",
+    col = "bias",
     subtitle_text = "data_source: mod - mod_truth")
 
 
-cant_inv %>%
+dcant_inv %>%
   group_split(data_source) %>%
+  # head(1) %>%
   map(
     ~ p_map_cant_inv(
     df = .x,
-    var = "cant_pos_inv",
+    var = "dcant_pos",
     subtitle_text = paste("data_source:", unique(.x$data_source))
   ))
 
 ```
 
-# Cant - all
+# dcant - all
 
-In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
+In a second series of plots we explore the distribution of all dcant, taking positive and negative estimates into account.
 
-Column inventory of all Cant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
+Column inventory of all dcant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
-```{r cant_all_inventory_map, fig.asp=0.5}
+```{r dcant_all_inventory_map, fig.asp=0.5}
 
-cant_inv_bias <- cant_inv %>%
+dcant_inv_bias <- dcant_inv %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, lon, data_source, cant_inv) %>%
+  select(lat, lon, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_inv) %>%
-  mutate(cant_bias = mod - mod_truth) %>% 
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - mod_truth) %>% 
   drop_na()
 
 p_map_cant_inv(
-    df = cant_inv_bias,
-    var = "cant_bias",
-    col = "divergent",
+    df = dcant_inv_bias,
+    var = "dcant_bias",
+    col = "bias",
     subtitle_text = "data_source: mod - mod_truth")
 
-cant_inv %>%
+dcant_inv %>%
   group_split(data_source) %>%
+  # head(1) %>% 
   map(~ p_map_cant_inv(
     df = .x,
-      var = "cant_inv",
-      col = "divergent",
+      var = "dcant",
+      col = "continuous",
     subtitle_text = paste("data_source:", unique(.x$data_source))
   ))
 

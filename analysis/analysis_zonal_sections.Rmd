@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant estimates"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -73,162 +73,128 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Data sources
 
-Cant estimates from this sensitivity case:
+dcant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 - Inventories (lat, lon)
 
 
-```{r read_cant_files}
+```{r read_dcant_files}
 
-cant_3d <-
+# dcant_3d <-
+#   read_csv(paste(path_version_data,
+#                  "dcant_3d.csv",
+#                  sep = ""))
+# 
+# dcant_3d_mod_truth <-
+#   read_csv(paste(path_version_data,
+#                  "dcant_3d_mod_truth.csv",
+#                  sep = ""))
+# 
+# dcant_3d <- bind_rows(dcant_3d,
+#                      dcant_3d_mod_truth)
+
+dcant_zonal <-
   read_csv(paste(path_version_data,
-                 "cant_3d.csv",
+                 "dcant_zonal.csv",
                  sep = ""))
 
-cant_3d_mod_truth <-
+dcant_zonal_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_3d_mod_truth.csv",
+                 "dcant_zonal_mod_truth.csv",
                  sep = ""))
 
-cant_3d <- bind_rows(cant_3d,
-                     cant_3d_mod_truth)
-
-cant_zonal <-
-  read_csv(paste(path_version_data,
-                 "cant_zonal.csv",
-                 sep = ""))
-
-cant_zonal_mod_truth <-
-  read_csv(paste(path_version_data,
-                 "cant_zonal_mod_truth.csv",
-                 sep = ""))
-
-cant_zonal <- bind_rows(cant_zonal,
-                        cant_zonal_mod_truth)
+dcant_zonal <- bind_rows(dcant_zonal,
+                        dcant_zonal_mod_truth)
 
 
 ```
 
-# Cant - positive
+# dcant - positive
 
-In a first series of plots we explore the distribution of Cant, taking only positive estimates into account (positive here refers to the mean cant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
+In a first series of plots we explore the distribution of dcant, taking only positive estimates into account (positive here refers to the mean dcant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.
 
 
-```{r cant_pos_zonal_mean_sections, fig.asp=0.6}
+```{r dcant_pos_zonal_mean_sections, fig.asp=0.6}
 
-cant_zonal_bias <- cant_zonal %>%
+dcant_zonal_bias <- dcant_zonal %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, cant_pos_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant_pos_mean) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_pos_mean) %>%
-  mutate(cant_pos_bias = mod - mod_truth)
+              values_from = dcant_pos_mean) %>%
+  mutate(dcant_pos_bias = mod - mod_truth)
 
-cant_zonal_bias <- full_join(
-  cant_zonal_bias,
-  cant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
+dcant_zonal_bias <- full_join(
+  dcant_zonal_bias,
+  dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
 
-# cant_zonal %>%
-#   group_split(data_source, basin_AIP) %>%
-#   map(
-#     i_basin_AIP = unique(.x$basin_AIP),
-#     ~ p_section_zonal(
-#     df = .x,
-#     var = "cant_pos_mean",
-#     subtitle_text = paste("data_source:", unique(.x$data_source),
-#                           "basin:", unique(.x$basin_AIP))
-#   ))
-
-
-# i_basin_AIP <- unique(cant_zonal$basin_AIP)[2]
-# i_data_source <- unique(cant_zonal$data_source)[1]
-
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  for (i_data_source in unique(cant_zonal$data_source)) {
-   
-     print(
+for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
+  for (i_data_source in unique(dcant_zonal$data_source)) {
+    # i_basin_AIP <- unique(dcant_zonal$basin_AIP)[2]
+    # i_data_source <- unique(dcant_zonal$data_source)[1]
+    
+    print(
       p_section_zonal(
-        df = cant_zonal %>%
+        df = dcant_zonal %>%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "cant_pos_mean",
+        var = "dcant_pos_mean",
         subtitle_text =
-          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
+          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source)
+      )
     )
     
   }
-    print(
+  print(
     p_section_zonal(
-      df = cant_zonal_bias %>%
+      df = dcant_zonal_bias %>%
         filter(basin_AIP == i_basin_AIP),
-      var = "cant_pos_bias",
-      col="divergent",
-      breaks = params_global$breaks_cant_offset,
+      var = "dcant_pos_bias",
+      col = "divergent",
       subtitle_text =
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
   )
 }
 
-rm(cant_zonal_bias)
+rm(dcant_zonal_bias)
   
 ```
 
 
-## Global sections
+# dcant - all
 
-```{r cant_sections_positive_mean_one_lon_JGOFS_GO, fig.asp=0.6}
+In a second series of plots we explore the distribution of all dcant, taking positive and negative estimates into account.
 
+```{r dcant_all_zonal_mean_sections, fig.asp=0.6}
 
-for (i_data_source in unique(cant_3d$data_source)) {
-  print(
-    p_section_global(
-      df = cant_3d %>% filter(data_source == i_data_source),
-      var = "cant_pos",
-      subtitle_text = paste("data_source:", i_data_source)
-    )
-  )
-  
-}
-
-```
-
-
-# Cant - all
-
-In a second series of plots we explore the distribution of all Cant, taking positive and negative estimates into account.
-
-```{r cant_all_zonal_mean_sections, fig.asp=0.6}
-
-cant_zonal_bias <- cant_zonal %>%
+dcant_zonal_bias <- dcant_zonal %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, cant_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_mean) %>%
-  mutate(cant_bias = mod - mod_truth)
+              values_from = dcant_mean) %>%
+  mutate(dcant_bias = mod - mod_truth)
 
-cant_zonal_bias <- full_join(
-  cant_zonal_bias,
-  cant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
+dcant_zonal_bias <- full_join(
+  dcant_zonal_bias,
+  dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
-# i_data_source <- unique(cant_zonal$data_source)[1]
-# i_basin_AIP <- unique(cant_zonal$basin_AIP)[1]
+# i_data_source <- unique(dcant_zonal$data_source)[1]
+# i_basin_AIP <- unique(dcant_zonal$basin_AIP)[1]
 
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  for (i_data_source in unique(cant_zonal$data_source)) {
+for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
+  for (i_data_source in unique(dcant_zonal$data_source)) {
     print(
       p_section_zonal(
-        df = cant_zonal %>%
+        df = dcant_zonal %>%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "cant_mean",
+        var = "dcant_mean",
         gamma = "gamma_mean",
-        breaks = params_global$breaks_cant,
-        col = "divergent",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
     )
@@ -237,11 +203,11 @@ for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
   
     print(
     p_section_zonal(
-      df = cant_zonal_bias %>%
+      df = dcant_zonal_bias %>%
         filter(basin_AIP == i_basin_AIP),
-      var = "cant_bias",
+      var = "dcant_bias",
       col="divergent",
-      breaks = params_global$breaks_cant_offset,
+      breaks = params_global$breaks_dcant_offset,
       subtitle_text =
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
