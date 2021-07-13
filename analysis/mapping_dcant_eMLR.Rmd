@@ -400,7 +400,7 @@ Mean and sd are calculated across `r params_local$MLR_number` models for Cant in
 
 ```{r calc_dcant_model_mean}
 
-dcant_average <- m_dcant_3d_MLR_average(dcant)
+dcant_average <- m_dcant_3d_average(dcant)
 dcant_average <- m_cut_gamma(dcant_average, "gamma")
 
 # split data set for individual predictor contributions and total cant
@@ -464,7 +464,7 @@ The averaging function is also applied to the surface data, although only one va
 ```{r calc_cant_mean_surface}
 
 dcant_surface_average <-
-  m_dcant_3d_MLR_average(dcant_surface)
+  m_dcant_3d_average(dcant_surface)
 
 dcant_surface_average <- m_cut_gamma(dcant_surface_average, "gamma")
 rm(dcant_surface)
@@ -489,11 +489,17 @@ rm(dcant_surface_average)
 
 ## Zonal mean sections
 
-For each basin and era combination, the zonal mean cant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+For each basin and era combination, the zonal mean dcant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
 
 ```{r calc_cant_zonal_mean_sections}
 
-dcant_zonal <- m_zonal_mean_sd(dcant_3d)
+dcant_zonal <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
 dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
 
 ```
@@ -504,8 +510,12 @@ For each basin and era combination, the zonal mean is calculated for the term of
 
 ```{r calc_cant_predictor_mean_sections}
 
-dcant_predictor_zonal <-
-  m_zonal_mean_sd(dcant_predictor_3d)
+dcant_predictor_zonal <- dcant_predictor_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
 
 dcant_predictor_zonal <-
   m_cut_gamma(dcant_predictor_zonal, "gamma_mean")

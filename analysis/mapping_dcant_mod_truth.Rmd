@@ -64,15 +64,21 @@ path_version_figures  <-
         sep = "")
 ```
 
+```{r load_libraries_specific, include=FALSE}
+library(marelac)
+```
+
+
 # Version ID
 
 The results displayed on this site correspond to the Version_ID: `r params$Version_ID`
 
 # Required data
 
-## Predictor fields
+- tcant 3D fields at tref1 and tref2 for variable and constant climate model runs
 
-```{r read_model_tcant_files}
+
+```{r read_model_tcant_files_vc}
 
 tref  <-
   read_csv(paste(path_version_data,
@@ -113,9 +119,7 @@ tcant_tref_2 <- tcant_tref_2 %>%
 
 ```
 
-
-
-```{r read_model_cant_files_cc}
+```{r read_model_tcant_files_cc}
 
 tcant_cc_tref_1 <-
   read_csv(
@@ -152,15 +156,6 @@ tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
 ```
 
 
-```{r select_basin_mask, include=FALSE, eval=FALSE}
-
-basinmask <- basinmask %>% 
-  filter(MLR_basins == params_local$MLR_basins) %>% 
-  select(-c(MLR_basins, basin_AIP))
-
-```
-
-
 ```{r load_model_gamma_climatology}
 
 climatology <-
@@ -171,8 +166,9 @@ climatology <- climatology %>%
 
 ```
 
+# dcant calculation
 
-```{r calc_model_cant_between_tref}
+```{r calc_model_cant_between_tref_vc}
 
 dcant_3d <- left_join(tcant_tref_1, tcant_tref_2) %>%
   mutate(dcant = tcant_tref_2 - tcant_tref_1)
@@ -233,8 +229,7 @@ rm(
 
 ```
 
-
-## Model dcant
+# Maps
 
 ```{r cant_deep_climatology_map, fig.asp=0.6}
 
@@ -254,7 +249,7 @@ dcant_3d %>%
 
 dcant_3d %>%
   group_split(data_source) %>%
-  head(1) %>%
+  # head(1) %>%
   map(~ p_section_climatology_regular(
     df = .x,
     var = "dcant_pos",
@@ -263,8 +258,9 @@ dcant_3d %>%
 
 ```
 
+# Averaging and integration
 
-## Zonal mean sections
+## Zonal sections
 
 ```{r calc_cant_zonal_mean_sections}
 
@@ -280,9 +276,9 @@ dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
 
 ```
 
-## Inventory calculation
+## Inventories
 
-To calculate Cant column inventories, we:  
+To calculate dcant column inventories, we:  
 
 1. Convert Cant concentrations to volumetric units
 2. Multiply layer thickness with volumetric Cant concentration to get a layer inventory
@@ -324,6 +320,117 @@ p_map_cant_inv(df = tcant_inv,
   facet_grid(inv_depth ~ data_source)
 
 ```
+
+## Budgets
+
+Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
+
+```{r calculate_budget_per_grid_cell}
+
+molC_to_PgC <- 12*1e-15
+
+dcant_budget <- dcant_inv %>% 
+  mutate(surface_area = earth_surf(lat, lon),
+         dcant_grid = dcant*surface_area*molC_to_PgC,
+         dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
+```
+
+```{r budget_global}
+
+dcant_budget_global <- dcant_budget %>%
+  group_by(data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+
+```{r budget_basin_AIP}
+
+dcant_budget_basin_AIP <- dcant_budget %>% 
+  group_by(basin_AIP, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_basin_AIP %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+
+```{r budget_MLR_regions, fig.asp=1}
+
+dcant_budget_basin_MLR <-
+  full_join(dcant_budget, basinmask) %>% 
+  group_by(basin, MLR_basins, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_basin_MLR %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(MLR_basins, value, fill=basin)) +
+  geom_col() +
+  facet_grid(estimate~data_source)
+
+```
+
+
+```{r budget_lat_grid, fig.asp=1}
+
+dcant_budget_lat_grid <- 
+  dcant_budget %>% 
+  m_grid_horizontal_coarse() %>%
+  group_by(lat_grid, basin_AIP, data_source, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid),
+            dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid),
+            dcant_pos = round(dcant_pos,1)) %>% 
+  ungroup() %>% 
+  pivot_longer(cols = dcant:dcant_pos,
+               names_to = "estimate",
+               values_to = "value")
+
+dcant_budget_lat_grid %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(lat_grid, value, fill = basin_AIP)) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip() +
+  facet_grid(estimate ~ data_source)
+
+```
+
+
+
 
 # Alpha
 
@@ -435,6 +542,8 @@ dcant_3d %>%
   write_csv(paste(path_version_data,
                   "dcant_3d_mod_truth_cc.csv", sep = ""))
 
+
+
 dcant_zonal %>%
   filter(data_source == "mod_truth") %>%
   write_csv(paste(path_version_data,
@@ -445,6 +554,8 @@ dcant_zonal %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_mod_truth_cc.csv", sep = ""))
 
+
+
 dcant_inv %>%
   filter(data_source == "mod_truth") %>%
   write_csv(paste(path_version_data,
@@ -454,6 +565,48 @@ dcant_inv %>%
   filter(data_source == "mod_truth_cc") %>%
   write_csv(paste(path_version_data,
                   "dcant_inv_mod_truth_cc.csv", sep = ""))
+
+
+
+dcant_budget_global %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global_mod_truth.csv", sep = ""))
+
+dcant_budget_global %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global_mod_truth_cc.csv", sep = ""))
+
+dcant_budget_basin_AIP %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_mod_truth.csv", sep = ""))
+
+dcant_budget_basin_AIP %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_mod_truth_cc.csv", sep = ""))
+
+dcant_budget_basin_MLR %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_mod_truth.csv", sep = ""))
+
+dcant_budget_basin_MLR %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_mod_truth_cc.csv", sep = ""))
+
+dcant_budget_lat_grid %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_lat_grid_mod_truth.csv", sep = ""))
+
+dcant_budget_lat_grid %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_lat_grid_mod_truth_cc.csv", sep = ""))
 
 ```
 

@@ -313,12 +313,11 @@ The criterion was summed up for two adjacent eras, and the models with lowest su
 ```{r predictor_selection}
 
 # calculate RMSE sum for adjacent eras
-lm_all_eras <- GLODAP_glanced_clean  %>%
+lm_all <- GLODAP_glanced_clean  %>%
   select(data_source, basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
   arrange(era) %>% 
   group_by(data_source, basin, gamma_slab, model) %>% 
-  mutate(eras = paste(lag(era), era, sep = " --> "),
-         rmse_sum = rmse + lag(rmse),
+  mutate(rmse_sum = rmse + lag(rmse),
          aic_sum = AIC + lag(AIC),
          bic_sum = BIC + lag(BIC)
          ) %>% 
@@ -330,38 +329,38 @@ lm_all_eras <- GLODAP_glanced_clean  %>%
 # chose which criterion is applied
 
 if (params_local$MLR_criterion == "aic") {
-  lm_best_eras <- lm_all_eras %>%
-    group_by(data_source, basin, gamma_slab, eras) %>%
+  lm_best <- lm_all %>%
+    group_by(data_source, basin, gamma_slab) %>%
     slice_min(order_by = aic_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
     ungroup() %>%
-    arrange(basin, gamma_slab, eras, model)
+    arrange(basin, gamma_slab, model)
 } 
 
 if (params_local$MLR_criterion == "bic") {
-  lm_best_eras <- lm_all_eras %>%
-    group_by(data_source, basin, gamma_slab, eras) %>%
+  lm_best <- lm_all %>%
+    group_by(data_source, basin, gamma_slab) %>%
     slice_min(order_by = bic_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
     ungroup() %>%
-    arrange(basin, gamma_slab, eras, model)
+    arrange(basin, gamma_slab, model)
 }
 
 if (params_local$MLR_criterion == "rmse") {
-  lm_best_eras <- lm_all_eras %>%
-    group_by(data_source, basin, gamma_slab, eras) %>%
+  lm_best <- lm_all %>%
+    group_by(data_source, basin, gamma_slab) %>%
     slice_min(order_by = rmse_sum,
               with_ties = FALSE,
               n = params_local$MLR_number) %>%
     ungroup() %>%
-    arrange(basin, gamma_slab, eras, model)
+    arrange(basin, gamma_slab, model)
 }
 
 
 # print table
-lm_best_eras %>% 
+lm_best %>% 
   kable() %>%
   add_header_above() %>%
   kable_styling() %>%
@@ -375,54 +374,29 @@ A data frame to map the target variable is prepared.
 
 ```{r prepare_model_coefficients_table_target_variable_mapping}
 
-# create table with two era belonging to one eras
-eras_forward <- GLODAP_glanced %>%
-  arrange(era) %>% 
-  group_by(basin, gamma_slab, model) %>% 
-  mutate(eras = paste(era, lead(era), sep = " --> ")) %>% 
-  ungroup() %>% 
-  select(era, eras) %>% 
-  unique()
-
-eras_backward <- GLODAP_glanced %>%
-  arrange(era) %>% 
-  group_by(basin, gamma_slab, model) %>% 
-  mutate(eras = paste(lag(era), era, sep = " --> ")) %>% 
-  ungroup() %>% 
-  select(era, eras) %>% 
-  unique()
-
-eras_era <- full_join(eras_backward, eras_forward) %>% 
-  filter(str_detect(eras, "NA") == FALSE)
-
-# extend best model selection from eras to era
-lm_best <- full_join(
-  lm_best_eras %>% select(data_source, basin, gamma_slab, model, eras),
-  eras_era) %>% 
-  drop_na() %>% 
-  arrange(era, basin, gamma_slab, data_source)
+# extend best model selection with coefficients
 
 lm_best <- left_join(
   lm_best,
-  GLODAP_tidy %>% select(data_source, basin, gamma_slab, era, model, term, estimate))
-
-rm(eras_era, eras_forward, eras_backward)
+  GLODAP_tidy %>% select(data_source, basin, gamma_slab, era, model, term, estimate)
+)
 
 ```
 
-## Cant coeffcients
+## dcant coeffcients
 
-A data frame of coefficient offsets is prepared to facilitate the direct mapping of Cant.
+A data frame of coefficient offsets is prepared to facilitate the direct mapping of dcant.
 
 ```{r prepare_delta_coefficients_for_cant_mapping}
 
 # subtract coefficients of adjacent era  
 lm_best_dcant <- lm_best %>%
+  select(-c(AIC, BIC, rmse, aic_sum, bic_sum, rmse_sum)) %>% 
   arrange(era) %>%
-  group_by(data_source, basin, gamma_slab, eras, model, term) %>%
+  group_by(data_source, basin, gamma_slab, model, term) %>%
   mutate(delta_coeff = estimate - lag(estimate)) %>%
   ungroup() %>%
-  arrange(basin, gamma_slab, model, term, eras) %>%
+  arrange(basin, gamma_slab, model, term) %>%
   drop_na() %>%
   select(-c(era,estimate))
 
@@ -439,6 +413,7 @@ lm_best_dcant <- lm_best_dcant %>%
 
 # create table of target variable coefficients in wide format
 lm_best_target <- lm_best %>% 
+  select(-c(AIC, BIC, rmse, aic_sum, bic_sum, rmse_sum)) %>% 
   pivot_wider(names_from = "term",
               names_prefix = "coeff_",
               values_from = "estimate",
@@ -494,6 +469,7 @@ The selection criterion (`r params_local$MLR_criterion`) was plotted against the
 
 GLODAP_glanced %>%
   group_split(era) %>%
+  # head(1) %>%
   map(
     ~ ggplot(data = .x,
              aes(
@@ -522,6 +498,7 @@ GLODAP_glanced %>%
 left_join(lm_best_target %>% select(basin, gamma_slab, era, model),
           GLODAP_glanced) %>%
   group_split(era) %>%
+  # head(1) %>%
   imap(
   ~ ggplot(data = .x,
          aes("",
@@ -549,10 +526,10 @@ RMSE was plotted to compare the agreement for one model applied to two adjecent 
 
 # find max rmse to scale axis
 max_rmse <-
-  max(c(lm_all_eras$rmse,
-        lm_all_eras$rmse_sum - lm_all_eras$rmse))
+  max(c(lm_all$rmse,
+        lm_all$rmse_sum - lm_all$rmse))
 
-lm_all_eras %>%
+lm_all %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -573,10 +550,10 @@ rm(max_rmse)
 
 # find max rmse to scale axis
 max_rmse <-
-  max(c(lm_best_eras$rmse,
-        lm_best_eras$rmse_sum - lm_best_eras$rmse))
+  max(c(lm_best$rmse,
+        lm_best$rmse_sum - lm_best$rmse))
 
-lm_best_eras %>%
+lm_best %>%
   ggplot(aes(rmse, rmse_sum - rmse, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -627,7 +604,7 @@ lm_all_stats %>%
 AIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
 ```{r aic_vs_rmse_all_models}
-lm_all_eras %>% 
+lm_all %>% 
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -637,19 +614,21 @@ lm_all_eras %>%
 
 
 ```{r aic_vs_rmse_selected_models}
-lm_best_eras %>% 
+lm_best %>% 
   ggplot(aes(rmse, AIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
   facet_grid(data_source~basin)
 
 ```
+
+
 ### AIC vs BIC
 
 BIC is an alternative criterion to RMSE to judge model quality, but not (yet) taken into account.
 
 ```{r BIC_vs_AIC_all_models}
-lm_all_eras %>% 
+lm_all %>% 
   ggplot(aes(AIC, BIC, col = gamma_slab)) +
   geom_point() +
   scale_color_viridis_d() +
@@ -678,33 +657,19 @@ GLODAP_glanced %>%
 
 Plotted are fitted vs actual target variable values, here: `r `params_local$MLR_target`
 
-```{r fitted_vs_actual_all, fig.asp=0.5}
-
-# calculate equal axis limits and binwidth
-axis_lims <- GLODAP_augmented %>%
-  summarise(
-    max_value = max(
-      c(max(.fitted, max(!!sym(params_local$MLR_target))))
-      ),
-    min_value = min(
-      c(min(.fitted, min(!!sym(params_local$MLR_target))))
-    )
-  )
+```{r fitted_vs_actual_all_property_property, fig.asp=1}
 
 i_binwidth <- 2
-# binwidth_value <- (axis_lims$max_value - axis_lims$min_value) / 40
-axis_lims <- c(axis_lims$min_value, axis_lims$max_value)
 
-GLODAP_augmented %>%
-  ggplot(aes(!!sym(params_local$MLR_target), .fitted)) +
-  geom_bin2d(binwidth = i_binwidth) +
-  scale_fill_viridis_c(trans = "log10") +
-  geom_abline(slope = 1,
-              col = "black") +
-  coord_equal(xlim = axis_lims,
-              ylim = axis_lims) +
-  labs(title = "All models") +
-  facet_wrap(~data_source)
+p_prop_prop(df = GLODAP_augmented,
+            var1 = params_local$MLR_target,
+            var2 = ".fitted") +
+  facet_grid(basin_AIP ~ data_source) +
+  labs(title = "All models")
+
+```
+
+```{r fitted_vs_actual_all_histogram, fig.asp=0.5}
 
 GLODAP_augmented %>%
   ggplot(aes(!!sym(params_local$MLR_target) - .fitted)) +
@@ -716,18 +681,19 @@ GLODAP_augmented %>%
 ```
 
 
-```{r fitted_vs_actual_best}
+```{r fitted_vs_actual_best_property_property, fig.asp=1}
 
-GLODAP_augmented_best %>%
-  ggplot(aes(!!sym(params_local$MLR_target), .fitted)) +
-  geom_bin2d(binwidth = i_binwidth) +
-  scale_fill_viridis_c(trans = "log10") +
-  geom_abline(slope = 1,
-              col = "black") +
-  coord_equal(xlim = axis_lims,
-              ylim = axis_lims) +
+p_prop_prop(df = GLODAP_augmented_best,
+            var1 = params_local$MLR_target,
+            var2 = ".fitted") +
   labs(title = "Selected models") +
-  facet_wrap(~data_source)
+  facet_grid(basin_AIP ~ data_source)
+
+
+```
+
+
+```{r fitted_vs_actual_best_histogram, fig.asp=0.5}
 
 GLODAP_augmented_best %>%
   ggplot(aes(!!sym(params_local$MLR_target) - .fitted)) +
@@ -735,8 +701,6 @@ GLODAP_augmented_best %>%
   labs(title = "Selected models") +
     scale_x_continuous(limits = c(-50,50)) +
   facet_wrap(~data_source)
-
-rm(binwidth_value, axis_lims)
 
 ```
 
@@ -899,7 +863,7 @@ spatial_residual %>%
          lon = lon_grid) %>%
   group_split(data_source, gamma_slab) %>%
   # head(1) %>%
-  map(~ p_map_cant_slab(
+  map(~ p_map_dcant_slab(
     df = .x,
     var = ".resid_mean",
     col = "divergent",
@@ -943,7 +907,7 @@ spatial_residual_offset %>%
          lon = lon_grid) %>%
   group_split(data_source, gamma_slab) %>%
   # head(1) %>%
-  map(~ p_map_cant_slab(
+  map(~ p_map_dcant_slab(
     df = .x,
     var = ".resid_mean_offset",
     col = "divergent",

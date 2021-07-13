@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -73,26 +73,31 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Data sources
 
-Cant estimates from this sensitivity case:
+dcant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 - Inventories (lat, lon)
 
 
-```{r read_cant_files}
+```{r read_dcant_budget_files}
 
-cant_inv <-
+dcant_budget_basin_AIP <-
   read_csv(paste(path_version_data,
-                 "cant_inv.csv",
+                 "dcant_budget_basin_AIP.csv",
                  sep = ""))
 
-cant_inv_mod_truth <-
-  read_csv(paste(path_version_data,
-                 "cant_inv_mod_truth.csv",
-                 sep = ""))
+dcant_budget_basin_AIP_mod_truth <-
+  read_csv(paste(
+    path_version_data,
+    "dcant_budget_basin_AIP_mod_truth.csv",
+    sep = ""
+  ))
 
-cant_inv <- bind_rows(cant_inv, cant_inv_mod_truth)
+dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
+                                    dcant_budget_basin_AIP_mod_truth)
+
+rm(dcant_budget_basin_AIP_mod_truth)
 
 tref <-
   read_csv(paste(path_version_data,
@@ -113,75 +118,55 @@ duration
 ```
 
 
-# Cant budgets
-
-Global Cant inventories were estimated in units of Pg C. Please note that here we added Cant (all vs postitive only) values and do not apply additional corrections for areas not covered.
-
-```{r calculate_global_inventory}
-
-cant_inv_budget <- cant_inv %>% 
-  mutate(surface_area = earth_surf(lat, lon),
-         cant_inv_grid = cant_inv*surface_area,
-         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
-  group_by(basin_AIP, data_source, inv_depth) %>% 
-  summarise(cant_total = sum(cant_inv_grid)*12*1e-15,
-            cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
-            cant_pos_total = round(cant_pos_total,1)) %>% 
-  ungroup()
-
-cant_inv_budget %>%  
-  group_by(data_source, inv_depth) %>% 
-  summarise(cant_total = sum(cant_total),
-            cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_total),
-            cant_pos_total = round(cant_pos_total,1),
-            cant_total_rate = cant_total / duration,
-            cant_pos_total_rate = cant_pos_total / duration) %>% 
-  ungroup()
-
-
-```
+# dcant budgets
 
 ## Standard depth
 
 Results integrated over the upper `r params_global$inventory_depth_standard` m
 
-```{r cant_budget_standard_depth}
+```{r dcant_budget_standard_depth}
 
-cant_inv_budget %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
-  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+
+dcant_budget_basin_AIP %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value, fill=basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
-  facet_wrap(~ estimate)
+  facet_grid(~data_source)
 
-cant_inv_budget %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  gt(rowname_col = "basin_AIP",
-     groupname_col = c("data_source", "inv_depth"),
-     row_group.sep = " | Depth: ") %>% 
-  summary_rows(
-    groups = TRUE,
-    fns = list(total = "sum")
-  )
+dcant_budget_basin_AIP %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    rowname_col = "basin_AIP",
+    groupname_col = c("data_source", "inv_depth"),
+    row_group.sep = " | Depth: "
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
 
 
-cant_inv_bias <- cant_inv_budget %>%
+dcant_budget_basin_AIP_bias <- dcant_budget_basin_AIP %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(data_source, basin_AIP, inv_depth, cant_pos_total, cant_total) %>%
-  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
+  select(data_source, basin_AIP, inv_depth, estimate, value) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant_total) %>%
-  mutate(cant_bias = mod - mod_truth,
-         cant_bias_rel = cant_bias / mod_truth)
+              values_from = value) %>%
+  mutate(dcant_bias = mod - mod_truth,
+         dcant_bias_rel = dcant_bias / mod_truth * 100)
 
-cant_inv_bias %>% 
+dcant_budget_basin_AIP_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(cant_bias, estimate, fill=basin_AIP)) +
+  ggplot(aes(dcant_bias, estimate, fill=basin_AIP)) +
   geom_vline(xintercept = 0) +
   geom_col() +
+  scale_fill_brewer(palette = "Dark2")
+
+dcant_budget_basin_AIP_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = "dodge") +
   scale_fill_brewer(palette = "Dark2")
 
 
@@ -193,32 +178,51 @@ Results integrated over the upper `r params_global$inventory_depths` m
 
 ```{r cant_budget_other_depth, fig.asp=1}
 
-cant_inv_budget %>%
-  filter(inv_depth != params_global$inventory_depth_standard) %>% 
-  pivot_longer(cols = c(cant_total, cant_pos_total), names_to = "estimate", values_to = "cant_total") %>% 
-  ggplot(aes(data_source, cant_total, fill = basin_AIP)) +
+dcant_budget_basin_AIP %>%
+  ggplot(aes(data_source, value, fill=basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
   facet_grid(inv_depth ~ estimate, scales = "free_y")
 
-cant_inv_budget %>%
-  filter(inv_depth != params_global$inventory_depth_standard) %>% 
-  gt(rowname_col = "basin_AIP",
-     groupname_col = c("data_source", "inv_depth"),
-     row_group.sep = " | Depth: ") %>% 
-  summary_rows(
-    groups = TRUE,
-    fns = list(total = "sum")
-  )
+dcant_budget_basin_AIP %>%
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    rowname_col = "basin_AIP",
+    groupname_col = c("data_source", "inv_depth"),
+    row_group.sep = " | Depth: "
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
 
-rm(cant_inv_budget)
 
-cant_inv_bias %>% 
-  filter(inv_depth != params_global$inventory_depth_standard) %>% 
-  ggplot(aes(cant_bias, estimate, fill=basin_AIP)) +
+dcant_budget_basin_AIP_bias %>% 
+  ggplot(aes(dcant_bias, estimate, fill=basin_AIP)) +
   geom_vline(xintercept = 0) +
   geom_col() +
   scale_fill_brewer(palette = "Dark2") +
-  facet_wrap(~ inv_depth)
+  facet_grid(inv_depth ~ .)
+
+dcant_budget_basin_AIP_bias %>% 
+  ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(inv_depth ~ .)
+
 
 ```
+
+
+# Write csv
+
+```{r write_cant_files}
+
+dcant_budget_basin_AIP_bias %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_bias.csv", sep = ""))
+
+```
+
+
+
