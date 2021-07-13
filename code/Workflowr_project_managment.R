@@ -22,8 +22,8 @@ wflow_publish(here::here(
     "eMLR_assumption_testing.Rmd",
     "eMLR_model_fitting.Rmd",
     "mapping_predictor_preparation.Rmd",
-    "mapping_cant.Rmd",
-    "mapping_cant_mod_truth.Rmd",
+    "mapping_dcant_eMLR.Rmd",
+    "mapping_dcant_mod_truth.Rmd",
     "analysis_budgets.Rmd",
     "analysis_column_inventory.Rmd",
     "analysis_zonal_sections.Rmd",
@@ -32,8 +32,9 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "update standard configuration",
+message = "complete revision",
 republish = TRUE)
+
 
 
 # Push latest version to GitHub
@@ -63,9 +64,9 @@ files <- c(
 
 Version_IDs <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_2")
+  pattern = "v_3")
 
-Version_IDs <- Version_IDs[13:16]
+Version_IDs <- Version_IDs[20:23]
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
