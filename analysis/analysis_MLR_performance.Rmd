@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant estimates"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -73,111 +73,118 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Data sources
 
-Cant estimates from this sensitivity case:
+dcant estimates from this sensitivity case:
 
 - Mean and SD per grid cell (lat, lon, depth)
 - Zonal mean and SD (basin, lat, depth)
 - Inventories (lat, lon)
 
 
-```{r read_cant_files}
+```{r read_dcant_files}
 
-cant_3d <-
+dcant_3d <-
   read_csv(paste(path_version_data,
-                 "cant_3d.csv",
+                 "dcant_3d.csv",
                  sep = ""))
 
-cant_zonal <-
+dcant_3d_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_zonal.csv",
+                 "dcant_3d_mod_truth.csv",
                  sep = ""))
 
-cant_zonal_mod_truth <-
+dcant_zonal <-
   read_csv(paste(path_version_data,
-                 "cant_zonal_mod_truth.csv",
+                 "dcant_zonal.csv",
                  sep = ""))
 
-cant_zonal <- bind_rows(cant_zonal,
-                        cant_zonal_mod_truth)
-
-cant_inv <-
+dcant_zonal_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_inv.csv",
+                 "dcant_zonal_mod_truth.csv",
+                 sep = ""))
+
+dcant_zonal <- bind_rows(dcant_zonal,
+                        dcant_zonal_mod_truth)
+
+dcant_inv <-
+  read_csv(paste(path_version_data,
+                 "dcant_inv.csv",
                  sep = ""))
 
 ```
 
-# Cant variability
+# dcant variability
 
 ## Across models
 
-Standard deviation across Cant from all MLR models was calculate for each grid cell (XYZ). The zonal mean of this standard deviation should reflect the uncertainty associated to the predictor selection within each slab and era. 
+Standard deviation across dcant from all MLR models was calculate for each grid cell (XYZ). The zonal mean of this standard deviation should reflect the uncertainty associated to the predictor selection within each slab and era. 
 
-```{r cant_sections_sd_models, fig.asp=0.6}
+```{r dcant_sections_sd_models, fig.asp=0.6}
 
-# i_data_source <- unique(cant_zonal$data_source)[1]
-# i_basin_AIP <- unique(cant_zonal$basin_AIP)[2]
-
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  for (i_data_source in unique(cant_zonal$data_source)) {
-    print(
-      p_section_zonal(
-        df = cant_zonal %>%
-          filter(basin_AIP == i_basin_AIP,
-                 data_source == i_data_source),
-        var = "cant_sd_mean",
-        gamma = "gamma_mean",
-        legend_title = "sd",
-        title_text = "Zonal mean section of SD across models",
-        subtitle_text =
-          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
+dcant_zonal %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_section_zonal(
+      df = .x,
+      var = "dcant_sd_mean",
+      gamma = "gamma_mean",
+      legend_title = "sd",
+      breaks = seq(0, 2, 0.1),
+      title_text = "Zonal mean section of SD across models",
+      subtitle_text =
+        paste(
+          "Basin:",
+          unique(.x$basin_AIP),
+          "| data_source:",
+          unique(.x$data_source)
+        )
     )
-    
-  }
-}
-  
+  )
 
 ```
 
 ## Across basins
 
-Standard deviation of mean cant values was calculate across all longitudes. This standard deviation should reflect the zonal variability of cant within the basin and era.
+Standard deviation of mean dcant values was calculate across all longitudes. This standard deviation should reflect the zonal variability of dcant within the basin and era.
 
-```{r cant_sections_sd_cant, fig.asp=0.6}
+```{r dcant_sections_sd_dcant, fig.asp=0.6}
 
-# i_data_source <- unique(cant_zonal$data_source)[1]
-# i_basin_AIP <- unique(cant_zonal$basin_AIP)[2]
-
-for (i_basin_AIP in unique(cant_zonal$basin_AIP)) {
-  for (i_data_source in unique(cant_zonal$data_source)) {
-    print(
-      p_section_zonal(
-        df = cant_zonal %>%
-          filter(basin_AIP == i_basin_AIP,
-                 data_source == i_data_source),
-        var = "cant_sd",
-        gamma = "gamma_mean",
-        legend_title = "sd",
-        title_text = "Zonal mean section of Cant SD",
-        subtitle_text =
-          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
+dcant_zonal %>%
+  group_by(basin_AIP, data_source) %>%
+  group_split() %>%
+  head(1) %>% 
+  map(
+    ~ p_section_zonal(
+      df = .x,
+      var = "dcant_sd",
+      gamma = "gamma_mean",
+      legend_title = "sd",
+      breaks = seq(0, 4, 0.2),
+      title_text = "Zonal mean section of dcant SD",
+      subtitle_text =
+        paste(
+          "Basin:",
+          unique(.x$basin_AIP),
+          "| data_source:",
+          unique(.x$data_source)
+        )
     )
-    
-  }
-}
+  )
+
 
 ```
 
 ## Correlation
 
-### Cant vs model SD
+### dcant vs model SD
 
 #### Era vs basin
 
-```{r cant_vs_sd_by_basin_era}
+```{r dcant_vs_sd_by_basin_era}
 
-cant_3d %>% 
-  ggplot(aes(cant, cant_sd)) +
+dcant_3d %>% 
+  ggplot(aes(dcant, dcant_sd)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 10) +
   geom_bin2d() +
@@ -191,12 +198,13 @@ cant_3d %>%
 
 #### Basin vs gamma
 
-```{r cant_vs_sd_by_basin_gamma, fig.asp=2}
+```{r dcant_vs_sd_by_basin_gamma, fig.asp=2}
 
-cant_3d %>%
+dcant_3d %>%
   group_split(basin_AIP) %>%
+  # head(1) %>% 
   map(
-    ~ ggplot(data = .x, aes(cant, cant_sd)) +
+    ~ ggplot(data = .x, aes(dcant, dcant_sd)) +
       geom_vline(xintercept = 0) +
       geom_hline(yintercept = 10) +
       geom_bin2d() +
@@ -212,14 +220,14 @@ cant_3d %>%
 
 ```
 
-### Cant vs regional SD
+### dcant vs regional SD
 
 #### Era vs basin
 
-```{r cant_vs_sd_by_basin_era_zonal}
+```{r dcant_vs_sd_by_basin_era_zonal}
 
-cant_zonal %>% 
-  ggplot(aes(cant_mean, cant_sd)) +
+dcant_zonal %>% 
+  ggplot(aes(dcant_mean, dcant_sd)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 10) +
   geom_bin2d() +
@@ -233,12 +241,13 @@ cant_zonal %>%
 
 #### Era vs basin
 
-```{r cant_vs_sd_by_basin_gamma_zonal, fig.asp=2}
+```{r dcant_vs_sd_by_basin_gamma_zonal, fig.asp=2}
 
-cant_zonal %>%
+dcant_zonal %>%
   group_split(basin_AIP) %>%
+  # head(1) %>% 
   map(
-    ~ ggplot(data = .x, aes(cant_mean, cant_sd)) +
+    ~ ggplot(data = .x, aes(dcant_mean, dcant_sd)) +
       geom_vline(xintercept = 0) +
       geom_hline(yintercept = 10) +
       scale_fill_viridis_c(
@@ -253,34 +262,29 @@ cant_zonal %>%
 
 ```
 
-### Cant bias vs model SD
+### dcant bias vs model SD
 
-```{r cant_bias_vs_cant_sd}
+```{r dcant_bias_vs_dcant_sd}
 
-cant_3d_mod_truth <-
-  read_csv(paste(path_version_data,
-                 "cant_3d_mod_truth.csv",
-                 sep = ""))
-
-cant_3d <- bind_rows(cant_3d,
-                     cant_3d_mod_truth)
+dcant_3d <- bind_rows(dcant_3d,
+                     dcant_3d_mod_truth)
 
 
-cant_3d_bias <- cant_3d %>%
+dcant_3d_bias <- dcant_3d %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, lon, depth, data_source, basin_AIP, gamma_slab, cant) %>%
+  select(lat, lon, depth, data_source, basin_AIP, gamma_slab, dcant) %>%
   pivot_wider(names_from = data_source,
-              values_from = cant) %>%
-  mutate(cant_bias = mod - mod_truth)
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - mod_truth)
 
-cant_3d_bias_sd <- cant_3d %>% 
+dcant_3d_bias_sd <- dcant_3d %>% 
   filter(data_source %in% c("mod")) %>%
-  select(lat, lon, depth, cant, cant_sd)
+  select(lat, lon, depth, dcant, dcant_sd)
 
-cant_3d_bias <- full_join(cant_3d_bias, cant_3d_bias_sd)
+dcant_3d_bias <- full_join(dcant_3d_bias, dcant_3d_bias_sd)
 
-cant_3d_bias %>%
-  ggplot(aes(cant_sd, cant_bias)) +
+dcant_3d_bias %>%
+  ggplot(aes(dcant_sd, dcant_bias)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 0) +
   scale_fill_viridis_c(option = "magma",
@@ -292,10 +296,10 @@ cant_3d_bias %>%
 ```
 
 
-```{r cant_bias_vs_cant_sd_basin_gamma_slab, fig.asp=2}
+```{r dcant_bias_vs_dcant_sd_basin_gamma_slab, fig.asp=2}
 
-cant_3d_bias %>%
-  ggplot(aes(cant_sd, cant_bias)) +
+dcant_3d_bias %>%
+  ggplot(aes(dcant_sd, dcant_bias)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 0) +
   scale_fill_viridis_c(option = "magma",
@@ -307,13 +311,13 @@ cant_3d_bias %>%
 ```
 
 
-### Cant bias vs cant
+### dcant bias vs dcant
 
 
-```{r cant_bias_vs_cant}
+```{r dcant_bias_vs_dcant}
 
-cant_3d_bias %>%
-  ggplot(aes(cant, cant_bias)) +
+dcant_3d_bias %>%
+  ggplot(aes(dcant, dcant_bias)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 0) +
   scale_fill_viridis_c(option = "magma",
@@ -324,11 +328,11 @@ cant_3d_bias %>%
 
 
 
-```{r cant_bias_vs_cant_basin_gamma_slab, fig.asp=2}
+```{r dcant_bias_vs_dcant_basin_gamma_slab, fig.asp=2}
 
 
-cant_3d_bias %>%
-  ggplot(aes(cant, cant_bias)) +
+dcant_3d_bias %>%
+  ggplot(aes(dcant, dcant_bias)) +
   geom_vline(xintercept = 0) +
   geom_hline(yintercept = 0) +
   scale_fill_viridis_c(option = "magma",
