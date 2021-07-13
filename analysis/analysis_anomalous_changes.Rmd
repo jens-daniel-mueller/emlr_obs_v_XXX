@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant estimates"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -89,23 +89,23 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 Required are: 
 
-- Cant from Sabine 2004 (S04)
-- Cant from Gruber 2019 (G19)
+- tcant from Sabine 2004 (S04)
+- tcant from Gruber 2019 (G19)
 - annual mean atmospheric pCO~2~ 
 
-- Mean eMLR-Cant per grid cell (lat, lon, depth)
+- Mean eMLR-dcant per grid cell (lat, lon, depth)
 
 
 ```{r read_cant_files}
 
 
-cant_3d_ss <- read_csv(paste(path_version_data,
-                             "cant_3d_tref.csv",
+dcant_3d_ss <- read_csv(paste(path_version_data,
+                             "projected_tcant_3d_tref.csv",
                              sep = ""))
 
-cant_3d_emlr <-
+dcant_3d_emlr <-
   read_csv(paste(path_version_data,
-                 "cant_3d.csv",
+                 "dcant_3d.csv",
                  sep = ""))
 
 co2_atm <-
@@ -119,31 +119,31 @@ tref <-
                  sep = ""))
 
 
-cant_3d_mod_truth <-
+dcant_3d_mod_truth <-
   read_csv(paste(path_version_data,
-                 "cant_3d_mod_truth.csv", sep = ""))
+                 "dcant_3d_mod_truth.csv", sep = ""))
 
-cant_3d_mod_truth_cc <-
+dcant_3d_mod_truth_cc <-
   read_csv(paste(path_version_data,
-                 "cant_3d_mod_truth_cc.csv", sep = ""))
+                 "dcant_3d_mod_truth_cc.csv", sep = ""))
 
 ```
 
-# Prepare delta Cant
+# Prepare delta dcant
 
 ## Steady state
 
 ```{r prep_steady_state}
 
 # join with basinmask
-cant_3d_ss <- inner_join(cant_3d_ss, basinmask)
+dcant_3d_ss <- inner_join(dcant_3d_ss, basinmask)
 
-# calculate delta cant as the difference between total cant at tref
+# calculate delta dcant as the difference between total dcant at tref
 # this includes the G19 anomaly
-cant_3d_ss <- cant_3d_ss %>%
+dcant_3d_ss <- dcant_3d_ss %>%
   pivot_wider(names_from = era,
-              values_from = "cant_pos") %>% 
-  mutate(delta_cant_pos = !!sym(tref$era[2]) - !!sym(tref$era[1])) %>% 
+              values_from = "tcant_pos") %>% 
+  mutate(dcant_pos = !!sym(tref$era[2]) - !!sym(tref$era[1])) %>% 
   select(-c(!!sym(tref$era[2]), !!sym(tref$era[1]))) %>%
   drop_na()
 
@@ -154,13 +154,11 @@ cant_3d_ss <- cant_3d_ss %>%
 
 ```{r prep_model_truth}
 
-cant_3d_mod_truth <- cant_3d_mod_truth %>% 
-  select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
-  mutate(data_source = "mod_truth")
+dcant_3d_mod_truth <- dcant_3d_mod_truth %>% 
+  select(lon, lat, depth, basin_AIP, dcant_pos, data_source)
 
-cant_3d_mod_truth_cc <- cant_3d_mod_truth_cc %>% 
-  select(lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos) %>% 
-  mutate(data_source = "mod_truth_cc")
+dcant_3d_mod_truth_cc <- dcant_3d_mod_truth_cc %>% 
+  select(lon, lat, depth, basin_AIP, dcant_pos, data_source)
 
 ```
 
@@ -168,8 +166,8 @@ cant_3d_mod_truth_cc <- cant_3d_mod_truth_cc %>%
 
 ```{r prep_emlr}
 
-cant_3d_emlr <- cant_3d_emlr %>% 
-  select(data_source, lon, lat, depth, basin_AIP, delta_cant_pos = cant_pos)
+dcant_3d_emlr <- dcant_3d_emlr %>% 
+  select(data_source, lon, lat, depth, basin_AIP, dcant_pos)
 
 ```
 
@@ -179,20 +177,20 @@ cant_3d_emlr <- cant_3d_emlr %>%
 
 ```{r join_mod_data}
 
-cant_mod_3d <- bind_rows(
-  cant_3d_emlr %>%
+dcant_mod_3d <- bind_rows(
+  dcant_3d_emlr %>%
     filter(data_source == "mod") %>%
     select(-data_source) %>%
     mutate(estimate = "emlr"),
-  cant_3d_mod_truth %>%
+  dcant_3d_mod_truth %>%
     filter(data_source == "mod_truth") %>%
     select(-data_source) %>%
     mutate(estimate = "mod_truth_vc"),
-  cant_3d_mod_truth_cc %>%
+  dcant_3d_mod_truth_cc %>%
     filter(data_source == "mod_truth_cc") %>%
     select(-data_source) %>%
     mutate(estimate = "mod_truth_cc"),
-  cant_3d_ss %>%
+  dcant_3d_ss %>%
     filter(data_source == "mod") %>%
     select(-data_source) %>%
     mutate(estimate = "ss_tss")
@@ -204,12 +202,12 @@ cant_mod_3d <- bind_rows(
 
 ```{r join_obs_data}
 
-cant_obs_3d <- bind_rows(
-  cant_3d_emlr %>% 
+dcant_obs_3d <- bind_rows(
+  dcant_3d_emlr %>% 
     filter(data_source == "obs") %>% 
     select(-data_source) %>% 
     mutate(estimate = "emlr"),
-  cant_3d_ss %>% 
+  dcant_3d_ss %>% 
     filter(data_source == "obs") %>% 
     select(-data_source) %>% 
     mutate(estimate = "ss_tss")
@@ -223,20 +221,20 @@ cant_obs_3d <- bind_rows(
 
 ```{r bias_correlation_mod, fig.asp=0.5}
 
-cant_mod_3d_bias <- cant_mod_3d %>%
+dcant_mod_3d_bias <- dcant_mod_3d %>%
   pivot_wider(names_from = estimate,
-              values_from = delta_cant_pos) %>%
+              values_from = dcant_pos) %>%
   drop_na()
 
 
-cant_mod_3d_bias <- cant_mod_3d_bias %>% 
+dcant_mod_3d_bias <- dcant_mod_3d_bias %>% 
   mutate(emlr_anom = emlr - ss_tss,
          emlr_bias = emlr - mod_truth_vc,
          nss_mod_truth = mod_truth_vc - mod_truth_cc,
          nss_projection = mod_truth_vc - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
-axis_limit <- cant_mod_3d_bias %>% 
+axis_limit <- dcant_mod_3d_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -244,7 +242,7 @@ axis_limit <- cant_mod_3d_bias %>%
   abs() %>% 
   max()
 
-cant_mod_3d_bias %>%
+dcant_mod_3d_bias %>%
   ggplot(aes(emlr_bias, emlr_anom)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -255,7 +253,7 @@ cant_mod_3d_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
-cant_mod_3d_bias %>% 
+dcant_mod_3d_bias %>% 
   ggplot(aes(emlr_anom, nss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -266,7 +264,7 @@ cant_mod_3d_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
-cant_mod_3d_bias %>% 
+dcant_mod_3d_bias %>% 
   ggplot(aes(nss_mod_truth, nss_projection)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -283,7 +281,7 @@ cant_mod_3d_bias %>%
 
 ```{r vertical_bias_distribution_basin, fig.asp=0.5}
 
-cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
+dcant_mod_3d_bias_profile <- dcant_mod_3d_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -291,7 +289,7 @@ cant_mod_3d_bias_profile <- cant_mod_3d_bias %>%
   summarise(bias = mean(bias)) %>% 
   ungroup()
 
-cant_mod_3d_bias_profile %>% 
+dcant_mod_3d_bias_profile %>% 
   ggplot(aes(bias, depth, col=estimate)) +
   geom_path() +
   scale_y_reverse() +
@@ -303,7 +301,7 @@ cant_mod_3d_bias_profile %>%
 
 ```{r vertical_bias_distribution}
 
-cant_mod_3d_bias_profile <- cant_mod_3d_bias %>% 
+dcant_mod_3d_bias_profile <- dcant_mod_3d_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -311,12 +309,12 @@ cant_mod_3d_bias_profile <- cant_mod_3d_bias %>%
   summarise(bias = mean(bias)) %>% 
   ungroup()
 
-cant_mod_3d_bias_profile %>% 
+dcant_mod_3d_bias_profile %>% 
   ggplot(aes(bias, depth, col=estimate)) +
   geom_path() +
   scale_y_reverse()
 
-rm(cant_mod_3d_bias_profile)
+rm(dcant_mod_3d_bias_profile)
 
 ```
 
@@ -324,12 +322,12 @@ rm(cant_mod_3d_bias_profile)
 
 ## Zonal mean sections
 
-### delta Cant
+### delta dcant
 
-```{r zonal_section_delta_cant_pos_mod}
+```{r zonal_section_dcant_pos_mod}
 
 # calculate zonal mean section
-cant_mod_section <- cant_mod_3d %>%
+dcant_mod_section <- dcant_mod_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
@@ -340,43 +338,43 @@ cant_mod_section <- cant_mod_3d %>%
 
 ### Bias
 
-```{r zonal_section_delta_cant_pos_bias_mod}
+```{r zonal_section_dcant_pos_bias_mod}
 
-cant_mod_section_bias <- cant_mod_section %>%
-  select(-delta_cant_pos_sd) %>% 
+dcant_mod_section_bias <- dcant_mod_section %>%
+  select(-dcant_pos_sd) %>% 
   pivot_wider(names_from = estimate,
-              values_from = delta_cant_pos_mean) %>% 
+              values_from = dcant_pos_mean) %>% 
   drop_na()
 
 
-cant_mod_section_bias <- cant_mod_section_bias %>% 
+dcant_mod_section_bias <- dcant_mod_section_bias %>% 
   mutate(emlr_anom = emlr - ss_tss,
          emlr_bias = emlr - mod_truth_vc,
          nss_mod_truth = mod_truth_vc - mod_truth_cc,
          nss_projection = mod_truth_vc - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
-cant_mod_section_bias_long <- cant_mod_section_bias %>% 
+dcant_mod_section_bias_long <- dcant_mod_section_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
-               values_to = "delta_cant_pos_bias")
+               values_to = "dcant_pos_bias")
   
 
 
-cant_mod_section_bias_long %>% 
+dcant_mod_section_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
   # head(1) %>%
   map( ~ p_section_zonal(
     df = .x,
-    var = "delta_cant_pos_bias",
+    var = "dcant_pos_bias",
     col = "divergent",
-    breaks = params_global$breaks_cant_offset,
+    breaks = params_global$breaks_dcant_offset,
     plot_slabs = "n",
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
 
-axis_limit <- cant_mod_section_bias %>% 
+axis_limit <- dcant_mod_section_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -384,7 +382,7 @@ axis_limit <- cant_mod_section_bias %>%
   abs() %>% 
   max()
 
-cant_mod_section_bias %>%
+dcant_mod_section_bias %>%
   ggplot(aes(emlr_bias, emlr_anom)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -395,7 +393,7 @@ cant_mod_section_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
-cant_mod_section_bias %>% 
+dcant_mod_section_bias %>% 
   ggplot(aes(emlr_anom, nss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -406,7 +404,7 @@ cant_mod_section_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
-cant_mod_section_bias %>% 
+dcant_mod_section_bias %>% 
   ggplot(aes(nss_mod_truth, nss_projection)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -422,37 +420,34 @@ cant_mod_section_bias %>%
 
 ## Inventories
 
-### delta Cant
+### dcant
 
-```{r inventory_delta_cant_pos_mod, fig.asp = 0.5}
+```{r inventory_dcant_pos_mod, fig.asp = 0.5}
 
-# calculate zonal mean section
-cant_mod_inv <- cant_mod_3d %>%
-  rename(cant_pos = delta_cant_pos) %>% 
-  mutate(cant = 0,
-         eras = "blank") %>% 
+dcant_mod_inv <- dcant_mod_3d %>%
+  mutate(dcant = 0) %>% 
   group_by(estimate) %>%
   nest() %>%
-  mutate(inv = map(.x = data, ~m_cant_inv(.x))) %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
   select(-data) %>%
   unnest(inv) %>% 
-  select(-c(cant_inv, eras))
+  select(-c(dcant))
 
 ```
 
 ### Bias
 
-```{r inventory_delta_cant_pos_bias_mod}
+```{r inventory_dcant_pos_bias_mod}
 
-cant_mod_inv_bias <- cant_mod_inv %>%
+dcant_mod_inv_bias <- dcant_mod_inv %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
   select(-inv_depth) %>% 
   pivot_wider(names_from = estimate,
-              values_from = cant_pos_inv) %>% 
+              values_from = dcant_pos) %>% 
   drop_na()
 
 
-cant_mod_inv_bias <- cant_mod_inv_bias %>% 
+dcant_mod_inv_bias <- dcant_mod_inv_bias %>% 
   mutate(emlr_anom = emlr - ss_tss,
          emlr_bias = emlr - mod_truth_vc,
          nss_mod_truth = mod_truth_vc - mod_truth_cc,
@@ -460,25 +455,26 @@ cant_mod_inv_bias <- cant_mod_inv_bias %>%
   select(-c(emlr:ss_tss))
 
 
-cant_mod_inv_bias_long <- cant_mod_inv_bias %>% 
+dcant_mod_inv_bias_long <- dcant_mod_inv_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
-               values_to = "cant_pos_inv_bias",
+               values_to = "dcant_pos_bias",
                names_to = "estimate")
   
 
 
-cant_mod_inv_bias_long %>% 
+dcant_mod_inv_bias_long %>% 
   group_by(estimate) %>%
   group_split() %>% 
   # head(1) %>%
-  map( ~ p_map_cant_inv_offset(
+  map( ~ p_map_cant_inv(
     df = .x,
-    var = "cant_pos_inv_bias",
+    var = "dcant_pos_bias",
+    col = "bias",
     subtitle_text = paste("Estimate:", .x$estimate)
   ))
 
 
-axis_limit <- cant_mod_inv_bias %>% 
+axis_limit <- dcant_mod_inv_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -486,7 +482,7 @@ axis_limit <- cant_mod_inv_bias %>%
   abs() %>% 
   max()
 
-cant_mod_inv_bias %>%
+dcant_mod_inv_bias %>%
   ggplot(aes(emlr_bias, emlr_anom)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -497,7 +493,7 @@ cant_mod_inv_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
-cant_mod_inv_bias %>% 
+dcant_mod_inv_bias %>% 
   ggplot(aes(emlr_anom, nss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -508,7 +504,7 @@ cant_mod_inv_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
-cant_mod_inv_bias %>% 
+dcant_mod_inv_bias %>% 
   ggplot(aes(nss_mod_truth, nss_projection)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -526,27 +522,27 @@ cant_mod_inv_bias %>%
 
 ```{r calculate_global_inventory_mod}
 
-cant_mod_inv_budget <- cant_mod_inv %>% 
+dcant_mod_budget <- dcant_mod_inv %>% 
   mutate(surface_area = earth_surf(lat, lon),
-         # cant_inv_grid = cant_inv*surface_area,
-         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
+         # dcant_inv_grid = dcant_inv*surface_area,
+         dcant_pos_grid = dcant_pos*surface_area) %>% 
   group_by(basin_AIP, estimate, inv_depth) %>% 
-  summarise(#cant_total = sum(cant_inv_grid)*12*1e-15,
-            #cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
-            cant_pos_total = round(cant_pos_total,1)) %>% 
+  summarise(#dcant = sum(dcant_inv_grid)*12*1e-15,
+            #dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid)*12*1e-15,
+            dcant_pos = round(dcant_pos,1)) %>% 
   ungroup()
 
 duration <- sort(tref$median_year)[2] - sort(tref$median_year)[1]
 
-cant_mod_inv_budget %>%  
+dcant_mod_budget %>%  
   group_by(estimate, inv_depth) %>% 
-  summarise(#cant_total = sum(cant_total),
-            #cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_total),
-            cant_pos_total = round(cant_pos_total,1),
-            #cant_total_rate = cant_total / duration,
-            cant_pos_total_rate = cant_pos_total / duration) %>% 
+  summarise(#dcant = sum(dcant),
+            #dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos),
+            dcant_pos = round(dcant_pos,1),
+            #dcant_rate = dcant / duration,
+            dcant_pos_rate = dcant_pos / duration) %>% 
   ungroup()
 
 
@@ -556,15 +552,15 @@ cant_mod_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depth_standard` m
 
-```{r cant_budget_standard_depth_mod}
+```{r dcant_budget_standard_depth_mod}
 
-cant_mod_inv_budget %>%
+dcant_mod_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  ggplot(aes(estimate, dcant_pos, fill = basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col()
 
-cant_mod_inv_budget %>%
+dcant_mod_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
   gt(rowname_col = "basin_AIP",
      groupname_col = c("estimate", "inv_depth"),
@@ -581,16 +577,16 @@ cant_mod_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depths` m
 
-```{r cant_budget_other_depth_mod, fig.asp=1.5}
+```{r dcant_budget_other_depth_mod, fig.asp=1.5}
 
-cant_mod_inv_budget %>%
+dcant_mod_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 
-  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  ggplot(aes(estimate, dcant_pos, fill = basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
   facet_grid(inv_depth ~ ., scales = "free_y")
 
-cant_mod_inv_budget %>%
+dcant_mod_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 
   gt(rowname_col = "basin_AIP",
      groupname_col = c("estimate", "inv_depth"),
@@ -607,12 +603,12 @@ cant_mod_inv_budget %>%
 
 ## Zonal mean sections
 
-### delta Cant
+### delta dcant
 
-```{r zonal_section_delta_cant_pos_obs}
+```{r zonal_section_dcant_pos_obs}
 
 # calculate zonal mean section
-cant_obs_section <- cant_obs_3d %>%
+dcant_obs_section <- dcant_obs_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
@@ -623,35 +619,35 @@ cant_obs_section <- cant_obs_3d %>%
 
 ### Bias
 
-```{r zonal_section_delta_cant_pos_bias_obs}
+```{r zonal_section_dcant_pos_bias_obs}
 
-cant_obs_section_bias <- cant_obs_section %>%
-  select(-delta_cant_pos_sd) %>% 
+dcant_obs_section_bias <- dcant_obs_section %>%
+  select(-dcant_pos_sd) %>% 
   pivot_wider(names_from = estimate,
-              values_from = delta_cant_pos_mean) %>% 
+              values_from = dcant_pos_mean) %>% 
   drop_na()
 
 
-cant_obs_section_bias <- cant_obs_section_bias %>% 
+dcant_obs_section_bias <- dcant_obs_section_bias %>% 
   mutate(emlr_anom = emlr - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
-cant_obs_section_bias_long <- cant_obs_section_bias %>% 
+dcant_obs_section_bias_long <- dcant_obs_section_bias %>% 
   pivot_longer(emlr_anom,
                names_to = "estimate",
-               values_to = "delta_cant_pos_bias")
+               values_to = "dcant_pos_bias")
   
 
 
-cant_obs_section_bias_long %>% 
+dcant_obs_section_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
-  # head(1) %>%
+  head(1) %>%
   map( ~ p_section_zonal(
     df = .x,
-    var = "delta_cant_pos_bias",
+    var = "dcant_pos_bias",
     col = "divergent",
-    breaks = params_global$breaks_cant_offset,
+    breaks = params_global$breaks_dcant_offset,
     plot_slabs = "n",
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
@@ -660,55 +656,55 @@ cant_obs_section_bias_long %>%
 
 ## Inventories
 
-### delta Cant
+### delta dcant
 
-```{r inventory_delta_cant_pos_obs, fig.asp = 0.5}
+```{r inventory_dcant_pos_obs, fig.asp = 0.5}
 
 # calculate zonal mean section
-cant_obs_inv <- cant_obs_3d %>%
-  rename(cant_pos = delta_cant_pos) %>% 
-  mutate(cant = 0,
-         eras = "blank") %>% 
+dcant_obs_inv <- dcant_obs_3d %>%
+  rename(dcant_pos = dcant_pos) %>% 
+  mutate(dcant = 0) %>% 
   group_by(estimate) %>%
   nest() %>%
-  mutate(inv = map(.x = data, ~m_cant_inv(.x))) %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
   select(-data) %>%
   unnest(inv) %>% 
-  select(-c(cant_inv, eras))
+  select(-c(dcant))
 
 ```
 
 ### Bias
 
-```{r inventory_delta_cant_pos_bias_obs}
+```{r inventory_dcant_pos_bias_obs}
 
-cant_obs_inv_bias <- cant_obs_inv %>%
+dcant_obs_inv_bias <- dcant_obs_inv %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
   select(-inv_depth) %>% 
   pivot_wider(names_from = estimate,
-              values_from = cant_pos_inv) %>% 
+              values_from = dcant_pos) %>% 
   drop_na()
 
 
-cant_obs_inv_bias <- cant_obs_inv_bias %>% 
+dcant_obs_inv_bias <- dcant_obs_inv_bias %>% 
   mutate(emlr_anom = emlr - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
 
-cant_obs_inv_bias_long <- cant_obs_inv_bias %>% 
+dcant_obs_inv_bias_long <- dcant_obs_inv_bias %>% 
   pivot_longer(emlr_anom,
-               values_to = "cant_pos_inv_bias",
+               values_to = "dcant_pos_bias",
                names_to = "estimate")
   
 
 
-cant_obs_inv_bias_long %>% 
+dcant_obs_inv_bias_long %>% 
   group_by(estimate) %>%
   group_split() %>% 
-  # head(1) %>%
-  map( ~ p_map_cant_inv_offset(
+  head(1) %>%
+  map( ~ p_map_cant_inv(
     df = .x,
-    var = "cant_pos_inv_bias",
+    var = "dcant_pos_bias",
+    col = "bias",
     subtitle_text = paste("Estimate:", .x$estimate)
   ))
 
@@ -721,27 +717,27 @@ cant_obs_inv_bias_long %>%
 
 ```{r calculate_global_inventory_obs}
 
-cant_obs_inv_budget <- cant_obs_inv %>% 
+dcant_obs_budget <- dcant_obs_inv %>% 
   mutate(surface_area = earth_surf(lat, lon),
-         # cant_inv_grid = cant_inv*surface_area,
-         cant_pos_inv_grid = cant_pos_inv*surface_area) %>% 
+         # dcant_inv_grid = dcant_inv*surface_area,
+         dcant_pos_grid = dcant_pos*surface_area) %>% 
   group_by(basin_AIP, estimate, inv_depth) %>% 
-  summarise(#cant_total = sum(cant_inv_grid)*12*1e-15,
-            #cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_inv_grid)*12*1e-15,
-            cant_pos_total = round(cant_pos_total,1)) %>% 
+  summarise(#dcant = sum(dcant_inv_grid)*12*1e-15,
+            #dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos_grid)*12*1e-15,
+            dcant_pos = round(dcant_pos,1)) %>% 
   ungroup()
 
 duration <- sort(tref$median_year)[2] - sort(tref$median_year)[1]
 
-cant_obs_inv_budget %>%  
+dcant_obs_budget %>%  
   group_by(estimate, inv_depth) %>% 
-  summarise(#cant_total = sum(cant_total),
-            #cant_total = round(cant_total,1),
-            cant_pos_total = sum(cant_pos_total),
-            cant_pos_total = round(cant_pos_total,1),
-            #cant_total_rate = cant_total / duration,
-            cant_pos_total_rate = cant_pos_total / duration) %>% 
+  summarise(#dcant = sum(dcant),
+            #dcant = round(dcant,1),
+            dcant_pos = sum(dcant_pos),
+            dcant_pos = round(dcant_pos,1),
+            #dcant_rate = dcant / duration,
+            dcant_pos_rate = dcant_pos / duration) %>% 
   ungroup()
 
 
@@ -751,15 +747,15 @@ cant_obs_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depth_standard` m
 
-```{r cant_budget_standard_depth_obs}
+```{r dcant_budget_standard_depth_obs}
 
-cant_obs_inv_budget %>%
+dcant_obs_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  ggplot(aes(estimate, dcant_pos, fill = basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col()
 
-cant_obs_inv_budget %>%
+dcant_obs_budget %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
   gt(rowname_col = "basin_AIP",
      groupname_col = c("estimate", "inv_depth"),
@@ -776,16 +772,16 @@ cant_obs_inv_budget %>%
 
 Results integrated over the upper `r params_global$inventory_depths` m
 
-```{r cant_budget_other_depth_obs, fig.asp=1.5}
+```{r dcant_budget_other_depth_obs, fig.asp=1.5}
 
-cant_obs_inv_budget %>%
+dcant_obs_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 
-  ggplot(aes(estimate, cant_pos_total, fill = basin_AIP)) +
+  ggplot(aes(estimate, dcant_pos, fill = basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
   facet_grid(inv_depth ~ ., scales = "free_y")
 
-cant_obs_inv_budget %>%
+dcant_obs_budget %>%
   filter(inv_depth != params_global$inventory_depth_standard) %>% 
   gt(rowname_col = "basin_AIP",
      groupname_col = c("estimate", "inv_depth"),
@@ -802,34 +798,34 @@ cant_obs_inv_budget %>%
 
 ```{r write_csv}
 
-cant_mod_3d_bias %>%
+dcant_mod_3d_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_mod_3d_bias.csv"))
+                   "anom_dcant_mod_3d_bias.csv"))
 
-cant_mod_section_bias %>%
+dcant_mod_section_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_mod_section_bias.csv"))
+                   "anom_dcant_mod_section_bias.csv"))
 
-cant_mod_inv_bias %>%
+dcant_mod_inv_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_mod_inv_bias.csv"))
+                   "anom_dcant_mod_inv_bias.csv"))
 
-cant_mod_inv_budget %>%
+dcant_mod_budget %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_mod_inv_budget.csv"))
+                   "anom_dcant_mod_budget.csv"))
 
 
-cant_obs_section_bias %>%
+dcant_obs_section_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_obs_section_bias.csv"))
+                   "anom_dcant_obs_section_bias.csv"))
 
-cant_obs_inv_bias %>%
+dcant_obs_inv_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_obs_inv_bias.csv"))
+                   "anom_dcant_obs_inv_bias.csv"))
 
-cant_obs_inv_budget %>%
+dcant_obs_budget %>%
   write_csv(paste0(path_version_data,
-                   "anom_cant_obs_inv_budget.csv"))
+                   "anom_dcant_obs_budget.csv"))
 
 ```
 
