@@ -223,19 +223,72 @@ $\Delta$~t~C~ant,eq~(t2 − t1) = 1∕$\gamma$ ⋅ DIC/pCO~2~ ⋅ (pCO~2,atm~ (t
 
 , where DIC and pCO~2~ are the in situ values, where $\gamma$ is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Luecker constants using the climatological values for temperature, salinity, DIC and Alk.
 
+### Preformed DIC
+
+Preformed DIC was estimated by applying the same DIC/TA ratio as observed at the surface also to deep water layers.
+
+```{r TCO2_TAlk_ratio}
+
+predictors_surface %>% 
+  filter(depth %in% c(0,5)) %>% 
+  ggplot(aes(TCO2, TAlk)) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ basin_AIP)
+
+```
+
+
+```{r TCO2_TAlk_climatology_map, fig.asp=0.6}
+
+predictors_surface %>%
+  mutate(TCO2_TAlk_ratio = TCO2/TAlk) %>% 
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "TCO2_TAlk_ratio",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+```
+
+```{r calc_TCO2_preformed}
+
+predictors_surface_preformed <- predictors_surface %>%
+  filter(depth %in% c(0, 5)) %>%
+  mutate(TCO2_TAlk_ratio = TCO2 / TAlk) %>% 
+  select(lon, lat, data_source, TCO2_TAlk_ratio)
+
+
+predictors_surface <- full_join(
+  predictors_surface,
+  predictors_surface_preformed
+)
+
+rm(predictors_surface_preformed)
+
+predictors_surface <- predictors_surface %>% 
+  mutate(TCO2_preformed = TAlk * TCO2_TAlk_ratio) %>% 
+  select(-TCO2_TAlk_ratio)
+
+```
+
+
 ### pCO~2~ climatology
 
-Plots below show the calculated climatolofical pCO~2~ values.
+Plots below show the calculated climatological pCO~2~ values.
 
 ```{r calc_pCO2_climatology}
 
 # calculate pCO2 from talk and tco2 climatology
 predictors_surface <- predictors_surface %>%
   mutate(
-    pCO2 = carb(
+    pCO2_preformed = carb(
       flag = 15,
       var1 = TAlk * 1e-6,
-      var2 = TCO2 * 1e-6,
+      var2 = TCO2_preformed * 1e-6,
       S = sal,
       T = temp,
       P = depth / 10,
@@ -256,7 +309,7 @@ predictors_surface %>%
   map( ~
          p_map_climatology(
            df = .x,
-           var = "pCO2",
+           var = "pCO2_preformed",
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
 
@@ -271,25 +324,27 @@ predictors_surface %>%
   map( ~
          p_section_climatology_regular(
            df = .x,
-           var = "pCO2",
+           var = "pCO2_preformed",
            surface = "y",
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
 
 ```
 
+
+
 ### Revelle factor
 
-Plots below show the calculated climatolofical Revelle factor values.
+Plots below show the calculated climatological Revelle factor values.
 
 ```{r calc_revelle_factor_climatology}
 
 predictors_surface <- predictors_surface %>%
   mutate(
-    rev_fac = buffer(
+    rev_fac_preformed = buffer(
       flag = 15,
       var1 = TAlk * 1e-6,
-      var2 = TCO2 * 1e-6,
+      var2 = TCO2_preformed * 1e-6,
       S = sal,
       T = temp,
       P = depth / 10,
@@ -310,7 +365,7 @@ predictors_surface %>%
   map( ~
          p_map_climatology(
            df = .x,
-           var = "rev_fac",
+           var = "rev_fac_preformed",
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
 
@@ -325,7 +380,7 @@ predictors_surface %>%
   map( ~
          p_section_climatology_regular(
            df = .x,
-           var = "rev_fac",
+           var = "rev_fac_preformed",
            surface = "y",
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
@@ -340,21 +395,22 @@ predictors_surface %>%
 # calculate increase in atm pCO2 between eras
 co2_atm_tref <- co2_atm_tref %>%
   arrange(pCO2_tref) %>%
-  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref),
-         eras = paste(lag(era), era, sep = " --> ")) %>%
+  mutate(d_pCO2_tref = pCO2_tref - lag(pCO2_tref)) %>%
   drop_na() %>%
-  select(eras, d_pCO2_tref)
+  select(d_pCO2_tref)
 
 dcant_surface <- full_join(predictors_surface, co2_atm_tref,
                            by = character())
 
 # calculate cant
 dcant_surface <- dcant_surface %>%
-  mutate(dcant = (1 / rev_fac) * (TCO2 / pCO2) * d_pCO2_tref)
+  mutate(dcant = (1 / rev_fac_preformed) *
+           (TCO2_preformed / pCO2_preformed) * d_pCO2_tref)
 
 # calculate positive cant
 dcant_surface <- dcant_surface %>%
-  mutate(dcant_pos = if_else(dcant < 0, 0, dcant))
+  mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>% 
+  select(-c(TCO2_preformed, pCO2_preformed, rev_fac_preformed))
 
 ```
 

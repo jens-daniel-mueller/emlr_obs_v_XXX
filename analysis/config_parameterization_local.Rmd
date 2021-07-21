@@ -150,7 +150,20 @@ params_local <-
 
 ```
 
-```{r test_list_expansion}
+```{r test_list_expansion, eval=FALSE}
+
+library(tidyverse)
+
+expand_grid(version = c("GLO", "DAP"),
+       year = c(2021, 2022),
+       era = seq(23,25,1),
+       pred = c(MLR_predictors, MLR_predictors))
+
+params_local %>% 
+  cross()
+
+hoist()
+
 
 ```
 
