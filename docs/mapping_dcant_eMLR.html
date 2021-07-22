@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree17db872c7ba296f03c74ef6e389d4e882e9ceb04targetblank17db872a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/17db872c7ba296f03c74ef6e389d4e882e9ceb04" target="_blank">17db872</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7d6951d7c7f513b3d78724b827567b772d1a3cdetargetblank7d6951da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7d6951d7c7f513b3d78724b827567b772d1a3cde" target="_blank">7d6951d</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree17db872c7ba296f03c74ef6e389d4e882e9ceb04targetblank17db872a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7d6951d7c7f513b3d78724b827567b772d1a3cdetargetblank7d6951da" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/17db872c7ba296f03c74ef6e389d4e882e9ceb04" target="_blank">17db872</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7d6951d7c7f513b3d78724b827567b772d1a3cde" target="_blank">7d6951d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,9 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -670,6 +673,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7d6951d7c7f513b3d78724b827567b772d1a3cde/analysis/mapping_dcant_eMLR.Rmd" target="_blank">7d6951d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+<td>
+surface dcant mapping seperate
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/mapping_dcant_eMLR.html" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -838,7 +875,7 @@ predictors_surface &lt;-
 </div>
 <div id="atm.-pco2" class="section level2" number="2.2">
 <h2 number="2.2"><span class="header-section-number">2.2</span> Atm. pCO2</h2>
-<p>Required only to estimate the change of Cant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.</p>
+<p>Required only to estimate the change of dcant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.</p>
 <pre class="r"><code>co2_atm_tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;co2_atm_tref.csv&quot;,
@@ -936,12 +973,34 @@ rm(predictors, lm_best_dcant)</code></pre>
 </div>
 <div id="surface-water" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> Surface water</h2>
-<p>As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate Cant in surface waters, assuming that the CO<sub>2</sub> system in these waters has followed the increase in atmospheric CO<sub>2</sub> closely.</p>
+<p>As outlined in Gruber et al. (2019), a transient equilibrium approach was applied to estimate dcant in surface waters, assuming that the CO<sub>2</sub> system in these waters has followed the increase in atmospheric CO<sub>2</sub> closely.</p>
 <p>Using eq 10.2.16 from OBD, the change in anthropogenic CO<sub>2</sub> in the upper ocean was computed as:</p>
 <p><span class="math inline">\(\Delta\)</span><sub>t</sub>C<sub>ant,eq</sub>(t2 − t1) = 1∕<span class="math inline">\(\gamma\)</span> ⋅ DIC/pCO<sub>2</sub> ⋅ (pCO<sub>2,atm</sub> (t2)− pCO<sub>2,atm</sub>(t1))</p>
 <p>, where DIC and pCO<sub>2</sub> are the in situ values, where <span class="math inline">\(\gamma\)</span> is the buffer (Revelle) factor and where we evaluated the right-hand side using seacarb employing the Luecker constants using the climatological values for temperature, salinity, DIC and Alk.</p>
-<div id="surface-pco2" class="section level3" number="4.2.1">
-<h3 number="4.2.1"><span class="header-section-number">4.2.1</span> Surface pCO2</h3>
+<div id="layer-depth" class="section level3" number="4.2.1">
+<h3 number="4.2.1"><span class="header-section-number">4.2.1</span> Layer depth</h3>
+<pre class="r"><code>surface_layer &lt;- predictors_surface %&gt;% 
+  group_by(lat, lon, data_source) %&gt;% 
+  summarise(depth_max = max(depth),
+            n_layer = n()) %&gt;% 
+  ungroup()
+
+
+map +
+  geom_raster(data = surface_layer,
+              aes(lon, lat, fill=depth_max)) +
+  scale_fill_scico(palette = &quot;nuuk&quot;, direction = -1) +
+  facet_grid(data_source ~ .)</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/surface_layer_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = surface_layer,
+              aes(lon, lat, fill=n_layer)) +
+  scale_fill_scico(palette = &quot;tokyo&quot;) +
+  facet_grid(data_source ~ .)</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/surface_layer_depth-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="surface-pco2" class="section level3" number="4.2.2">
+<h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Surface pCO2</h3>
 <pre class="r"><code>predictors_surface_all_depth &lt;- predictors_surface
 
 predictors_surface &lt;- predictors_surface %&gt;%
@@ -995,6 +1054,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/pCO2_climatology_map-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/pCO2_climatology_map-1.png" target="_blank">78fe930</a>
 </td>
 <td>
@@ -1046,6 +1116,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/pCO2_climatology_map-2.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/pCO2_climatology_map-2.png" target="_blank">78fe930</a>
 </td>
 <td>
@@ -1071,8 +1152,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="revelle-factor" class="section level3" number="4.2.2">
-<h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Revelle factor</h3>
+<div id="revelle-factor" class="section level3" number="4.2.3">
+<h3 number="4.2.3"><span class="header-section-number">4.2.3</span> Revelle factor</h3>
 <p>Plots below show the calculated climatological Revelle factor values.</p>
 <pre class="r"><code>predictors_surface &lt;- predictors_surface %&gt;%
   mutate(
@@ -1121,6 +1202,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/revelle_factor_climatology_map-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/revelle_factor_climatology_map-1.png" target="_blank">78fe930</a>
@@ -1174,6 +1266,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/revelle_factor_climatology_map-2.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/revelle_factor_climatology_map-2.png" target="_blank">78fe930</a>
 </td>
 <td>
@@ -1209,8 +1312,8 @@ jens-daniel-mueller
            subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
          ))</code></pre>
 </div>
-<div id="dcant-calculation" class="section level3" number="4.2.3">
-<h3 number="4.2.3"><span class="header-section-number">4.2.3</span> dcant calculation</h3>
+<div id="dcant-calculation" class="section level3" number="4.2.4">
+<h3 number="4.2.4"><span class="header-section-number">4.2.4</span> dcant calculation</h3>
 <pre class="r"><code># calculate increase in atm pCO2 between eras
 co2_atm_tref &lt;- co2_atm_tref %&gt;%
   arrange(pCO2_tref) %&gt;%
@@ -1237,8 +1340,8 @@ dcant_surface &lt;- full_join(
   predictors_surface_all_depth
 )</code></pre>
 </div>
-<div id="control-plots" class="section level3" number="4.2.4">
-<h3 number="4.2.4"><span class="header-section-number">4.2.4</span> Control plots</h3>
+<div id="control-plots" class="section level3" number="4.2.5">
+<h3 number="4.2.5"><span class="header-section-number">4.2.5</span> Control plots</h3>
 <pre class="r"><code>dcant_surface %&gt;%
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
@@ -1363,6 +1466,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-1.png" target="_blank">78fe930</a>
 </td>
 <td>
@@ -1412,6 +1526,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-2.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-2.png" target="_blank">78fe930</a>
@@ -1652,19 +1777,19 @@ jens-daniel-mueller
 dcant_surface_average &lt;- m_cut_gamma(dcant_surface_average, &quot;gamma&quot;)
 rm(dcant_surface)</code></pre>
 </div>
-<div id="join-surface-and-deep-water" class="section level3" number="4.3.3">
-<h3 number="4.3.3"><span class="header-section-number">4.3.3</span> Join surface and deep water</h3>
+</div>
+<div id="join-surface-and-deep-water" class="section level2" number="4.4">
+<h2 number="4.4"><span class="header-section-number">4.4</span> Join surface and deep water</h2>
 <pre class="r"><code>dcant_3d &lt;-
   full_join(
-    dcant_average %&gt;% mutate(estimate = &quot;equilibrium&quot;),
-    dcant_surface_average %&gt;%  mutate(estimate = &quot;eMLR&quot;)
+    dcant_average %&gt;% mutate(method = &quot;eMLR&quot;),
+    dcant_surface_average %&gt;%  mutate(method = &quot;surface&quot;)
   )
 
-rm(dcant_surface_average)</code></pre>
+rm(dcant_surface_average, dcant_average)</code></pre>
 </div>
-</div>
-<div id="zonal-mean-sections" class="section level2" number="4.4">
-<h2 number="4.4"><span class="header-section-number">4.4</span> Zonal mean sections</h2>
+<div id="zonal-mean-sections" class="section level2" number="4.5">
+<h2 number="4.5"><span class="header-section-number">4.5</span> Zonal mean sections</h2>
 <p>For each basin and era combination, the zonal mean dcant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
 <pre class="r"><code>dcant_zonal &lt;- dcant_3d %&gt;%
   group_by(data_source) %&gt;%
@@ -1673,10 +1798,21 @@ rm(dcant_surface_average)</code></pre>
   select(-data) %&gt;%
   unnest(zonal)
 
-dcant_zonal &lt;- m_cut_gamma(dcant_zonal, &quot;gamma_mean&quot;)</code></pre>
+dcant_zonal &lt;- m_cut_gamma(dcant_zonal,
+                           &quot;gamma_mean&quot;)
+
+dcant_zonal_method &lt;- dcant_3d %&gt;%
+  group_by(data_source, method) %&gt;%
+  nest() %&gt;%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
+  select(-data) %&gt;%
+  unnest(zonal)
+
+dcant_zonal_method &lt;- m_cut_gamma(dcant_zonal_method,
+                                   &quot;gamma_mean&quot;)</code></pre>
 </div>
-<div id="mean-dcant-sections-by-coefficient" class="section level2" number="4.5">
-<h2 number="4.5"><span class="header-section-number">4.5</span> Mean dcant sections by coefficient</h2>
+<div id="mean-dcant-sections-by-coefficient" class="section level2" number="4.6">
+<h2 number="4.6"><span class="header-section-number">4.6</span> Mean dcant sections by coefficient</h2>
 <p>For each basin and era combination, the zonal mean is calculated for the term of each predictor.</p>
 <pre class="r"><code>dcant_predictor_zonal &lt;- dcant_predictor_3d %&gt;%
   group_by(data_source) %&gt;%
@@ -1688,15 +1824,17 @@ dcant_zonal &lt;- m_cut_gamma(dcant_zonal, &quot;gamma_mean&quot;)</code></pre>
 dcant_predictor_zonal &lt;-
   m_cut_gamma(dcant_predictor_zonal, &quot;gamma_mean&quot;)</code></pre>
 </div>
-<div id="inventory-calculation" class="section level2" number="4.6">
-<h2 number="4.6"><span class="header-section-number">4.6</span> Inventory calculation</h2>
-<p>To calculate Cant column inventories, we:</p>
+<div id="inventory-calculation" class="section level2" number="4.7">
+<h2 number="4.7"><span class="header-section-number">4.7</span> Inventory calculation</h2>
+<p>To calculate dcant column inventories, we:</p>
 <ol style="list-style-type: decimal">
-<li>Convert Cant concentrations to volumetric units</li>
-<li>Multiply layer thickness with volumetric Cant concentration to get a layer inventory</li>
-<li>For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (100, 500, 1000, 3000, 10^{4} m)</li>
+<li>Convert dcant concentrations to volumetric units</li>
+<li>Multiply layer thickness with volumetric dcant concentration to get a layer inventory</li>
+<li>For each horizontal grid cell and era, sum dcant layer inventories for different inventory depths (100, 500, 1000, 3000, 10^{4} m)</li>
 </ol>
-<p>Step 2 is performed separately for all Cant and positive Cant values only.</p>
+<p>Step 2 is performed separately for all dcant and positive dcant values only.</p>
+<div id="full-water-column" class="section level3" number="4.7.1">
+<h3 number="4.7.1"><span class="header-section-number">4.7.1</span> Full water column</h3>
 <pre class="r"><code>dcant_inv &lt;- dcant_3d %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
@@ -1731,6 +1869,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">78fe930</a>
@@ -1769,8 +1918,90 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="budgets" class="section level2" number="4.7">
-<h2 number="4.7"><span class="header-section-number">4.7</span> Budgets</h2>
+<div id="surface-layer" class="section level3" number="4.7.2">
+<h3 number="4.7.2"><span class="header-section-number">4.7.2</span> Surface layer</h3>
+<pre class="r"><code>dcant_inv_surface &lt;- dcant_3d %&gt;%
+  filter(method == &quot;surface&quot;) %&gt;% 
+  group_by(data_source) %&gt;%
+  nest() %&gt;%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %&gt;%
+  select(-data) %&gt;%
+  unnest(inv)
+
+p_map_cant_inv(df = dcant_inv_surface %&gt;% 
+                 filter(inv_depth &lt; 1000),
+               var = &quot;dcant_pos&quot;,
+               subtitle_text = &quot;for predefined integration depths&quot;,
+               breaks = c(-Inf,seq(0,4,0.5), Inf)) +
+  facet_grid(inv_depth ~ data_source)</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/cant_inventories_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="emlr-only" class="section level3" number="4.7.3">
+<h3 number="4.7.3"><span class="header-section-number">4.7.3</span> eMLR only</h3>
+<pre class="r"><code>dcant_inv &lt;- full_join(
+  dcant_inv %&gt;% rename(dcant_total = dcant,
+                       dcant_pos_total = dcant_pos),
+  dcant_inv_surface %&gt;% rename(dcant_surface = dcant,
+                               dcant_pos_surface = dcant_pos)
+)
+
+dcant_inv &lt;- dcant_inv %&gt;%
+  mutate(dcant_eMLR = dcant_total -
+           replace(dcant_surface, is.na(dcant_surface), 0),
+         dcant_pos_eMLR = dcant_pos_total -
+           replace(dcant_pos_surface, is.na(dcant_pos_surface), 0))
+
+dcant_inv_all &lt;- dcant_inv %&gt;% 
+  select(-starts_with(&quot;dcant_pos&quot;)) %&gt;% 
+  pivot_longer(starts_with(&quot;dcant_&quot;),
+               names_to = &quot;method&quot;,
+               names_prefix = &quot;dcant_&quot;,
+               values_to = &quot;dcant&quot;)
+
+dcant_inv_pos &lt;- dcant_inv %&gt;% 
+  select(data_source, lon, lat, basin_AIP, inv_depth,
+         starts_with(&quot;dcant_pos_&quot;)) %&gt;% 
+  pivot_longer(starts_with(&quot;dcant_pos_&quot;),
+               names_to = &quot;method&quot;,
+               names_prefix = &quot;dcant_pos_&quot;,
+               values_to = &quot;dcant_pos&quot;)
+
+dcant_inv &lt;- full_join(
+  dcant_inv_all,
+  dcant_inv_pos
+)
+
+rm(dcant_inv_all, dcant_inv_pos, dcant_inv_surface)
+
+dcant_inv %&gt;%
+  group_by(inv_depth) %&gt;%
+  group_split() %&gt;% 
+  # tail(1) %&gt;%
+  map(
+    ~ p_map_cant_inv(df = .x,
+                     var = &quot;dcant&quot;,
+                     subtitle_text = paste(&quot;Integration depth&quot;,
+                                           unique(.x$inv_depth))) +
+      facet_grid(method ~ data_source)
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[4]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[5]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="budgets" class="section level2" number="4.8">
+<h2 number="4.8"><span class="header-section-number">4.8</span> Budgets</h2>
 <p>Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.</p>
 <pre class="r"><code>molC_to_PgC &lt;- 12*1e-15
 
@@ -1779,18 +2010,19 @@ dcant_budget &lt;- dcant_inv %&gt;%
          dcant_grid = dcant*surface_area*molC_to_PgC,
          dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)</code></pre>
 <pre class="r"><code>dcant_budget_global &lt;- dcant_budget %&gt;%
-  group_by(data_source, inv_depth) %&gt;% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %&gt;% 
+  group_by(data_source, inv_depth, method) %&gt;% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %&gt;% 
   ungroup() %&gt;% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = &quot;estimate&quot;,
                values_to = &quot;value&quot;)
 
 dcant_budget_global %&gt;%
-  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method == &quot;total&quot;) %&gt;%
   ggplot(aes(estimate, value)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
@@ -1820,6 +2052,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">78fe930</a>
 </td>
 <td>
@@ -1844,23 +2087,32 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>dcant_budget_global %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c(&quot;surface&quot;, &quot;eMLR&quot;)) %&gt;%
+  ggplot(aes(estimate, value, fill=method)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  geom_col() +
+  facet_grid(.~data_source)</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_global_surface-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_AIP &lt;- dcant_budget %&gt;% 
-  group_by(basin_AIP, data_source, inv_depth) %&gt;% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %&gt;% 
+  group_by(basin_AIP, data_source, method, inv_depth) %&gt;% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %&gt;% 
   ungroup() %&gt;% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = &quot;estimate&quot;,
                values_to = &quot;value&quot;)
 
 dcant_budget_basin_AIP %&gt;%
-  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
-  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c(&quot;surface&quot;, &quot;eMLR&quot;)) %&gt;%
+  ggplot(aes(basin_AIP, value, fill=method)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
-  facet_grid(~data_source)</code></pre>
+  facet_grid(estimate~data_source)</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-budget_basin_AIP-1">
@@ -1884,6 +2136,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP-1.png" target="_blank">78fe930</a>
@@ -1912,21 +2175,31 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>dcant_budget_basin_MLR &lt;-
   full_join(dcant_budget, basinmask) %&gt;% 
-  group_by(basin, MLR_basins, data_source, inv_depth) %&gt;% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %&gt;% 
+  group_by(basin, MLR_basins, data_source, method, inv_depth) %&gt;% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %&gt;% 
   ungroup() %&gt;% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = &quot;estimate&quot;,
                values_to = &quot;value&quot;)
 
 dcant_budget_basin_MLR %&gt;%
-  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
-  ggplot(aes(MLR_basins, value, fill=basin)) +
-  geom_col() +
-  facet_grid(estimate~data_source)</code></pre>
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c(&quot;surface&quot;, &quot;eMLR&quot;)) %&gt;%
+  group_by(MLR_basins) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ ggplot(data = .x,
+             aes(basin, value, fill = method)) +
+      scale_fill_brewer(palette = &quot;Dark2&quot;) +
+      geom_col() +
+      facet_grid(estimate ~ data_source) +
+      labs(title = paste(&quot;MLR_basins:&quot;, unique(.x$MLR_basins)))
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-budget_MLR_regions-1">
@@ -1950,6 +2223,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-1.png" target="_blank">78fe930</a>
@@ -1976,26 +2260,50 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[4]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[5]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[6]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions-6.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_lat_grid &lt;- 
   dcant_budget %&gt;% 
   m_grid_horizontal_coarse() %&gt;%
-  group_by(lat_grid, basin_AIP, data_source, inv_depth) %&gt;% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %&gt;% 
+  group_by(lat_grid, basin_AIP, data_source, method, inv_depth) %&gt;% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %&gt;% 
   ungroup() %&gt;% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = &quot;estimate&quot;,
                values_to = &quot;value&quot;)
 
 dcant_budget_lat_grid %&gt;%
-  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
-  ggplot(aes(lat_grid, value, fill = basin_AIP)) +
-  geom_col() +
-  scale_fill_brewer(palette = &quot;Dark2&quot;) +
-  coord_flip() +
-  facet_grid(estimate ~ data_source)</code></pre>
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c(&quot;surface&quot;, &quot;eMLR&quot;)) %&gt;%
+  group_by(basin_AIP) %&gt;%
+  group_split() %&gt;%
+  head(1) %&gt;%
+  map(
+    ~ ggplot(data = .x,
+             aes(lat_grid, value, fill = method)) +
+      scale_fill_brewer(palette = &quot;Dark2&quot;) +
+      geom_col() +
+      coord_flip() +
+      facet_grid(estimate ~ data_source) +
+      labs(title = paste(&quot;MLR_basins:&quot;, unique(.x$basin_AIP)))
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/budget_lat_grid-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-budget_lat_grid-1">
@@ -2019,6 +2327,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/768ae834ec2960a5cca17bff09f4ac90bfdf08d2/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid-1.png" target="_blank">768ae83</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-07-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/78fe9303849e27b611cd6116257d332af04cb435/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid-1.png" target="_blank">78fe930</a>
@@ -2061,13 +2380,25 @@ dcant_zonal %&gt;%
   write_csv(paste(path_version_data,
                   &quot;dcant_zonal.csv&quot;, sep = &quot;&quot;))
 
+dcant_zonal_method %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;dcant_zonal_method.csv&quot;, sep = &quot;&quot;))
+
 dcant_predictor_zonal %&gt;%
   write_csv(paste(path_version_data,
                   &quot;dcant_predictor_zonal.csv&quot;, sep = &quot;&quot;))
 
 dcant_inv %&gt;%
+  filter(method == &quot;total&quot;) %&gt;% 
+  select(-method) %&gt;% 
   write_csv(paste(path_version_data,
                   &quot;dcant_inv.csv&quot;, sep = &quot;&quot;))
+
+dcant_inv %&gt;%
+  filter(method != &quot;total&quot;) %&gt;% 
+  select(-method) %&gt;% 
+  write_csv(paste(path_version_data,
+                  &quot;dcant_inv_method.csv&quot;, sep = &quot;&quot;))
 
 dcant_budget_global %&gt;%
   write_csv(paste(path_version_data,
