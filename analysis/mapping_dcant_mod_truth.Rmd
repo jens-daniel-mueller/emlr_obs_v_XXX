@@ -159,10 +159,11 @@ tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
 ```{r load_model_gamma_climatology}
 
 climatology <-
-  read_csv(paste(path_model_preprocessing, "climatology_runA_2007.csv", sep = ""))
+  read_csv(paste0(path_model_preprocessing,
+                  "climatology_runA_2007.csv"))
 
 climatology <- climatology %>%
-  select(lon,lat,depth, gamma)
+  select(lon, lat, depth, gamma)
 
 ```
 
@@ -180,11 +181,21 @@ dcant_3d <- dcant_3d %>%
 
 dcant_3d <- full_join(dcant_3d, climatology)
 
+dcant_3d <- dcant_3d %>%
+  mutate(
+    method = "surface",
+    method = if_else(
+      depth >= params_local$depth_min | gamma >= params_local$gamma_min,
+      "eMLR",
+      method
+    )
+  )
+
 dcant_3d <- m_cut_gamma(dcant_3d, "gamma")
 
 dcant_3d_vc <- dcant_3d %>% 
   mutate(data_source = "mod_truth") %>% 
-  select(lon, lat, depth, basin_AIP, data_source,
+  select(lon, lat, depth, basin_AIP, data_source, method,
             tcant_tref_1, dcant, dcant_pos,
             gamma, gamma_slab)
 
@@ -202,11 +213,21 @@ dcant_3d <- dcant_3d %>%
 
 dcant_3d <- full_join(dcant_3d, climatology)
 
+dcant_3d <- dcant_3d %>%
+  mutate(
+    method = "surface",
+    method = if_else(
+      depth >= params_local$depth_min | gamma >= params_local$gamma_min,
+      "eMLR",
+      method
+    )
+  )
+
 dcant_3d <- m_cut_gamma(dcant_3d, "gamma")
 
 dcant_3d_cc <- dcant_3d %>% 
   mutate(data_source = "mod_truth_cc") %>% 
-  select(lon, lat, depth, basin_AIP, data_source,
+  select(lon, lat, depth, basin_AIP, data_source, method,
             tcant_tref_1, dcant, dcant_pos,
             gamma, gamma_slab)
 
@@ -271,8 +292,18 @@ dcant_zonal <- dcant_3d %>%
   select(-data) %>%
   unnest(zonal)
 
-
 dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
+
+dcant_zonal_method <- dcant_3d %>%
+  group_by(data_source, method) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+dcant_zonal_method <- m_cut_gamma(dcant_zonal_method,
+                                   "gamma_mean")
+
 
 ```
 
@@ -286,6 +317,8 @@ To calculate dcant column inventories, we:
 
 Step 2 is performed separately for all Cant and positive Cant values only.
 
+### Full water column
+
 ```{r calc_dcant_inventories, fig.asp=1}
 
 dcant_inv <- dcant_3d %>%
@@ -296,7 +329,7 @@ dcant_inv <- dcant_3d %>%
   unnest(inv)
 
 p_map_cant_inv(df = dcant_inv,
-               var = "dcant_pos",
+               var = "dcant",
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
@@ -314,12 +347,91 @@ tcant_inv <- dcant_3d %>%
   unnest(inv)
 
 p_map_cant_inv(df = tcant_inv,
-               var = "tcant_pos",
+               var = "tcant",
                breaks = seq(0,70,10),
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
 ```
+
+
+### Surface layer
+
+```{r cant_inventories_surface}
+
+dcant_inv_surface <- dcant_3d %>%
+  filter(method == "surface") %>% 
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(
+  df = dcant_inv_surface %>%
+    filter(inv_depth < 1000),
+  var = "dcant_pos",
+  subtitle_text = "for predefined integration depths",
+  breaks = c(-Inf, seq(0, 4, 0.5), Inf)
+) +
+  facet_grid(inv_depth ~ data_source)
+
+
+```
+
+### eMLR only
+
+```{r combine_dcant_inventories}
+
+dcant_inv <- full_join(
+  dcant_inv %>% rename(dcant_total = dcant,
+                       dcant_pos_total = dcant_pos),
+  dcant_inv_surface %>% rename(dcant_surface = dcant,
+                               dcant_pos_surface = dcant_pos)
+)
+
+dcant_inv <- dcant_inv %>%
+  mutate(dcant_eMLR = dcant_total -
+           replace(dcant_surface, is.na(dcant_surface), 0),
+         dcant_pos_eMLR = dcant_pos_total -
+           replace(dcant_pos_surface, is.na(dcant_pos_surface), 0))
+
+dcant_inv_all <- dcant_inv %>% 
+  select(-starts_with("dcant_pos")) %>% 
+  pivot_longer(starts_with("dcant_"),
+               names_to = "method",
+               names_prefix = "dcant_",
+               values_to = "dcant")
+
+dcant_inv_pos <- dcant_inv %>% 
+  select(data_source, lon, lat, basin_AIP, inv_depth,
+         starts_with("dcant_pos_")) %>% 
+  pivot_longer(starts_with("dcant_pos_"),
+               names_to = "method",
+               names_prefix = "dcant_pos_",
+               values_to = "dcant_pos")
+
+dcant_inv <- full_join(
+  dcant_inv_all,
+  dcant_inv_pos
+)
+
+rm(dcant_inv_all, dcant_inv_pos, dcant_inv_surface)
+
+dcant_inv %>%
+  group_by(inv_depth) %>%
+  group_split() %>% 
+  # tail(1) %>%
+  map(
+    ~ p_map_cant_inv(df = .x,
+                     var = "dcant",
+                     subtitle_text = paste("Integration depth",
+                                           unique(.x$inv_depth))) +
+      facet_grid(method ~ data_source)
+  )
+
+```
+
 
 ## Budgets
 
@@ -333,23 +445,25 @@ dcant_budget <- dcant_inv %>%
   mutate(surface_area = earth_surf(lat, lon),
          dcant_grid = dcant*surface_area*molC_to_PgC,
          dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
+
 ```
 
 ```{r budget_global}
 
 dcant_budget_global <- dcant_budget %>%
-  group_by(data_source, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %>% 
+  group_by(data_source, inv_depth, method) %>% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %>% 
   ungroup() %>% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = "estimate",
                values_to = "value")
 
 dcant_budget_global %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method == "total") %>%
   ggplot(aes(estimate, value)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
@@ -357,26 +471,39 @@ dcant_budget_global %>%
 
 ```
 
+```{r budget_global_surface}
+
+dcant_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  ggplot(aes(estimate, value, fill=method)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(.~data_source)
+
+```
+
 
 ```{r budget_basin_AIP}
 
 dcant_budget_basin_AIP <- dcant_budget %>% 
-  group_by(basin_AIP, data_source, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %>% 
+  group_by(basin_AIP, data_source, method, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %>% 
   ungroup() %>% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = "estimate",
                values_to = "value")
 
 dcant_budget_basin_AIP %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>%
-  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  ggplot(aes(basin_AIP, value, fill=method)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
-  facet_grid(~data_source)
+  facet_grid(estimate~data_source)
 
 ```
 
@@ -385,21 +512,30 @@ dcant_budget_basin_AIP %>%
 
 dcant_budget_basin_MLR <-
   full_join(dcant_budget, basinmask) %>% 
-  group_by(basin, MLR_basins, data_source, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %>% 
+  group_by(basin, MLR_basins, data_source, method, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %>% 
   ungroup() %>% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = "estimate",
                values_to = "value")
 
 dcant_budget_basin_MLR %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>%
-  ggplot(aes(MLR_basins, value, fill=basin)) +
-  geom_col() +
-  facet_grid(estimate~data_source)
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  group_by(MLR_basins) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(basin, value, fill = method)) +
+      scale_fill_brewer(palette = "Dark2") +
+      geom_col() +
+      facet_grid(estimate ~ data_source) +
+      labs(title = paste("MLR_basins:", unique(.x$MLR_basins)))
+  )
 
 ```
 
@@ -409,119 +545,35 @@ dcant_budget_basin_MLR %>%
 dcant_budget_lat_grid <- 
   dcant_budget %>% 
   m_grid_horizontal_coarse() %>%
-  group_by(lat_grid, basin_AIP, data_source, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid),
-            dcant = round(dcant,1),
-            dcant_pos = sum(dcant_pos_grid),
-            dcant_pos = round(dcant_pos,1)) %>% 
+  group_by(lat_grid, basin_AIP, data_source, method, inv_depth) %>% 
+  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+            dcant = round(dcant,3),
+            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+            dcant_pos = round(dcant_pos,3)) %>% 
   ungroup() %>% 
   pivot_longer(cols = dcant:dcant_pos,
                names_to = "estimate",
                values_to = "value")
 
 dcant_budget_lat_grid %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>%
-  ggplot(aes(lat_grid, value, fill = basin_AIP)) +
-  geom_col() +
-  scale_fill_brewer(palette = "Dark2") +
-  coord_flip() +
-  facet_grid(estimate ~ data_source)
-
-```
-
-
-
-
-# Alpha
-
-## 3d fields
-
-```{r alpha_3d}
-
-alpha_3d <- dcant_3d %>%
-  mutate(
-    alpha = dcant / tcant_tref_1,
-    alpha = if_else(dcant <= 0 | tcant_tref_1 <= 0,
-                    NaN, alpha)
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  group_by(basin_AIP) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(lat_grid, value, fill = method)) +
+      scale_fill_brewer(palette = "Dark2") +
+      geom_col() +
+      coord_flip() +
+      facet_grid(estimate ~ data_source) +
+      labs(title = paste("MLR_basins:", unique(.x$basin_AIP)))
   )
 
-alpha_3d %>%
-  filter(alpha < 1) %>%
-  ggplot(aes(alpha)) +
-  geom_histogram() +
-  facet_grid(basin_AIP ~ data_source) +
-  scale_x_continuous(breaks = seq(0, 1, 0.1))
-
-median_alpha <- 
-  alpha_3d %>% 
-  group_by(depth, basin_AIP, data_source) %>% 
-  summarise(alpha_median = median(alpha, na.rm = TRUE),
-            alpha_mean = weighted.mean(alpha, tcant_tref_1, na.rm = TRUE)) %>% 
-  ungroup()
-
-alpha_3d %>%
-  filter(alpha < 1) %>%
-  ggplot(aes(alpha, depth)) +
-  geom_bin2d(binwidth = c(0.01, 200)) +
-  geom_path(data = median_alpha,
-            aes(alpha_median, depth, col="Median")) +
-  geom_path(data = median_alpha,
-            aes(alpha_mean, depth, col="Weighted mean")) +
-  scale_color_manual(name = "Alpha",
-                     values = c("red", "orange")) +
-  scale_y_reverse() +
-  scale_x_continuous(breaks = seq(0, 1, 0.1),
-                     limits = c(0,1)) +
-  scale_fill_viridis_c(trans = "log10") +
-  coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP~data_source)
-
-
-print(paste("mean:",
-            round(mean(
-              alpha_3d$alpha, na.rm = TRUE
-            ), 3)))
-
-print(paste("mean, weighted with Cant:",
-            round(
-              weighted.mean(
-                x = alpha_3d$alpha,
-                w = alpha_3d$tcant_tref_1,
-                na.rm = TRUE
-              ),
-              3
-            )))
-
-print(paste("median:",
-            round(median(
-              alpha_3d$alpha, na.rm = TRUE
-            ), 3)))
-
-
 ```
 
-## Inventory maps
 
-```{r alpha_surface_distribution, fig.asp=1.5}
-
-alpha_inv <- full_join(
-  dcant_inv,
-  tcant_inv)
-
-alpha_inv <- alpha_inv %>% 
-  mutate(alpha = dcant / tcant)
-
-
-map +
-  geom_raster(data = alpha_inv,
-              aes(lon, lat, fill = alpha)) +
-  facet_grid(inv_depth ~ data_source) +
-  scale_fill_divergent(
-    midpoint = median(alpha_inv$alpha)
-  )
-
-
-```
 
 
 
@@ -543,28 +595,50 @@ dcant_3d %>%
                   "dcant_3d_mod_truth_cc.csv", sep = ""))
 
 
-
 dcant_zonal %>%
   filter(data_source == "mod_truth") %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_mod_truth.csv", sep = ""))
+
+dcant_zonal_method %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_mod_truth_method.csv", sep = ""))
 
 dcant_zonal %>%
   filter(data_source == "mod_truth_cc") %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_mod_truth_cc.csv", sep = ""))
 
+dcant_zonal_method %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_mod_truth_cc_method.csv", sep = ""))
 
 
 dcant_inv %>%
-  filter(data_source == "mod_truth") %>%
+  filter(data_source == "mod_truth",
+         method == "total") %>%
   write_csv(paste(path_version_data,
                   "dcant_inv_mod_truth.csv", sep = ""))
 
 dcant_inv %>%
-  filter(data_source == "mod_truth_cc") %>%
+  filter(data_source == "mod_truth_cc",
+         method == "total") %>%
   write_csv(paste(path_version_data,
                   "dcant_inv_mod_truth_cc.csv", sep = ""))
+
+dcant_inv %>%
+  filter(data_source == "mod_truth",
+         method != "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_mod_truth_method.csv", sep = ""))
+
+dcant_inv %>%
+  filter(data_source == "mod_truth_cc",
+         method != "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_mod_truth_cc_method.csv", sep = ""))
 
 
 

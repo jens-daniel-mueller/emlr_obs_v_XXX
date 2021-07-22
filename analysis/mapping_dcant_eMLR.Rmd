@@ -508,7 +508,7 @@ rm(dcant_surface_average, dcant_average)
 ```
 
 
-## Zonal mean sections
+## Zonal sections
 
 For each basin and era combination, the zonal mean dcant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
 
@@ -786,7 +786,7 @@ dcant_budget_lat_grid %>%
          method %in% c("surface", "eMLR")) %>%
   group_by(basin_AIP) %>%
   group_split() %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ ggplot(data = .x,
              aes(lat_grid, value, fill = method)) +
