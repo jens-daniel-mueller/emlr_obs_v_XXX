@@ -94,6 +94,18 @@ dcant_inv_mod_truth <-
 
 dcant_inv <- bind_rows(dcant_inv, dcant_inv_mod_truth)
 
+dcant_inv_method <-
+  read_csv(paste(path_version_data,
+                 "dcant_inv_method.csv",
+                 sep = ""))
+
+dcant_inv_mod_truth_method <-
+  read_csv(paste(path_version_data,
+                 "dcant_inv_mod_truth_method.csv",
+                 sep = ""))
+
+dcant_inv_method <- bind_rows(dcant_inv_method, dcant_inv_mod_truth_method)
+
 ```
 
 The following analysis is restricted to the standard inventory depth of `r params_global$inventory_depth_standard` m.
@@ -101,6 +113,9 @@ The following analysis is restricted to the standard inventory depth of `r param
 ```{r filter_standard_inventory_depth}
 
 dcant_inv <- dcant_inv %>%
+  filter(inv_depth == params_global$inventory_depth_standard)
+
+dcant_inv_method <- dcant_inv_method %>%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 ```
@@ -172,6 +187,41 @@ dcant_inv %>%
       var = "dcant",
       col = "continuous",
     subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+```
+
+## Surface
+
+```{r dcant_all_inventory_map_method, fig.asp=0.5}
+
+dcant_inv_bias_method <- dcant_inv_method %>%
+  filter(data_source %in% c("mod", "mod_truth"),
+         method == "surface") %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - mod_truth) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_method,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "Surface only | data_source: mod - mod_truth",
+    # breaks = c(-Inf, seq(-3,3,0.5), Inf)
+    )
+
+dcant_inv_method %>%
+  filter(method == "surface") %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~ p_map_cant_inv(
+    df = .x,
+    var = "dcant",
+    col = "continuous",
+    subtitle_text = paste("data_source:", unique(.x$data_source)),
+    breaks = c(-Inf,seq(0,4,0.5), Inf)
   ))
 
 ```

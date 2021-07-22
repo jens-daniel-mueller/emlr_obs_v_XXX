@@ -85,14 +85,18 @@ dcant estimates from this sensitivity case:
 dcant_budget_basin_AIP <-
   read_csv(paste(path_version_data,
                  "dcant_budget_basin_AIP.csv",
-                 sep = ""))
+                 sep = "")) %>% 
+  filter(method == "total") %>% 
+  select(-method)
 
 dcant_budget_basin_AIP_mod_truth <-
   read_csv(paste(
     path_version_data,
     "dcant_budget_basin_AIP_mod_truth.csv",
     sep = ""
-  ))
+  )) %>% 
+  filter(method == "total") %>% 
+  select(-method)
 
 dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
                                     dcant_budget_basin_AIP_mod_truth)
