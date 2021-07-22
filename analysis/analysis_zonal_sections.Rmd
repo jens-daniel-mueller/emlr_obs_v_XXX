@@ -82,18 +82,15 @@ dcant estimates from this sensitivity case:
 
 ```{r read_dcant_files}
 
-# dcant_3d <-
-#   read_csv(paste(path_version_data,
-#                  "dcant_3d.csv",
-#                  sep = ""))
-# 
-# dcant_3d_mod_truth <-
-#   read_csv(paste(path_version_data,
-#                  "dcant_3d_mod_truth.csv",
-#                  sep = ""))
-# 
-# dcant_3d <- bind_rows(dcant_3d,
-#                      dcant_3d_mod_truth)
+dcant_3d <-
+  read_csv(paste(path_version_data,
+                 "dcant_3d.csv",
+                 sep = ""))
+
+dcant_3d_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "dcant_3d_mod_truth.csv",
+                 sep = ""))
 
 dcant_zonal <-
   read_csv(paste(path_version_data,
@@ -133,7 +130,7 @@ dcant_zonal_bias <- full_join(
 
 for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   for (i_data_source in unique(dcant_zonal$data_source)) {
-    # i_basin_AIP <- unique(dcant_zonal$basin_AIP)[2]
+    # i_basin_AIP <- unique(dcant_zonal$basin_AIP)[1]
     # i_data_source <- unique(dcant_zonal$data_source)[1]
     
     print(
@@ -212,6 +209,83 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
     )
   )
+  
+}
+  
+```
+
+## Surface vs deep
+
+```{r zonal_section_surface}
+
+dcant_3d <- dcant_3d %>% 
+  filter(data_source == "mod") %>% 
+  select(lon, lat, depth, basin_AIP,
+         dcant, gamma, gamma_slab, estimate)
+
+dcant_3d_mod_truth <- dcant_3d_mod_truth %>% 
+  select(lon, lat, depth, basin_AIP,
+         dcant_mod_truth = dcant, gamma_mod_truth = gamma)
+
+dcant_3d <- left_join(dcant_3d,
+                      dcant_3d_mod_truth)
+
+dcant_3d <- dcant_3d %>% 
+  mutate(dcant_bias = dcant - dcant_mod_truth)
+
+dcant_zonal <- dcant_3d %>%
+  group_by(estimate) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+dcant_zonal <- m_cut_gamma(dcant_zonal, "gamma_mean")
+
+```
+
+
+```{r dcant_all_zonal_mean_sections_surface, fig.asp=0.6}
+
+# i_estimate <- unique(dcant_zonal$estimate)[2]
+# i_basin_AIP <- unique(dcant_zonal$basin_AIP)[1]
+
+for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
+  for (i_estimate in unique(dcant_zonal$estimate)) {
+    print(
+      p_section_zonal(
+        df = dcant_zonal %>%
+          filter(basin_AIP == i_basin_AIP,
+                 estimate == i_estimate),
+        var = "dcant_mean",
+        gamma = "gamma_mean",
+        subtitle_text =
+          paste("Basin:", i_basin_AIP, "| estimate:", i_estimate))
+    )
+    print(
+      p_section_zonal(
+        df = dcant_zonal %>%
+          filter(basin_AIP == i_basin_AIP,
+                 estimate == i_estimate),
+        var = "dcant_mod_truth_mean",
+        gamma = "gamma_mean",
+        subtitle_text =
+          paste("Basin:", i_basin_AIP, "| estimate:", i_estimate))
+    )
+    
+  }
+  
+    print(
+    p_section_zonal(
+      df = dcant_zonal %>%
+        filter(basin_AIP == i_basin_AIP,
+               estimate == i_estimate),
+      var = "dcant_bias_mean",
+      col="divergent",
+      breaks = params_global$breaks_dcant_offset,
+              subtitle_text =
+          paste("Basin:", i_basin_AIP, "| estimate:", i_estimate))
+    )
   
 }
   
