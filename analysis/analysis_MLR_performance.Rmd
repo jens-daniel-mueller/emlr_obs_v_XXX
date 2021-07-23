@@ -112,9 +112,9 @@ dcant_inv <-
 
 ```
 
-# dcant variability
+# Zonal sections
 
-## Across models
+## SD across models
 
 Standard deviation across dcant from all MLR models was calculate for each grid cell (XYZ). The zonal mean of this standard deviation should reflect the uncertainty associated to the predictor selection within each slab and era. 
 
@@ -123,14 +123,14 @@ Standard deviation across dcant from all MLR models was calculate for each grid 
 dcant_zonal %>%
   group_by(basin_AIP, data_source) %>%
   group_split() %>%
-  # head(1) %>%
+  head(1) %>%
   map(
     ~ p_section_zonal(
       df = .x,
       var = "dcant_sd_mean",
       gamma = "gamma_mean",
       legend_title = "sd",
-      breaks = seq(0, 2, 0.1),
+      breaks = c(seq(0, 3, 0.3), Inf),
       title_text = "Zonal mean section of SD across models",
       subtitle_text =
         paste(
@@ -144,7 +144,7 @@ dcant_zonal %>%
 
 ```
 
-## Across basins
+## SD across basins
 
 Standard deviation of mean dcant values was calculate across all longitudes. This standard deviation should reflect the zonal variability of dcant within the basin and era.
 
@@ -160,7 +160,7 @@ dcant_zonal %>%
       var = "dcant_sd",
       gamma = "gamma_mean",
       legend_title = "sd",
-      breaks = seq(0, 4, 0.2),
+      breaks = c(seq(0, 3, 0.3),Inf),
       title_text = "Zonal mean section of dcant SD",
       subtitle_text =
         paste(
@@ -175,7 +175,19 @@ dcant_zonal %>%
 
 ```
 
-## Correlation
+# Slab
+
+## SD across models
+
+```{r SD_slabs}
+
+
+
+```
+
+
+
+# Correlation
 
 ### dcant vs model SD
 

@@ -128,15 +128,12 @@ GLODAP_grid <- GLODAP_grid %>%
 
 ```{r calculate_gamma_slab_maps}
 
-dcant_slab_layer <- dcant_3d %>%
+dcant_slab <- dcant_3d %>%
   group_by(data_source) %>%
   nest() %>%
   mutate(slab = map(.x = data, ~ m_dcant_slab_concentration(.x))) %>%
   select(-data) %>%
   unnest(slab)
-
-dcant_slab <- dcant_slab_layer %>% 
-  select(-c("layer_thickness", "layer_volume"))
 
 dcant_slab <- dcant_slab %>% 
   arrange(gamma_slab, data_source)
@@ -162,12 +159,13 @@ Please note that:
 dcant_slab %>%
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  # head(1) %>%
+  # head(4) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
       subtitle_text = paste("data_source:", unique(.x$data_source),
-                            "| Neutral density:", unique(.x$gamma_slab))
+                            "| Neutral density:", unique(.x$gamma_slab)),
+      var = "n_layer"
       ) +
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
@@ -195,6 +193,7 @@ dcant_slab %>%
 ```{r dcant_pos_gamma_slab_maps_bias}
 
 dcant_slab_bias <- dcant_slab %>% 
+  select(-c(layer_thickness, layer_volume, n_layer)) %>% 
   pivot_wider(names_from = data_source,
               values_from = c("dcant", "dcant_pos")) %>% 
   mutate(dcant_bias = dcant_mod - dcant_mod_truth,
@@ -405,7 +404,7 @@ dcant_slab %>%
 
 ```{r slab_thickness}
 
-dcant_slab_layer %>%
+dcant_slab %>%
   group_by(gamma_slab, data_source) %>%
   group_split() %>%
   # head(1) %>%
