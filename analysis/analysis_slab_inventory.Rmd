@@ -194,7 +194,8 @@ dcant_slab %>%
 ```{r dcant_pos_gamma_slab_maps_bias}
 
 dcant_slab_bias <- dcant_slab %>% 
-  select(-c(layer_thickness, layer_volume, n_layer)) %>% 
+  select(-c(layer_thickness, layer_volume, n_layer,
+            dcant_pos_sd, dcant_sd)) %>% 
   pivot_wider(names_from = data_source,
               values_from = c("dcant", "dcant_pos")) %>% 
   mutate(dcant_bias = dcant_mod - dcant_mod_truth,
@@ -203,7 +204,7 @@ dcant_slab_bias <- dcant_slab %>%
 
 dcant_slab_bias %>%
   group_split(gamma_slab) %>%
-  # head(1) %>%
+  # head(2) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,

@@ -183,6 +183,15 @@ dcant_zonal %>%
 
 # Correlation
 
+```{r define_plot_ranges}
+
+dcant_min <- -20
+dcant_max <- 20
+dcant_sd_max <- 10
+
+```
+
+
 ### dcant vs model SD
 
 #### Era vs basin
@@ -191,14 +200,14 @@ dcant_zonal %>%
 
 dcant_3d %>% 
   ggplot(aes(dcant, dcant_sd)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 10) +
-  geom_bin2d() +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10",
+  geom_bin2d(binwidth = 1) +
+  geom_vline(xintercept = 0,
+             col = "red") +
+  scale_fill_viridis_c(trans = "log10",
                        name = "log10(n)") +
-  facet_grid(basin_AIP ~ data_source)
+  facet_grid(basin_AIP ~ data_source) +
+  coord_cartesian(ylim = c(0, dcant_sd_max),
+                  xlim = c(dcant_min, dcant_max))
 
 ```
 
@@ -208,17 +217,17 @@ dcant_3d %>%
 
 dcant_3d %>%
   group_split(basin_AIP) %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ ggplot(data = .x, aes(dcant, dcant_sd)) +
-      geom_vline(xintercept = 0) +
-      geom_hline(yintercept = 10) +
-      geom_bin2d() +
-      scale_fill_viridis_c(
-        option = "magma",
-        
-        trans = "log10",
-        name = "log10(n)"
+      geom_bin2d(binwidth = 1) +
+      geom_vline(xintercept = 0,
+                 col = "red") +
+      scale_fill_viridis_c(trans = "log10",
+                           name = "log10(n)") +
+      coord_cartesian(
+        ylim = c(0, dcant_sd_max),
+        xlim = c(dcant_min, dcant_max)
       ) +
       facet_grid(gamma_slab ~ data_source) +
       labs(title = paste("Basin:", unique(.x$basin_AIP)))
@@ -232,15 +241,15 @@ dcant_3d %>%
 
 ```{r dcant_vs_sd_by_basin_era_zonal}
 
-dcant_zonal %>% 
+dcant_zonal %>%
   ggplot(aes(dcant_mean, dcant_sd)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 10) +
   geom_bin2d() +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10",
+  geom_vline(xintercept = 0,
+             col = "red") +
+  scale_fill_viridis_c(trans = "log10",
                        name = "log10(n)") +
+  coord_cartesian(ylim = c(0, dcant_sd_max),
+                  xlim = c(dcant_min, dcant_max)) +
   facet_grid(basin_AIP ~ data_source)
 
 ```
@@ -251,18 +260,17 @@ dcant_zonal %>%
 
 dcant_zonal %>%
   group_split(basin_AIP) %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ ggplot(data = .x, aes(dcant_mean, dcant_sd)) +
-      geom_vline(xintercept = 0) +
-      geom_hline(yintercept = 10) +
-      scale_fill_viridis_c(
-        option = "magma",
-        
-        trans = "log10"
-      ) +
       geom_bin2d() +
+      geom_vline(xintercept = 0) +
+      scale_fill_viridis_c(trans = "log10") +
       facet_grid(gamma_slab ~ data_source)  +
+      coord_cartesian(
+        ylim = c(0, dcant_sd_max),
+        xlim = c(dcant_min, dcant_max)
+      ) +
       labs(title = paste("Basin:", unique(.x$basin_AIP)))
   )
 
@@ -273,8 +281,7 @@ dcant_zonal %>%
 ```{r dcant_bias_vs_dcant_sd}
 
 dcant_3d <- bind_rows(dcant_3d,
-                     dcant_3d_mod_truth)
-
+                      dcant_3d_mod_truth)
 
 dcant_3d_bias <- dcant_3d %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
@@ -283,21 +290,21 @@ dcant_3d_bias <- dcant_3d %>%
               values_from = dcant) %>%
   mutate(dcant_bias = mod - mod_truth)
 
-dcant_3d_bias_sd <- dcant_3d %>% 
+dcant_3d_bias_sd <- dcant_3d %>%
   filter(data_source %in% c("mod")) %>%
   select(lat, lon, depth, dcant, dcant_sd)
 
 dcant_3d_bias <- full_join(dcant_3d_bias, dcant_3d_bias_sd)
 
 dcant_3d_bias %>%
-  ggplot(aes(dcant_sd, dcant_bias)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10") +
-  geom_bin2d()
-
+  ggplot(aes(dcant_bias, dcant_sd)) +
+  scale_fill_viridis_c(trans = "log10") +
+  geom_bin2d(binwidth = 1) +
+  coord_cartesian(ylim = c(0, dcant_sd_max),
+                  xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red")
+  
 
 ```
 
@@ -305,13 +312,13 @@ dcant_3d_bias %>%
 ```{r dcant_bias_vs_dcant_sd_basin_gamma_slab, fig.asp=2}
 
 dcant_3d_bias %>%
-  ggplot(aes(dcant_sd, dcant_bias)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10") +
-  geom_bin2d() +
+  ggplot(aes(dcant_bias, dcant_sd)) +
+  scale_fill_viridis_c(trans = "log10") +
+  geom_bin2d(binwidth = 1) +
+  coord_cartesian(ylim = c(0, dcant_sd_max),
+                  xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red") +
   facet_grid(gamma_slab ~ basin_AIP)
 
 ```
@@ -319,32 +326,61 @@ dcant_3d_bias %>%
 
 ### dcant bias vs dcant
 
-
 ```{r dcant_bias_vs_dcant}
 
 dcant_3d_bias %>%
-  ggplot(aes(dcant, dcant_bias)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10") +
-  geom_bin2d()
+  ggplot(aes(dcant_bias, dcant)) +
+  scale_fill_viridis_c(trans = "log10") +
+  geom_bin2d(binwidth = 1) +
+  coord_cartesian(ylim = c(dcant_min, dcant_max),
+                  xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red")
+
+dcant_3d_bias %>%
+  ggplot(aes(dcant_bias)) +
+  geom_histogram(binwidth = 1) +
+  coord_cartesian(xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red")
+
+dcant_3d_bias %>%
+  ggplot(aes(dcant)) +
+  geom_histogram(binwidth = 1) +
+  coord_cartesian(xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red")
+
 ```
 
 
 
 ```{r dcant_bias_vs_dcant_basin_gamma_slab, fig.asp=2}
 
+dcant_3d_bias %>%
+  ggplot(aes(dcant_bias, dcant)) +
+  scale_fill_viridis_c(trans = "log10") +
+  geom_bin2d(binwidth = 1) +
+  coord_cartesian(ylim = c(dcant_min, dcant_max),
+                  xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red") +
+  facet_grid(gamma_slab ~ basin_AIP)
 
 dcant_3d_bias %>%
-  ggplot(aes(dcant, dcant_bias)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  scale_fill_viridis_c(option = "magma",
-                       
-                       trans = "log10") +
-  geom_bin2d() +
+  ggplot(aes(dcant_bias)) +
+  geom_histogram(binwidth = 1) +
+  coord_cartesian(xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red") +
+  facet_grid(gamma_slab ~ basin_AIP)
+
+dcant_3d_bias %>%
+  ggplot(aes(dcant)) +
+  geom_histogram(binwidth = 1) +
+  coord_cartesian(xlim = c(dcant_min, dcant_max)) +
+  geom_vline(xintercept = 0,
+             col = "red") +
   facet_grid(gamma_slab ~ basin_AIP)
 
 ```
