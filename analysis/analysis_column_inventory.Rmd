@@ -130,7 +130,7 @@ Column inventory of positive dcant between the surface and `r params_global$inve
 
 ```{r dcant_pos_inventory_map, fig.asp=0.5}
 
-dcant_inv_bias <- dcant_inv %>%
+dcant_pos_inv_bias <- dcant_inv %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
   select(lat, lon, data_source, dcant_pos) %>%
   pivot_wider(names_from = data_source,
@@ -139,7 +139,7 @@ dcant_inv_bias <- dcant_inv %>%
   drop_na()
 
 p_map_cant_inv(
-    df = dcant_inv_bias,
+    df = dcant_pos_inv_bias,
     var = "dcant_pos_bias",
     col = "bias",
     subtitle_text = "data_source: mod - mod_truth")
@@ -225,3 +225,21 @@ dcant_inv_method %>%
   ))
 
 ```
+
+# Write files
+
+```{r write_csv}
+
+full_join(dcant_inv_bias %>% select(-c(mod, mod_truth)),
+          dcant_pos_inv_bias %>% select(-c(mod, mod_truth))) %>%
+  write_csv(paste0(path_version_data,
+                   "dcant_inv_bias.csv"))
+
+dcant_inv_bias_method %>%
+  write_csv(paste0(path_version_data,
+                   "dcant_inv_bias_method.csv"))
+
+```
+
+
+

@@ -150,6 +150,131 @@ params_local <-
 
 ```
 
+```{r define_params_local_manually, class.source = 'fold-show', eval=FALSE}
+
+# neutral density thresholds to cut the Atlantic ocean into slabs
+slabs_Atl <-
+  c(
+    -Inf,
+    26.00,
+    26.50,
+    26.75,
+    27.00,
+    27.25,
+    27.50,
+    27.75,
+    27.85,
+    27.95,
+    28.05,
+    28.10,
+    28.15,
+    28.20,
+    Inf
+  )
+
+# neutral density thresholds to cut the Indo-Pacific ocean into slabs
+slabs_Ind_Pac <-
+  c(-Inf,
+    26.00,
+    26.50,
+    26.75,
+    27.00,
+    27.25,
+    27.50,
+    27.75,
+    27.85,
+    27.95,
+    28.05,
+    28.10,
+    28.20,
+    28.30,
+    28.40,
+    Inf)
+
+# Predictors for MLR model
+MLR_predictors <- c(
+                "sal",
+                "temp",
+                "aou",
+                "nitrate",
+                "silicate",
+                "phosphate",
+                "phosphate_star")
+
+params_local <-
+  lst(
+    # ID of current sensitivity run
+    Version_ID = "v_105",
+    # GLODAP version used
+    GLODAPv2_version = "2021",
+    # f flags accepted for GLODAP data
+    flag_f = c(0,2,9),
+    # qc flags accepted for GLODAP data
+    flag_qc = c(1,0),
+    # Shallowest depth for data to be included in MLR fitting
+    depth_min = 150,
+    # Shallowest water depth for data to be included in MLR fitting
+    bottomdepth_min = 0,
+    # Lowest neutral density to map dcant with eMLR approach
+    gamma_min = 26,
+    # CANYON-B offset threshold
+    # (factor applied to standard deviation of all cruise offsets)
+    CANYON_B_max = 10,
+    # break years for eras, numbers indicate the upper end of the respective era
+    c_star_rmse_max = 50,
+    # start years for eras
+    era_start = c(2000, 2010),
+    # end years for eras
+    era_end = c(2009, 2019),
+    # manually define tref1, set to NULL to use median year
+    tref1 = NULL,
+    # manually define tref2, set to NULL to use median year
+    tref2 = NULL,
+    # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
+    MLR_basins = "AIP",
+    # gap filling of NA values in GLODAP
+    gap_filling = "CANYON-B",
+    # rarefication approach
+    rarefication = "coarse_grid",
+    # rarefication approach threshold
+    rarefication_threshold = 25,
+    # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
+    MLR_target = "cstar_tref",
+    # see above
+    MLR_predictors = MLR_predictors,
+    # Maxmimum number of MLR predictors
+    MLR_predictors_max = 5,
+    # Minimum number of MLR predictors
+    MLR_predictors_min = 2,
+    # Total number of MLR fits taken into account
+    MLR_number = 10,
+    # Maximum VIF of fitted MLR models to be included
+    vif_max = 500,
+    # Criterion to select best MLR fits, either "rmse" or "aic"
+    MLR_criterion = "rmse",
+    # see above
+    slabs_Atl = slabs_Atl,
+    # see above
+    slabs_Ind_Pac = slabs_Ind_Pac,
+    # nutrient for cstar calculation
+    cstar_nutrient = "phosphate",
+    # Stoichiometric ratio of C to P
+    rCP = 117,
+    # Stoichiometric ratio of N to P
+    rNP = 16,
+    # Stoichiometric ratio of P to O (PO4* calculation)
+    rPO = 170,
+    # Offset P to O (PO4* calculation)
+    rPO_offset = 1.95,
+    # Preindustrial atmospheric pCO2
+    preind_atm_pCO2 = 280,
+    # generate a high number of diagnostic plots while running the analysis (y/n)
+    plot_all_figures = "n"
+  )
+
+
+```
+
 ```{r test_list_expansion, eval=FALSE}
 
 library(tidyverse)

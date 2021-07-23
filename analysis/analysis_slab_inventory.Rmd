@@ -561,29 +561,3 @@ rm(slabs_Atl, slabs_Atl_int, slabs_Ind_Pac, slabs_Ind_Pac_int)
 
 ```
 
-```{r calculate_slab_thickness, eval=FALSE, fig.asp=2.5}
- 
-# slabs_ex <- slabs %>% 
-#   filter(lat == 0.5,
-#          lon == 250.5)
-
-slabs <- slabs %>% 
-  group_by(data_source, lat, lon) %>% 
-  arrange(depth) %>% 
-  mutate(depth_lower_bound = depth,
-         depth_upper_bound = lag(depth, default = 0),
-         slab_thickness = depth_lower_bound - depth_upper_bound,
-         gamma_in_slab = gamma - 0.01) %>% 
-  ungroup()
-
-slabs <- m_cut_gamma(slabs, "gamma_in_slab")
-
-map + 
-  geom_raster(data = slabs,
-              aes(lon, lat, fill = slab_thickness)) +
-  facet_grid(gamma_slab ~ data_source) +
-  scale_fill_viridis_c(direction = -1)
-
-rm(slabs)
-
-```

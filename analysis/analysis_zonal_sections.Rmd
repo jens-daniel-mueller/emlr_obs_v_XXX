@@ -82,16 +82,6 @@ dcant estimates from this sensitivity case:
 
 ```{r read_dcant_files}
 
-# dcant_3d <-
-#   read_csv(paste(path_version_data,
-#                  "dcant_3d.csv",
-#                  sep = ""))
-# 
-# dcant_3d_mod_truth <-
-#   read_csv(paste(path_version_data,
-#                  "dcant_3d_mod_truth.csv",
-#                  sep = ""))
-
 dcant_zonal <-
   read_csv(paste(path_version_data,
                  "dcant_zonal.csv",
@@ -128,15 +118,15 @@ In a first series of plots we explore the distribution of dcant, taking only pos
 
 ```{r dcant_pos_zonal_mean_sections, fig.asp=0.6}
 
-dcant_zonal_bias <- dcant_zonal %>%
+dcant_pos_zonal_bias <- dcant_zonal %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
   select(lat, depth, basin_AIP, data_source, dcant_pos_mean) %>%
   pivot_wider(names_from = data_source,
               values_from = dcant_pos_mean) %>%
   mutate(dcant_pos_bias = mod - mod_truth)
 
-dcant_zonal_bias <- full_join(
-  dcant_zonal_bias,
+dcant_pos_zonal_bias <- full_join(
+  dcant_pos_zonal_bias,
   dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
@@ -160,7 +150,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   }
   print(
     p_section_zonal(
-      df = dcant_zonal_bias %>%
+      df = dcant_pos_zonal_bias %>%
         filter(basin_AIP == i_basin_AIP),
       var = "dcant_pos_bias",
       col = "divergent",
@@ -170,8 +160,6 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   )
 }
 
-rm(dcant_zonal_bias)
-  
 ```
 
 
@@ -232,7 +220,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 
 ```{r dcant_all_zonal_mean_sections_surface, fig.asp=0.6}
 
-dcant_zonal_bias_method <- dcant_zonal_method %>%
+dcant_zonal_bias_method_surface <- dcant_zonal_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
          method == "surface") %>%
   select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
@@ -240,8 +228,8 @@ dcant_zonal_bias_method <- dcant_zonal_method %>%
               values_from = dcant_mean) %>%
   mutate(dcant_bias = mod - mod_truth)
 
-dcant_zonal_bias_method <- full_join(
-  dcant_zonal_bias_method,
+dcant_zonal_bias_method_surface <- full_join(
+  dcant_zonal_bias_method_surface,
   dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
@@ -266,7 +254,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   
     print(
     p_section_zonal(
-      df = dcant_zonal_bias_method %>%
+      df = dcant_zonal_bias_method_surface %>%
         filter(basin_AIP == i_basin_AIP),
       var = "dcant_bias",
       col="divergent",
@@ -286,7 +274,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 
 ```{r dcant_all_zonal_mean_sections_deep, fig.asp=0.6}
 
-dcant_zonal_bias_method <- dcant_zonal_method %>%
+dcant_zonal_bias_method_deep <- dcant_zonal_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
          method == "eMLR") %>%
   select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
@@ -294,8 +282,8 @@ dcant_zonal_bias_method <- dcant_zonal_method %>%
               values_from = dcant_mean) %>%
   mutate(dcant_bias = mod - mod_truth)
 
-dcant_zonal_bias_method <- full_join(
-  dcant_zonal_bias_method,
+dcant_zonal_bias_method_deep <- full_join(
+  dcant_zonal_bias_method_deep,
   dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
@@ -319,7 +307,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   
     print(
     p_section_zonal(
-      df = dcant_zonal_bias_method %>%
+      df = dcant_zonal_bias_method_deep %>%
         filter(basin_AIP == i_basin_AIP),
       var = "dcant_bias",
       col="divergent",
@@ -331,5 +319,27 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   
 }
   
+```
+
+
+# Write files
+
+```{r write_csv}
+
+full_join(dcant_zonal_bias %>% select(-c(mod, mod_truth)),
+          dcant_pos_zonal_bias %>% select(-c(mod, mod_truth))) %>%
+  write_csv(paste0(path_version_data, 
+                   "dcant_zonal_bias.csv"))
+
+bind_rows(
+  dcant_zonal_bias_method_surface %>%
+    mutate(method = "surface"),
+  dcant_zonal_bias_method_deep %>%
+    mutate(method = "deep")
+) %>%
+  write_csv(paste0(path_version_data,
+                   "dcant_zonal_bias_method.csv"))
+
+
 ```
 
