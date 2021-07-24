@@ -696,7 +696,7 @@ GLODAP %>%
 
 A selected section is plotted to demonstrate the magnitude of various parameters and corrections relevant to C*.
 
-```{r select_cruises}
+```{r select_cruises, eval=FALSE}
 
 GLODAP_cruise <- GLODAP %>% 
   filter(cruise %in% params_global$cruises_meridional)
@@ -704,7 +704,7 @@ GLODAP_cruise <- GLODAP %>%
 ```
 
 
-```{r meridional_sections}
+```{r meridional_sections, eval=FALSE}
 
 map +
   geom_path(data = GLODAP_cruise %>%
@@ -796,7 +796,7 @@ GLODAP <- m_cut_gamma(GLODAP, "gamma")
 
 ```
 
-```{r meridional_sections_isoneutral_slabs, fig.asp=0.6}
+```{r meridional_sections_isoneutral_slabs, fig.asp=0.6, eval=FALSE}
 
 GLODAP_cruise <- GLODAP %>% 
   filter(cruise %in% params_global$cruises_meridional)
@@ -1145,7 +1145,7 @@ Zonal and meridional section plots are produce for each cruise individually and 
 
 `r paste(path_version_figures, "Cruise_sections_histograms/", sep = "")`
 
-```{r plot_all_individual_cruises_clean}
+```{r plot_all_individual_cruises_clean, eval=FALSE}
 
 if (params_local$plot_all_figures == "y") {
 
