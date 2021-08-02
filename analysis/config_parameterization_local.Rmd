@@ -71,10 +71,9 @@ MLR_predictors <- c(
                 "sal",
                 "temp",
                 "aou",
+                "oxygen",
                 "nitrate",
-                "silicate",
-                "phosphate",
-                "phosphate_star")
+                "silicate")
 
 params_local <-
   lst(
@@ -204,7 +203,7 @@ MLR_predictors <- c(
 params_local <-
   lst(
     # ID of current sensitivity run
-    Version_ID = "v_105",
+    Version_ID = "v_214",
     # GLODAP version used
     GLODAPv2_version = "2021",
     # f flags accepted for GLODAP data
@@ -223,17 +222,17 @@ params_local <-
     # break years for eras, numbers indicate the upper end of the respective era
     c_star_rmse_max = 50,
     # start years for eras
-    era_start = c(2000, 2010),
+    era_start = c(1982, 2000),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(1999, 2009),
     # manually define tref1, set to NULL to use median year
-    tref1 = NULL,
+    tref1 = 1994,
     # manually define tref2, set to NULL to use median year
-    tref2 = NULL,
+    tref2 = 2004,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
-    MLR_basins = "AIP",
+    MLR_basins = "SO",
     # gap filling of NA values in GLODAP
-    gap_filling = "CANYON-B",
+    gap_filling = "none",
     # rarefication approach
     rarefication = "coarse_grid",
     # rarefication approach threshold
