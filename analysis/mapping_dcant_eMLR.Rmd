@@ -462,7 +462,7 @@ dcant_average %>%
 ```
 
 
-```{r cant_deep_climatology_sections, fig.asp=1}
+```{r dcant_deep_climatology_sections, fig.asp=1}
 
 dcant_average %>%
   group_split(data_source) %>%
@@ -482,7 +482,7 @@ dcant_average %>%
 
 The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
 
-```{r calc_cant_mean_surface}
+```{r calc_dcant_mean_surface}
 
 dcant_surface_average <-
   m_dcant_3d_average(dcant_surface)
@@ -495,7 +495,7 @@ rm(dcant_surface)
 
 ## Join surface and deep water
 
-```{r join_surface_deep_cant}
+```{r join_surface_deep_dcant}
 
 dcant_3d <-
   full_join(
@@ -533,6 +533,18 @@ dcant_zonal_method <- dcant_3d %>%
 
 dcant_zonal_method <- m_cut_gamma(dcant_zonal_method,
                                    "gamma_mean")
+
+dcant_zonal <- dcant_zonal %>% 
+  rename(dcant = dcant_mean,
+         dcant_pos = dcant_pos_mean) %>% 
+  select(-c(dcant_sd_sd, dcant_pos_sd_sd,
+            gamma_sd_mean, gamma_sd_sd))
+
+dcant_zonal_method <- dcant_zonal_method %>% 
+  rename(dcant = dcant_mean,
+         dcant_pos = dcant_pos_mean) %>% 
+  select(-c(dcant_sd_sd, dcant_pos_sd_sd,
+            gamma_sd_mean, gamma_sd_sd))
 
 ```
 
@@ -665,27 +677,30 @@ Global dcant budgets were estimated in units of Pg C. Please note that here we a
 
 ```{r calculate_budget_per_grid_cell}
 
-molC_to_PgC <- 12*1e-15
-
-dcant_budget <- dcant_inv %>% 
-  mutate(surface_area = earth_surf(lat, lon),
-         dcant_grid = dcant*surface_area*molC_to_PgC,
-         dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
+# molC_to_PgC <- 12*1e-15
+# 
+# dcant_budget <- dcant_inv %>% 
+#   mutate(surface_area = earth_surf(lat, lon),
+#          dcant_grid = dcant*surface_area*molC_to_PgC,
+#          dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
 
 ```
 
 ```{r budget_global}
 
-dcant_budget_global <- dcant_budget %>%
-  group_by(data_source, inv_depth, method) %>% 
-  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
-            dcant = round(dcant,3),
-            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
-            dcant_pos = round(dcant_pos,3)) %>% 
-  ungroup() %>% 
-  pivot_longer(cols = dcant:dcant_pos,
-               names_to = "estimate",
-               values_to = "value")
+# dcant_budget_global <- dcant_budget %>%
+#   group_by(data_source, inv_depth, method) %>% 
+#   summarise(dcant = sum(dcant_grid, na.rm = TRUE),
+#             dcant = round(dcant,3),
+#             dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
+#             dcant_pos = round(dcant_pos,3)) %>% 
+#   ungroup() %>% 
+#   pivot_longer(cols = dcant:dcant_pos,
+#                names_to = "estimate",
+#                values_to = "value")
+
+dcant_budget_global <- m_dcant_budget(dcant_inv)
+
 
 dcant_budget_global %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -712,16 +727,13 @@ dcant_budget_global %>%
 
 ```{r budget_basin_AIP}
 
-dcant_budget_basin_AIP <- dcant_budget %>% 
-  group_by(basin_AIP, data_source, method, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
-            dcant = round(dcant,3),
-            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
-            dcant_pos = round(dcant_pos,3)) %>% 
-  ungroup() %>% 
-  pivot_longer(cols = dcant:dcant_pos,
-               names_to = "estimate",
-               values_to = "value")
+dcant_budget_basin_AIP <- dcant_inv %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
 
 dcant_budget_basin_AIP %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -737,16 +749,12 @@ dcant_budget_basin_AIP %>%
 ```{r budget_MLR_regions, fig.asp=1}
 
 dcant_budget_basin_MLR <-
-  full_join(dcant_budget, basinmask) %>% 
-  group_by(basin, MLR_basins, data_source, method, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
-            dcant = round(dcant,3),
-            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
-            dcant_pos = round(dcant_pos,3)) %>% 
-  ungroup() %>% 
-  pivot_longer(cols = dcant:dcant_pos,
-               names_to = "estimate",
-               values_to = "value")
+  full_join(dcant_inv, basinmask) %>%
+  group_by(basin, MLR_basins) %>%
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
 
 dcant_budget_basin_MLR %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -769,24 +777,20 @@ dcant_budget_basin_MLR %>%
 ```{r budget_lat_grid, fig.asp=1}
 
 dcant_budget_lat_grid <- 
-  dcant_budget %>% 
+  dcant_inv %>% 
   m_grid_horizontal_coarse() %>%
-  group_by(lat_grid, basin_AIP, data_source, method, inv_depth) %>% 
-  summarise(dcant = sum(dcant_grid, na.rm = TRUE),
-            dcant = round(dcant,3),
-            dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
-            dcant_pos = round(dcant_pos,3)) %>% 
-  ungroup() %>% 
-  pivot_longer(cols = dcant:dcant_pos,
-               names_to = "estimate",
-               values_to = "value")
+  group_by(lat_grid, basin_AIP) %>% 
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
 
 dcant_budget_lat_grid %>%
   filter(inv_depth == params_global$inventory_depth_standard,
          method %in% c("surface", "eMLR")) %>%
   group_by(basin_AIP) %>%
   group_split() %>%
-  # head(1) %>%
+  head(1) %>%
   map(
     ~ ggplot(data = .x,
              aes(lat_grid, value, fill = method)) +

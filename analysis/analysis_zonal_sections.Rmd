@@ -120,9 +120,9 @@ In a first series of plots we explore the distribution of dcant, taking only pos
 
 dcant_pos_zonal_bias <- dcant_zonal %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, dcant_pos_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant_pos) %>%
   pivot_wider(names_from = data_source,
-              values_from = dcant_pos_mean) %>%
+              values_from = dcant_pos) %>%
   mutate(dcant_pos_bias = mod - mod_truth)
 
 dcant_pos_zonal_bias <- full_join(
@@ -141,7 +141,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         df = dcant_zonal %>%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "dcant_pos_mean",
+        var = "dcant_pos",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| data_source:", i_data_source)
       )
@@ -171,9 +171,9 @@ In a second series of plots we explore the distribution of all dcant, taking pos
 
 dcant_zonal_bias <- dcant_zonal %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %>%
+              values_from = dcant) %>%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias <- full_join(
@@ -191,7 +191,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         df = dcant_zonal %>%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "dcant_mean",
+        var = "dcant",
         gamma = "gamma_mean",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
@@ -223,9 +223,9 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 dcant_zonal_bias_method_surface <- dcant_zonal_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
          method == "surface") %>%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %>%
+              values_from = dcant) %>%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias_method_surface <- full_join(
@@ -244,7 +244,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
           filter(method == "surface",
                  basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "dcant_mean",
+        var = "dcant",
         plot_slabs = "n",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
@@ -277,9 +277,9 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 dcant_zonal_bias_method_deep <- dcant_zonal_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
          method == "eMLR") %>%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %>%
+  select(lat, depth, basin_AIP, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %>%
+              values_from = dcant) %>%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias_method_deep <- full_join(
@@ -298,7 +298,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
           filter(method == "eMLR",
                  basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = "dcant_mean",
+        var = "dcant",
         subtitle_text =
           paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
     )
