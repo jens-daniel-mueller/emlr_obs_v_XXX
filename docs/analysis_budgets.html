@@ -12,7 +12,7 @@
 <meta name="author" content="Jens Daniel Müller" />
 
 
-<title>Analysis of cant estimates</title>
+<title>Analysis of dcant budgets</title>
 
 <script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -496,7 +496,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Analysis of cant estimates</h1>
+<h1 class="title toc-ignore">Analysis of dcant budgets</h1>
 <h4 class="author">Jens Daniel Müller</h4>
 <h4 class="date">03 August, 2021</h4>
 
@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeeb004536e47b886f37c40bfe26d0919954858b66targetblankeb00453a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/eb004536e47b886f37c40bfe26d0919954858b66" target="_blank">eb00453</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeeb004536e47b886f37c40bfe26d0919954858b66targetblankeb00453a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/eb004536e47b886f37c40bfe26d0919954858b66" target="_blank">eb00453</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -634,8 +634,6 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
-    Modified:   analysis/analysis_slab_inventory.Rmd
-    Modified:   analysis/eMLR_model_fitting.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -676,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4d7bb5a4678c45b5893f8202162e98b37f3cf28d/analysis/analysis_budgets.Rmd" target="_blank">4d7bb5a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+test rlm model fitting
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/analysis_budgets.html" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2021,7 +2053,9 @@ included model data
 <li>Zonal mean and SD (basin, lat, depth)</li>
 <li>Inventories (lat, lon)</li>
 </ul>
-<pre class="r"><code>dcant_budget_basin_AIP &lt;-
+<pre class="r"><code># integrated per basin_AIP
+
+dcant_budget_basin_AIP &lt;-
   read_csv(paste(path_version_data,
                  &quot;dcant_budget_basin_AIP.csv&quot;,
                  sep = &quot;&quot;)) %&gt;% 
@@ -2042,6 +2076,31 @@ dcant_budget_basin_AIP &lt;- bind_rows(dcant_budget_basin_AIP,
 
 rm(dcant_budget_basin_AIP_mod_truth)
 
+# globally integrated
+
+dcant_budget_global &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;dcant_budget_global.csv&quot;,
+                 sep = &quot;&quot;)) %&gt;% 
+  filter(method == &quot;total&quot;) %&gt;% 
+  select(-method)
+
+dcant_budget_global_mod_truth &lt;-
+  read_csv(paste(
+    path_version_data,
+    &quot;dcant_budget_global_mod_truth.csv&quot;,
+    sep = &quot;&quot;
+  )) %&gt;% 
+  filter(method == &quot;total&quot;) %&gt;% 
+  select(-method)
+
+dcant_budget_global &lt;- bind_rows(dcant_budget_global,
+                                    dcant_budget_global_mod_truth)
+
+rm(dcant_budget_global_mod_truth)
+
+# reference year
+
 tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;tref.csv&quot;,
@@ -2059,140 +2118,24 @@ tref &lt;-
 duration</code></pre>
 <pre><code>[1] 10</code></pre>
 </div>
-<div id="dcant-budgets" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> dcant budgets</h1>
+<div id="global" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Global</h1>
 <div id="standard-depth" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> Standard depth</h2>
 <p>Results integrated over the upper 3000 m</p>
-<pre class="r"><code>dcant_budget_basin_AIP %&gt;%
+<pre class="r"><code>dcant_budget_global %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
-  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  ggplot(aes(estimate, value, fill = data_source)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
-  geom_col() +
-  facet_grid(~data_source)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_budget_standard_depth-1">
-Past versions of dcant_budget_standard_depth-1.png
-</button>
-</p>
-<div id="fig-dcant_budget_standard_depth-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-1.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>dcant_budget_basin_AIP %&gt;%
+  geom_col(position = position_dodge2())</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_global-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
+  select(-inv_depth) %&gt;% 
   pivot_wider(names_from = estimate,
               values_from = value) %&gt;% 
   gt(
-    rowname_col = &quot;basin_AIP&quot;,
-    groupname_col = c(&quot;data_source&quot;, &quot;inv_depth&quot;),
-    row_group.sep = &quot; | Depth: &quot;
+    groupname_col = c(&quot;data_source&quot;)
   ) %&gt;%
   summary_rows(groups = TRUE,
                fns = list(total = &quot;sum&quot;))</code></pre>
@@ -2200,7 +2143,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#tfuewjlzsl .gt_table {
+#qckjgrtnjc .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -2225,7 +2168,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_heading {
+#qckjgrtnjc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2237,7 +2180,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_title {
+#qckjgrtnjc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2247,7 +2190,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#tfuewjlzsl .gt_subtitle {
+#qckjgrtnjc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2257,13 +2200,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#tfuewjlzsl .gt_bottom_border {
+#qckjgrtnjc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_col_headings {
+#qckjgrtnjc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2278,7 +2221,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_col_heading {
+#qckjgrtnjc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2298,7 +2241,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#tfuewjlzsl .gt_column_spanner_outer {
+#qckjgrtnjc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2310,15 +2253,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#tfuewjlzsl .gt_column_spanner_outer:first-child {
+#qckjgrtnjc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tfuewjlzsl .gt_column_spanner_outer:last-child {
+#qckjgrtnjc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tfuewjlzsl .gt_column_spanner {
+#qckjgrtnjc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2330,7 +2273,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#tfuewjlzsl .gt_group_heading {
+#qckjgrtnjc .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2352,7 +2295,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#tfuewjlzsl .gt_empty_group_heading {
+#qckjgrtnjc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2367,15 +2310,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#tfuewjlzsl .gt_from_md > :first-child {
+#qckjgrtnjc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tfuewjlzsl .gt_from_md > :last-child {
+#qckjgrtnjc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tfuewjlzsl .gt_row {
+#qckjgrtnjc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2394,7 +2337,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#tfuewjlzsl .gt_stub {
+#qckjgrtnjc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2406,7 +2349,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#tfuewjlzsl .gt_summary_row {
+#qckjgrtnjc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2416,7 +2359,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#tfuewjlzsl .gt_first_summary_row {
+#qckjgrtnjc .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2426,7 +2369,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_grand_summary_row {
+#qckjgrtnjc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2436,7 +2379,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#tfuewjlzsl .gt_first_grand_summary_row {
+#qckjgrtnjc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2446,11 +2389,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_striped {
+#qckjgrtnjc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tfuewjlzsl .gt_table_body {
+#qckjgrtnjc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2459,7 +2402,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_footnotes {
+#qckjgrtnjc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2473,13 +2416,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_footnote {
+#qckjgrtnjc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#tfuewjlzsl .gt_sourcenotes {
+#qckjgrtnjc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2493,46 +2436,991 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#tfuewjlzsl .gt_sourcenote {
+#qckjgrtnjc .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#tfuewjlzsl .gt_left {
+#qckjgrtnjc .gt_left {
   text-align: left;
 }
 
-#tfuewjlzsl .gt_center {
+#qckjgrtnjc .gt_center {
   text-align: center;
 }
 
-#tfuewjlzsl .gt_right {
+#qckjgrtnjc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tfuewjlzsl .gt_font_normal {
+#qckjgrtnjc .gt_font_normal {
   font-weight: normal;
 }
 
-#tfuewjlzsl .gt_font_bold {
+#qckjgrtnjc .gt_font_bold {
   font-weight: bold;
 }
 
-#tfuewjlzsl .gt_font_italic {
+#qckjgrtnjc .gt_font_italic {
   font-style: italic;
 }
 
-#tfuewjlzsl .gt_super {
+#qckjgrtnjc .gt_super {
   font-size: 65%;
 }
 
-#tfuewjlzsl .gt_footnote_marks {
+#qckjgrtnjc .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="tfuewjlzsl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="qckjgrtnjc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">dcant</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">dcant_pos</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">22.684</td>
+      <td class="gt_row gt_right">23.421</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">29.181</td>
+      <td class="gt_row gt_right">30.199</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">20.722</td>
+      <td class="gt_row gt_right">20.861</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<pre class="r"><code>dcant_budget_global_bias &lt;- dcant_budget_global %&gt;%
+  filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;)) %&gt;%
+  select(data_source, inv_depth, estimate, value) %&gt;%
+  pivot_wider(names_from = data_source,
+              values_from = value) %&gt;%
+  mutate(dcant_bias = mod - mod_truth,
+         dcant_bias_rel = dcant_bias / mod_truth * 100)
+
+dcant_budget_global_bias %&gt;% 
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
+  ggplot(aes(dcant_bias, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_global-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global_bias %&gt;% 
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
+  ggplot(aes(dcant_bias_rel, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_global-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global_bias %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
+  ggplot() +
+  geom_col(aes(estimate, mod,
+               fill = &quot;eMLR&quot;)) +
+  geom_col(aes(estimate, mod_truth,
+               col = &quot;truth&quot;),
+           fill = &quot;transparent&quot;) +
+  scale_fill_manual(values = &quot;grey60&quot;) +
+  scale_color_manual(values = c(&quot;red&quot;, &quot;red&quot;)) +
+  theme(legend.title = element_blank()) +
+  labs(y = &quot;value&quot;)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_global-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # geom_segment(aes(
+  #   x = estimate,
+  #   y = mod,
+  #   xend = estimate,
+  #   yend = mod_truth,
+  #   col = &quot;truth&quot;
+  # )) +
+  # geom_point(aes(x = estimate,
+  #                y = mod_truth,
+  #                col = &quot;truth&quot;))</code></pre>
+</div>
+<div id="other-depths" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Other depths</h2>
+<p>Results integrated over the upper 100, 500, 1000, 3000, 10^{4} m</p>
+<pre class="r"><code>dcant_budget_global &lt;- dcant_budget_global %&gt;%
+  mutate(inv_depth = as.factor(inv_depth))
+
+dcant_budget_global %&gt;%
+  ggplot() +
+  scale_fill_viridis_d() +
+  geom_col(aes(data_source, value, fill = inv_depth),
+           position = position_dodge2()) +
+  facet_grid(. ~ estimate, scales = &quot;free_y&quot;)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_global-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global %&gt;%
+  pivot_wider(names_from = estimate,
+              values_from = value) %&gt;% 
+  gt(
+    groupname_col = c(&quot;data_source&quot;, &quot;inv_depth&quot;),
+    row_group.sep = &quot; | Depth: &quot;
+  ) %&gt;%
+  summary_rows(groups = TRUE,
+               fns = list(total = &quot;sum&quot;))</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#toczusaedq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#toczusaedq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#toczusaedq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#toczusaedq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#toczusaedq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#toczusaedq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#toczusaedq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#toczusaedq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#toczusaedq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#toczusaedq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#toczusaedq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#toczusaedq .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#toczusaedq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#toczusaedq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#toczusaedq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#toczusaedq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#toczusaedq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#toczusaedq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#toczusaedq .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#toczusaedq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#toczusaedq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#toczusaedq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#toczusaedq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#toczusaedq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#toczusaedq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#toczusaedq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#toczusaedq .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#toczusaedq .gt_left {
+  text-align: left;
+}
+
+#toczusaedq .gt_center {
+  text-align: center;
+}
+
+#toczusaedq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#toczusaedq .gt_font_normal {
+  font-weight: normal;
+}
+
+#toczusaedq .gt_font_bold {
+  font-weight: bold;
+}
+
+#toczusaedq .gt_font_italic {
+  font-style: italic;
+}
+
+#toczusaedq .gt_super {
+  font-size: 65%;
+}
+
+#toczusaedq .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="toczusaedq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">dcant</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">dcant_pos</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod | Depth: 100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">3.983</td>
+      <td class="gt_row gt_right">3.984</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod | Depth: 500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">13.559</td>
+      <td class="gt_row gt_right">13.575</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod | Depth: 1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">18.593</td>
+      <td class="gt_row gt_right">18.654</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod | Depth: 3000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">22.684</td>
+      <td class="gt_row gt_right">23.421</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">22.936</td>
+      <td class="gt_row gt_right">24.101</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs | Depth: 100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">4.188</td>
+      <td class="gt_row gt_right">4.217</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs | Depth: 500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">14.914</td>
+      <td class="gt_row gt_right">15.020</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs | Depth: 1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">21.219</td>
+      <td class="gt_row gt_right">21.452</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs | Depth: 3000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">29.181</td>
+      <td class="gt_row gt_right">30.199</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">obs | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">31.840</td>
+      <td class="gt_row gt_right">33.627</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth | Depth: 100</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">3.710</td>
+      <td class="gt_row gt_right">3.710</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth | Depth: 500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">13.589</td>
+      <td class="gt_row gt_right">13.596</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth | Depth: 1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">18.322</td>
+      <td class="gt_row gt_right">18.338</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth | Depth: 3000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">20.722</td>
+      <td class="gt_row gt_right">20.861</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">mod_truth | Depth: 10000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_right">21.055</td>
+      <td class="gt_row gt_right">21.220</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<pre class="r"><code>dcant_budget_global_bias %&gt;% 
+  ggplot(aes(dcant_bias, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  facet_grid(inv_depth ~ .)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_global-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global_bias %&gt;% 
+  ggplot(aes(dcant_bias_rel, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = &quot;dodge&quot;) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  facet_grid(inv_depth ~ .)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_global-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_global_bias %&gt;%
+  ggplot() +
+  geom_vline(xintercept = 0) +
+  geom_col(aes(mod, estimate, fill = &quot;eMLR&quot;),
+           position = &quot;dodge&quot;) +
+  geom_col(aes(mod_truth, estimate,
+               col = &quot;truth&quot;),
+           fill = &quot;transparent&quot;) +
+  scale_fill_manual(values = &quot;grey60&quot;) +
+  scale_color_manual(values = c(&quot;red&quot;, &quot;red&quot;)) +
+  theme(legend.title = element_blank()) +
+  labs(x = &quot;value&quot;) +
+  facet_grid(inv_depth ~ .)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_global-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="basin-aip" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Basin AIP</h1>
+<div id="standard-depth-1" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Standard depth</h2>
+<p>Results integrated over the upper 3000 m</p>
+<pre class="r"><code>dcant_budget_basin_AIP %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
+  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  geom_col() +
+  facet_grid(~data_source)</code></pre>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_basin_AIP-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_budget_basin_AIP %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard) %&gt;%
+  pivot_wider(names_from = estimate,
+              values_from = value) %&gt;% 
+  gt(
+    rowname_col = &quot;basin_AIP&quot;,
+    groupname_col = c(&quot;data_source&quot;, &quot;inv_depth&quot;),
+    row_group.sep = &quot; | Depth: &quot;
+  ) %&gt;%
+  summary_rows(groups = TRUE,
+               fns = list(total = &quot;sum&quot;))</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#sasutgqqmc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#sasutgqqmc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#sasutgqqmc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#sasutgqqmc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#sasutgqqmc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#sasutgqqmc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#sasutgqqmc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#sasutgqqmc .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#sasutgqqmc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#sasutgqqmc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#sasutgqqmc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#sasutgqqmc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#sasutgqqmc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#sasutgqqmc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sasutgqqmc .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#sasutgqqmc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#sasutgqqmc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#sasutgqqmc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#sasutgqqmc .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#sasutgqqmc .gt_left {
+  text-align: left;
+}
+
+#sasutgqqmc .gt_center {
+  text-align: center;
+}
+
+#sasutgqqmc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#sasutgqqmc .gt_font_normal {
+  font-weight: normal;
+}
+
+#sasutgqqmc .gt_font_bold {
+  font-weight: bold;
+}
+
+#sasutgqqmc .gt_font_italic {
+  font-style: italic;
+}
+
+#sasutgqqmc .gt_super {
+  font-size: 65%;
+}
+
+#sasutgqqmc .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="sasutgqqmc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -2629,795 +3517,24 @@ dcant_budget_basin_AIP_bias %&gt;%
   geom_vline(xintercept = 0) +
   geom_col() +
   scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_budget_standard_depth-2">
-Past versions of dcant_budget_standard_depth-2.png
-</button>
-</p>
-<div id="fig-dcant_budget_standard_depth-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-2.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_basin_AIP-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_AIP_bias %&gt;% 
   filter(inv_depth == params_global$inventory_depth_standard) %&gt;% 
   ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
   geom_vline(xintercept = 0) +
   geom_col(position = &quot;dodge&quot;) +
   scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_budget_standard_depth-3">
-Past versions of dcant_budget_standard_depth-3.png
-</button>
-</p>
-<div id="fig-dcant_budget_standard_depth-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/dcant_budget_standard_depth-3.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/analysis_budgets.Rmd/dcant_budget_standard_depth_basin_AIP-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-</div>
-<div id="other-depths" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Other depths</h2>
+<div id="other-depths-1" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Other depths</h2>
 <p>Results integrated over the upper 100, 500, 1000, 3000, 10^{4} m</p>
 <pre class="r"><code>dcant_budget_basin_AIP %&gt;%
   ggplot(aes(data_source, value, fill=basin_AIP)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
   facet_grid(inv_depth ~ estimate, scales = &quot;free_y&quot;)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_budget_other_depth-1">
-Past versions of cant_budget_other_depth-1.png
-</button>
-</p>
-<div id="fig-cant_budget_other_depth-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">910d64a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">1cbf907</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/955f5dc28f0d8776afcd0c73303c490871b1d7dd/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">955f5dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d054c39032818d90721a3ce901b8b90d57e4a4c9/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">d054c39</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4fcd066e65b3b03d2a534cbb1cc9269cc28d0b99/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">4fcd066</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a8d5f88412d805c514662697901def8a9729e89/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">7a8d5f8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e0660fedb74c040521ee70977179ee8243e3706d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">e0660fe</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/69c79d019afe3637587da96935eb6d7ee440d57d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">69c79d0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-08
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/177290392858f03833092bce740ec20b67727c98/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">1772903</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594ed9ae3d8963d783944873c913ae1f5c25cb42/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">594ed9a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/db7df0e12e9e0b7d120efa2ca3c01848c62c7723/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">db7df0e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2edc7919a3cd1d74571728102907f95dae4809e4/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">2edc791</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">be90356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">d37a85d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-31
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4b7a5eeb1907b55b4a4d8976810240ff363005d5/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">4b7a5ee</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/25bd183bcad9ee32d58ce0947484428a9e9390f3/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">25bd183</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/62bd5741baabdfe5402cd5bea3bfe99a9fcf0328/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">62bd574</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c56c39b7481d779c5a7cdb7acdb731edc00b9ac/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">7c56c39</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-19
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">52e7583</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/969e631cefba5c3de4548e64f39eb20894ce498b/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">969e631</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d2a83bc8ff1234165bfa77b6af9bdf176594be61/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">d2a83bc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">c0a47df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">50290e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a00ec94b0459e6e44327e43abff7d01948f5104f/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">a00ec94</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">b6fe355</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">81b7c6d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0a6099c516e625257af05687fef880a33bab057a/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">0a6099c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ddec5b76211f07c3fcd776842a5e969c6029f6db/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">ddec5b7</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/29edae5566c6efcb0fd289fa145c80bb1b1b374f/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">29edae5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/099d5660ad9a627fd83cc615223de07a473021a2/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">099d566</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">bb44686</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bf40480d847eaae9f433e7a81cbf33488eb3ed58/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">bf40480</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">9f31fe3</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f6ed7dec44bd17a9bad5f04ec3bf12bdf553bc21/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-1.png" target="_blank">f6ed7de</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_basin_AIP-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_AIP %&gt;%
   pivot_wider(names_from = estimate,
               values_from = value) %&gt;% 
@@ -3432,7 +3549,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#yqckjgrtnj .gt_table {
+#lscpkeznme .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -3457,7 +3574,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_heading {
+#lscpkeznme .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3469,7 +3586,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_title {
+#lscpkeznme .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3479,7 +3596,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#yqckjgrtnj .gt_subtitle {
+#lscpkeznme .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3489,13 +3606,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#yqckjgrtnj .gt_bottom_border {
+#lscpkeznme .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_col_headings {
+#lscpkeznme .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3510,7 +3627,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_col_heading {
+#lscpkeznme .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3530,7 +3647,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#yqckjgrtnj .gt_column_spanner_outer {
+#lscpkeznme .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3542,15 +3659,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#yqckjgrtnj .gt_column_spanner_outer:first-child {
+#lscpkeznme .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yqckjgrtnj .gt_column_spanner_outer:last-child {
+#lscpkeznme .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yqckjgrtnj .gt_column_spanner {
+#lscpkeznme .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3562,7 +3679,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#yqckjgrtnj .gt_group_heading {
+#lscpkeznme .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3584,7 +3701,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#yqckjgrtnj .gt_empty_group_heading {
+#lscpkeznme .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3599,15 +3716,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#yqckjgrtnj .gt_from_md > :first-child {
+#lscpkeznme .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yqckjgrtnj .gt_from_md > :last-child {
+#lscpkeznme .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yqckjgrtnj .gt_row {
+#lscpkeznme .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3626,7 +3743,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#yqckjgrtnj .gt_stub {
+#lscpkeznme .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3638,7 +3755,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#yqckjgrtnj .gt_summary_row {
+#lscpkeznme .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3648,7 +3765,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#yqckjgrtnj .gt_first_summary_row {
+#lscpkeznme .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3658,7 +3775,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_grand_summary_row {
+#lscpkeznme .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3668,7 +3785,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#yqckjgrtnj .gt_first_grand_summary_row {
+#lscpkeznme .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3678,11 +3795,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_striped {
+#lscpkeznme .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yqckjgrtnj .gt_table_body {
+#lscpkeznme .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3691,7 +3808,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_footnotes {
+#lscpkeznme .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3705,13 +3822,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_footnote {
+#lscpkeznme .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#yqckjgrtnj .gt_sourcenotes {
+#lscpkeznme .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3725,46 +3842,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#yqckjgrtnj .gt_sourcenote {
+#lscpkeznme .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#yqckjgrtnj .gt_left {
+#lscpkeznme .gt_left {
   text-align: left;
 }
 
-#yqckjgrtnj .gt_center {
+#lscpkeznme .gt_center {
   text-align: center;
 }
 
-#yqckjgrtnj .gt_right {
+#lscpkeznme .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yqckjgrtnj .gt_font_normal {
+#lscpkeznme .gt_font_normal {
   font-weight: normal;
 }
 
-#yqckjgrtnj .gt_font_bold {
+#lscpkeznme .gt_font_bold {
   font-weight: bold;
 }
 
-#yqckjgrtnj .gt_font_italic {
+#lscpkeznme .gt_font_italic {
   font-style: italic;
 }
 
-#yqckjgrtnj .gt_super {
+#lscpkeznme .gt_super {
   font-size: 65%;
 }
 
-#yqckjgrtnj .gt_footnote_marks {
+#lscpkeznme .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="yqckjgrtnj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="lscpkeznme" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -4129,678 +4246,25 @@ jens-daniel-mueller
   geom_col() +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   facet_grid(inv_depth ~ .)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_budget_other_depth-2">
-Past versions of cant_budget_other_depth-2.png
-</button>
-</p>
-<div id="fig-cant_budget_other_depth-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/910d64a7981f4fc115772c57d0ef6fbfa29260f5/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">910d64a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1cbf907f51cc206d9691339d3034e194e33e5f18/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">1cbf907</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/955f5dc28f0d8776afcd0c73303c490871b1d7dd/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">955f5dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-29
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d054c39032818d90721a3ce901b8b90d57e4a4c9/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">d054c39</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4fcd066e65b3b03d2a534cbb1cc9269cc28d0b99/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">4fcd066</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7a8d5f88412d805c514662697901def8a9729e89/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">7a8d5f8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e0660fedb74c040521ee70977179ee8243e3706d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">e0660fe</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c6b3da6314c42c7136be960284bc14ee2c582484/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">c6b3da6</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7e1f40713adb075a5b7defc4eaaac9c487128a8c/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">7e1f407</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2cbe18c008268bc248f0359458e2d87fc1039285/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">2cbe18c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/69c79d019afe3637587da96935eb6d7ee440d57d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">69c79d0</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-08
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/177290392858f03833092bce740ec20b67727c98/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">1772903</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-07
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/594ed9ae3d8963d783944873c913ae1f5c25cb42/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">594ed9a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/db7df0e12e9e0b7d120efa2ca3c01848c62c7723/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">db7df0e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2edc7919a3cd1d74571728102907f95dae4809e4/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">2edc791</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/207339da513cae872b923fff856fc65cb3b8112d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">207339d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/315710b788baace49422ac3541254a690f4e6807/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">315710b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-03
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be90356df2057730a6648228ad3bf92bb1501122/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">be90356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-06-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d37a85d93d64b3911de15ed32bbcdd466410bd8c/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">d37a85d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-31
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4b7a5eeb1907b55b4a4d8976810240ff363005d5/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">4b7a5ee</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-28
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/25bd183bcad9ee32d58ce0947484428a9e9390f3/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">25bd183</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-26
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/62bd5741baabdfe5402cd5bea3bfe99a9fcf0328/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">62bd574</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-20
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7c56c39b7481d779c5a7cdb7acdb731edc00b9ac/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">7c56c39</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-19
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/52e75837a3de567c500196c701c4353487d8efe7/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">52e7583</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/969e631cefba5c3de4548e64f39eb20894ce498b/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">969e631</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-05-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d2a83bc8ff1234165bfa77b6af9bdf176594be61/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">d2a83bc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0a47df4bb34c54ca7f9ac7006cf39fd59b8b3cb/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">c0a47df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/50290e80e8c14c57dd6a4088006c46f243a55b4d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">50290e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a00ec94b0459e6e44327e43abff7d01948f5104f/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">a00ec94</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b6fe355a4811d3327b624d701b44ef31ecbfa660/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">b6fe355</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/81b7c6dfa5e2d00f0ad642b4f7ccaeb7d7281bc8/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">81b7c6d</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0a6099c516e625257af05687fef880a33bab057a/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">0a6099c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ddec5b76211f07c3fcd776842a5e969c6029f6db/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">ddec5b7</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-15
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/29edae5566c6efcb0fd289fa145c80bb1b1b374f/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">29edae5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/099d5660ad9a627fd83cc615223de07a473021a2/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">099d566</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb4468618fc7d581f8aa9a224478654c88f6a3cc/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">bb44686</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-14
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bf40480d847eaae9f433e7a81cbf33488eb3ed58/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">bf40480</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9f31fe315444a0eeeb4293e36d56ca334ab29dc1/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">9f31fe3</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6eecb54e5e8ac389935e93ecd71fe2e041256595/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-2.png" target="_blank">6eecb54</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-04-13
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_basin_AIP-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_AIP_bias %&gt;% 
   ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
   geom_vline(xintercept = 0) +
   geom_col(position = &quot;dodge&quot;) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   facet_grid(inv_depth ~ .)</code></pre>
-<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cant_budget_other_depth-3">
-Past versions of cant_budget_other_depth-3.png
-</button>
-</p>
-<div id="fig-cant_budget_other_depth-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7592793a6d0e9f4685bb10a9ef07afa8339a319/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">d759279</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/426b2df6e58935d1412e3ee622b9e5f920fc21e0/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">426b2df</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-21
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/971ce870f7e33417f57779ff49b0e53e334920aa/docs/figure/analysis_budgets.Rmd/cant_budget_other_depth-3.png" target="_blank">971ce87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-13
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/analysis_budgets.Rmd/cant_budget_other_depth_basin_AIP-3.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-</div>
-</div>
-<div id="write-csv" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> Write csv</h1>
+<div id="write-files" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Write files</h1>
 <pre class="r"><code>dcant_budget_basin_AIP_bias %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;dcant_budget_basin_AIP_bias.csv&quot;, sep = &quot;&quot;))</code></pre>
+                  &quot;dcant_budget_basin_AIP_bias.csv&quot;, sep = &quot;&quot;))
+
+dcant_budget_global_bias %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;dcant_budget_global_bias.csv&quot;, sep = &quot;&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

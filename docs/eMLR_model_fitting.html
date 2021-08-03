@@ -616,16 +616,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeeb004536e47b886f37c40bfe26d0919954858b66targetblankeb00453a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/eb004536e47b886f37c40bfe26d0919954858b66" target="_blank">eb00453</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeeb004536e47b886f37c40bfe26d0919954858b66targetblankeb00453a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/eb004536e47b886f37c40bfe26d0919954858b66" target="_blank">eb00453</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -676,6 +676,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4d7bb5a4678c45b5893f8202162e98b37f3cf28d/analysis/eMLR_model_fitting.Rmd" target="_blank">4d7bb5a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+test rlm model fitting
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/eMLR_model_fitting.html" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4121,10 +4155,25 @@ GLODAP_nested_lm &lt;- expand_grid(
 )
 
 # fit models and extract tidy model output
+if (params_local$MLR_function == &quot;lm&quot;) {
 GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
   mutate(
     fit = map2(.x = data, .y = model, 
-               ~ lm(as.formula(.y), data = .x)),
+               ~ lm(as.formula(.y), data = .x))
+  )
+}
+
+if (params_local$MLR_function == &quot;rlm&quot;) {
+GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm %&gt;% 
+  mutate(
+    fit = map2(.x = data, .y = model, 
+               ~ lm(as.formula(.y), data = .x))
+  )
+}
+
+
+GLODAP_nested_lm_fit &lt;- GLODAP_nested_lm_fit %&gt;% 
+  mutate(
     tidied = map(fit, tidy),
     glanced = map(fit, glance),
     augmented = map(fit, augment),
@@ -31628,6 +31677,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -32482,6 +32542,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_all-2.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -33089,6 +33160,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">88f7356</a>
@@ -34000,6 +34082,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -34607,6 +34700,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">88f7356</a>
@@ -35741,6 +35845,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">88f7356</a>
@@ -37994,6 +38109,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -38926,6 +39052,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">88f7356</a>
@@ -39877,6 +40014,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -40541,6 +40689,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -41175,6 +41334,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all_property_property-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all_property_property-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -41283,6 +41453,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all_histogram-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_all_histogram-1.png" target="_blank">88f7356</a>
@@ -41394,6 +41575,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_property_property-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_property_property-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -41502,6 +41694,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_histogram-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_histogram-1.png" target="_blank">88f7356</a>
@@ -41626,6 +41829,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">88f7356</a>
@@ -42461,6 +42675,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">88f7356</a>
@@ -43317,6 +43542,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -44092,6 +44328,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">88f7356</a>
@@ -44904,6 +45151,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -45426,6 +45684,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" target="_blank">88f7356</a>
@@ -46018,6 +46287,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-5.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-5.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -46188,6 +46468,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-6.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-6.png" target="_blank">88f7356</a>
@@ -46385,6 +46676,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">88f7356</a>
@@ -47164,6 +47466,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -47732,6 +48045,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-3.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-3.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -47918,6 +48242,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">88f7356</a>
@@ -48769,6 +49104,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -48928,6 +49274,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-2.png" target="_blank">88f7356</a>
@@ -49091,6 +49448,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-3.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-3.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -49250,6 +49618,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-4.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-4.png" target="_blank">88f7356</a>
@@ -49413,6 +49792,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-5.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-5.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -49572,6 +49962,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-6.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-6.png" target="_blank">88f7356</a>
@@ -49735,6 +50136,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-7.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-7.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -49894,6 +50306,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-8.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-8.png" target="_blank">88f7356</a>
@@ -50057,6 +50480,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-9.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-9.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -50216,6 +50650,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-10.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-10.png" target="_blank">88f7356</a>
@@ -50379,6 +50824,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-11.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-11.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -50540,6 +50996,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-12.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-12.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -50688,6 +51155,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-13.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-13.png" target="_blank">88f7356</a>
@@ -50849,6 +51327,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-14.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-14.png" target="_blank">88f7356</a>
@@ -51162,6 +51651,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-16.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-16.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -51321,6 +51821,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-17.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-17.png" target="_blank">88f7356</a>
@@ -51484,6 +51995,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-18.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-18.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -51643,6 +52165,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-19.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-19.png" target="_blank">88f7356</a>
@@ -51806,6 +52339,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-20.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-20.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -51965,6 +52509,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-21.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-21.png" target="_blank">88f7356</a>
@@ -52128,6 +52683,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-22.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-22.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -52287,6 +52853,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-23.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-23.png" target="_blank">88f7356</a>
@@ -52461,6 +53038,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-24.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-24.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -52620,6 +53208,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-25.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-25.png" target="_blank">88f7356</a>
@@ -52783,6 +53382,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-26.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-26.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -52942,6 +53552,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-27.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-27.png" target="_blank">88f7356</a>
@@ -53105,6 +53726,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-28.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-28.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -53264,6 +53896,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-29.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-29.png" target="_blank">88f7356</a>
@@ -53427,6 +54070,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-30.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-30.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -53586,6 +54240,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-31.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-31.png" target="_blank">88f7356</a>
@@ -53749,6 +54414,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-32.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-32.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -53897,6 +54573,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-33.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-33.png" target="_blank">88f7356</a>
@@ -54060,6 +54747,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-34.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-34.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -54208,6 +54906,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-35.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-35.png" target="_blank">88f7356</a>
@@ -54397,6 +55106,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-1.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -54556,6 +55276,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-2.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-2.png" target="_blank">88f7356</a>
@@ -54719,6 +55450,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-3.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-3.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -54878,6 +55620,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-4.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-4.png" target="_blank">88f7356</a>
@@ -55041,6 +55794,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-5.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-5.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -55200,6 +55964,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-6.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-6.png" target="_blank">88f7356</a>
@@ -55363,6 +56138,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-7.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-7.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -55522,6 +56308,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-8.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-8.png" target="_blank">88f7356</a>
@@ -55685,6 +56482,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-9.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-9.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -55844,6 +56652,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-10.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-10.png" target="_blank">88f7356</a>
@@ -56007,6 +56826,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-11.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-11.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -56168,6 +56998,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-12.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-12.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -56316,6 +57157,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-13.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-13.png" target="_blank">88f7356</a>
@@ -56477,6 +57329,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-14.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-14.png" target="_blank">88f7356</a>
@@ -56790,6 +57653,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-16.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-16.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -56951,6 +57825,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-17.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-17.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -57099,6 +57984,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-18.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-18.png" target="_blank">88f7356</a>
@@ -57262,6 +58158,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-19.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-19.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -57421,6 +58328,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-20.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-20.png" target="_blank">88f7356</a>
@@ -57584,6 +58502,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-21.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-21.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -57743,6 +58672,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-22.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-22.png" target="_blank">88f7356</a>
@@ -57906,6 +58846,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-23.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-23.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -58065,6 +59016,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-24.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-24.png" target="_blank">88f7356</a>
@@ -58228,6 +59190,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-25.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-25.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -58387,6 +59360,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-26.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-26.png" target="_blank">88f7356</a>
@@ -58550,6 +59534,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-27.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-27.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -58698,6 +59693,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-28.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-28.png" target="_blank">88f7356</a>
@@ -58861,6 +59867,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-29.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-29.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -59022,6 +60039,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-30.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-30.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -59170,6 +60198,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-31.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-31.png" target="_blank">88f7356</a>
@@ -59333,6 +60372,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-32.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-32.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -59494,6 +60544,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-33.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-33.png" target="_blank">88f7356</a>
 </td>
 <td>
@@ -59642,6 +60703,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-34.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-34.png" target="_blank">88f7356</a>
@@ -59803,6 +60875,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_n_predictors-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_n_predictors-1.png" target="_blank">88f7356</a>
@@ -60334,6 +61417,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a53656d67ee9946c1da7d70f1d9acf7fdd47f82b/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_type_predictor-1.png" target="_blank">a53656d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/eMLR_model_fitting.Rmd/vif_distribution_type_predictor-1.png" target="_blank">88f7356</a>
