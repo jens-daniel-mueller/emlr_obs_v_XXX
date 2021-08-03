@@ -1,5 +1,5 @@
 ---
-title: "Analysis of cant estimates"
+title: "Analysis of dcant budgets"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -82,6 +82,8 @@ dcant estimates from this sensitivity case:
 
 ```{r read_dcant_budget_files}
 
+# integrated per basin_AIP
+
 dcant_budget_basin_AIP <-
   read_csv(paste(path_version_data,
                  "dcant_budget_basin_AIP.csv",
@@ -103,6 +105,31 @@ dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
 
 rm(dcant_budget_basin_AIP_mod_truth)
 
+# globally integrated
+
+dcant_budget_global <-
+  read_csv(paste(path_version_data,
+                 "dcant_budget_global.csv",
+                 sep = "")) %>% 
+  filter(method == "total") %>% 
+  select(-method)
+
+dcant_budget_global_mod_truth <-
+  read_csv(paste(
+    path_version_data,
+    "dcant_budget_global_mod_truth.csv",
+    sep = ""
+  )) %>% 
+  filter(method == "total") %>% 
+  select(-method)
+
+dcant_budget_global <- bind_rows(dcant_budget_global,
+                                    dcant_budget_global_mod_truth)
+
+rm(dcant_budget_global_mod_truth)
+
+# reference year
+
 tref <-
   read_csv(paste(path_version_data,
                  "tref.csv",
@@ -121,15 +148,145 @@ duration
 
 ```
 
-
-# dcant budgets
+# Global
 
 ## Standard depth
 
 Results integrated over the upper `r params_global$inventory_depth_standard` m
 
-```{r dcant_budget_standard_depth}
+```{r dcant_budget_standard_depth_global}
 
+
+dcant_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value, fill = data_source)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col(position = position_dodge2())
+
+dcant_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  select(-inv_depth) %>% 
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    groupname_col = c("data_source")
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
+
+
+dcant_budget_global_bias <- dcant_budget_global %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(data_source, inv_depth, estimate, value) %>%
+  pivot_wider(names_from = data_source,
+              values_from = value) %>%
+  mutate(dcant_bias = mod - mod_truth,
+         dcant_bias_rel = dcant_bias / mod_truth * 100)
+
+dcant_budget_global_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(dcant_bias, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2")
+
+dcant_budget_global_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(dcant_bias_rel, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2")
+
+dcant_budget_global_bias %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot() +
+  geom_col(aes(estimate, mod,
+               fill = "eMLR")) +
+  geom_col(aes(estimate, mod_truth,
+               col = "truth"),
+           fill = "transparent") +
+  scale_fill_manual(values = "grey60") +
+  scale_color_manual(values = c("red", "red")) +
+  theme(legend.title = element_blank()) +
+  labs(y = "value")
+  # geom_segment(aes(
+  #   x = estimate,
+  #   y = mod,
+  #   xend = estimate,
+  #   yend = mod_truth,
+  #   col = "truth"
+  # )) +
+  # geom_point(aes(x = estimate,
+  #                y = mod_truth,
+  #                col = "truth"))
+
+
+```
+
+## Other depths
+
+Results integrated over the upper `r params_global$inventory_depths` m
+
+```{r cant_budget_other_depth_global, fig.asp=1}
+
+dcant_budget_global <- dcant_budget_global %>%
+  mutate(inv_depth = as.factor(inv_depth))
+
+dcant_budget_global %>%
+  ggplot() +
+  scale_fill_viridis_d() +
+  geom_col(aes(data_source, value, fill = inv_depth),
+           position = position_dodge2()) +
+  facet_grid(. ~ estimate, scales = "free_y")
+
+dcant_budget_global %>%
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    groupname_col = c("data_source", "inv_depth"),
+    row_group.sep = " | Depth: "
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
+
+
+dcant_budget_global_bias %>% 
+  ggplot(aes(dcant_bias, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col() +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(inv_depth ~ .)
+
+dcant_budget_global_bias %>% 
+  ggplot(aes(dcant_bias_rel, estimate)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(inv_depth ~ .)
+
+dcant_budget_global_bias %>%
+  ggplot() +
+  geom_vline(xintercept = 0) +
+  geom_col(aes(mod, estimate, fill = "eMLR"),
+           position = "dodge") +
+  geom_col(aes(mod_truth, estimate,
+               col = "truth"),
+           fill = "transparent") +
+  scale_fill_manual(values = "grey60") +
+  scale_color_manual(values = c("red", "red")) +
+  theme(legend.title = element_blank()) +
+  labs(x = "value") +
+  facet_grid(inv_depth ~ .)
+
+```
+
+# Basin AIP
+
+## Standard depth
+
+Results integrated over the upper `r params_global$inventory_depth_standard` m
+
+```{r dcant_budget_standard_depth_basin_AIP}
 
 dcant_budget_basin_AIP %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>%
@@ -180,7 +337,7 @@ dcant_budget_basin_AIP_bias %>%
 
 Results integrated over the upper `r params_global$inventory_depths` m
 
-```{r cant_budget_other_depth, fig.asp=1}
+```{r cant_budget_other_depth_basin_AIP, fig.asp=1}
 
 dcant_budget_basin_AIP %>%
   ggplot(aes(data_source, value, fill=basin_AIP)) +
@@ -218,13 +375,17 @@ dcant_budget_basin_AIP_bias %>%
 ```
 
 
-# Write csv
+# Write files
 
 ```{r write_cant_files}
 
 dcant_budget_basin_AIP_bias %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_basin_AIP_bias.csv", sep = ""))
+
+dcant_budget_global_bias %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global_bias.csv", sep = ""))
 
 ```
 

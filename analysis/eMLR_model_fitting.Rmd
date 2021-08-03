@@ -194,10 +194,25 @@ GLODAP_nested_lm <- expand_grid(
 )
 
 # fit models and extract tidy model output
+if (params_local$MLR_function == "lm") {
 GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
   mutate(
     fit = map2(.x = data, .y = model, 
-               ~ lm(as.formula(.y), data = .x)),
+               ~ lm(as.formula(.y), data = .x))
+  )
+}
+
+if (params_local$MLR_function == "rlm") {
+GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
+  mutate(
+    fit = map2(.x = data, .y = model, 
+               ~ lm(as.formula(.y), data = .x))
+  )
+}
+
+
+GLODAP_nested_lm_fit <- GLODAP_nested_lm_fit %>% 
+  mutate(
     tidied = map(fit, tidy),
     glanced = map(fit, glance),
     augmented = map(fit, augment),

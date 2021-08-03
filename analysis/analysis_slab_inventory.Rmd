@@ -166,7 +166,7 @@ dcant_slab %>%
       df = .x,
       subtitle_text = paste("data_source:", unique(.x$data_source),
                             "| Neutral density:", unique(.x$gamma_slab)),
-      var = "n_layer"
+      var = "dcant_pos"
       ) +
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
@@ -361,6 +361,44 @@ dcant_slab %>%
         aes(lon, lat),fill = "black")
   )
 
+
+
+```
+
+
+# Depth levels
+
+```{r n_layers_gamma_slab_maps}
+
+dcant_slab %>%
+  group_by(gamma_slab, data_source) %>%
+  group_split() %>% 
+  # head(4) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      title_text = "Number of depth levels within slab",
+      subtitle_text = paste("data_source:", unique(.x$data_source),
+                            "| Neutral density:", unique(.x$gamma_slab)),
+      var = "n_layer"
+      ) +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == "both"),
+        aes(lon, lat), fill = "red") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = "grey50") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = "black")
+  )
 
 
 ```
