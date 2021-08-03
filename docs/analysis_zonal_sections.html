@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree02fbeaea398c78b4a9002656aa07ee12ef30e6a6targetblank02fbeaea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/02fbeaea398c78b4a9002656aa07ee12ef30e6a6" target="_blank">02fbeae</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d7bb5a4678c45b5893f8202162e98b37f3cf28dtargetblank4d7bb5aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree02fbeaea398c78b4a9002656aa07ee12ef30e6a6targetblank02fbeaea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d7bb5a4678c45b5893f8202162e98b37f3cf28d" target="_blank">4d7bb5a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/02fbeaea398c78b4a9002656aa07ee12ef30e6a6" target="_blank">02fbeae</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -674,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/02fbeaea398c78b4a9002656aa07ee12ef30e6a6/analysis/analysis_zonal_sections.Rmd" target="_blank">02fbeae</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+test with strict CANYON-B offset threshold
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/0f0d5e55c394fa59350c294faf5dfec7caef98af/docs/analysis_zonal_sections.html" target="_blank">0f0d5e5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2152,9 +2186,9 @@ dcant_zonal_method &lt;- bind_rows(dcant_zonal_method,
 <p>In a first series of plots we explore the distribution of dcant, taking only positive estimates into account (positive here refers to the mean dcant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
 <pre class="r"><code>dcant_pos_zonal_bias &lt;- dcant_zonal %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;)) %&gt;%
-  select(lat, depth, basin_AIP, data_source, dcant_pos_mean) %&gt;%
+  select(lat, depth, basin_AIP, data_source, dcant_pos) %&gt;%
   pivot_wider(names_from = data_source,
-              values_from = dcant_pos_mean) %&gt;%
+              values_from = dcant_pos) %&gt;%
   mutate(dcant_pos_bias = mod - mod_truth)
 
 dcant_pos_zonal_bias &lt;- full_join(
@@ -2173,7 +2207,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         df = dcant_zonal %&gt;%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = &quot;dcant_pos_mean&quot;,
+        var = &quot;dcant_pos&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| data_source:&quot;, i_data_source)
       )
@@ -3709,9 +3743,9 @@ jens-daniel-mueller
 <p>In a second series of plots we explore the distribution of all dcant, taking positive and negative estimates into account.</p>
 <pre class="r"><code>dcant_zonal_bias &lt;- dcant_zonal %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;)) %&gt;%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %&gt;%
+  select(lat, depth, basin_AIP, data_source, dcant) %&gt;%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %&gt;%
+              values_from = dcant) %&gt;%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias &lt;- full_join(
@@ -3729,7 +3763,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         df = dcant_zonal %&gt;%
           filter(basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = &quot;dcant_mean&quot;,
+        var = &quot;dcant&quot;,
         gamma = &quot;gamma_mean&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| data_source:&quot;, i_data_source))
@@ -5267,9 +5301,9 @@ jens-daniel-mueller
 <pre class="r"><code>dcant_zonal_bias_method_surface &lt;- dcant_zonal_method %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;),
          method == &quot;surface&quot;) %&gt;%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %&gt;%
+  select(lat, depth, basin_AIP, data_source, dcant) %&gt;%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %&gt;%
+              values_from = dcant) %&gt;%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias_method_surface &lt;- full_join(
@@ -5288,7 +5322,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
           filter(method == &quot;surface&quot;,
                  basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = &quot;dcant_mean&quot;,
+        var = &quot;dcant&quot;,
         plot_slabs = &quot;n&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| data_source:&quot;, i_data_source))
@@ -6432,9 +6466,9 @@ jens-daniel-mueller
 <pre class="r"><code>dcant_zonal_bias_method_deep &lt;- dcant_zonal_method %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;),
          method == &quot;eMLR&quot;) %&gt;%
-  select(lat, depth, basin_AIP, data_source, dcant_mean) %&gt;%
+  select(lat, depth, basin_AIP, data_source, dcant) %&gt;%
   pivot_wider(names_from = data_source,
-              values_from = dcant_mean) %&gt;%
+              values_from = dcant) %&gt;%
   mutate(dcant_bias = mod - mod_truth)
 
 dcant_zonal_bias_method_deep &lt;- full_join(
@@ -6453,7 +6487,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
           filter(method == &quot;eMLR&quot;,
                  basin_AIP == i_basin_AIP,
                  data_source == i_data_source),
-        var = &quot;dcant_mean&quot;,
+        var = &quot;dcant&quot;,
         subtitle_text =
           paste(&quot;Basin:&quot;, i_basin_AIP, &quot;| data_source:&quot;, i_data_source))
     )
