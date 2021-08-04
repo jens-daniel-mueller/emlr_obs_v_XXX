@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree92bb6b36601575f7d130ef83b1ad161bd06e1a3atargetblank92bb6b3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/92bb6b36601575f7d130ef83b1ad161bd06e1a3a" target="_blank">92bb6b3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree749971808fee53f31cc7d429c08838704b57d080targetblank7499718a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/749971808fee53f31cc7d429c08838704b57d080" target="_blank">7499718</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree92bb6b36601575f7d130ef83b1ad161bd06e1a3atargetblank92bb6b3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree749971808fee53f31cc7d429c08838704b57d080targetblank7499718a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/92bb6b36601575f7d130ef83b1ad161bd06e1a3a" target="_blank">92bb6b3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/749971808fee53f31cc7d429c08838704b57d080" target="_blank">7499718</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -634,8 +634,6 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
-    Modified:   analysis/_site.yml
-    Modified:   analysis/analysis_anomalous_changes.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -676,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/749971808fee53f31cc7d429c08838704b57d080/analysis/analysis_column_inventory.Rmd" target="_blank">7499718</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-04
+</td>
+<td>
+test with eMLR to surface
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/1c597ab15395ccbc93de85b7f4ed8107062efb7a/docs/analysis_column_inventory.html" target="_blank">1c597ab</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-04
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -3219,6 +3251,7 @@ jens-daniel-mueller
 </div>
 <div id="surface" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> Surface</h2>
+<pre class="r"><code>surface_data &lt;- nrow(dcant_inv_method %&gt;% filter(method == &quot;surface&quot;)) &gt; 0</code></pre>
 <pre class="r"><code>dcant_inv_bias_method &lt;- dcant_inv_method %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;mod_truth&quot;),
          method == &quot;surface&quot;) %&gt;%
@@ -3234,90 +3267,9 @@ p_map_cant_inv(
     col = &quot;bias&quot;,
     subtitle_text = &quot;Surface only | data_source: mod - mod_truth&quot;,
     # breaks = c(-Inf, seq(-3,3,0.5), Inf)
-    )</code></pre>
-<p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map_method-1">
-Past versions of dcant_all_inventory_map_method-1.png
-</button>
-</p>
-<div id="fig-dcant_all_inventory_map_method-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-1.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>dcant_inv_method %&gt;%
+    )
+
+dcant_inv_method %&gt;%
   filter(method == &quot;surface&quot;) %&gt;%
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
@@ -3328,257 +3280,6 @@ jens-daniel-mueller
     subtitle_text = paste(&quot;data_source:&quot;, unique(.x$data_source)),
     breaks = c(-Inf,seq(0,4,0.5), Inf)
   ))</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map_method-2">
-Past versions of dcant_all_inventory_map_method-2.png
-</button>
-</p>
-<div id="fig-dcant_all_inventory_map_method-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-2.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map_method-3">
-Past versions of dcant_all_inventory_map_method-3.png
-</button>
-</p>
-<div id="fig-dcant_all_inventory_map_method-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-3.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[3]]</code></pre>
-<p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map_method-4">
-Past versions of dcant_all_inventory_map_method-4.png
-</button>
-</p>
-<div id="fig-dcant_all_inventory_map_method-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/88f73565ec1f91f76f35da482c915113cb9b5ae1/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" target="_blank">88f7356</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-08-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/127b801430fd1514ddfbef2754dee713b95cee8e/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" target="_blank">127b801</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-24
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/912d90e01f922d998bc2df5749346d4f7e03c37a/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" target="_blank">912d90e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2477316bf562b71880f94a298c940714320f4e1d/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" target="_blank">2477316</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9ccc00f675849a895833a815c46527ba717e032/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_method-4.png" target="_blank">c9ccc00</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-07-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 </div>
 <div id="write-files" class="section level1" number="5">
@@ -3588,9 +3289,11 @@ jens-daniel-mueller
   write_csv(paste0(path_version_data,
                    &quot;dcant_inv_bias.csv&quot;))
 
+if (surface_data){
 dcant_inv_bias_method %&gt;%
   write_csv(paste0(path_version_data,
-                   &quot;dcant_inv_bias_method.csv&quot;))</code></pre>
+                   &quot;dcant_inv_bias_method.csv&quot;))
+}</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
