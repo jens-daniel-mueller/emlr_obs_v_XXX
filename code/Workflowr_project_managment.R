@@ -32,9 +32,8 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "rebuild: complete revision",
+message = "test with intermediate CANYON-B offset threshold",
 republish = TRUE)
-
 
 
 # Push latest version to GitHub
@@ -62,11 +61,11 @@ files <- c(
   "analysis_anomalous_changes.Rmd"
 )
 
-Version_IDs <- list.files(
+Version_IDs_temp <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_")
+  pattern = "v_13")
 
-Version_IDs <- Version_IDs[1:10]
+Version_IDs <- c(Version_IDs, Version_IDs_temp)
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
