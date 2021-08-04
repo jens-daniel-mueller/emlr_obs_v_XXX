@@ -126,6 +126,7 @@ Standard deviation across dcant from all MLR models was calculate for each grid 
 ```{r dcant_sections_sd_models, fig.asp=0.6}
 
 dcant_zonal %>%
+  filter(data_source != "mod_truth") %>% 
   group_by(basin_AIP, data_source) %>%
   group_split() %>%
   # head(1) %>%
@@ -158,7 +159,7 @@ Standard deviation of mean dcant values was calculate across all longitudes. Thi
 dcant_zonal %>%
   group_by(basin_AIP, data_source) %>%
   group_split() %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ p_section_zonal(
       df = .x,
