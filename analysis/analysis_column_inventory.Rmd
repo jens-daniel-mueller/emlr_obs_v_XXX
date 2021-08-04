@@ -193,7 +193,14 @@ dcant_inv %>%
 
 ## Surface
 
-```{r dcant_all_inventory_map_method, fig.asp=0.5}
+```{r test_surface_data}
+
+surface_data <- nrow(dcant_inv_method %>% filter(method == "surface")) > 0
+
+```
+
+
+```{r dcant_all_inventory_map_method, fig.asp=0.5, eval=surface_data}
 
 dcant_inv_bias_method <- dcant_inv_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
@@ -235,9 +242,11 @@ full_join(dcant_inv_bias %>% select(-c(mod, mod_truth)),
   write_csv(paste0(path_version_data,
                    "dcant_inv_bias.csv"))
 
+if (surface_data){
 dcant_inv_bias_method %>%
   write_csv(paste0(path_version_data,
                    "dcant_inv_bias_method.csv"))
+}
 
 ```
 

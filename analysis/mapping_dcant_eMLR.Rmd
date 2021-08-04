@@ -91,6 +91,9 @@ predictors_surface <-
                  "W18_st_G16_opsn_surface.csv",
                  sep = ""))
 
+# check if surface data exist
+surface_data <- nrow(predictors_surface) > 0
+
 tref  <-
   read_csv(paste(path_version_data,
                  "tref.csv",
@@ -258,7 +261,7 @@ $\Delta$~t~C~ant,eq~(t2 − t1) = 1∕$\gamma$ ⋅ DIC/pCO~2~ ⋅ (pCO~2,atm~ (t
 
 ### Layer depth
 
-```{r surface_layer_depth}
+```{r surface_layer_depth, eval=surface_data}
 
 surface_layer <- predictors_surface %>% 
   group_by(lat, lon, data_source) %>% 
@@ -285,7 +288,7 @@ map +
 
 ### Surface pCO2
 
-```{r calc_surface_pCO2}
+```{r calc_surface_pCO2, eval=surface_data}
 
 predictors_surface_all_depth <- predictors_surface
 
@@ -307,7 +310,7 @@ predictors_surface <- predictors_surface %>%
 
 ```
 
-```{r pCO2_climatology_map, fig.asp=0.6}
+```{r pCO2_climatology_map, fig.asp=0.6, eval=surface_data}
 
 predictors_surface %>%
   mutate(depth = 0) %>% 
@@ -328,7 +331,7 @@ predictors_surface %>%
 
 Plots below show the calculated climatological Revelle factor values.
 
-```{r calc_revelle_factor_climatology}
+```{r calc_revelle_factor_climatology, eval=surface_data}
 
 predictors_surface <- predictors_surface %>%
   mutate(
@@ -349,7 +352,7 @@ predictors_surface <- predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_map, fig.asp=0.6}
+```{r revelle_factor_climatology_map, fig.asp=0.6, eval=surface_data}
 
 predictors_surface %>%
   group_split(data_source) %>%
@@ -382,7 +385,7 @@ predictors_surface %>%
 
 ### dcant calculation
 
-```{r calc_dcant_surface}
+```{r calc_dcant_surface, eval=surface_data}
 
 # calculate increase in atm pCO2 between eras
 co2_atm_tref <- co2_atm_tref %>%
@@ -414,7 +417,7 @@ dcant_surface <- full_join(
 
 ### Sea surface observations
 
-```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1}
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
 
 surface_mod <- surface_mod %>% 
   rename(tco2 = dissicos,
@@ -481,7 +484,7 @@ surface_trend %>%
 
 ### Control plots
 
-```{r dcant_surface_climatology_map, fig.asp=0.6}
+```{r dcant_surface_climatology_map, fig.asp=0.6, eval=surface_data}
 
 dcant_surface %>%
   group_split(data_source) %>%
@@ -496,7 +499,7 @@ dcant_surface %>%
 ```
 
 
-```{r dcant_surface_climatology_sections, fig.asp=1}
+```{r dcant_surface_climatology_sections, fig.asp=1, eval=surface_data}
 
 dcant_surface %>%
   group_split(data_source) %>%
@@ -582,7 +585,7 @@ dcant_average %>%
 
 The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
 
-```{r calc_dcant_mean_surface}
+```{r calc_dcant_mean_surface, eval=surface_data}
 
 dcant_surface_average <-
   m_dcant_3d_average(dcant_surface)
@@ -597,11 +600,17 @@ rm(dcant_surface)
 
 ```{r join_surface_deep_dcant}
 
-dcant_3d <-
+if (surface_data) {
+  dcant_3d <-
   full_join(
     dcant_average %>% mutate(method = "eMLR"),
     dcant_surface_average %>%  mutate(method = "surface")
   )
+} else {
+  dcant_3d <- dcant_average %>% mutate(method = "eMLR")
+}
+
+
 
 rm(dcant_surface_average, dcant_average)
 
@@ -692,12 +701,17 @@ p_map_cant_inv(df = dcant_inv,
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
+if (surface_data == FALSE){
+  dcant_inv <- dcant_inv %>% 
+    mutate(method = "total")
+}
+
 
 ```
 
 ### Surface layer
 
-```{r cant_inventories_surface}
+```{r cant_inventories_surface, eval=surface_data}
 
 dcant_inv_surface <- dcant_3d %>%
   filter(method == "surface") %>% 
@@ -719,7 +733,7 @@ p_map_cant_inv(df = dcant_inv_surface %>%
 
 ### eMLR only
 
-```{r combine_dcant_inventories}
+```{r combine_dcant_inventories, eval=surface_data}
 
 dcant_inv <- full_join(
   dcant_inv %>% rename(dcant_total = dcant,
@@ -775,32 +789,9 @@ dcant_inv %>%
 
 Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
 
-```{r calculate_budget_per_grid_cell}
-
-# molC_to_PgC <- 12*1e-15
-# 
-# dcant_budget <- dcant_inv %>% 
-#   mutate(surface_area = earth_surf(lat, lon),
-#          dcant_grid = dcant*surface_area*molC_to_PgC,
-#          dcant_pos_grid = dcant_pos*surface_area*molC_to_PgC)
-
-```
-
 ```{r budget_global}
 
-# dcant_budget_global <- dcant_budget %>%
-#   group_by(data_source, inv_depth, method) %>% 
-#   summarise(dcant = sum(dcant_grid, na.rm = TRUE),
-#             dcant = round(dcant,3),
-#             dcant_pos = sum(dcant_pos_grid, na.rm = TRUE),
-#             dcant_pos = round(dcant_pos,3)) %>% 
-#   ungroup() %>% 
-#   pivot_longer(cols = dcant:dcant_pos,
-#                names_to = "estimate",
-#                values_to = "value")
-
 dcant_budget_global <- m_dcant_budget(dcant_inv)
-
 
 dcant_budget_global %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -812,7 +803,7 @@ dcant_budget_global %>%
 
 ```
 
-```{r budget_global_surface}
+```{r budget_global_surface, eval=surface_data}
 
 dcant_budget_global %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -834,6 +825,9 @@ dcant_budget_basin_AIP <- dcant_inv %>%
   select(-data) %>%
   unnest(budget)
 
+```
+
+```{r budget_basin_AIP_fig, eval=surface_data}
 
 dcant_budget_basin_AIP %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -846,7 +840,7 @@ dcant_budget_basin_AIP %>%
 ```
 
 
-```{r budget_MLR_regions, fig.asp=1}
+```{r budget_MLR_regions}
 
 dcant_budget_basin_MLR <-
   full_join(dcant_inv, basinmask) %>%
@@ -855,6 +849,11 @@ dcant_budget_basin_MLR <-
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
   select(-data) %>%
   unnest(budget)
+
+```
+
+
+```{r budget_MLR_regions_fig, fig.asp=1, eval=surface_data}
 
 dcant_budget_basin_MLR %>%
   filter(inv_depth == params_global$inventory_depth_standard,
@@ -884,6 +883,10 @@ dcant_budget_lat_grid <-
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
   select(-data) %>%
   unnest(budget)
+
+```
+
+```{r budget_lat_grid_fig, fig.asp=1, eval=surface_data}
 
 dcant_budget_lat_grid %>%
   filter(inv_depth == params_global$inventory_depth_standard,

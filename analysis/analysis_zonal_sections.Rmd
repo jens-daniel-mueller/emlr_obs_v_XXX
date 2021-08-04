@@ -217,8 +217,16 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 
 ## Surface
 
+```{r test_surface_data}
 
-```{r dcant_all_zonal_mean_sections_surface, fig.asp=0.6}
+surface_data <- nrow(dcant_zonal_method %>% filter(method == "surface")) > 0
+surface_data
+
+```
+
+
+
+```{r dcant_all_zonal_mean_sections_surface, fig.asp=0.6, eval=surface_data}
 
 dcant_zonal_bias_method_surface <- dcant_zonal_method %>%
   filter(data_source %in% c("mod", "mod_truth"),
@@ -331,14 +339,23 @@ full_join(dcant_zonal_bias %>% select(-c(mod, mod_truth)),
   write_csv(paste0(path_version_data, 
                    "dcant_zonal_bias.csv"))
 
-bind_rows(
-  dcant_zonal_bias_method_surface %>%
-    mutate(method = "surface"),
+
+if (surface_data) {
+  bind_rows(
+    dcant_zonal_bias_method_surface %>%
+      mutate(method = "surface"),
+    dcant_zonal_bias_method_deep %>%
+      mutate(method = "deep")
+  ) %>%
+    write_csv(paste0(path_version_data,
+                     "dcant_zonal_bias_method.csv"))
+} else {
   dcant_zonal_bias_method_deep %>%
-    mutate(method = "deep")
-) %>%
-  write_csv(paste0(path_version_data,
-                   "dcant_zonal_bias_method.csv"))
+    mutate(method = "deep") %>%
+    write_csv(paste0(path_version_data,
+                     "dcant_zonal_bias_method.csv"))
+  
+}
 
 
 ```

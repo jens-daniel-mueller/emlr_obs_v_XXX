@@ -215,8 +215,19 @@ model_predictors <- climatology %>%
 
 ```{r load_model_climatologies_surface_mapping}
 
+
 model_predictors_surface <- climatology %>%
-  select(lon, lat, depth, basin_AIP, gamma, sal, temp, TCO2, TAlk, phosphate, silicate)
+  select(lon,
+         lat,
+         depth,
+         basin_AIP,
+         gamma,
+         sal,
+         temp,
+         TCO2,
+         TAlk,
+         phosphate,
+         silicate)
 
 ```
 
@@ -573,15 +584,17 @@ Predictor sections along with lines are shown below for each (potential) predict
 
 ```{r predictors_observations_sections_map_surface, fig.asp=0.6}
 
-map +
-  geom_bin2d(data = predictors_surface,
-             aes(lon, lat),
-             binwidth = c(1,1)) +
-  geom_vline(xintercept = params_global$longitude_sections_regular,
-             col = "white") +
-  scale_fill_viridis_c(direction = -1) +
-  theme(legend.position = "bottom") +
-  facet_wrap(~ data_source)
+if (nrow(predictors_surface) > 0) {
+  map +
+    geom_bin2d(data = predictors_surface,
+               aes(lon, lat),
+               binwidth = c(1, 1)) +
+    geom_vline(xintercept = params_global$longitude_sections_regular,
+               col = "white") +
+    scale_fill_viridis_c(direction = -1) +
+    theme(legend.position = "bottom") +
+    facet_wrap( ~ data_source)
+}
 
 ```
 
