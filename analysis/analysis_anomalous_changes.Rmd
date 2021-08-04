@@ -320,19 +320,22 @@ rm(dcant_mod_3d_bias_profile)
 
 
 
-## Zonal mean sections
+## Zonal sections
 
 ### delta dcant
 
 ```{r zonal_section_dcant_pos_mod}
 
 # calculate zonal mean section
-dcant_mod_section <- dcant_mod_3d %>%
+dcant_mod_zonal <- dcant_mod_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
+
+dcant_mod_zonal <- dcant_mod_zonal %>% 
+  rename(dcant_pos = dcant_pos_mean)
 
 ```
 
@@ -340,28 +343,28 @@ dcant_mod_section <- dcant_mod_3d %>%
 
 ```{r zonal_section_dcant_pos_bias_mod}
 
-dcant_mod_section_bias <- dcant_mod_section %>%
+dcant_mod_zonal_bias <- dcant_mod_zonal %>%
   select(-dcant_pos_sd) %>% 
   pivot_wider(names_from = estimate,
-              values_from = dcant_pos_mean) %>% 
+              values_from = dcant_pos) %>% 
   drop_na()
 
 
-dcant_mod_section_bias <- dcant_mod_section_bias %>% 
+dcant_mod_zonal_bias <- dcant_mod_zonal_bias %>% 
   mutate(emlr_anom = emlr - ss_tss,
          emlr_bias = emlr - mod_truth_vc,
          nss_mod_truth = mod_truth_vc - mod_truth_cc,
          nss_projection = mod_truth_vc - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
-dcant_mod_section_bias_long <- dcant_mod_section_bias %>% 
+dcant_mod_zonal_bias_long <- dcant_mod_zonal_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "dcant_pos_bias")
   
 
 
-dcant_mod_section_bias_long %>% 
+dcant_mod_zonal_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
   # head(1) %>%
@@ -374,7 +377,7 @@ dcant_mod_section_bias_long %>%
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
 
-axis_limit <- dcant_mod_section_bias %>% 
+axis_limit <- dcant_mod_zonal_bias %>% 
   pivot_longer(emlr_anom:nss_projection,
                names_to = "estimate",
                values_to = "bias") %>% 
@@ -382,7 +385,7 @@ axis_limit <- dcant_mod_section_bias %>%
   abs() %>% 
   max()
 
-dcant_mod_section_bias %>%
+dcant_mod_zonal_bias %>%
   ggplot(aes(emlr_bias, emlr_anom)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -393,7 +396,7 @@ dcant_mod_section_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap( ~ basin_AIP)
 
-dcant_mod_section_bias %>% 
+dcant_mod_zonal_bias %>% 
   ggplot(aes(emlr_anom, nss_mod_truth)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -404,7 +407,7 @@ dcant_mod_section_bias %>%
   labs(title = "Bias vs bias plots") +
   facet_wrap(~ basin_AIP)
 
-dcant_mod_section_bias %>% 
+dcant_mod_zonal_bias %>% 
   ggplot(aes(nss_mod_truth, nss_projection)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
@@ -608,12 +611,15 @@ dcant_mod_budget %>%
 ```{r zonal_section_dcant_pos_obs}
 
 # calculate zonal mean section
-dcant_obs_section <- dcant_obs_3d %>%
+dcant_obs_zonal <- dcant_obs_3d %>%
   group_by(estimate) %>%
   nest() %>%
   mutate(section = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(section)
+
+dcant_obs_zonal <- dcant_obs_zonal %>% 
+  rename(dcant_pos = dcant_pos_mean)
 
 ```
 
@@ -621,28 +627,28 @@ dcant_obs_section <- dcant_obs_3d %>%
 
 ```{r zonal_section_dcant_pos_bias_obs}
 
-dcant_obs_section_bias <- dcant_obs_section %>%
+dcant_obs_zonal_bias <- dcant_obs_zonal %>%
   select(-dcant_pos_sd) %>% 
   pivot_wider(names_from = estimate,
-              values_from = dcant_pos_mean) %>% 
+              values_from = dcant_pos) %>% 
   drop_na()
 
 
-dcant_obs_section_bias <- dcant_obs_section_bias %>% 
+dcant_obs_zonal_bias <- dcant_obs_zonal_bias %>% 
   mutate(emlr_anom = emlr - ss_tss) %>% 
   select(-c(emlr:ss_tss))
 
-dcant_obs_section_bias_long <- dcant_obs_section_bias %>% 
+dcant_obs_zonal_bias_long <- dcant_obs_zonal_bias %>% 
   pivot_longer(emlr_anom,
                names_to = "estimate",
                values_to = "dcant_pos_bias")
   
 
 
-dcant_obs_section_bias_long %>% 
+dcant_obs_zonal_bias_long %>% 
   group_by(basin_AIP, estimate) %>%
   group_split() %>% 
-  head(1) %>%
+  # head(1) %>%
   map( ~ p_section_zonal(
     df = .x,
     var = "dcant_pos_bias",
@@ -651,6 +657,7 @@ dcant_obs_section_bias_long %>%
     plot_slabs = "n",
     subtitle_text = paste("Basin:", .x$basin_AIP, "| Estimate:", .x$estimate)
   ))
+
 ```
 
 
@@ -700,7 +707,7 @@ dcant_obs_inv_bias_long <- dcant_obs_inv_bias %>%
 dcant_obs_inv_bias_long %>% 
   group_by(estimate) %>%
   group_split() %>% 
-  head(1) %>%
+  # head(1) %>%
   map( ~ p_map_cant_inv(
     df = .x,
     var = "dcant_pos_bias",
@@ -802,9 +809,9 @@ dcant_mod_3d_bias %>%
   write_csv(paste0(path_version_data,
                    "anom_dcant_mod_3d_bias.csv"))
 
-dcant_mod_section_bias %>%
+dcant_mod_zonal_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_dcant_mod_section_bias.csv"))
+                   "anom_dcant_mod_zonal_bias.csv"))
 
 dcant_mod_inv_bias %>%
   write_csv(paste0(path_version_data,
@@ -815,9 +822,9 @@ dcant_mod_budget %>%
                    "anom_dcant_mod_budget.csv"))
 
 
-dcant_obs_section_bias %>%
+dcant_obs_zonal_bias %>%
   write_csv(paste0(path_version_data,
-                   "anom_dcant_obs_section_bias.csv"))
+                   "anom_dcant_obs_zonal_bias.csv"))
 
 dcant_obs_inv_bias %>%
   write_csv(paste0(path_version_data,
