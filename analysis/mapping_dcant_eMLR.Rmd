@@ -364,11 +364,11 @@ predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_sections, fig.asp=1}
+```{r revelle_factor_climatology_sections, fig.asp=1, eval=FALSE}
 
 predictors_surface %>%
   group_split(data_source) %>%
-  # head(1) %>%
+  head(1) %>%
   map( ~
          p_section_climatology_regular(
            df = .x,
@@ -412,7 +412,9 @@ dcant_surface <- full_join(
 
 ```
 
-```{r calc_dcant_surface_based_on_surface_observations, fig.asp=0.5}
+### Sea surface observations
+
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1}
 
 surface_mod <- surface_mod %>% 
   rename(tco2 = dissicos,
@@ -459,7 +461,7 @@ surface_trend %>%
       geom_raster(data = .x,
                   aes(lon, lat, fill = d)) +
       scale_fill_divergent(name = unique(.x$parameter)) +
-      facet_grid(. ~ data_source)
+      facet_grid(data_source~.)
   )
 
 
