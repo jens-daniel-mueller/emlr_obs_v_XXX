@@ -1,5 +1,5 @@
 ---
-title: "Analysis of dcant estimates"
+title: "Analysis of dcant within density slabs"
 author: "Jens Daniel Müller"
 date:  "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
@@ -160,7 +160,7 @@ Please note that:
 dcant_slab %>%
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  # head(4) %>%
+  # head(1) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -204,7 +204,7 @@ dcant_slab_bias <- dcant_slab %>%
 
 dcant_slab_bias %>%
   group_split(gamma_slab) %>%
-  # head(2) %>%
+  # head(1) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -446,6 +446,9 @@ dcant_slab_budget_bias <- dcant_slab_budget %>%
          dcant_pos_bias = dcant_pos_mod - dcant_pos_mod_truth) %>% 
   select(c(basin_AIP, gamma_slab, ends_with("bias")))
 
+dcant_slab_budget_bias <- dcant_slab_budget_bias %>%
+  mutate(gamma_slab = fct_relevel(gamma_slab,
+                                ~sort(.x, decreasing = TRUE)))
 
 dcant_slab_budget_bias %>% 
   ggplot(aes(gamma_slab, dcant_pos_bias)) +

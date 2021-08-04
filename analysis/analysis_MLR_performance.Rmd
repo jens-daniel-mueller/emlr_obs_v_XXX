@@ -242,7 +242,7 @@ dcant_3d %>%
 ```{r dcant_vs_sd_by_basin_era_zonal}
 
 dcant_zonal %>%
-  ggplot(aes(dcant_mean, dcant_sd)) +
+  ggplot(aes(dcant, dcant_sd)) +
   geom_bin2d() +
   geom_vline(xintercept = 0,
              col = "red") +
@@ -262,7 +262,7 @@ dcant_zonal %>%
   group_split(basin_AIP) %>%
   # head(1) %>%
   map(
-    ~ ggplot(data = .x, aes(dcant_mean, dcant_sd)) +
+    ~ ggplot(data = .x, aes(dcant, dcant_sd)) +
       geom_bin2d() +
       geom_vline(xintercept = 0) +
       scale_fill_viridis_c(trans = "log10") +
