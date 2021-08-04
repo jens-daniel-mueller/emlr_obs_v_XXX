@@ -91,6 +91,39 @@ predictors_surface <-
                  "W18_st_G16_opsn_surface.csv",
                  sep = ""))
 
+tref  <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
+
+variables <-
+  c("dissicos", "talkos", "po4os", "spco2", "tos")
+
+for (i_variable in variables) {
+  
+  temp <- read_csv(paste0(
+    path_root,
+    "/model/preprocessing/surface_ocean_A/", i_variable, ".csv")
+  )
+  
+  if (exists("surface_mod")) {
+    surface_mod <- full_join(surface_mod, temp)
+  }
+  
+  if (!exists("surface_mod")) {
+    surface_mod <- temp
+  }
+}
+
+rm(temp, i_variable, variables)
+
+
+surface_obs <- read_csv(paste0(
+    path_observations,
+    "preprocessing/OceanSODA.csv")
+  )
+
 ```
 
 ## Atm. pCO2
@@ -331,7 +364,7 @@ predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_sections, fig.asp=1, eval=FALSE}
+```{r revelle_factor_climatology_sections, fig.asp=1}
 
 predictors_surface %>%
   group_split(data_source) %>%
@@ -376,6 +409,71 @@ dcant_surface <- full_join(
   dcant_surface,
   predictors_surface_all_depth
 )
+
+```
+
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=0.5}
+
+surface_mod <- surface_mod %>% 
+  rename(tco2 = dissicos,
+         talk = talkos,
+         phosphate = po4os,
+         pco2 = spco2,
+         temp = tos) %>% 
+  mutate(tco2 = tco2 * 1e3,
+         phosphate = phosphate * 1e3) %>% 
+  mutate(cstar = b_cstar_phosphate(tco2 = tco2,
+                                   phosphate = phosphate,
+                                   talk = talk))
+surface_obs <- surface_obs %>% 
+  select(lon, lat, year, temp, tco2, talk, pco2 = pCO2)
+
+surface <- bind_rows(
+  surface_mod %>% mutate(data_source = "mod"),
+  surface_obs %>% mutate(data_source = "obs")
+)
+
+
+surface_wide <- surface %>% 
+  filter(year %in% tref$median_year) %>% 
+  pivot_longer(tco2:cstar,
+               names_to = "parameter",
+               values_to = "value") %>% 
+  pivot_wider(names_from = year,
+              values_from = value)
+
+surface_wide <- surface_wide %>% 
+  mutate(d = !!sym(as.character(sort(tref$median_year)[2])) -
+           !!sym(as.character(sort(tref$median_year)[1])))
+
+surface_trend <- surface_wide %>% 
+  select(lon, lat, parameter, data_source, d)
+
+
+surface_trend %>%
+  group_by(parameter) %>%
+  group_split() %>%
+  # head(1) %>% 
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = d)) +
+      scale_fill_divergent(name = unique(.x$parameter)) +
+      facet_grid(. ~ data_source)
+  )
+
+
+# 
+# # calculate positive cant
+# dcant_surface <- dcant_surface %>%
+#   mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>% 
+#   select(lon, lat, data_source, dcant, dcant_pos)
+# 
+# 
+# dcant_surface <- full_join(
+#   dcant_surface,
+#   predictors_surface_all_depth
+# )
 
 ```
 
