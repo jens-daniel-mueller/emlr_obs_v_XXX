@@ -222,16 +222,13 @@ map +
 
 ## CANYON-B comparison
 
-Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets. This critrion is evaluated individually for each variable involved in the eMLR approach.
+Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets. This criterion is evaluated individually for each variable involved in the eMLR approach. The selection criterion is applied to samples collected deeper than `r params_local$CANYON_B_depth` m.
 
 ```{r combine_GLODAP_CANYON_B}
 
 # join data frames
 GLODAP_combined_raw <- left_join(GLODAP,
                                  GLODAP_CB)
-
-GLODAP_combined_raw <- GLODAP_combined_raw %>% 
-  filter(depth > params_local$CANYON_B_depth)
 
 # calculate offset by parameter
 GLODAP_combined <- GLODAP_combined_raw %>%
@@ -248,6 +245,7 @@ GLODAP_combined <- GLODAP_combined_raw %>%
          basin_AIP,
          lat,
          lon,
+         depth,
          starts_with("offset_"))
 
 # pivot to long format
@@ -267,24 +265,37 @@ GLODAP_combined <- GLODAP_combined %>%
 ```{r CANYON_B_residual_histograms, fig.asp=0.6}
 
 GLODAP_combined <- GLODAP_combined %>% 
-  mutate(cruise_group = if_else(cruise >= 3000, "3XXX", "<3000"))
+  mutate(sampling_depth =
+           if_else(depth >= params_local$CANYON_B_depth,
+                   "deep", "shallow"))
 
 GLODAP_combined %>%
-  ggplot(aes(offset, fill=cruise_group)) +
+  # filter(cruise == 695) %>%
+  ggplot(aes(offset, fill=sampling_depth)) +
   geom_histogram() +
   scale_y_continuous(trans = "log10") +
   facet_grid(basin_AIP ~ parameter, scales = "free_x")
 
 GLODAP_combined <- GLODAP_combined %>% 
-  select(-cruise_group)
+  filter(sampling_depth == "deep")
 
-map+
-  geom_raster(
-    data = GLODAP_combined %>%
-      filter(offset > 50,
-             parameter == "talk") %>% 
-      distinct(lon, lat),
-    aes(lon, lat))
+GLODAP_combined %>%
+  # filter(cruise == 695) %>% 
+  ggplot(aes(offset, fill=sampling_depth)) +
+  geom_histogram() +
+  scale_y_continuous(trans = "log10") +
+  facet_grid(basin_AIP ~ parameter, scales = "free_x")
+
+GLODAP_combined <- GLODAP_combined %>% 
+  select(-sampling_depth)
+
+# map+
+#   geom_raster(
+#     data = GLODAP_combined %>%
+#       filter(offset > 50,
+#              parameter == "talk") %>% 
+#       distinct(lon, lat),
+#     aes(lon, lat))
 
 ```
 
@@ -298,7 +309,8 @@ variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
 for (i_variable in variables) {
   # i_variable <- variables[1]
   p_prop_prop(
-    df = GLODAP_combined_raw,
+    df = GLODAP_combined_raw %>% 
+      filter(depth >= params_local$CANYON_B_depth),
     var1 = i_variable,
     var2 = paste0(i_variable, "_CANYONB")
   )
@@ -322,7 +334,7 @@ GLODAP_combined %>%
 ```
 
 
-### Residual distribution
+### Cruise bias metrics
 
 ```{r CANYON_B_residuals}
 
@@ -335,21 +347,46 @@ cruise_all <- GLODAP_combined %>%
   ) %>%
   ungroup()
 
+
 # rank offsets and calculate offset thresholds
 cruise_all <- cruise_all %>%
   group_by(parameter) %>%
   mutate(
-    rank_offset = rank(mean_offset),
-    threshold_offset = sd(mean_offset, na.rm = TRUE) *
+    rank_mean_offset = rank(mean_offset),
+    mean_limit = sd(mean_offset, na.rm = TRUE) *
+      params_local$CANYON_B_max,
+    sd_limit = median(sd_offset, na.rm = TRUE) *
       params_local$CANYON_B_max,
     cruise = as.factor(cruise)
   ) %>%
   ungroup() %>%
-  arrange(parameter, rank_offset)
+  arrange(parameter, rank_mean_offset)
+
+cruise_all %>% 
+  ggplot() +
+  geom_vline(aes(xintercept = c(1,-1)* mean_limit),
+             col = "red") +
+  geom_histogram(aes(mean_offset)) +
+  facet_grid(. ~ parameter, scales = "free_x")
+
+cruise_all %>% 
+  ggplot() +
+  geom_vline(aes(xintercept = sd_limit),
+             col = "red") +
+  geom_histogram(aes(sd_offset)) +
+  facet_grid(. ~ parameter, scales = "free_x")
+
+
+
+```
+
+### Filter cruise mean
+
+```{r filter_cruises}
 
 cruise_out <- cruise_all %>%
   filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>%
-  filter(abs(mean_offset) > threshold_offset)
+  filter(abs(mean_offset) > mean_limit)
 
 for (i_parameter in unique(cruise_all$parameter)) {
   # i_parameter <- unique(cruise_all$parameter)[4]
@@ -364,22 +401,22 @@ for (i_parameter in unique(cruise_all$parameter)) {
     ggplot() +
       geom_hline(
         data = i_cruise_all,
-        aes(yintercept = c(-1, 1) * threshold_offset),
+        aes(yintercept = c(-1, 1) * mean_limit),
         lty = 2
       ) +
       geom_ribbon(
         data = i_cruise_all,
         aes(
-          x = rank_offset,
+          x = rank_mean_offset,
           ymax = mean_offset + sd_offset,
           ymin = mean_offset - sd_offset
         ),
         alpha = 0.3
       ) +
       geom_path(data = i_cruise_all,
-                aes(rank_offset, mean_offset)) +
+                aes(rank_mean_offset, mean_offset)) +
       geom_point(data = i_cruise_out,
-                 aes(rank_offset, mean_offset, col = cruise)) +
+                 aes(rank_mean_offset, mean_offset, col = cruise)) +
       labs(title = i_parameter)
   )
   
@@ -431,6 +468,53 @@ GLODAP <- GLODAP %>%
 
 ```
 
+
+### Filter samples
+
+```{r filter_samples}
+
+parameter_stats <- cruise_all %>%
+  group_by(parameter) %>%
+  summarise(
+    mean_limit = sd(mean_offset, na.rm = TRUE) *
+      params_local$CANYON_B_max,
+    sd_limit = median(sd_offset, na.rm = TRUE) *
+      params_local$CANYON_B_max
+  ) %>%
+  ungroup()
+
+GLODAP_combined <- full_join(
+  GLODAP_combined,
+  parameter_stats
+)
+
+GLODAP_combined <- GLODAP_combined %>%
+  filter(!(cruise %in% cruise_out$cruise)) %>% 
+  mutate(offset_flag = if_else(abs(offset) <= sd_limit,
+                               "included", 
+                               "removed"))
+
+GLODAP_combined %>%
+  # filter(cruise == 695) %>% 
+  ggplot(aes(offset, fill=offset_flag)) +
+  geom_histogram() +
+  scale_y_continuous(trans = "log10") +
+  facet_grid(basin_AIP ~ parameter, scales = "free_x")
+
+GLODAP_combined %>%
+  filter(offset_flag == "removed") %>% 
+  ggplot(aes(offset, fill=offset_flag)) +
+  geom_histogram() +
+  scale_y_continuous() +
+  facet_grid(basin_AIP ~ parameter, scales = "free_x")
+
+samples_out <- GLODAP_combined %>% 
+  filter(offset_flag == "removed")
+
+GLODAP <- GLODAP %>% 
+  filter(!(row_number %in% samples_out$row_number))
+
+```
 
 
 
