@@ -151,7 +151,7 @@ GLODAP <- GLODAP %>%
 GLODAP <- GLODAP %>% 
   select(-c(start, end))
 
-rm(era_labels)
+# rm(era_labels)
 
 ```
 
@@ -220,9 +220,10 @@ map +
 
 ```
 
-## CANYON-B comparison
+## CANYON-B cleaning
 
-Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets. This criterion is evaluated individually for each variable involved in the eMLR approach. The selection criterion is applied to samples collected deeper than `r params_local$CANYON_B_depth` m.
+Data cleaning based on comparison to CANYOB-B predictions is done individually for each variable required in the eMLR approach and constrained to samples collected deeper than `r params_local$CANYON_B_depth` m.
+
 
 ```{r combine_GLODAP_CANYON_B}
 
@@ -264,7 +265,8 @@ GLODAP_combined <- GLODAP_combined %>%
 
 ```{r CANYON_B_residual_histograms, fig.asp=0.6}
 
-GLODAP_combined <- GLODAP_combined %>% 
+# flag data according to sampling depth
+GLODAP_combined <- GLODAP_combined %>%
   mutate(sampling_depth =
            if_else(depth >= params_local$CANYON_B_depth,
                    "deep", "shallow"))
@@ -276,6 +278,7 @@ GLODAP_combined %>%
   scale_y_continuous(trans = "log10") +
   facet_grid(basin_AIP ~ parameter, scales = "free_x")
 
+# filter only deep water samples
 GLODAP_combined <- GLODAP_combined %>% 
   filter(sampling_depth == "deep")
 
@@ -289,14 +292,6 @@ GLODAP_combined %>%
 GLODAP_combined <- GLODAP_combined %>% 
   select(-sampling_depth)
 
-# map+
-#   geom_raster(
-#     data = GLODAP_combined %>%
-#       filter(offset > 50,
-#              parameter == "talk") %>% 
-#       distinct(lon, lat),
-#     aes(lon, lat))
-
 ```
 
 
@@ -308,16 +303,16 @@ variables <- c("talk", "tco2", "nitrate", "phosphate", "silicate")
 
 for (i_variable in variables) {
   # i_variable <- variables[1]
-  p_prop_prop(
-    df = GLODAP_combined_raw %>% 
+  print(p_prop_prop(
+    df = GLODAP_combined_raw %>%
       filter(depth >= params_local$CANYON_B_depth),
     var1 = i_variable,
     var2 = paste0(i_variable, "_CANYONB")
-  )
+  ))
 }
 
 rm(variables, GLODAP_combined_raw, i_variable)
-  
+
 ```
 
 ### Residual time series
@@ -334,9 +329,10 @@ GLODAP_combined %>%
 ```
 
 
-### Cruise bias metrics
+### Cruise offset metrics
 
-```{r CANYON_B_residuals}
+
+```{r CANYON_B_residuals_cruise_metrics, fig.asp=0.4}
 
 # calculate mean cruise offset by parameter
 cruise_all <- GLODAP_combined %>%
@@ -352,41 +348,48 @@ cruise_all <- GLODAP_combined %>%
 cruise_all <- cruise_all %>%
   group_by(parameter) %>%
   mutate(
-    rank_mean_offset = rank(mean_offset),
-    mean_limit = sd(mean_offset, na.rm = TRUE) *
+    mean_offset_rank = rank(mean_offset),
+    mean_offset_max = sd(mean_offset, na.rm = TRUE) *
       params_local$CANYON_B_max,
-    sd_limit = median(sd_offset, na.rm = TRUE) *
+    sd_offset_max = median(sd_offset, na.rm = TRUE) *
       params_local$CANYON_B_max,
     cruise = as.factor(cruise)
   ) %>%
   ungroup() %>%
-  arrange(parameter, rank_mean_offset)
+  arrange(parameter, mean_offset_rank)
 
 cruise_all %>% 
   ggplot() +
-  geom_vline(aes(xintercept = c(1,-1)* mean_limit),
-             col = "red") +
+  geom_vline(aes(xintercept = c(1,-1)* mean_offset_max,
+             col = "threshold")) +
   geom_histogram(aes(mean_offset)) +
-  facet_grid(. ~ parameter, scales = "free_x")
+  facet_grid(. ~ parameter, scales = "free_x") +
+  scale_color_manual(values = "red") +
+  theme(legend.title = element_blank())
 
 cruise_all %>% 
   ggplot() +
-  geom_vline(aes(xintercept = sd_limit),
-             col = "red") +
+  geom_vline(aes(xintercept = sd_offset_max,
+             col = "threshold")) +
   geom_histogram(aes(sd_offset)) +
-  facet_grid(. ~ parameter, scales = "free_x")
-
+  facet_grid(. ~ parameter, scales = "free_x") +
+  scale_color_manual(values = "red") +
+  theme(legend.title = element_blank())
 
 
 ```
 
 ### Filter cruise mean
 
-```{r filter_cruises}
+Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets.
 
+
+```{r CANYON_B_filter_cruises, fig.asp=0.5}
+
+# identify cruises to be removed
 cruise_out <- cruise_all %>%
   filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors)) %>%
-  filter(abs(mean_offset) > mean_limit)
+  filter(abs(mean_offset) > mean_offset_max)
 
 for (i_parameter in unique(cruise_all$parameter)) {
   # i_parameter <- unique(cruise_all$parameter)[4]
@@ -401,22 +404,22 @@ for (i_parameter in unique(cruise_all$parameter)) {
     ggplot() +
       geom_hline(
         data = i_cruise_all,
-        aes(yintercept = c(-1, 1) * mean_limit),
+        aes(yintercept = c(-1, 1) * mean_offset_max),
         lty = 2
       ) +
       geom_ribbon(
         data = i_cruise_all,
         aes(
-          x = rank_mean_offset,
+          x = mean_offset_rank,
           ymax = mean_offset + sd_offset,
           ymin = mean_offset - sd_offset
         ),
         alpha = 0.3
       ) +
       geom_path(data = i_cruise_all,
-                aes(rank_mean_offset, mean_offset)) +
+                aes(mean_offset_rank, mean_offset)) +
       geom_point(data = i_cruise_out,
-                 aes(rank_mean_offset, mean_offset, col = cruise)) +
+                 aes(mean_offset_rank, mean_offset, col = cruise)) +
       labs(title = i_parameter)
   )
   
@@ -436,8 +439,6 @@ rm(i_parameter, i_cruise_all, i_cruise_out)
 ```
 
 
-### Remove cruises
-
 ```{r CANYON_B_removed_cruises_map, fig.asp=1}
 
 GLODAP_out <- GLODAP %>%
@@ -445,10 +446,14 @@ GLODAP_out <- GLODAP %>%
 
 if (nrow(GLODAP_out) > 0) {
   map +
+    geom_raster(data = GLODAP %>% distinct(lat, lon, era),
+                aes(lon, lat, fill = "included")) +
     geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
-                aes(lon, lat)) +
-    facet_wrap(~ era, ncol = 1) +
-    labs(title = "Maps of removed cruises")
+                aes(lon, lat, fill = "removed")) +
+    scale_fill_manual(values = c("grey70", "red")) +
+    facet_wrap( ~ era, ncol = 1) +
+    labs(title = "Maps of removed cruises") +
+    theme(legend.title = element_blank())
   
 } else {
   print("no cruises removed")
@@ -457,7 +462,7 @@ if (nrow(GLODAP_out) > 0) {
 
 ```
 
-The ratio (%) of removed cruises is:
+The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_cruises}
 
@@ -473,29 +478,27 @@ GLODAP <- GLODAP %>%
 
 ```{r filter_samples}
 
+# calculate offset parameters across all observations
 parameter_stats <- cruise_all %>%
   group_by(parameter) %>%
   summarise(
-    mean_limit = sd(mean_offset, na.rm = TRUE) *
+    mean_offset_max = sd(mean_offset, na.rm = TRUE) *
       params_local$CANYON_B_max,
-    sd_limit = median(sd_offset, na.rm = TRUE) *
+    sd_offset_max = median(sd_offset, na.rm = TRUE) *
       params_local$CANYON_B_max
   ) %>%
   ungroup()
 
-GLODAP_combined <- full_join(
-  GLODAP_combined,
-  parameter_stats
-)
+GLODAP_combined <- full_join(GLODAP_combined,
+                             parameter_stats)
 
 GLODAP_combined <- GLODAP_combined %>%
   filter(!(cruise %in% cruise_out$cruise)) %>% 
-  mutate(offset_flag = if_else(abs(offset) <= sd_limit,
+  mutate(offset_flag = if_else(abs(offset) <= sd_offset_max,
                                "included", 
                                "removed"))
 
 GLODAP_combined %>%
-  # filter(cruise == 695) %>% 
   ggplot(aes(offset, fill=offset_flag)) +
   geom_histogram() +
   scale_y_continuous(trans = "log10") +
@@ -511,12 +514,47 @@ GLODAP_combined %>%
 samples_out <- GLODAP_combined %>% 
   filter(offset_flag == "removed")
 
-GLODAP <- GLODAP %>% 
-  filter(!(row_number %in% samples_out$row_number))
+```
+
+
+```{r CANYON_B_removed_samples_map, fig.asp=1}
+
+GLODAP_out <- GLODAP %>%
+  filter(row_number %in% samples_out$row_number) %>% 
+  count(lat, lon, era)
+
+if (nrow(GLODAP_out) > 0) {
+  map +
+    # geom_raster(data = GLODAP %>% distinct(lat, lon, era),
+    #             aes(lon, lat, fill = "included")) +
+    # geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
+    #             aes(lon, lat, fill = "removed")) +
+    geom_raster(data = GLODAP_out,
+                aes(lon, lat, fill = n)) +
+    # scale_fill_manual(values = c("grey70", "red")) +
+    scale_fill_viridis_c(trans = "log10", direction = -1) +
+    facet_wrap( ~ era, ncol = 1) +
+    labs(title = "Maps of removed samples") +
+    theme(legend.title = element_blank())
+  
+} else {
+  print("no cruises removed")
+  
+}
 
 ```
 
 
+The ratio (%) of removed observations is:
+
+```{r CANYON_B_remove_samples}
+
+nrow(samples_out) / nrow(GLODAP_combined) * 100
+
+GLODAP <- GLODAP %>% 
+  filter(!(row_number %in% samples_out$row_number))
+
+```
 
 
 ## Gap filling
@@ -1116,6 +1154,7 @@ if (!is.null(params_local$tref2)) {
 
 tref <- bind_rows(tref1, tref2)
 
+tref <- full_join(tref, era_labels)
 tref
 
 ```

@@ -417,7 +417,7 @@ dcant_surface <- full_join(
 
 ### Sea surface observations
 
-```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
+```{r calc_dcant_surface_based_on_surface_observations, eval=FALSE, fig.asp=1, eval=surface_data}
 
 surface_mod <- surface_mod %>% 
   rename(tco2 = dissicos,
@@ -438,9 +438,17 @@ surface <- bind_rows(
   surface_obs %>% mutate(data_source = "obs")
 )
 
+surface <- expand_grid(surface, tref)
+
+surface <- surface %>%
+  filter(year >= start & year <= end) %>% 
+  select(-c(start, end))
+
+surface <- surface %>% 
+  group_by()
+
 
 surface_wide <- surface %>% 
-  filter(year %in% tref$median_year) %>% 
   pivot_longer(tco2:cstar,
                names_to = "parameter",
                values_to = "value") %>% 
