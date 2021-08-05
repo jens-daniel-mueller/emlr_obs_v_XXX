@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "test with intermediate CANYON-B offset threshold",
+message = "test with equilibrium in high lat",
 republish = TRUE)
 
 
@@ -95,4 +95,52 @@ for (i_Version_IDs in Version_IDs) {
                       "i_files", "files")))
   }
 }
+
+### concept code
+
+Dear John,
+
+sorry for the late reply to this issue. I had to focus on some scientific aspects rather than code improvement.
+
+Also, I found a satisfactory, yet not perfect solution to loop over the Rmd files of a workflowr project programmatically, to run the same code for different parameterizations.
+
+I try to give you a conceptual example how I do this:
+
+1) I create folders for each version, that already contain a config file with the parameterization details.
+
+2) In the header of each .Rmd file, I define:
+
+params:
+  Version_ID: "v_XXX"
+
+In the code, I use params$Version_ID to select the configuration file.
+Thus, when I render the Rmd files with wflow_publish(), the standard configuration file from the folder "v_XXX" will be used.
+
+3) This setup allows me to use render() to execute .Rmd files in a for loop, in which I provide a vector of Version_IDs to override the params argument and use alternative config files. The respective code reads:
+
+for (i_Version_IDs in Version_IDs) {
+  for (i_files in files) {
+
+    render(
+      input = here::here("analysis", i_files),
+      output_dir = paste0("/path/to/local/folder",
+                          i_Version_IDs,
+                          "/website"),
+      output_format = html_document(),
+      params = list(Version_ID = i_Version_IDs)
+    )
+
+    rm(list=setdiff(ls(),
+                    c("i_Version_IDs", "Version_IDs",
+                      "i_files", "files")))
+  }
+}
+
+While this approach in general works fine, I'm surprised that it doesn't work when I set the clean=TRUE in render(), which I wanted to do to ensure I do not reuse information from the global environment.
+Likewise, I did not manage to execute the inner for loop for one Version_ID as a seperate Job in RStudio, which would be really nice for parallelization.
+I guess both issues might result from failure to pass the function arguments forward correctly.
+
+Maybe you know help...
+
+
 
