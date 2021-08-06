@@ -66,6 +66,7 @@ path_version_figures  <-
 library(marelac)
 library(lubridate)
 library(broom)
+library(seacarb)
 ```
 
 
@@ -134,6 +135,12 @@ co2_atm <-
   read_csv(paste(path_preprocessing,
                  "co2_atm.csv",
                  sep = ""))
+
+co2_atm_reccap2 <-
+  read_csv(paste(path_preprocessing,
+                 "co2_atm_reccap2.csv",
+                 sep = ""))
+
 delta_pco2_annual_mod <-
     read_csv(
       file = paste(
@@ -166,6 +173,47 @@ tref <-
                  "tref.csv",
                  sep = ""))
 
+variables <-
+  c("talkos", "spco2", "tos", "sos")
+
+for (i_variable in variables) {
+  
+  temp <- read_csv(paste0(
+    path_root,
+    "/model/preprocessing/surface_ocean_A/", i_variable, ".csv")
+  )
+  
+  if (exists("surface_mod")) {
+    surface_mod <- full_join(surface_mod, temp)
+  }
+  
+  if (!exists("surface_mod")) {
+    surface_mod <- temp
+  }
+}
+
+rm(temp, i_variable, variables)
+
+surface_mod <- surface_mod %>% 
+  rename(talk = talkos,
+         pCO2 = spco2,
+         temp = tos,
+         sal = sos)
+
+surface_obs <- read_csv(paste0(
+    path_observations,
+    "preprocessing/OceanSODA.csv")
+  )
+
+surface_obs <- surface_obs %>% 
+  select(lon, lat, year, talk, pCO2, sal, temp)
+
+surface <- bind_rows(
+  surface_obs %>% mutate(data_source = "obs"),
+  surface_mod %>% mutate(data_source = "mod")
+)
+
+rm(surface_mod, surface_obs)
 
 ```
 
@@ -416,6 +464,81 @@ tcant_3d_t1 <- tcant_3d %>%
 
 Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.
 
+```{r calc_rev_fac_ratio}
+
+tref_mean <- c(sort(tref$median_year)[1]-50 , mean(tref$median_year))
+
+surface <- surface %>% 
+  filter(year == mean(tref$median_year))
+
+delta_pCO2_hist <- co2_atm_reccap2 %>% 
+  filter(year %in% tref_mean) %>% 
+  arrange(year) %>% 
+  mutate(delta_pCO2_hist = pCO2 - lag(pCO2)) %>% 
+  drop_na() %>% 
+  pull(delta_pCO2_hist)
+
+
+surface_hist <- surface %>% 
+  mutate(pCO2 = pCO2 - delta_pCO2_hist,
+         year = tref_mean[1])
+
+surface <- bind_rows(
+  surface,
+  surface_hist
+)
+
+map +
+  geom_raster(data = surface,
+              aes(lon, lat, fill=pCO2)) +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ year)
+
+surface <- surface %>%
+  drop_na() %>% 
+  mutate(
+    rev_fac = buffer(
+      flag = 24,
+      var1 = pCO2,
+      var2 = talk * 1e-6,
+      S = sal,
+      T = temp,
+      P = 0,
+      k1k2 = "l"
+    )$BetaD
+  )
+
+map +
+  geom_raster(data = surface,
+              aes(lon, lat, fill=rev_fac)) +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ year)
+
+surface <- surface %>% 
+  arrange(year) %>% 
+  group_by(lon, lat, data_source) %>% 
+  mutate(rev_fac_ratio = lag(rev_fac) / rev_fac) %>% 
+  ungroup() %>% 
+  drop_na()
+
+map +
+  geom_raster(data = surface,
+              aes(lon, lat, fill=rev_fac_ratio)) +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ .)
+
+rev_fac_ratio <- surface %>% 
+  mutate(area = earth_surf(lat = lat),
+         rev_fac_ratio_scaled = area * rev_fac_ratio) %>% 
+  group_by(data_source) %>% 
+  summarise(rev_fac_ratio = sum(rev_fac_ratio_scaled) / sum(area)) %>% 
+  ungroup()
+
+rm(surface, surface_hist, delta_pCO2_hist, tref_mean)
+
+```
+
+
 ```{r calc_alpha}
 
 # extract atm pCO2 at reference years
@@ -429,8 +552,8 @@ co2_atm_tref <- co2_atm_tref %>%
            lag(pCO2_tref, default = params_local$preind_atm_pCO2))
 
 # define ratio of changes in revelle factor
-rev_fac_ratio <- 0.92
-print(c("Revelle factor ratio (fixed):", rev_fac_ratio))
+# rev_fac_ratio <- 0.92
+# print(c("Revelle factor ratio (fixed):", rev_fac_ratio))
 
 # derive change in atm-sea disequilibrium pCO2
 delta_pco2_annual <- right_join(delta_pco2_annual,
@@ -483,6 +606,11 @@ disequi_pCO2_change <- disequi_pCO2_change %>%
          delta_pCO2_atm_ratio = delta_pCO2_atm / lag(delta_pCO2_atm)) %>% 
   ungroup()
 
+disequi_pCO2_change <- full_join(
+  disequi_pCO2_change,
+  rev_fac_ratio
+)
+rm(rev_fac_ratio)
 
 # determine alpha scaling factor
 disequi_pCO2_change <- disequi_pCO2_change %>% 

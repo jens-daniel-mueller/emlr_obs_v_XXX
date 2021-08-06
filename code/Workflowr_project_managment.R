@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "compare surface obs and equi dcant estimates")
+wflow_publish(all = TRUE, message = "included calculation of revelle factor")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "test with stricter CANYON-B filtering",
+message = "test with one global basin separation",
 republish = TRUE)
 
 
