@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3a3552318f4ad2b57145977690fd77530d2e1c47targetblank3a35523a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3a3552318f4ad2b57145977690fd77530d2e1c47" target="_blank">3a35523</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree39bfaccfd7f8d688cbc80a7a00e000c33eb26538targetblank39bfacca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/39bfaccfd7f8d688cbc80a7a00e000c33eb26538" target="_blank">39bfacc</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3a3552318f4ad2b57145977690fd77530d2e1c47targetblank3a35523a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree39bfaccfd7f8d688cbc80a7a00e000c33eb26538targetblank39bfacca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3a3552318f4ad2b57145977690fd77530d2e1c47" target="_blank">3a35523</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/39bfaccfd7f8d688cbc80a7a00e000c33eb26538" target="_blank">39bfacc</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,10 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -670,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/39bfaccfd7f8d688cbc80a7a00e000c33eb26538/analysis/mapping_dcant_eMLR.Rmd" target="_blank">39bfacc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+<td>
+test with one global basin separation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/1010198101890cd97325bb8e0698721492560f14/docs/mapping_dcant_eMLR.html" target="_blank">1010198</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3724,9 +3762,47 @@ jens-daniel-mueller
 )
 
 p_map_dcant_slab(df = surface_dcant_comparison,
-                  var = &quot;dcant&quot;) +
+                  var = &quot;dcant&quot;,
+                 title_text = &quot;Sea surface maps&quot;) +
   facet_grid(data_source ~ .)</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/surf_equi_truth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-surf_equi_truth-1">
+Past versions of surf_equi_truth-1.png
+</button>
+</p>
+<div id="fig-surf_equi_truth-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1010198101890cd97325bb8e0698721492560f14/docs/figure/mapping_dcant_eMLR.Rmd/surf_equi_truth-1.png" target="_blank">1010198</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>surface_dcant_comparison_bias &lt;- surface_dcant_comparison %&gt;% 
   pivot_wider(names_from = data_source,
               values_from = dcant) %&gt;% 
@@ -3739,9 +3815,47 @@ p_map_dcant_slab(df = surface_dcant_comparison,
 
 p_map_dcant_slab(df = surface_dcant_comparison_bias,
                   var = &quot;dcant_bias&quot;,
-                 col = &quot;bias&quot;) +
+                 col = &quot;bias&quot;,
+                 title_text = &quot;Sea surface maps&quot;) +
   facet_grid(data_source ~ .)</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/surf_equi_truth_bias-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-surf_equi_truth_bias-1">
+Past versions of surf_equi_truth_bias-1.png
+</button>
+</p>
+<div id="fig-surf_equi_truth_bias-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1010198101890cd97325bb8e0698721492560f14/docs/figure/mapping_dcant_eMLR.Rmd/surf_equi_truth_bias-1.png" target="_blank">1010198</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="average-model-dcant" class="section level2" number="4.3">
@@ -6853,6 +6967,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[7]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-7.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_lat_grid &lt;- 
   dcant_inv %&gt;% 
   m_grid_horizontal_coarse() %&gt;%
