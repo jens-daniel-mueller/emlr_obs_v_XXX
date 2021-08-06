@@ -467,7 +467,7 @@ surface_trend <- surface_wide %>%
 surface_trend %>%
   group_by(parameter) %>%
   group_split() %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
