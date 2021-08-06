@@ -255,19 +255,19 @@ C* was actually calculated as:
 ```{r cstar_selection}
 
 if (params_local$cstar_nutrient == "phosphate") {
-  
   print(b_cstar_phosphate)
   
   GLODAP <- GLODAP %>%
+    mutate(cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)) %>%
     rename(cstar = cstar_phosphate) %>%
     select(-cstar_nitrate)
 }
 
 if (params_local$cstar_nutrient == "nitrate") {
-  
   print(b_cstar_nitrate)
   
   GLODAP <- GLODAP %>%
+    mutate(cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk)) %>%
     rename(cstar = cstar_nitrate) %>%
     select(-cstar_phosphate)
 }

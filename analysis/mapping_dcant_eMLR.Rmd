@@ -59,6 +59,9 @@ path_version_figures  <-
         params_local$Version_ID,
         "/figures/",
         sep = "")
+
+path_model_preprocessing    <-
+  paste(path_root, "/model/preprocessing/", sep = "")
 ```
 
 ```{r load_libraries_specific, include=FALSE}
@@ -151,6 +154,59 @@ lm_best_dcant <-
                  "lm_best_dcant.csv",
                  sep = ""))
 ```
+
+## Model truth
+
+```{r read_surface_model_truth_dcant}
+
+tcant_tref_1 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_AD",
+      "/cant_",
+      unique(tref$median_year[1]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_tref_1 <- tcant_tref_1 %>%
+  rename(tcant_tref_1 = cant_total) %>%
+  select(-year)
+
+tcant_tref_2 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cant_annual_field_AD",
+      "/cant_",
+      unique(tref$median_year[2]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+tcant_tref_2 <- tcant_tref_2 %>%
+  rename(tcant_tref_2 = cant_total) %>%
+  select(-year)
+
+dcant_3d <- left_join(tcant_tref_1, tcant_tref_2) %>%
+  mutate(dcant = tcant_tref_2 - tcant_tref_1)
+
+rm(tcant_tref_1, tcant_tref_2)
+
+dcant_3d <- dcant_3d %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_surface_mod_truth <- dcant_3d %>% 
+  filter(depth == 5)
+
+rm(dcant_3d)
+
+```
+
+
 
 
 # Join MLRs + climatologies
@@ -417,7 +473,7 @@ dcant_surface <- full_join(
 
 ### Sea surface observations
 
-```{r calc_dcant_surface_based_on_surface_observations, eval=FALSE, fig.asp=1, eval=surface_data}
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
 
 surface_mod <- surface_mod %>% 
   rename(tco2 = dissicos,
@@ -510,6 +566,53 @@ dcant_surface %>%
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
 
+
+```
+
+### Surf, equi, truth
+
+```{r surf_equi_truth}
+
+surface_dcant_comparison <- bind_rows(
+  surface_trend %>%
+    filter(data_source == "mod",
+           parameter == "cstar") %>%
+    select(lon, lat, dcant = d) %>%
+    mutate(data_source = "surface_obs"),
+  dcant_surface %>%
+    filter(data_source == "mod",
+           depth == 5) %>%
+    select(lon, lat, dcant) %>%
+    mutate(data_source = "surface_equi"),
+  dcant_surface_mod_truth %>%
+    select(lon, lat, dcant) %>%
+    mutate(data_source = "mod_truth")
+)
+
+p_map_dcant_slab(df = surface_dcant_comparison,
+                  var = "dcant") +
+  facet_grid(data_source ~ .)
+
+
+```
+
+
+```{r surf_equi_truth_bias}
+
+surface_dcant_comparison_bias <- surface_dcant_comparison %>% 
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>% 
+  mutate(surface_obs_bias = surface_obs - mod_truth,
+         surface_equi_bias = surface_equi - mod_truth) %>% 
+  select(lon, lat, surface_obs_bias, surface_equi_bias) %>% 
+  pivot_longer(surface_obs_bias:surface_equi_bias,
+               names_to = "data_source",
+               values_to = "dcant_bias")
+
+p_map_dcant_slab(df = surface_dcant_comparison_bias,
+                  var = "dcant_bias",
+                 col = "bias") +
+  facet_grid(data_source ~ .)
 
 ```
 
