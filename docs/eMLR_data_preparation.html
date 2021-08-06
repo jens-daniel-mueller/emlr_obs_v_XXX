@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d17b4f614de2cb6e747a0dd3dba4df1c4b0814ftargetblank5d17b4fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d17b4f614de2cb6e747a0dd3dba4df1c4b0814f" target="_blank">5d17b4f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3a3552318f4ad2b57145977690fd77530d2e1c47targetblank3a35523a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3a3552318f4ad2b57145977690fd77530d2e1c47" target="_blank">3a35523</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d17b4f614de2cb6e747a0dd3dba4df1c4b0814ftargetblank5d17b4fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3a3552318f4ad2b57145977690fd77530d2e1c47targetblank3a35523a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d17b4f614de2cb6e747a0dd3dba4df1c4b0814f" target="_blank">5d17b4f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3a3552318f4ad2b57145977690fd77530d2e1c47" target="_blank">3a35523</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -670,6 +670,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a3552318f4ad2b57145977690fd77530d2e1c47/analysis/eMLR_data_preparation.Rmd" target="_blank">3a35523</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+<td>
+compare surface obs and equi dcant estimates
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/6da46ae45b982c576239859d0de1495449bca751/docs/eMLR_data_preparation.html" target="_blank">6da46ae</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -4675,6 +4709,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6da46ae45b982c576239859d0de1495449bca751/docs/figure/eMLR_data_preparation.Rmd/calculate_cstar-1.png" target="_blank">6da46ae</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/340d73190ab302341f1d44925c7a52a5d3666865/docs/figure/eMLR_data_preparation.Rmd/calculate_cstar-1.png" target="_blank">340d731</a>
 </td>
 <td>
@@ -4844,10 +4889,10 @@ jens-daniel-mueller
 </div>
 <p>C* was actually calculated as:</p>
 <pre class="r"><code>if (params_local$cstar_nutrient == &quot;phosphate&quot;) {
-  
   print(b_cstar_phosphate)
   
   GLODAP &lt;- GLODAP %&gt;%
+    mutate(cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)) %&gt;%
     rename(cstar = cstar_phosphate) %&gt;%
     select(-cstar_nitrate)
 }</code></pre>
@@ -4858,10 +4903,10 @@ jens-daniel-mueller
     return(cstar)
 }</code></pre>
 <pre class="r"><code>if (params_local$cstar_nutrient == &quot;nitrate&quot;) {
-  
   print(b_cstar_nitrate)
   
   GLODAP &lt;- GLODAP %&gt;%
+    mutate(cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk)) %&gt;%
     rename(cstar = cstar_nitrate) %&gt;%
     select(-cstar_phosphate)
 }</code></pre>
