@@ -156,6 +156,49 @@ tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
 ```
 
 
+```{r read_model_cstar_files_vc}
+
+cstar_tref_1 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cstar_annual_field_A",
+      "/cstar_A_",
+      unique(tref$median_year[1]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+cstar_tref_1 <- cstar_tref_1 %>%
+  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
+  pivot_longer(cstar_no3:cstar_po4,
+               names_to = "cstar_variant",
+               names_prefix = "cstar_",
+               values_to = "cstar_tref_1")
+
+cstar_tref_2 <-
+  read_csv(
+    paste(
+      path_model_preprocessing,
+      "cstar_annual_field_A",
+      "/cstar_A_",
+      unique(tref$median_year[2]),
+      ".csv",
+      sep = ""
+    )
+  )
+
+cstar_tref_2 <- cstar_tref_2 %>%
+  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
+  pivot_longer(cstar_no3:cstar_po4,
+               names_to = "cstar_variant",
+               names_prefix = "cstar_",
+               values_to = "cstar_tref_2")
+
+```
+
+
 ```{r load_model_gamma_climatology}
 
 climatology <-
@@ -231,7 +274,7 @@ dcant_3d_cc <- dcant_3d %>%
             tcant_tref_1, dcant, dcant_pos,
             gamma, gamma_slab)
 
-rm(climatology, dcant_3d)
+rm(dcant_3d)
 
 ```
 
@@ -257,6 +300,46 @@ surface_data <- nrow(dcant_3d %>% filter(method == "surface")) > 0
 ```
 
 
+```{r calc_model_dcant_between_tref_vc_cstar}
+
+dcant_3d_cstar <- left_join(cstar_tref_1, cstar_tref_2) %>%
+  mutate(dcant = cstar_tref_2 - cstar_tref_1)
+
+rm(cstar_tref_1, cstar_tref_2)
+
+dcant_3d_cstar <- dcant_3d_cstar %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_3d_cstar <- full_join(dcant_3d_cstar, climatology)
+
+dcant_3d_cstar <- dcant_3d_cstar %>%
+  mutate(
+    method = "surface",
+    method = if_else(
+      depth >= params_local$depth_min | gamma >= params_local$gamma_min,
+      "eMLR",
+      method
+    )
+  )
+
+dcant_3d_cstar <- m_cut_gamma(dcant_3d_cstar, "gamma")
+
+dcant_3d_cstar <- inner_join(
+  dcant_3d_cstar,
+  basinmask %>%
+    filter(MLR_basins == params_local$MLR_basins) %>%
+    select(-MLR_basins)
+) 
+
+dcant_3d_cstar <- dcant_3d_cstar %>% 
+  mutate(data_source = "mod_truth_cstar") %>% 
+  select(lon, lat, depth, basin_AIP, data_source, cstar_variant, method,
+            cstar_tref_1, cstar_tref_2, dcant, dcant_pos,
+            gamma, gamma_slab)
+
+```
+
+
 # Maps
 
 ```{r cant_deep_climatology_map, fig.asp=0.6}
@@ -266,8 +349,22 @@ dcant_3d %>%
   # head(1) %>%
   map(~ p_map_climatology(
     df = .x,
-    var = "dcant_pos",
+    var = "dcant",
     subtitle_text = paste("Climate: ", .x$data_source)
+  ))
+
+```
+
+
+```{r cant_deep_climatology_map_cstar, fig.asp=0.6}
+
+dcant_3d_cstar %>%
+  group_split(cstar_variant) %>%
+  # head(1) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "dcant",
+    subtitle_text = paste("Cstar_variant: ", .x$cstar_variant)
   ))
 
 ```
@@ -280,8 +377,21 @@ dcant_3d %>%
   # head(1) %>%
   map(~ p_section_climatology_regular(
     df = .x,
-    var = "dcant_pos",
+    var = "dcant",
     subtitle_text = paste("Climate: ", .x$data_source)
+  ))
+
+```
+
+```{r cant_deep_climatology_sections_cstar, fig.asp=1}
+
+dcant_3d_cstar %>%
+  group_split(cstar_variant) %>%
+  # head(1) %>%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = "dcant",
+    subtitle_text = paste("cstar_variant: ", .x$cstar_variant)
   ))
 
 ```

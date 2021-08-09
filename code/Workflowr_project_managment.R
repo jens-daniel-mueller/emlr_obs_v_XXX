@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised flag filtering only for predictors used")
+wflow_publish(all = TRUE, message = "added cstar-based dcant estimate")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "included calculation of revelle factor",
+message = "without P, AIP basins",
 republish = TRUE)
 
 
