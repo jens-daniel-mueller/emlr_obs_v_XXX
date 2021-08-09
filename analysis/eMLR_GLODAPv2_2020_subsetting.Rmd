@@ -982,9 +982,18 @@ rm(GLODAP_obs_grid_temp)
 
 ### Phosphate
 
+Phosphate was used as predictor:
+
+```{r check_phosphate_predictor}
+
+P_used <- "phosphate" %in% params_local$MLR_predictors
+
+```
+
+
 #### NA
 
-```{r phosphate_na_subset, fig.asp=0.6}
+```{r phosphate_na_subset, fig.asp=0.6, eval=P_used}
 
 GLODAP <- GLODAP %>% 
   mutate(phosphatena = if_else(is.na(phosphate), "NA", "Value"))
@@ -1028,7 +1037,7 @@ rm(GLODAP_obs_grid_temp)
 
 #### f flag
 
-```{r phosphate_f_subset, fig.asp=0.6}
+```{r phosphate_f_subset, fig.asp=0.6, eval=P_used}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphatef)
@@ -1052,7 +1061,7 @@ GLODAP <- GLODAP %>%
 
 #### qc flag
 
-```{r phosphate_qc_subset, fig.asp=0.6}
+```{r phosphate_qc_subset, fig.asp=0.6, eval=P_used}
 
 GLODAP_obs_grid_temp <- GLODAP %>%
   count(lat, lon, era, phosphateqc)
@@ -1133,8 +1142,7 @@ if ("silicate" %in% params_local$MLR_predictors) {
 
 ##
 
-if ("oxygen" %in% params_local$MLR_predictors |
-    "phosphate_star" %in% params_local$MLR_predictors) {
+if ("oxygen" %in% params_local$MLR_predictors) {
   GLODAP <- GLODAP %>%
     filter(!is.na(oxygen))
   
