@@ -614,16 +614,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef0efda597ef431924af0136a4a4b5e5ce32b64b0targetblankf0efda5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f0efda597ef431924af0136a4a4b5e5ce32b64b0" target="_blank">f0efda5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedd6419c5316633eb38a2c89f6c6a43073cb91713targetblankdd6419ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dd6419c5316633eb38a2c89f6c6a43073cb91713" target="_blank">dd6419c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef0efda597ef431924af0136a4a4b5e5ce32b64b0targetblankf0efda5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedd6419c5316633eb38a2c89f6c6a43073cb91713targetblankdd6419ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f0efda597ef431924af0136a4a4b5e5ce32b64b0" target="_blank">f0efda5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dd6419c5316633eb38a2c89f6c6a43073cb91713" target="_blank">dd6419c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,10 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -670,6 +674,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/dd6419c5316633eb38a2c89f6c6a43073cb91713/analysis/config_parameterization_local.Rmd" target="_blank">dd6419c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-09
+</td>
+<td>
+revised global MLR cleaning
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c65f2e308f2294ca99faece8f63e7fb9977d5d38/docs/config_parameterization_local.html" target="_blank">c65f2e3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -5387,13 +5425,13 @@ params_local &lt;-
     gamma_min = 30,
     # CANYON-B offset threshold
     # (factor applied to standard deviation of all cruise offsets)
-    CANYON_B_cruise_mean = 4,
+    CANYON_B_cruise_mean = 5,
     # (factor applied to median of standard deviations of all cruise offsets)
-    CANYON_B_sample_SD = 5,
+    CANYON_B_sample_SD = 4,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 1000,
-    # break years for eras, numbers indicate the upper end of the respective era
-    c_star_rmse_max = 50,
+    # threshold for the cruise rmse from a global MLR model of the target variable
+    target_global_rmse_max = 20,
     # start years for eras
     era_start = c(2000, 2010),
     # end years for eras
