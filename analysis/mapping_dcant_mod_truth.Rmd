@@ -1016,3 +1016,50 @@ dcant_budget_lat_grid %>%
 ```
 
 
+```{r write_cant_files_cstar}
+
+dcant_3d_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_3d_cstar.csv", sep = ""))
+
+dcant_zonal_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_cstar.csv", sep = ""))
+
+dcant_zonal_method_cstar %>% 
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_method_cstar.csv", sep = ""))
+
+dcant_inv_cstar %>%
+  filter(method == "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_cstar.csv", sep = ""))
+
+dcant_inv_cstar %>%
+  filter(method != "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_method_cstar.csv", sep = ""))
+
+dcant_budget_global_cstar %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global_cstar.csv", sep = ""))
+
+
+dcant_budget_basin_AIP_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_cstar.csv", sep = ""))
+
+
+dcant_budget_basin_MLR_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_cstar.csv", sep = ""))
+
+
+dcant_budget_lat_grid_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_lat_grid_cstar.csv", sep = ""))
+
+```
+
+
