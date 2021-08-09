@@ -82,7 +82,7 @@ dcant estimates from this sensitivity case:
 
 ```{r read_dcant_files}
 
-dcant_inv <-
+dcant_inv_read <-
   read_csv(paste(path_version_data,
                  "dcant_inv.csv",
                  sep = ""))
@@ -92,7 +92,13 @@ dcant_inv_mod_truth <-
                  "dcant_inv_mod_truth.csv",
                  sep = ""))
 
-dcant_inv <- bind_rows(dcant_inv, dcant_inv_mod_truth)
+dcant_inv_cstar <-
+  read_csv(paste(path_version_data,
+                 "dcant_inv_cstar.csv",
+                 sep = ""))
+
+dcant_inv <- bind_rows(dcant_inv_read, dcant_inv_mod_truth)
+dcant_inv_cstar <- bind_rows(dcant_inv_read, dcant_inv_cstar)
 
 dcant_inv_method <-
   read_csv(paste(path_version_data,
@@ -113,6 +119,9 @@ The following analysis is restricted to the standard inventory depth of `r param
 ```{r filter_standard_inventory_depth}
 
 dcant_inv <- dcant_inv %>%
+  filter(inv_depth == params_global$inventory_depth_standard)
+
+dcant_inv_cstar <- dcant_inv_cstar %>%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 dcant_inv_method <- dcant_inv_method %>%
@@ -232,6 +241,69 @@ dcant_inv_method %>%
   ))
 
 ```
+
+## Cstar no3
+
+```{r dcant_all_inventory_map_cstar_no3, fig.asp=0.5}
+
+dcant_inv_bias_cstar <- dcant_inv_cstar %>%
+  filter(data_source %in% c("mod", "no3")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - no3) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_cstar,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: mod - mod_truth")
+
+dcant_inv_cstar %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map(~ p_map_cant_inv(
+    df = .x,
+      var = "dcant",
+      col = "continuous",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+```
+
+
+## Cstar po4
+
+```{r dcant_all_inventory_map_cstar_po4, fig.asp=0.5}
+
+dcant_inv_bias_cstar <- dcant_inv_cstar %>%
+  filter(data_source %in% c("mod", "po4")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - po4) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_cstar,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: mod - mod_truth")
+
+dcant_inv_cstar %>%
+  group_split(data_source) %>%
+  # head(1) %>% 
+  map(~ p_map_cant_inv(
+    df = .x,
+      var = "dcant",
+      col = "continuous",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+```
+
+
 
 # Write files
 
