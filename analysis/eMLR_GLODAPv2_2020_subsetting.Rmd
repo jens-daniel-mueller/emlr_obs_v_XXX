@@ -287,7 +287,7 @@ GLODAP_combined <- GLODAP_combined %>%
   filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors))
 
 GLODAP_combined <- left_join(GLODAP_combined,
-                             GLODAP %>% select(row_number, era))
+                             GLODAP %>% distinct(row_number, era))
 
 
 ```
@@ -359,35 +359,36 @@ GLODAP_combined %>%
 
 ```
 
-
 ### Cruise offset metrics
-
 
 ```{r CANYON_B_residuals_cruise_metrics, fig.asp=0.4}
 
 # calculate mean cruise offset by parameter
-cruise_all <- GLODAP_combined %>%
+cruise_stats <- GLODAP_combined %>%
   group_by(cruise, parameter) %>%
   summarise(
     mean_offset = mean(offset, na.rm = TRUE),
+    mean_offset_rank = rank(mean_offset),
     sd_offset = sd(offset, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+# calculate offset parameters across all observations
+GLODAP_stats <- cruise_stats %>%
+  group_by(parameter) %>%
+  summarise(
+    mean_offset_max = sd(mean_offset, na.rm = TRUE) *
+      params_local$CANYON_B_cruise_mean,
+    sd_offset_max = median(sd_offset, na.rm = TRUE) *
+      params_local$CANYON_B_sample_SD
   ) %>%
   ungroup()
 
 
 # rank offsets and calculate offset thresholds
-cruise_all <- cruise_all %>%
-  group_by(parameter) %>%
-  mutate(
-    mean_offset_rank = rank(mean_offset),
-    mean_offset_max = sd(mean_offset, na.rm = TRUE) *
-      params_local$CANYON_B_max,
-    sd_offset_max = median(sd_offset, na.rm = TRUE) *
-      params_local$CANYON_B_max,
-    cruise = as.factor(cruise)
-  ) %>%
-  ungroup() %>%
-  arrange(parameter, mean_offset_rank)
+cruise_stats <- full_join(cruise_stats,
+                          GLODAP_stats) %>%
+  mutate(cruise = as.factor(cruise))
 
 
 ```
@@ -399,14 +400,18 @@ Cruises are removed, when the mean offset of the observation from the value pred
 ```{r CANYON_B_filter_cruises, fig.asp=0.5}
 
 # identify cruises to be removed
-cruise_all <- cruise_all %>%
+cruise_stats <- cruise_stats %>%
   mutate(cruise_flag = if_else(abs(mean_offset) > mean_offset_max,
                                "removed",
                                "included"))
 
-cruise_all %>% 
+cruise_stats %>% 
   ggplot() +
-  geom_vline(aes(xintercept = c(1,-1)* mean_offset_max,
+  geom_vline(data = GLODAP_stats,
+             aes(xintercept = mean_offset_max * c(1),
+             col = "threshold")) +
+  geom_vline(data = GLODAP_stats,
+             aes(xintercept = mean_offset_max * c(-1),
              col = "threshold")) +
   geom_histogram(aes(mean_offset, fill = cruise_flag)) +
   facet_grid(. ~ parameter, scales = "free_x") +
@@ -414,25 +419,25 @@ cruise_all %>%
   scale_fill_brewer(palette = "Set1", direction = -1) +
   theme(legend.title = element_blank())
 
-for (i_parameter in unique(cruise_all$parameter)) {
-  # i_parameter <- unique(cruise_all$parameter)[4]
+for (i_parameter in unique(cruise_stats$parameter)) {
+  # i_parameter <- unique(cruise_stats$parameter)[4]
   
-  i_cruise_all <- cruise_all %>%
+  i_cruise_stats <- cruise_stats %>%
     filter(parameter == i_parameter)
   
-  i_cruise_out <- cruise_all %>%
+  i_cruise_out <- cruise_stats %>%
     filter(parameter == i_parameter,
            cruise_flag == "removed")
   
   print(
     ggplot() +
       geom_hline(
-        data = i_cruise_all,
+        data = i_cruise_stats,
         aes(yintercept = c(-1, 1) * mean_offset_max),
         lty = 2
       ) +
       geom_ribbon(
-        data = i_cruise_all,
+        data = i_cruise_stats,
         aes(
           x = mean_offset_rank,
           ymax = mean_offset + sd_offset,
@@ -440,7 +445,7 @@ for (i_parameter in unique(cruise_all$parameter)) {
         ),
         alpha = 0.3
       ) +
-      geom_path(data = i_cruise_all,
+      geom_path(data = i_cruise_stats,
                 aes(mean_offset_rank, mean_offset)) +
       geom_point(data = i_cruise_out,
                  aes(mean_offset_rank, mean_offset, col = cruise)) +
@@ -449,7 +454,7 @@ for (i_parameter in unique(cruise_all$parameter)) {
   
   print(
     ggplot() +
-      geom_point(data = i_cruise_all,
+      geom_point(data = i_cruise_stats,
                  aes(mean_offset, sd_offset)) +
       geom_point(data = i_cruise_out,
                  aes(mean_offset, sd_offset, col = cruise)) +
@@ -458,7 +463,7 @@ for (i_parameter in unique(cruise_all$parameter)) {
   
 }
 
-rm(i_parameter, i_cruise_all, i_cruise_out)
+rm(i_parameter, i_cruise_stats, i_cruise_out)
 
 ```
 
@@ -470,7 +475,7 @@ cruise_removal_grid <-
     GLODAP_combined %>%
       distinct(era, parameter, cruise, lon, lat) %>%
       mutate(cruise = as.factor(cruise)),
-    cruise_all %>% select(cruise, parameter, cruise_flag)
+    cruise_stats %>% select(cruise, parameter, cruise_flag)
   )
 
 
@@ -510,7 +515,7 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_cruises}
 
-cruise_out <- cruise_all %>% 
+cruise_out <- cruise_stats %>% 
   filter(cruise_flag == "removed") %>% 
   distinct(cruise) %>% 
   pull()
@@ -526,17 +531,16 @@ cruise_removal_ratio <-
   nrow(GLODAP %>% filter(cruise_flag == "removed")) /
   nrow(GLODAP) * 100
 
-cruise_removal_ratio
-
 ```
 
 ```{r stats_cruise_cleaning}
 
-stats_CANYON_B_cleaning_cruises <- lst(
+stats_CANYON_B_cleaning_cruises <- tibble(
   cruise_removal_ratio = cruise_removal_ratio,
-  cruise_removal_n = length(cruise_out),
-  cruises_removed = cruise_out
+  cruise_removal_n = length(cruise_out)
 )
+
+stats_CANYON_B_cleaning_cruises
 
 ```
 
@@ -545,7 +549,7 @@ stats_CANYON_B_cleaning_cruises <- lst(
 
 ```{r filter_samples}
 
-cruise_all %>% 
+cruise_stats %>% 
   ggplot() +
   geom_vline(aes(xintercept = sd_offset_max,
              col = "threshold")) +
@@ -555,19 +559,10 @@ cruise_all %>%
   scale_fill_brewer(palette = "Set1", direction = -1) +
   theme(legend.title = element_blank())
 
-# calculate offset parameters across all observations
-cruise_stats <- cruise_all %>%
-  group_by(parameter) %>%
-  summarise(
-    mean_offset_max = sd(mean_offset, na.rm = TRUE) *
-      params_local$CANYON_B_max,
-    sd_offset_max = median(sd_offset, na.rm = TRUE) *
-      params_local$CANYON_B_max
-  ) %>%
-  ungroup()
 
-GLODAP_combined <- full_join(GLODAP_combined,
-                             cruise_stats)
+GLODAP_combined <-
+  full_join(GLODAP_combined %>% mutate(cruise = as.factor(cruise)),
+            cruise_stats)
 
 GLODAP_combined <- GLODAP_combined %>%
   mutate(sample_flag = if_else(abs(offset) <= sd_offset_max,
@@ -596,12 +591,14 @@ stats_CANYON_B_cleaning_samples <- GLODAP_combined %>%
   group_by(parameter) %>% 
   count(sample_flag)
 
+stats_CANYON_B_cleaning_samples
+
 ```
 
 
 ```{r CANYON_B_removed_samples_map, fig.asp=1}
 
-sample_stats <- GLODAP_combined %>% 
+grid_CANYON_B_cleaning_samples <- GLODAP_combined %>% 
   count(lat, lon, era, parameter, sample_flag) %>% 
   pivot_wider(names_from = sample_flag,
               values_from = n,
@@ -609,7 +606,7 @@ sample_stats <- GLODAP_combined %>%
   mutate(removal_ratio = removed / (removed + included))
   
 map +
-    geom_raster(data = sample_stats,
+    geom_raster(data = grid_CANYON_B_cleaning_samples,
                 aes(lon, lat, fill = removal_ratio)) +
     scale_fill_viridis_c(direction = -1) +
     facet_grid(parameter ~ era) +
@@ -623,13 +620,8 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_samples}
 
-samples_removed <- GLODAP_combined %>% 
-  filter(sample_flag == "removed") %>% 
-  distinct(row_number) %>% 
-  pull()
-
 GLODAP <- GLODAP %>% 
-  mutate(sample_flag = if_else(row_number %in% samples_removed,
+  mutate(sample_flag = if_else(row_number %in% samples_out,
                                 "removed",
                                 "included"))
 
@@ -1308,6 +1300,37 @@ GLODAP  %>%  write_csv(paste(path_version_data,
 tref  %>%  write_csv(paste(path_version_data,
                            "tref.csv",
                            sep = ""))
+
+cruise_stats  %>%  write_csv(paste(
+  path_version_data,
+  "CANYON_B_cleaning_cruise_stats.csv",
+  sep = ""
+))
+
+GLODAP_stats  %>%  write_csv(paste(
+  path_version_data,
+  "CANYON_B_cleaning_GLODAP_stats.csv",
+  sep = ""
+))
+
+stats_CANYON_B_cleaning_cruises  %>%  write_csv(paste(
+  path_version_data,
+  "CANYON_B_cleaning_GLODAP_cruise_removal_stats.csv",
+  sep = ""
+))
+
+stats_CANYON_B_cleaning_samples  %>%  write_csv(paste(
+  path_version_data,
+  "CANYON_B_cleaning_GLODAP_sample_removal_stats.csv",
+  sep = ""
+))
+
+grid_CANYON_B_cleaning_samples  %>%  write_csv(paste(
+  path_version_data,
+  "CANYON_B_cleaning_GLODAP_sample_removal_grid.csv",
+  sep = ""
+))
+
 
 
 ```
