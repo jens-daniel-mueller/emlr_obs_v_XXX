@@ -92,20 +92,20 @@ params$Version_ID
 
 # Required data
 
-Required are: 
+## GLODAP
 
-- GLODAPv2.2020
-  - cleaned data file
-- Cant from Sabine 2004 (S04)
-- Cant from Gruber 2019 (G19)
-- annual mean atmospheric pCO~2~ 
-
-```{r read_required_data_sets}
+```{r read_GLODAP}
 
 GLODAP <-
   read_csv(paste(path_version_data,
                  "GLODAPv2.2020_clean.csv",
                  sep = ""))
+
+```
+
+## Cant fields
+
+```{r read_cant_files}
 
 S04_cant_3d <-
   read_csv(paste(path_preprocessing,
@@ -130,6 +130,12 @@ m07_cant_3d <-
     "cant_annual_field_AD/cant_2007.csv",
     sep = ""
   ))
+
+```
+
+## CO2 atm and disequi
+
+```{r read_atm_and_disequilibrium_CO2}
 
 co2_atm <-
   read_csv(paste(path_preprocessing,
@@ -167,11 +173,13 @@ delta_pco2_annual <- bind_rows(
 )
 
 rm(delta_pco2_annual_mod, delta_pco2_annual_obs)
+```
 
-tref <-
-  read_csv(paste(path_version_data,
-                 "tref.csv",
-                 sep = ""))
+## Surface ocean
+
+```{r read_surface_ocean}
+
+### model data
 
 variables <-
   c("talkos", "spco2", "tos", "sos")
@@ -200,6 +208,8 @@ surface_mod <- surface_mod %>%
          temp = tos,
          sal = sos)
 
+### Observational data (OceanSODA)
+
 surface_obs <- read_csv(paste0(
     path_observations,
     "preprocessing/OceanSODA.csv")
@@ -215,7 +225,21 @@ surface <- bind_rows(
 
 rm(surface_mod, surface_obs)
 
+
+
 ```
+
+## Others
+
+```{r read_other_data}
+
+tref <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
+```
+
 
 ## Convert to long format
 
@@ -243,7 +267,7 @@ GLODAP <- GLODAP %>%
 
 The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.  
 
-Here we use following equation:
+Here we use following equation, if PO~4~* is used as predictor:
 
 ```{r calculate_phosphate_star}
 
@@ -256,7 +280,7 @@ GLODAP <- GLODAP %>%
 
 ```
 
-
+Note, currently we decided to avoid using PO~4~* as predictor, because it is equivalent to using PO~4~ and O~2~.
 
 # C*
 
@@ -280,21 +304,17 @@ C* can optionally be calculated based on phosphate or nitrate.
 
 ```{r calculate_cstar}
 
-if("phosphate" %in% names(GLODAP) &
-   "nitrate" %in% names(GLODAP)) {
-  GLODAP <- GLODAP %>%
-    mutate(
-      cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk),
-      cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)
-    )
-  
-  
-  p_prop_prop(df = GLODAP,
-              var1 = "cstar_phosphate",
-              var2 = "cstar_nitrate") +
-    facet_grid(data_source ~ basin_AIP)
-  
-}
+GLODAP <- GLODAP %>%
+  mutate(
+    cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk),
+    cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)
+  )
+
+
+p_prop_prop(df = GLODAP,
+            var1 = "cstar_phosphate",
+            var2 = "cstar_nitrate") +
+  facet_grid(data_source ~ basin_AIP)
 
 ```
 
@@ -460,17 +480,18 @@ tcant_3d_t1 <- tcant_3d %>%
 ```
 
 
-### tcant at tref2
+### Revelle factor ratio
 
-Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.
+```{r calc_rev_fac_ratio, fig.asp=0.5}
 
-```{r calc_rev_fac_ratio}
-
+# determine mean year for both eras
 tref_mean <- c(sort(tref$median_year)[1]-50 , mean(tref$median_year))
 
+# extract surface ocean data for second mean year
 surface <- surface %>% 
   filter(year == mean(tref$median_year))
 
+# extract atm pCO2 level for time before first era
 delta_pCO2_hist <- co2_atm_reccap2 %>% 
   filter(year %in% tref_mean) %>% 
   arrange(year) %>% 
@@ -478,7 +499,7 @@ delta_pCO2_hist <- co2_atm_reccap2 %>%
   drop_na() %>% 
   pull(delta_pCO2_hist)
 
-
+# derive historic surface pCO2 field
 surface_hist <- surface %>% 
   mutate(pCO2 = pCO2 - delta_pCO2_hist,
          year = tref_mean[1])
@@ -494,6 +515,7 @@ map +
   scale_fill_viridis_c() +
   facet_grid(data_source ~ year)
 
+# calculate surface revelle factor dibution
 surface <- surface %>%
   drop_na() %>% 
   mutate(
@@ -514,6 +536,7 @@ map +
   scale_fill_viridis_c() +
   facet_grid(data_source ~ year)
 
+# calculate revelle factor ratios
 surface <- surface %>% 
   arrange(year) %>% 
   group_by(lon, lat, data_source) %>% 
@@ -527,6 +550,7 @@ map +
   scale_fill_viridis_c() +
   facet_grid(data_source ~ .)
 
+# area weighted mean changes in revelle factor
 rev_fac_ratio <- surface %>% 
   mutate(area = earth_surf(lat = lat),
          rev_fac_ratio_scaled = area * rev_fac_ratio) %>% 
@@ -538,6 +562,7 @@ rm(surface, surface_hist, delta_pCO2_hist, tref_mean)
 
 ```
 
+### Alpha
 
 ```{r calc_alpha}
 
@@ -625,6 +650,12 @@ alpha_df <- disequi_pCO2_change %>%
 
 
 ```
+
+
+### tcant at tref2
+
+Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.
+
 
 ```{r calc_cant_tref1}
 
@@ -821,54 +852,6 @@ GLODAP %>%
 
 ```
 
-# Selected section plots
-
-A selected section is plotted to demonstrate the magnitude of various parameters and corrections relevant to C*.
-
-```{r select_cruises, eval=FALSE}
-
-GLODAP_cruise <- GLODAP %>% 
-  filter(cruise %in% params_global$cruises_meridional)
-
-```
-
-
-```{r meridional_sections, eval=FALSE}
-
-map +
-  geom_path(data = GLODAP_cruise %>%
-              arrange(date),
-            aes(lon, lat)) +
-  geom_point(data = GLODAP_cruise %>%
-              arrange(date),
-             aes(lon, lat, col = date)) +
-  scale_color_viridis_c(trans = "date") +
-  labs(title = paste("Cruise year:", mean(GLODAP_cruise$year))) +
-  facet_wrap(~ data_source)
-
-lat_section <- 
-GLODAP_cruise %>%
-  ggplot(aes(lat, depth)) +
-  scale_y_reverse() +
-  scale_fill_viridis_c() +
-  theme(axis.title.x = element_blank()) +
-  facet_wrap(~ data_source)
-
-for (i_var in c("tco2",
-                "cstar",
-                "cstar_tref")) {
-  print(lat_section +
-          stat_summary_2d(aes(z = !!sym(i_var))) +
-          scale_fill_viridis_c(name = i_var)
-        )
-  
-}
-
-rm(lat_section, GLODAP_cruise)
-
-```
-
-
 # Isoneutral slabs
 
 ```{r density_histograms}
@@ -922,26 +905,6 @@ Continuous neutral densities (gamma) values from GLODAP are grouped into isoneut
 ```{r cut_isoneutral_slabs}
 
 GLODAP <- m_cut_gamma(GLODAP, "gamma")
-
-```
-
-```{r meridional_sections_isoneutral_slabs, fig.asp=0.6, eval=FALSE}
-
-GLODAP_cruise <- GLODAP %>% 
-  filter(cruise %in% params_global$cruises_meridional)
-
-lat_section <- 
-GLODAP_cruise %>%
-  ggplot(aes(lat, depth)) +
-  scale_y_reverse() +
-  theme(legend.position = "bottom") +
-  facet_wrap(~ data_source)
-
-lat_section +
-  geom_point(aes(col = gamma_slab)) +
-  scale_color_viridis_d()
-
-rm(lat_section, GLODAP_cruise)
 
 ```
 
@@ -1002,46 +965,55 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 ```
 
-
-
 # Rarefication
 
-```{r coarse_grid, fig.asp=0.5}
+```{r coarse_grid}
 
+# apply coarse grid
 GLODAP <- m_grid_horizontal_coarse(GLODAP)
 
+# count data in each coarse grid element
 GLODAP_grid <- GLODAP %>% 
-  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
   count() %>% 
   ungroup()
 
 GLODAP_grid %>%
   ggplot(aes(n)) +
   geom_histogram(binwidth = 1) +
+  facet_grid(data_source ~ .) +
   labs(title = "Observations per era, grid cell and slab, all data")
 
 GLODAP_grid %>%
   filter(n <= quantile(n, 0.9)) %>%
   ggplot(aes(n)) +
   geom_histogram(binwidth = 1) +
+  facet_grid(data_source ~ .) +
   labs(title = "Observations per era, grid cell and slab, 90th quantile")
 
 ```
 
 
-```{r rarefication, fig.asp=2}
+```{r rarefication, fig.asp=0.6}
 
-map +
-  geom_raster(data = GLODAP_grid,
-              aes(lon_grid, lat_grid, fill = n)) +
-  facet_grid(gamma_slab ~ era) +
-  scale_fill_viridis_c(trans = "log10") +
-  labs(title = "Before rarefication")
+GLODAP_grid %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>% 
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon_grid, lat_grid, fill = n)) +
+      facet_grid(data_source ~ era) +
+      scale_fill_viridis_c(trans = "log10") +
+      labs(title = paste("Before rarefication | gamma_slab",
+                         unique(.x$gamma_slab)))
+  )
 
 if (params_local$rarefication == "coarse_grid") {
 
 GLODAP <- GLODAP %>% 
-  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
   slice_sample(n = params_local$rarefication_threshold) %>% 
   ungroup()
 
@@ -1049,16 +1021,24 @@ GLODAP <- GLODAP %>%
 
 
 GLODAP_grid <- GLODAP %>% 
-  group_by(lat_grid, lon_grid, gamma_slab, era) %>% 
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
   count() %>% 
   ungroup()
 
-map +
-  geom_raster(data = GLODAP_grid,
-              aes(lon_grid, lat_grid, fill = n)) +
-  facet_grid(gamma_slab ~ era) +
-  scale_fill_viridis_c(trans = "log10") +
-  labs(title = "After rarefication")
+GLODAP_grid %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon_grid, lat_grid, fill = n)) +
+      facet_grid(data_source ~ era) +
+      scale_fill_viridis_c(trans = "log10") +
+      labs(title = paste("After rarefication | gamma_slab",
+                         unique(.x$gamma_slab)))
+  )
+
 
 GLODAP <- GLODAP %>% 
   select(-c(lat_grid, lon_grid))
@@ -1150,7 +1130,7 @@ model
 
 # prepare nested data frame
 GLODAP_nested <- GLODAP %>%
-  group_by(gamma_slab, basin, data_source) %>%
+  group_by(gamma_slab, data_source) %>%
   nest()
 
 # expand with model definitions
@@ -1188,24 +1168,39 @@ rm(GLODAP_data)
 
 Below, the residuals of C* from the mean C* and from C* predicted with the global model are shown.
 
-```{r Residuals_global_c_star, fig.asp=0.4}
+```{r Residuals_global_c_star}
 
-GLODAP_augmented %>%
+GLODAP_augmented <- GLODAP_augmented %>%
   group_by(data_source) %>% 
   mutate(cstar_minus_mean = cstar_tref - mean(cstar_tref)) %>% 
-  ungroup() %>% 
+  ungroup() 
+
+GLODAP_augmented%>% 
   ggplot(aes(year, cstar_minus_mean)) +
   geom_hline(yintercept = 0) +
   geom_bin2d(binwidth = c(1, 1)) +
   scale_fill_viridis_c() +
-  facet_grid(. ~ data_source)
+  facet_grid(basin_AIP ~ data_source)
+
+GLODAP_augmented %>%
+  ggplot(aes(cstar_minus_mean)) +
+  geom_vline(xintercept = 0) +
+  geom_histogram(binwidth = 1) +
+  scale_fill_viridis_c() +
+  facet_grid(basin_AIP ~ data_source)
 
 GLODAP_augmented %>%
   ggplot(aes(year, .resid)) +
   geom_hline(yintercept = 0) +
   geom_bin2d(binwidth = c(1, 1)) +
   scale_fill_viridis_c() +
-  facet_grid(. ~ data_source)
+  facet_grid(basin_AIP ~ data_source)
+
+GLODAP_augmented %>%
+  ggplot(aes(.resid)) +
+  geom_vline(xintercept = 0) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(basin_AIP ~ data_source)
 
 ```
 
@@ -1229,7 +1224,7 @@ cruise_all <- cruise_all %>%
 
 cruise_out <- cruise_all %>% 
   filter(data_source == "obs",
-         rmse > params_local$c_star_rmse_max)
+         rmse > params_local$target_global_rmse_max)
 
 GLODAP_out <- GLODAP_augmented %>% 
   filter(cruise %in% cruise_out$cruise)
@@ -1247,190 +1242,29 @@ ggplot() +
 
 ### Removed cruises
 
-Following fraction (%) of cruises was removed:
 
-```{r cstar_rmse_removed_cruises, fig.asp=0.8}
+```{r cstar_rmse_removed_cruises, fig.asp=1}
 
-nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
+cruise_removal_ratio <- nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
-if (nrow(GLODAP_out) > 0) {
-  map +
-  geom_raster(data = GLODAP_out %>% distinct(lat, lon, era),
-              aes(lon, lat)) +
+stats_MLR_cleaning_cruises <- tibble(
+  cruise_removal_ratio = cruise_removal_ratio,
+  cruise_removal_n = length(cruise_out)
+)
+
+stats_MLR_cleaning_cruises
+
+cruise_removal_grid <- GLODAP_out %>%
+  distinct(lat, lon, era, cruise)
+
+map +
+  geom_raster(data = GLODAP %>% distinct(lat, lon, era),
+              aes(lon, lat), fill = "grey70") +
+  geom_raster(data = cruise_removal_grid,
+              aes(lon, lat), fill = "red") +
   facet_wrap( ~ era, ncol = 1) +
   labs(title = "Maps of removed cruises")
 
-} else {
-  print("no cruises removed")
-  
-}
-
-
-```
-
-## Individual cruise sections
-
-Zonal and meridional section plots are produce for each cruise individually and are available under:  
-
-`r paste(path_version_figures, "Cruise_sections_histograms/", sep = "")`
-
-```{r plot_all_individual_cruises_clean, eval=FALSE}
-
-if (params_local$plot_all_figures == "y") {
-
-cruises <- GLODAP %>% 
-  group_by(cruise) %>% 
-  summarise(date_mean = mean(date, na.rm = TRUE),
-            n = n()) %>% 
-  ungroup() %>% 
-  arrange(date_mean)
-
-GLODAP <- full_join(GLODAP, cruises)
-
-n <- 0
-for (i_cruise in unique(cruises$cruise)) {
-
-# i_cruise <- unique(cruises$cruise)[1]
-# n <- n + 1
-# print(n)  
-  
-GLODAP_cruise <- GLODAP %>%
-  filter(cruise == i_cruise) %>% 
-  arrange(date)
-
-cruises_cruise <- cruises %>%
-  filter(cruise == i_cruise)
-  
-map_plot <- 
-  map +
-  geom_point(data = GLODAP_cruise,
-             aes(lon, lat, col = date)) +
-  scale_color_viridis_c(trans = "date") +
-  labs(title = paste("Mean date:", cruises_cruise$date_mean,
-                     "| cruise:", cruises_cruise$cruise,
-                     "| n(samples):", cruises_cruise$n))
-
-
-lon_section <- GLODAP_cruise %>%
-  ggplot(aes(lon, depth)) +
-  scale_y_reverse() +
-  scale_fill_viridis_c()
-
-lon_tco2 <- lon_section+
-  stat_summary_2d(aes(z=tco2))
-
-lon_talk <- lon_section+
-  stat_summary_2d(aes(z=talk))
-
-lon_phosphate <- lon_section+
-  stat_summary_2d(aes(z=phosphate))
-
-lon_oxygen <- lon_section+
-  stat_summary_2d(aes(z=oxygen))
-
-lon_aou <- lon_section+
-  stat_summary_2d(aes(z=aou))
-
-lon_phosphate_star <- lon_section+
-  stat_summary_2d(aes(z=phosphate_star))
-
-lon_nitrate <- lon_section+
-  stat_summary_2d(aes(z=nitrate))
-
-lon_cstar <- lon_section+
-  stat_summary_2d(aes(z=cstar_tref))
-
-
-lat_section <- GLODAP_cruise %>%
-  ggplot(aes(lat, depth)) +
-  scale_y_reverse() +
-  scale_fill_viridis_c()
-
-lat_tco2 <- lat_section+
-  stat_summary_2d(aes(z=tco2))
-
-lat_talk <- lat_section+
-  stat_summary_2d(aes(z=talk))
-
-lat_phosphate <- lat_section+
-  stat_summary_2d(aes(z=phosphate))
-
-lat_oxygen <- lat_section+
-  stat_summary_2d(aes(z=oxygen))
-
-lat_aou <- lat_section+
-  stat_summary_2d(aes(z=aou))
-
-lat_phosphate_star <- lat_section+
-  stat_summary_2d(aes(z=phosphate_star))
-
-lat_nitrate <- lat_section+
-  stat_summary_2d(aes(z=nitrate))
-
-lat_cstar <- lat_section+
-  stat_summary_2d(aes(z=cstar_tref))
-
-hist_tco2 <- GLODAP_cruise %>%
-  ggplot(aes(tco2)) +
-  geom_histogram()
-
-hist_talk <- GLODAP_cruise %>%
-  ggplot(aes(talk)) +
-  geom_histogram()
-
-hist_phosphate <- GLODAP_cruise %>%
-  ggplot(aes(phosphate)) +
-  geom_histogram()
-
-hist_oxygen <- GLODAP_cruise %>%
-  ggplot(aes(oxygen)) +
-  geom_histogram()
-
-hist_aou <- GLODAP_cruise %>%
-  ggplot(aes(aou)) +
-  geom_histogram()
-
-hist_phosphate_star <- GLODAP_cruise %>%
-  ggplot(aes(phosphate_star)) +
-  geom_histogram()
-
-hist_nitrate <- GLODAP_cruise %>%
-  ggplot(aes(nitrate)) +
-  geom_histogram()
-
-hist_cstar <- GLODAP_cruise %>%
-  ggplot(aes(cstar_tref)) +
-  geom_histogram()
-
-(map_plot /
-    ((hist_tco2 / hist_talk / hist_phosphate / hist_cstar) |
-       (hist_oxygen / hist_phosphate_star / hist_nitrate / hist_aou)
-    )) |
-  ((lat_tco2 / lat_talk / lat_phosphate / lat_oxygen / lat_aou / lat_phosphate_star / lat_nitrate / lat_cstar) |
-     (lon_tco2 / lon_talk / lon_phosphate / lon_oxygen /  lon_aou /lon_phosphate_star / lon_nitrate / lon_cstar))    
-
-ggsave(
-  path = paste(path_version_figures, "Cruise_sections_histograms/", sep = ""),
-  filename = paste(
-    "Cruise_date",
-    cruises_cruise$date_mean,
-    "count",
-    cruises_cruise$n,
-    "cruiseID",
-    cruises_cruise$cruise,
-    ".png",
-    sep = "_"
-  ),
-width = 20, height = 12)
-
-rm(map_plot,
-   lon_section, lat_section,
-   lat_tco2, lat_talk, lat_phosphate, lon_tco2, lon_talk, lon_phosphate,
-   GLODAP_cruise, cruises_cruise)
-
-}
-
-}
 
 ```
 
@@ -1475,5 +1309,19 @@ tcant_3d %>%  write_csv(paste(path_version_data,
 tcant_zonal %>%  write_csv(paste(path_version_data,
                              "projected_tcant_zonal_tref.csv",
                              sep = ""))
+
+
+stats_MLR_cleaning_cruises  %>%  write_csv(paste(
+  path_version_data,
+  "MLR_cleaning_cruise_removal_stats.csv",
+  sep = ""
+))
+
+cruise_removal_grid  %>%  write_csv(paste(
+  path_version_data,
+  "MLR_cleaning_cruise_removal_grid.csv",
+  sep = ""
+))
+
 
 ```
