@@ -469,6 +469,11 @@ GLODAP_augmented_best %>%
                   "lm_residuals_best_models.csv",
                   sep = ""))
 
+GLODAP_glanced %>%
+  write_csv(paste(path_version_data,
+                  "lm_model_metrics.csv",
+                  sep = ""))
+
 
 ```
 
@@ -588,7 +593,7 @@ The number of models where a particular predictor was included were counted for 
 ```{r predictor_counts}
 
 # calculate cases of predictor used
-lm_all_stats <- lm_best_dcant %>% 
+lm_best_predictor_counts <- lm_best_dcant %>% 
   pivot_longer(starts_with("delta_coeff_"),
                names_to = "term",
                names_prefix = "delta_coeff_",
@@ -601,7 +606,7 @@ lm_all_stats <- lm_best_dcant %>%
   pivot_wider(values_from = n, names_from = term)
 
 # print table
-lm_all_stats %>%
+lm_best_predictor_counts %>%
   gt(rowname_col = "gamma_slab",
      groupname_col = c("basin", "data_source")) %>% 
   summary_rows(
@@ -972,3 +977,34 @@ GLODAP_glanced_vif %>%
   
 ```
 
+## Write files
+
+```{r write_diagnostic_files}
+
+
+lm_best_predictor_counts %>%
+  write_csv(paste(path_version_data,
+                  "lm_best_predictor_counts.csv",
+                  sep = ""))
+
+lat_residual %>%
+  write_csv(paste(path_version_data,
+                  "lm_lat_residual.csv",
+                  sep = ""))
+
+lat_residual_offset %>%
+  write_csv(paste(path_version_data,
+                  "lm_lat_residual_offset.csv",
+                  sep = ""))
+
+spatial_residual %>%
+  write_csv(paste(path_version_data,
+                  "lm_spatial_residual.csv",
+                  sep = ""))
+
+spatial_residual_offset %>%
+  write_csv(paste(path_version_data,
+                  "lm_spatial_residual_offset.csv",
+                  sep = ""))
+
+```

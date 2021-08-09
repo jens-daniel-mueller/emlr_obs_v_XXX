@@ -995,7 +995,7 @@ dcant_budget_lat_grid %>%
          method %in% c("surface", "eMLR")) %>%
   group_by(basin_AIP) %>%
   group_split() %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ ggplot(data = .x,
              aes(lat_grid, value, fill = method)) +
