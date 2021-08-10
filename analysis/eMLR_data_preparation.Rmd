@@ -1238,7 +1238,7 @@ ggplot() +
 
 ```
 
-### Removed cruises
+## Removed cruises
 
 
 ```{r cstar_rmse_removed_cruises, fig.asp=1}
@@ -1266,10 +1266,7 @@ map +
 
 ```
 
-
-# Write files
-
-```{r write_csv_GLODAP_used_for_fitting}
+```{r clean_GLODAP}
 
 # select relevant columns
 GLODAP <- GLODAP %>%
@@ -1290,11 +1287,52 @@ GLODAP <- GLODAP %>%
     params_local$MLR_target
   )
 
+```
+
+
+# Create observation grids
+
+Grid containing all grid cells where at least one observation remains available after cleaning.
+
+```{r create_clean_GLODAP_grids}
+
+GLODAP_grid <- GLODAP %>% 
+  distinct(lat, lon)
+
+GLODAP_grid_era <- GLODAP %>% 
+  distinct(lat, lon, era)
+
+GLODAP_grid_era_gamma <- GLODAP %>% 
+  distinct(lat, lon, era, gamma_slab)
+
+```
+
+
+# Write files
+
+```{r write_csv_GLODAP_used_for_fitting}
+
+
 GLODAP %>% write_csv(paste(
   path_version_data,
   "GLODAPv2.2020_MLR_fitting_ready.csv",
   sep = ""
 ))
+
+GLODAP_grid  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAPv2.2020_clean_obs_grid.csv",
+                  sep = ""))
+
+GLODAP_grid_era  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAPv2.2020_clean_obs_grid_era.csv",
+                  sep = ""))
+
+GLODAP_grid_era_gamma  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAPv2.2020_clean_obs_grid_era_gamma.csv",
+                  sep = ""))
 
 co2_atm_tref %>%  write_csv(paste(path_version_data,
                                   "co2_atm_tref.csv",

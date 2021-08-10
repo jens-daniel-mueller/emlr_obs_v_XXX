@@ -368,10 +368,17 @@ cruise_stats <- GLODAP_combined %>%
   group_by(cruise, parameter) %>%
   summarise(
     mean_offset = mean(offset, na.rm = TRUE),
-    mean_offset_rank = rank(mean_offset),
     sd_offset = sd(offset, na.rm = TRUE)
   ) %>%
   ungroup()
+
+cruise_stats <- cruise_stats %>%
+  group_by(parameter) %>%
+  mutate(
+    mean_offset_rank = rank(mean_offset)
+  ) %>%
+  ungroup() %>% 
+  arrange(mean_offset_rank)
 
 # calculate offset parameters across all observations
 GLODAP_stats <- cruise_stats %>%
@@ -1267,26 +1274,10 @@ tref
 
 ```
 
-## Create clean observations grid
-
-Grid containing all grid cells where at least one observation remains available after cleaning.
-
-```{r create_clean_obs_grid}
-
-GLODAP_obs_grid_clean <- GLODAP %>% 
-  distinct(lat, lon)
-
-```
-
 
 ## Write files
  
 ```{r write_clean_data_files}
-
-GLODAP_obs_grid_clean  %>%
-  write_csv(paste(path_version_data,
-                  "GLODAPv2.2020_clean_obs_grid.csv",
-                  sep = ""))
 
 # select relevant columns for further analysis
 GLODAP <- GLODAP %>% 
