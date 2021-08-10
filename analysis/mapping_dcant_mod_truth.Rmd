@@ -322,7 +322,6 @@ dcant_3d_cstar <- dcant_3d_cstar %>%
     )
   )
 
-dcant_3d_cstar <- m_cut_gamma(dcant_3d_cstar, "gamma")
 
 dcant_3d_cstar <- inner_join(
   dcant_3d_cstar,
@@ -330,6 +329,9 @@ dcant_3d_cstar <- inner_join(
     filter(MLR_basins == params_local$MLR_basins) %>%
     select(-MLR_basins)
 ) 
+
+dcant_3d_cstar <- m_cut_gamma(dcant_3d_cstar, "gamma")
+
 
 dcant_3d_cstar <- dcant_3d_cstar %>% 
   # mutate(data_source = "mod_truth_cstar") %>% 
