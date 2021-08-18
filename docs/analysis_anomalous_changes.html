@@ -14,13 +14,22 @@
 
 <title>Analysis of dcant estimates</title>
 
-<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -28,8 +37,6 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -53,11 +60,6 @@ div.section {
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -70,32 +72,7 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -105,10 +82,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -125,40 +98,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -186,7 +132,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -198,7 +144,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -209,10 +155,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -224,7 +183,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -359,7 +317,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -484,11 +442,11 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -498,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of dcant estimates</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">10 August, 2021</h4>
+<h4 class="date">18 August, 2021</h4>
 
 </div>
 
@@ -523,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-10
+<strong>Last updated:</strong> 2021-08-18
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree26d595cc5ee1c6f24f8faca7386df6f351f3003btargetblank26d595ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/26d595cc5ee1c6f24f8faca7386df6f351f3003b" target="_blank">26d595c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree26d595cc5ee1c6f24f8faca7386df6f351f3003btargetblank26d595ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/26d595cc5ee1c6f24f8faca7386df6f351f3003b" target="_blank">26d595c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -674,6 +632,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/analysis_anomalous_changes.html" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -2651,6 +2626,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-1.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -3060,6 +3046,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-2.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-2.png" target="_blank">9943b45</a>
@@ -3473,6 +3470,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-3.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/bias_correlation_mod-3.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -3865,6 +3873,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/vertical_bias_distribution_basin-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/vertical_bias_distribution_basin-1.png" target="_blank">9943b45</a>
@@ -4278,6 +4297,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/vertical_bias_distribution-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/vertical_bias_distribution-1.png" target="_blank">9943b45</a>
@@ -4735,6 +4765,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-1.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -5004,6 +5045,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-2.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-2.png" target="_blank">9943b45</a>
@@ -5577,6 +5629,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-5.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-5.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -5846,6 +5909,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-6.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-6.png" target="_blank">9943b45</a>
@@ -6397,6 +6471,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-9.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-9.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -6666,6 +6751,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-10.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-10.png" target="_blank">9943b45</a>
@@ -7233,6 +7329,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-13.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-13.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -7512,6 +7619,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-14.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-14.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -7789,6 +7907,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-15.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_mod-15.png" target="_blank">9943b45</a>
@@ -8089,6 +8218,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-1.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -8358,6 +8498,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-2.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-2.png" target="_blank">9943b45</a>
@@ -8903,6 +9054,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-5.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-5.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -9180,6 +9342,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-6.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-6.png" target="_blank">9943b45</a>
@@ -9461,6 +9634,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-7.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_mod-7.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -9720,29 +9904,29 @@ dcant_mod_budget %&gt;%
             #dcant_rate = dcant / duration,
             dcant_pos_rate = dcant_pos / duration) %&gt;% 
   ungroup()</code></pre>
-<pre><code># A tibble: 20 x 4
+<pre><code>[38;5;246m# A tibble: 20 × 4[39m
    estimate     inv_depth dcant_pos dcant_pos_rate
-   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
- 1 emlr               100       3.9           0.39
- 2 emlr               500      13.5           1.35
- 3 emlr              1000      18.3           1.83
- 4 emlr              3000      23.2           2.32
- 5 emlr             10000      24.2           2.42
- 6 mod_truth_cc       100       3.6           0.36
- 7 mod_truth_cc       500      13.4           1.34
- 8 mod_truth_cc      1000      18.1           1.81
- 9 mod_truth_cc      3000      20.5           2.05
-10 mod_truth_cc     10000      20.5           2.05
-11 mod_truth_vc       100       3.7           0.37
-12 mod_truth_vc       500      13.6           1.36
-13 mod_truth_vc      1000      18.4           1.84
-14 mod_truth_vc      3000      20.8           2.08
-15 mod_truth_vc     10000      21.2           2.12
-16 ss_tss             100       3.4           0.34
-17 ss_tss             500      12             1.2 
-18 ss_tss            1000      15.6           1.56
-19 ss_tss            3000      17.3           1.73
-20 ss_tss           10000      17.5           1.75</code></pre>
+   [3m[38;5;246m&lt;chr&gt;[39m[23m            [3m[38;5;246m&lt;dbl&gt;[39m[23m     [3m[38;5;246m&lt;dbl&gt;[39m[23m          [3m[38;5;246m&lt;dbl&gt;[39m[23m
+[38;5;250m 1[39m emlr               100       0.4            0.4
+[38;5;250m 2[39m emlr               500       2              2  
+[38;5;250m 3[39m emlr              [4m1[24m000       3.4            3.4
+[38;5;250m 4[39m emlr              [4m3[24m000       6.7            6.7
+[38;5;250m 5[39m emlr             [4m1[24m[4m0[24m000       7.6            7.6
+[38;5;250m 6[39m mod_truth_cc       100       0.4            0.4
+[38;5;250m 7[39m mod_truth_cc       500       1.3            1.3
+[38;5;250m 8[39m mod_truth_cc      [4m1[24m000       1.8            1.8
+[38;5;250m 9[39m mod_truth_cc      [4m3[24m000       2              2  
+[38;5;250m10[39m mod_truth_cc     [4m1[24m[4m0[24m000       2.1            2.1
+[38;5;250m11[39m mod_truth_vc       100       0.4            0.4
+[38;5;250m12[39m mod_truth_vc       500       1.5            1.5
+[38;5;250m13[39m mod_truth_vc      [4m1[24m000       2.1            2.1
+[38;5;250m14[39m mod_truth_vc      [4m3[24m000       2.4            2.4
+[38;5;250m15[39m mod_truth_vc     [4m1[24m[4m0[24m000       2.4            2.4
+[38;5;250m16[39m ss_tss             100       0.5            0.5
+[38;5;250m17[39m ss_tss             500       2              2  
+[38;5;250m18[39m ss_tss            [4m1[24m000       2.6            2.6
+[38;5;250m19[39m ss_tss            [4m3[24m000       2.9            2.9
+[38;5;250m20[39m ss_tss           [4m1[24m[4m0[24m000       2.9            2.9</code></pre>
 <div id="standard-depth" class="section level3" number="5.4.1">
 <h3 number="5.4.1"><span class="header-section-number">5.4.1</span> Standard depth</h3>
 <p>Results integrated over the upper 3000 m</p>
@@ -9774,6 +9958,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_standard_depth_mod-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_standard_depth_mod-1.png" target="_blank">9943b45</a>
@@ -10033,7 +10228,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#rtnjctoczu .gt_table {
+#lyppdeaemj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -10058,7 +10253,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_heading {
+#lyppdeaemj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -10070,7 +10265,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_title {
+#lyppdeaemj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -10080,7 +10275,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#rtnjctoczu .gt_subtitle {
+#lyppdeaemj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -10090,13 +10285,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#rtnjctoczu .gt_bottom_border {
+#lyppdeaemj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_col_headings {
+#lyppdeaemj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -10111,7 +10306,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_col_heading {
+#lyppdeaemj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10131,7 +10326,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#rtnjctoczu .gt_column_spanner_outer {
+#lyppdeaemj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10143,15 +10338,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#rtnjctoczu .gt_column_spanner_outer:first-child {
+#lyppdeaemj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rtnjctoczu .gt_column_spanner_outer:last-child {
+#lyppdeaemj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rtnjctoczu .gt_column_spanner {
+#lyppdeaemj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -10163,7 +10358,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#rtnjctoczu .gt_group_heading {
+#lyppdeaemj .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -10185,7 +10380,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#rtnjctoczu .gt_empty_group_heading {
+#lyppdeaemj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -10200,15 +10395,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#rtnjctoczu .gt_from_md > :first-child {
+#lyppdeaemj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rtnjctoczu .gt_from_md > :last-child {
+#lyppdeaemj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rtnjctoczu .gt_row {
+#lyppdeaemj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10227,7 +10422,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#rtnjctoczu .gt_stub {
+#lyppdeaemj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10239,7 +10434,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#rtnjctoczu .gt_summary_row {
+#lyppdeaemj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -10249,7 +10444,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#rtnjctoczu .gt_first_summary_row {
+#lyppdeaemj .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10259,7 +10454,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_grand_summary_row {
+#lyppdeaemj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -10269,7 +10464,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#rtnjctoczu .gt_first_grand_summary_row {
+#lyppdeaemj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10279,11 +10474,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_striped {
+#lyppdeaemj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rtnjctoczu .gt_table_body {
+#lyppdeaemj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -10292,7 +10487,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_footnotes {
+#lyppdeaemj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -10306,13 +10501,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_footnote {
+#lyppdeaemj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#rtnjctoczu .gt_sourcenotes {
+#lyppdeaemj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -10326,46 +10521,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#rtnjctoczu .gt_sourcenote {
+#lyppdeaemj .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#rtnjctoczu .gt_left {
+#lyppdeaemj .gt_left {
   text-align: left;
 }
 
-#rtnjctoczu .gt_center {
+#lyppdeaemj .gt_center {
   text-align: center;
 }
 
-#rtnjctoczu .gt_right {
+#lyppdeaemj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rtnjctoczu .gt_font_normal {
+#lyppdeaemj .gt_font_normal {
   font-weight: normal;
 }
 
-#rtnjctoczu .gt_font_bold {
+#lyppdeaemj .gt_font_bold {
   font-weight: bold;
 }
 
-#rtnjctoczu .gt_font_italic {
+#lyppdeaemj .gt_font_italic {
   font-style: italic;
 }
 
-#rtnjctoczu .gt_super {
+#lyppdeaemj .gt_super {
   font-size: 65%;
 }
 
-#rtnjctoczu .gt_footnote_marks {
+#lyppdeaemj .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="rtnjctoczu" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="lyppdeaemj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -10379,76 +10574,76 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">1.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">6.9</td>
+      <td class="gt_row gt_right">2.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.7</td>
+      <td class="gt_row gt_right">2.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">23.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">6.70</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_cc | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.2</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.5</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.8</td>
+      <td class="gt_row gt_right">1.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.50</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_vc | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.1</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.6</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.1</td>
+      <td class="gt_row gt_right">1.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.80</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.4</td>
+      <td class="gt_row gt_right">0.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.6</td>
+      <td class="gt_row gt_right">0.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">8.3</td>
+      <td class="gt_row gt_right">1.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">17.30</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.90</td>
     </tr>
   </tbody>
   
@@ -10487,6 +10682,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_other_depth_mod-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_other_depth_mod-1.png" target="_blank">9943b45</a>
@@ -10746,7 +10952,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#saedqsasut .gt_table {
+#zdtxdianvx .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -10771,7 +10977,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#saedqsasut .gt_heading {
+#zdtxdianvx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -10783,7 +10989,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#saedqsasut .gt_title {
+#zdtxdianvx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -10793,7 +10999,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#saedqsasut .gt_subtitle {
+#zdtxdianvx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -10803,13 +11009,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#saedqsasut .gt_bottom_border {
+#zdtxdianvx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#saedqsasut .gt_col_headings {
+#zdtxdianvx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -10824,7 +11030,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#saedqsasut .gt_col_heading {
+#zdtxdianvx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10844,7 +11050,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#saedqsasut .gt_column_spanner_outer {
+#zdtxdianvx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10856,15 +11062,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#saedqsasut .gt_column_spanner_outer:first-child {
+#zdtxdianvx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#saedqsasut .gt_column_spanner_outer:last-child {
+#zdtxdianvx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#saedqsasut .gt_column_spanner {
+#zdtxdianvx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -10876,7 +11082,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#saedqsasut .gt_group_heading {
+#zdtxdianvx .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -10898,7 +11104,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#saedqsasut .gt_empty_group_heading {
+#zdtxdianvx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -10913,15 +11119,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#saedqsasut .gt_from_md > :first-child {
+#zdtxdianvx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#saedqsasut .gt_from_md > :last-child {
+#zdtxdianvx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#saedqsasut .gt_row {
+#zdtxdianvx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10940,7 +11146,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#saedqsasut .gt_stub {
+#zdtxdianvx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -10952,7 +11158,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#saedqsasut .gt_summary_row {
+#zdtxdianvx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -10962,7 +11168,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#saedqsasut .gt_first_summary_row {
+#zdtxdianvx .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10972,7 +11178,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#saedqsasut .gt_grand_summary_row {
+#zdtxdianvx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -10982,7 +11188,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#saedqsasut .gt_first_grand_summary_row {
+#zdtxdianvx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -10992,11 +11198,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#saedqsasut .gt_striped {
+#zdtxdianvx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#saedqsasut .gt_table_body {
+#zdtxdianvx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -11005,7 +11211,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#saedqsasut .gt_footnotes {
+#zdtxdianvx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -11019,13 +11225,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#saedqsasut .gt_footnote {
+#zdtxdianvx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#saedqsasut .gt_sourcenotes {
+#zdtxdianvx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -11039,46 +11245,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#saedqsasut .gt_sourcenote {
+#zdtxdianvx .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#saedqsasut .gt_left {
+#zdtxdianvx .gt_left {
   text-align: left;
 }
 
-#saedqsasut .gt_center {
+#zdtxdianvx .gt_center {
   text-align: center;
 }
 
-#saedqsasut .gt_right {
+#zdtxdianvx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#saedqsasut .gt_font_normal {
+#zdtxdianvx .gt_font_normal {
   font-weight: normal;
 }
 
-#saedqsasut .gt_font_bold {
+#zdtxdianvx .gt_font_bold {
   font-weight: bold;
 }
 
-#saedqsasut .gt_font_italic {
+#zdtxdianvx .gt_font_italic {
   font-style: italic;
 }
 
-#saedqsasut .gt_super {
+#zdtxdianvx .gt_super {
   font-size: 65%;
 }
 
-#saedqsasut .gt_footnote_marks {
+#zdtxdianvx .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="saedqsasut" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="zdtxdianvx" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -11092,235 +11298,273 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">2.1</td>
+      <td class="gt_row gt_right">0.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth:   500</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.3</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.1</td>
+      <td class="gt_row gt_right">0.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.1</td>
+      <td class="gt_row gt_right">1.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.50</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth:  1000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.3</td>
+      <td class="gt_row gt_right">0.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.8</td>
+      <td class="gt_row gt_right">0.9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.2</td>
+      <td class="gt_row gt_right">1.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">18.30</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.8</td>
+      <td class="gt_row gt_right">1.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">7.1</td>
+      <td class="gt_row gt_right">2.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">11.3</td>
+      <td class="gt_row gt_right">3.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">24.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">7.60</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_cc | Depth:   100</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.8</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">1.9</td>
+      <td class="gt_row gt_right">0.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_cc | Depth:   500</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.4</td>
+      <td class="gt_row gt_right">0.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.1</td>
+      <td class="gt_row gt_right">0.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">6.9</td>
+      <td class="gt_row gt_right">0.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">1.30</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_cc | Depth:  1000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.5</td>
+      <td class="gt_row gt_right">0.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.7</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">8.9</td>
+      <td class="gt_row gt_right">0.9</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">18.10</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">1.80</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_cc | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.2</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.5</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.8</td>
+      <td class="gt_row gt_right">1.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.50</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.10</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_vc | Depth:   100</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.8</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">2.0</td>
+      <td class="gt_row gt_right">0.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.70</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_vc | Depth:   500</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.4</td>
+      <td class="gt_row gt_right">0.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.1</td>
+      <td class="gt_row gt_right">0.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.1</td>
+      <td class="gt_row gt_right">0.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">1.50</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_vc | Depth:  1000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.5</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.7</td>
+      <td class="gt_row gt_right">0.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.2</td>
+      <td class="gt_row gt_right">1.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">18.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.10</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">mod_truth_vc | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.2</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.7</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.3</td>
+      <td class="gt_row gt_right">1.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">21.20</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth:   100</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.1</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">0.3</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.50</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">ss_tss | Depth:   500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">0.5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.5</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">1.0</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.00</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">ss_tss | Depth:  1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
@@ -11328,68 +11572,30 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">1.8</td>
+      <td class="gt_row gt_right">1.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.40</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">ss_tss | Depth:   500</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.0</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">2.8</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">6.2</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">12.00</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">ss_tss | Depth:  1000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">3.9</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.0</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.7</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.60</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.60</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.4</td>
+      <td class="gt_row gt_right">0.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.6</td>
+      <td class="gt_row gt_right">0.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">8.5</td>
+      <td class="gt_row gt_right">1.4</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">17.50</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.90</td>
     </tr>
   </tbody>
   
@@ -11471,6 +11677,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-1.png" target="_blank">9943b45</a>
@@ -11744,6 +11961,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-2.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-2.png" target="_blank">9943b45</a>
 </td>
 <td>
@@ -11903,6 +12131,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-3.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/zonal_section_dcant_pos_bias_obs-3.png" target="_blank">9943b45</a>
@@ -12112,6 +12351,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_obs-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/inventory_dcant_pos_bias_obs-1.png" target="_blank">9943b45</a>
@@ -12384,19 +12634,19 @@ dcant_obs_budget %&gt;%
             #dcant_rate = dcant / duration,
             dcant_pos_rate = dcant_pos / duration) %&gt;% 
   ungroup()</code></pre>
-<pre><code># A tibble: 10 x 4
+<pre><code>[38;5;246m# A tibble: 10 × 4[39m
    estimate inv_depth dcant_pos dcant_pos_rate
-   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
- 1 emlr           100       4.3           0.43
- 2 emlr           500      15.4           1.54
- 3 emlr          1000      21.7           2.17
- 4 emlr          3000      31.1           3.11
- 5 emlr         10000      35.4           3.54
- 6 ss_tss         100       4.1           0.41
- 7 ss_tss         500      15.1           1.51
- 8 ss_tss        1000      20.9           2.09
- 9 ss_tss        3000      25.4           2.54
-10 ss_tss       10000      26.4           2.64</code></pre>
+   [3m[38;5;246m&lt;chr&gt;[39m[23m        [3m[38;5;246m&lt;dbl&gt;[39m[23m     [3m[38;5;246m&lt;dbl&gt;[39m[23m          [3m[38;5;246m&lt;dbl&gt;[39m[23m
+[38;5;250m 1[39m emlr           100       0.6            0.6
+[38;5;250m 2[39m emlr           500       2.6            2.6
+[38;5;250m 3[39m emlr          [4m1[24m000       4.4            4.4
+[38;5;250m 4[39m emlr          [4m3[24m000       9.9            9.9
+[38;5;250m 5[39m emlr         [4m1[24m[4m0[24m000      13.1           13.1
+[38;5;250m 6[39m ss_tss         100       0.9            0.9
+[38;5;250m 7[39m ss_tss         500       3.2            3.2
+[38;5;250m 8[39m ss_tss        [4m1[24m000       4.5            4.5
+[38;5;250m 9[39m ss_tss        [4m3[24m000       5.5            5.5
+[38;5;250m10[39m ss_tss       [4m1[24m[4m0[24m000       5.8            5.8</code></pre>
 <div id="standard-depth-1" class="section level3" number="6.3.1">
 <h3 number="6.3.1"><span class="header-section-number">6.3.1</span> Standard depth</h3>
 <p>Results integrated over the upper 3000 m</p>
@@ -12428,6 +12678,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_standard_depth_obs-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_standard_depth_obs-1.png" target="_blank">9943b45</a>
@@ -12687,7 +12948,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#gqqmclscpk .gt_table {
+#ktrtfuewjl .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -12712,7 +12973,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_heading {
+#ktrtfuewjl .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -12724,7 +12985,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_title {
+#ktrtfuewjl .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -12734,7 +12995,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#gqqmclscpk .gt_subtitle {
+#ktrtfuewjl .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -12744,13 +13005,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#gqqmclscpk .gt_bottom_border {
+#ktrtfuewjl .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_col_headings {
+#ktrtfuewjl .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -12765,7 +13026,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_col_heading {
+#ktrtfuewjl .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -12785,7 +13046,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#gqqmclscpk .gt_column_spanner_outer {
+#ktrtfuewjl .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -12797,15 +13058,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#gqqmclscpk .gt_column_spanner_outer:first-child {
+#ktrtfuewjl .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gqqmclscpk .gt_column_spanner_outer:last-child {
+#ktrtfuewjl .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gqqmclscpk .gt_column_spanner {
+#ktrtfuewjl .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -12817,7 +13078,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#gqqmclscpk .gt_group_heading {
+#ktrtfuewjl .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -12839,7 +13100,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#gqqmclscpk .gt_empty_group_heading {
+#ktrtfuewjl .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -12854,15 +13115,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#gqqmclscpk .gt_from_md > :first-child {
+#ktrtfuewjl .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gqqmclscpk .gt_from_md > :last-child {
+#ktrtfuewjl .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gqqmclscpk .gt_row {
+#ktrtfuewjl .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -12881,7 +13142,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#gqqmclscpk .gt_stub {
+#ktrtfuewjl .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -12893,7 +13154,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#gqqmclscpk .gt_summary_row {
+#ktrtfuewjl .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -12903,7 +13164,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#gqqmclscpk .gt_first_summary_row {
+#ktrtfuewjl .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -12913,7 +13174,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_grand_summary_row {
+#ktrtfuewjl .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -12923,7 +13184,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#gqqmclscpk .gt_first_grand_summary_row {
+#ktrtfuewjl .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -12933,11 +13194,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_striped {
+#ktrtfuewjl .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gqqmclscpk .gt_table_body {
+#ktrtfuewjl .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -12946,7 +13207,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_footnotes {
+#ktrtfuewjl .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -12960,13 +13221,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_footnote {
+#ktrtfuewjl .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#gqqmclscpk .gt_sourcenotes {
+#ktrtfuewjl .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -12980,46 +13241,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#gqqmclscpk .gt_sourcenote {
+#ktrtfuewjl .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#gqqmclscpk .gt_left {
+#ktrtfuewjl .gt_left {
   text-align: left;
 }
 
-#gqqmclscpk .gt_center {
+#ktrtfuewjl .gt_center {
   text-align: center;
 }
 
-#gqqmclscpk .gt_right {
+#ktrtfuewjl .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gqqmclscpk .gt_font_normal {
+#ktrtfuewjl .gt_font_normal {
   font-weight: normal;
 }
 
-#gqqmclscpk .gt_font_bold {
+#ktrtfuewjl .gt_font_bold {
   font-weight: bold;
 }
 
-#gqqmclscpk .gt_font_italic {
+#ktrtfuewjl .gt_font_italic {
   font-style: italic;
 }
 
-#gqqmclscpk .gt_super {
+#ktrtfuewjl .gt_super {
   font-size: 65%;
 }
 
-#gqqmclscpk .gt_footnote_marks {
+#ktrtfuewjl .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="gqqmclscpk" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="ktrtfuewjl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -13033,38 +13294,38 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">8.3</td>
+      <td class="gt_row gt_right">1.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">7.4</td>
+      <td class="gt_row gt_right">2.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">15.4</td>
+      <td class="gt_row gt_right">6.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">31.10</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">9.90</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth: 3000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">9.5</td>
+      <td class="gt_row gt_right">2.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.7</td>
+      <td class="gt_row gt_right">1.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.2</td>
+      <td class="gt_row gt_right">2.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">25.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">5.50</td>
     </tr>
   </tbody>
   
@@ -13103,6 +13364,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_other_depth_obs-1.png" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9943b45e11eb2ce7c06c7ef054802b057091f677/docs/figure/analysis_anomalous_changes.Rmd/dcant_budget_other_depth_obs-1.png" target="_blank">9943b45</a>
@@ -13362,7 +13634,7 @@ jens-daniel-mueller
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#eznmeqymcl .gt_table {
+#zslyqckjgr .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -13387,7 +13659,7 @@ jens-daniel-mueller
   border-left-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_heading {
+#zslyqckjgr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -13399,7 +13671,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_title {
+#zslyqckjgr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -13409,7 +13681,7 @@ jens-daniel-mueller
   border-bottom-width: 0;
 }
 
-#eznmeqymcl .gt_subtitle {
+#zslyqckjgr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -13419,13 +13691,13 @@ jens-daniel-mueller
   border-top-width: 0;
 }
 
-#eznmeqymcl .gt_bottom_border {
+#zslyqckjgr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_col_headings {
+#zslyqckjgr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -13440,7 +13712,7 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_col_heading {
+#zslyqckjgr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13460,7 +13732,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#eznmeqymcl .gt_column_spanner_outer {
+#zslyqckjgr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13472,15 +13744,15 @@ jens-daniel-mueller
   padding-right: 4px;
 }
 
-#eznmeqymcl .gt_column_spanner_outer:first-child {
+#zslyqckjgr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#eznmeqymcl .gt_column_spanner_outer:last-child {
+#zslyqckjgr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#eznmeqymcl .gt_column_spanner {
+#zslyqckjgr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -13492,7 +13764,7 @@ jens-daniel-mueller
   width: 100%;
 }
 
-#eznmeqymcl .gt_group_heading {
+#zslyqckjgr .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -13514,7 +13786,7 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#eznmeqymcl .gt_empty_group_heading {
+#zslyqckjgr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -13529,15 +13801,15 @@ jens-daniel-mueller
   vertical-align: middle;
 }
 
-#eznmeqymcl .gt_from_md > :first-child {
+#zslyqckjgr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#eznmeqymcl .gt_from_md > :last-child {
+#zslyqckjgr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#eznmeqymcl .gt_row {
+#zslyqckjgr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13556,7 +13828,7 @@ jens-daniel-mueller
   overflow-x: hidden;
 }
 
-#eznmeqymcl .gt_stub {
+#zslyqckjgr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -13568,7 +13840,7 @@ jens-daniel-mueller
   padding-left: 12px;
 }
 
-#eznmeqymcl .gt_summary_row {
+#zslyqckjgr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -13578,7 +13850,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#eznmeqymcl .gt_first_summary_row {
+#zslyqckjgr .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13588,7 +13860,7 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_grand_summary_row {
+#zslyqckjgr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -13598,7 +13870,7 @@ jens-daniel-mueller
   padding-right: 5px;
 }
 
-#eznmeqymcl .gt_first_grand_summary_row {
+#zslyqckjgr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -13608,11 +13880,11 @@ jens-daniel-mueller
   border-top-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_striped {
+#zslyqckjgr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#eznmeqymcl .gt_table_body {
+#zslyqckjgr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -13621,7 +13893,7 @@ jens-daniel-mueller
   border-bottom-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_footnotes {
+#zslyqckjgr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -13635,13 +13907,13 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_footnote {
+#zslyqckjgr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#eznmeqymcl .gt_sourcenotes {
+#zslyqckjgr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -13655,46 +13927,46 @@ jens-daniel-mueller
   border-right-color: #D3D3D3;
 }
 
-#eznmeqymcl .gt_sourcenote {
+#zslyqckjgr .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#eznmeqymcl .gt_left {
+#zslyqckjgr .gt_left {
   text-align: left;
 }
 
-#eznmeqymcl .gt_center {
+#zslyqckjgr .gt_center {
   text-align: center;
 }
 
-#eznmeqymcl .gt_right {
+#zslyqckjgr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#eznmeqymcl .gt_font_normal {
+#zslyqckjgr .gt_font_normal {
   font-weight: normal;
 }
 
-#eznmeqymcl .gt_font_bold {
+#zslyqckjgr .gt_font_bold {
   font-weight: bold;
 }
 
-#eznmeqymcl .gt_font_italic {
+#zslyqckjgr .gt_font_italic {
   font-style: italic;
 }
 
-#eznmeqymcl .gt_super {
+#zslyqckjgr .gt_super {
   font-size: 65%;
 }
 
-#eznmeqymcl .gt_footnote_marks {
+#zslyqckjgr .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="eznmeqymcl" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="zslyqckjgr" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -13708,87 +13980,125 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">1.1</td>
+      <td class="gt_row gt_right">0.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">0.9</td>
+      <td class="gt_row gt_right">0.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">2.3</td>
+      <td class="gt_row gt_right">0.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.30</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.60</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth:   500</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.0</td>
+      <td class="gt_row gt_right">0.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.5</td>
+      <td class="gt_row gt_right">0.7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.9</td>
+      <td class="gt_row gt_right">1.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">2.60</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth:  1000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">5.9</td>
+      <td class="gt_row gt_right">0.8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">4.9</td>
+      <td class="gt_row gt_right">1.0</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.9</td>
+      <td class="gt_row gt_right">2.6</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">21.70</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.40</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">emlr | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">8.9</td>
+      <td class="gt_row gt_right">1.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">8.7</td>
+      <td class="gt_row gt_right">3.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">17.8</td>
+      <td class="gt_row gt_right">8.5</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">35.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">13.10</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth:   100</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">1.2</td>
+      <td class="gt_row gt_right">0.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.2</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">0.4</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">0.90</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">ss_tss | Depth:   500</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
       <td class="gt_row gt_right">0.9</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">0.7</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Pacific</td>
+      <td class="gt_row gt_right">1.6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">3.20</td>
+    </tr>
+    <tr class="gt_group_heading_row">
+      <td colspan="2" class="gt_group_heading">ss_tss | Depth:  1000</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Atlantic</td>
+      <td class="gt_row gt_right">1.4</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">Indian</td>
+      <td class="gt_row gt_right">1.1</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
@@ -13796,64 +14106,26 @@ jens-daniel-mueller
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.10</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">ss_tss | Depth:   500</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">4.4</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">3.4</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">7.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">15.10</td>
-    </tr>
-    <tr class="gt_group_heading_row">
-      <td colspan="2" class="gt_group_heading">ss_tss | Depth:  1000</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">6.6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">5.0</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">9.3</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">20.90</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">4.50</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="2" class="gt_group_heading">ss_tss | Depth: 10000</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Atlantic</td>
-      <td class="gt_row gt_right">9.9</td>
+      <td class="gt_row gt_right">2.2</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Indian</td>
-      <td class="gt_row gt_right">6.0</td>
+      <td class="gt_row gt_right">1.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">Pacific</td>
-      <td class="gt_row gt_right">10.5</td>
+      <td class="gt_row gt_right">2.3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">26.40</td>
+      <td class="gt_row gt_right gt_summary_row gt_first_summary_row">5.80</td>
     </tr>
   </tbody>
   
@@ -13923,36 +14195,37 @@ other attached packages:
  [1] gt_0.2.2        marelac_2.1.10  shape_1.4.5     ggforce_0.3.3  
  [5] metR_0.9.0      scico_1.2.0     patchwork_1.1.1 collapse_1.5.0 
  [9] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4    
-[13] readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.3  
+[13] readr_1.4.0     tidyr_1.1.3     tibble_3.1.3    ggplot2_3.3.3  
 [17] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 lubridate_1.7.9          gsw_1.0-5               
  [4] RColorBrewer_1.1-2       httr_1.4.2               rprojroot_2.0.2         
  [7] tools_4.0.3              backports_1.1.10         utf8_1.1.4              
-[10] R6_2.5.0                 DBI_1.1.0                colorspace_1.4-1        
+[10] R6_2.5.0                 DBI_1.1.0                colorspace_2.0-2        
 [13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
-[16] git2r_0.27.1             cli_2.1.0                rvest_0.3.6             
+[16] git2r_0.27.1             cli_3.0.1                rvest_0.3.6             
 [19] xml2_1.3.2               isoband_0.2.2            sass_0.2.0              
 [22] labeling_0.4.2           scales_1.1.1             checkmate_2.0.0         
-[25] digest_0.6.27            rmarkdown_2.5            oce_1.2-0               
-[28] pkgconfig_2.0.3          htmltools_0.5.0          dbplyr_1.4.4            
-[31] rlang_0.4.10             readxl_1.3.1             rstudioapi_0.11         
-[34] farver_2.0.3             generics_0.0.2           jsonlite_1.7.1          
-[37] magrittr_1.5             Matrix_1.2-18            Rcpp_1.0.5              
-[40] munsell_0.5.0            fansi_0.4.1              lifecycle_1.0.0         
-[43] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
-[46] MASS_7.3-53              grid_4.0.3               blob_1.2.1              
-[49] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[52] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[55] seacarb_3.2.14           knitr_1.30               pillar_1.4.7            
-[58] reprex_0.3.0             glue_1.4.2               evaluate_0.14           
-[61] RcppArmadillo_0.10.1.2.0 data.table_1.13.2        modelr_0.1.8            
-[64] vctrs_0.3.5              tweenr_1.0.2             httpuv_1.5.4            
-[67] testthat_2.3.2           cellranger_1.1.0         gtable_0.3.0            
-[70] polyclip_1.10-0          assertthat_0.2.1         xfun_0.18               
-[73] broom_0.7.5              RcppEigen_0.3.3.7.0      later_1.1.0.1           
-[76] viridisLite_0.3.0        ellipsis_0.3.1           here_0.1                </code></pre>
+[25] digest_0.6.27            rmarkdown_2.10           oce_1.2-0               
+[28] pkgconfig_2.0.3          htmltools_0.5.0          highr_0.8               
+[31] dbplyr_1.4.4             rlang_0.4.10             readxl_1.3.1            
+[34] rstudioapi_0.13          farver_2.0.3             generics_0.1.0          
+[37] jsonlite_1.7.1           magrittr_1.5             Matrix_1.2-18           
+[40] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
+[43] lifecycle_1.0.0          stringi_1.5.3            whisker_0.4             
+[46] yaml_2.2.1               MASS_7.3-53              grid_4.0.3              
+[49] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[52] crayon_1.3.4             lattice_0.20-41          haven_2.3.1             
+[55] hms_0.5.3                seacarb_3.2.14           knitr_1.33              
+[58] pillar_1.6.2             reprex_0.3.0             glue_1.4.2              
+[61] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.14.0       
+[64] modelr_0.1.8             vctrs_0.3.8              tweenr_1.0.2            
+[67] httpuv_1.5.4             testthat_2.3.2           cellranger_1.1.0        
+[70] gtable_0.3.0             polyclip_1.10-0          assertthat_0.2.1        
+[73] xfun_0.25                broom_0.7.5              RcppEigen_0.3.3.7.0     
+[76] later_1.2.0              viridisLite_0.3.0        ellipsis_0.3.2          
+[79] here_0.1                </code></pre>
 </div>
 </div>
 
@@ -13999,7 +14272,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -14013,6 +14286,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

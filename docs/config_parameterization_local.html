@@ -14,13 +14,22 @@
 
 <title>Parameterization</title>
 
-<script src="site_libs/header-attrs-2.5/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -28,8 +37,6 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -53,11 +60,6 @@ div.section {
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -70,32 +72,7 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 
 
@@ -105,10 +82,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -125,40 +98,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -186,7 +132,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -198,7 +144,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -209,10 +155,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -224,7 +183,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -359,7 +317,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -484,11 +442,11 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
 <li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
 <li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
 </ul>
@@ -498,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">10 August, 2021</h4>
+<h4 class="date">18 August, 2021</h4>
 
 </div>
 
@@ -523,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-10
+<strong>Last updated:</strong> 2021-08-18
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -614,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree26d595cc5ee1c6f24f8faca7386df6f351f3003btargetblank26d595ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/26d595cc5ee1c6f24f8faca7386df6f351f3003b" target="_blank">26d595c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree26d595cc5ee1c6f24f8faca7386df6f351f3003btargetblank26d595ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/26d595cc5ee1c6f24f8faca7386df6f351f3003b" target="_blank">26d595c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -674,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3fdf621d77758f53791c5fbf1500b8a811aa64b5/analysis/config_parameterization_local.Rmd" target="_blank">3fdf621</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-18
+</td>
+<td>
+test neighbouring trefs + auto slab correction
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/config_parameterization_local.html" target="_blank">9335b31</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -5493,8 +5485,6 @@ slabs_Ind_Pac &lt;-
     27.95,
     28.05,
     28.10,
-    28.20,
-    28.30,
     Inf)
 
 # Predictors for MLR model
@@ -5537,9 +5527,9 @@ params_local &lt;-
     # end years for eras
     era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 2004,
+    tref1 = 2009,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2014,
+    tref2 = 2010,
     # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
     MLR_basins = &quot;AIP&quot;,
     # gap filling of NA values in GLODAP
@@ -5618,8 +5608,6 @@ slabs_Ind_Pac &lt;- lst(
       27.95,
       28.05,
       28.10,
-      28.20,
-      28.30,
       Inf
     )
 )
@@ -5654,19 +5642,27 @@ gamma_min = 26
 
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
-CANYON_B_cruise_mean = 5
+CANYON_B_cruise_mean = lst(
+  CANYON_B_cruise_mean = 5,
+  CANYON_B_cruise_mean = 3,
+  CANYON_B_cruise_mean = 1
+)
 
 # (factor applied to median of standard deviations of all cruise offsets)
-CANYON_B_sample_SD = 4
+CANYON_B_sample_SD = lst(
+  CANYON_B_sample_SD = 5,
+  CANYON_B_sample_SD = 3,
+  CANYON_B_sample_SD = 1
+)
 
 # minimum sampling depth to apply CANYON-B offset threshold
 CANYON_B_depth = 1000
 
 # threshold for the cruise rmse from a global MLR model of the target variable
-target_global_rmse_max = 20
+target_global_rmse_max = 30
 
 # start years for eras
-era_start = lst (era_start = lst(era_start = c(2000, 2010)))
+era_start = lst(era_start = c(2000, 2010))
 
 # end years for eras
 era_end = lst(era_end = c(2009, 2019))
@@ -5679,12 +5675,12 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
-  MLR_basins = &quot;1&quot;,
-  MLR_basins = &quot;2&quot;,
-  MLR_basins = &quot;AIP&quot;,
-  MLR_basins = &quot;5&quot;,
-  MLR_basins = &quot;SO&quot;,
-  MLR_basins = &quot;SO_5&quot;,
+  # MLR_basins = &quot;1&quot;,
+  # MLR_basins = &quot;2&quot;,
+  # MLR_basins = &quot;AIP&quot;,
+  # MLR_basins = &quot;5&quot;,
+  # MLR_basins = &quot;SO&quot;,
+  # MLR_basins = &quot;SO_5&quot;,
   MLR_basins = &quot;SO_AIP&quot;
 )
 
@@ -5695,7 +5691,9 @@ gap_filling = &quot;CANYON-B&quot;
 rarefication = &quot;coarse_grid&quot;
 
 # rarefication approach threshold
-rarefication_threshold = 25
+rarefication_threshold = lst(
+  rarefication_threshold = 20
+)
 
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
 MLR_target = &quot;cstar_tref&quot;
@@ -5719,7 +5717,7 @@ vif_max = 500
 MLR_criterion = &quot;rmse&quot;
 
 # nutrient for cstar calculation
-cstar_nutrient = &quot;nitrate&quot;
+cstar_nutrient = &quot;phosphate&quot;
 
 # Stoichiometric ratio of C to P
 rCP = 117
@@ -5785,9 +5783,10 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 1
   
-  params_local &lt;- nth(params_local_all, i)
+  Version_ID &lt;- paste0(&quot;v_12&quot;,i)
   
-  Version_ID &lt;- paste0(&quot;v_10&quot;,i)
+  params_local &lt;- nth(params_local_all, i)
+  params_local$Version_ID &lt;- Version_ID
   
   # create folder structure
   dir.create(paste(path_root, Version_ID, sep = &quot;/&quot;))
@@ -5981,25 +5980,25 @@ attached base packages:
 
 other attached packages:
  [1] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4    
- [5] readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.3  
+ [5] readr_1.4.0     tidyr_1.1.3     tibble_3.1.3    ggplot2_3.3.3  
  [9] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.1.0 xfun_0.18        haven_2.3.1      colorspace_1.4-1
- [5] vctrs_0.3.5      generics_0.0.2   htmltools_0.5.0  yaml_2.2.1      
- [9] blob_1.2.1       rlang_0.4.10     later_1.1.0.1    pillar_1.4.7    
-[13] withr_2.3.0      glue_1.4.2       DBI_1.1.0        dbplyr_1.4.4    
-[17] readxl_1.3.1     modelr_0.1.8     lifecycle_1.0.0  cellranger_1.1.0
-[21] munsell_0.5.0    gtable_0.3.0     rvest_0.3.6      evaluate_0.14   
-[25] knitr_1.30       httpuv_1.5.4     fansi_0.4.1      broom_0.7.5     
-[29] Rcpp_1.0.5       promises_1.1.1   backports_1.1.10 scales_1.1.1    
-[33] jsonlite_1.7.1   fs_1.5.0         hms_0.5.3        digest_0.6.27   
-[37] stringi_1.5.3    rprojroot_2.0.2  grid_4.0.3       here_0.1        
-[41] cli_2.1.0        tools_4.0.3      magrittr_1.5     crayon_1.3.4    
-[45] whisker_0.4      pkgconfig_2.0.3  ellipsis_0.3.1   xml2_1.3.2      
-[49] reprex_0.3.0     lubridate_1.7.9  assertthat_0.2.1 rmarkdown_2.5   
-[53] httr_1.4.2       rstudioapi_0.11  R6_2.5.0         git2r_0.27.1    
-[57] compiler_4.0.3  </code></pre>
+ [1] tidyselect_1.1.0 xfun_0.25        haven_2.3.1      colorspace_2.0-2
+ [5] vctrs_0.3.8      generics_0.1.0   htmltools_0.5.0  yaml_2.2.1      
+ [9] utf8_1.1.4       blob_1.2.1       rlang_0.4.10     later_1.2.0     
+[13] pillar_1.6.2     withr_2.3.0      glue_1.4.2       DBI_1.1.0       
+[17] dbplyr_1.4.4     readxl_1.3.1     modelr_0.1.8     lifecycle_1.0.0 
+[21] cellranger_1.1.0 munsell_0.5.0    gtable_0.3.0     rvest_0.3.6     
+[25] evaluate_0.14    knitr_1.33       httpuv_1.5.4     fansi_0.4.1     
+[29] broom_0.7.5      Rcpp_1.0.5       promises_1.1.1   backports_1.1.10
+[33] scales_1.1.1     jsonlite_1.7.1   fs_1.5.0         hms_0.5.3       
+[37] digest_0.6.27    stringi_1.5.3    rprojroot_2.0.2  grid_4.0.3      
+[41] here_0.1         cli_3.0.1        tools_4.0.3      magrittr_1.5    
+[45] crayon_1.3.4     whisker_0.4      pkgconfig_2.0.3  ellipsis_0.3.2  
+[49] xml2_1.3.2       reprex_0.3.0     lubridate_1.7.9  assertthat_0.2.1
+[53] rmarkdown_2.10   httr_1.4.2       rstudioapi_0.13  R6_2.5.0        
+[57] git2r_0.27.1     compiler_4.0.3  </code></pre>
 </div>
 </div>
 
@@ -6046,7 +6045,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -6060,6 +6059,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
