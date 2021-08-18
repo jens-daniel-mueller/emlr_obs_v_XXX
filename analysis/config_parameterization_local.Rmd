@@ -59,8 +59,6 @@ slabs_Ind_Pac <-
     27.95,
     28.05,
     28.10,
-    28.20,
-    28.30,
     Inf)
 
 # Predictors for MLR model
@@ -103,9 +101,9 @@ params_local <-
     # end years for eras
     era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 2004,
+    tref1 = 2009,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2014,
+    tref2 = 2010,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -190,8 +188,6 @@ slabs_Ind_Pac <- lst(
       27.95,
       28.05,
       28.10,
-      28.20,
-      28.30,
       Inf
     )
 )
@@ -226,19 +222,27 @@ gamma_min = 26
 
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
-CANYON_B_cruise_mean = 5
+CANYON_B_cruise_mean = lst(
+  CANYON_B_cruise_mean = 5,
+  CANYON_B_cruise_mean = 3,
+  CANYON_B_cruise_mean = 1
+)
 
 # (factor applied to median of standard deviations of all cruise offsets)
-CANYON_B_sample_SD = 4
+CANYON_B_sample_SD = lst(
+  CANYON_B_sample_SD = 5,
+  CANYON_B_sample_SD = 3,
+  CANYON_B_sample_SD = 1
+)
 
 # minimum sampling depth to apply CANYON-B offset threshold
 CANYON_B_depth = 1000
 
 # threshold for the cruise rmse from a global MLR model of the target variable
-target_global_rmse_max = 20
+target_global_rmse_max = 30
 
 # start years for eras
-era_start = lst (era_start = lst(era_start = c(2000, 2010)))
+era_start = lst(era_start = c(2000, 2010))
 
 # end years for eras
 era_end = lst(era_end = c(2009, 2019))
@@ -251,12 +255,12 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  MLR_basins = "1",
-  MLR_basins = "2",
-  MLR_basins = "AIP",
-  MLR_basins = "5",
-  MLR_basins = "SO",
-  MLR_basins = "SO_5",
+  # MLR_basins = "1",
+  # MLR_basins = "2",
+  # MLR_basins = "AIP",
+  # MLR_basins = "5",
+  # MLR_basins = "SO",
+  # MLR_basins = "SO_5",
   MLR_basins = "SO_AIP"
 )
 
@@ -267,7 +271,9 @@ gap_filling = "CANYON-B"
 rarefication = "coarse_grid"
 
 # rarefication approach threshold
-rarefication_threshold = 25
+rarefication_threshold = lst(
+  rarefication_threshold = 20
+)
 
 # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
 MLR_target = "cstar_tref"
@@ -291,7 +297,7 @@ vif_max = 500
 MLR_criterion = "rmse"
 
 # nutrient for cstar calculation
-cstar_nutrient = "nitrate"
+cstar_nutrient = "phosphate"
 
 # Stoichiometric ratio of C to P
 rCP = 117
@@ -357,9 +363,10 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 1
   
-  params_local <- nth(params_local_all, i)
+  Version_ID <- paste0("v_12",i)
   
-  Version_ID <- paste0("v_10",i)
+  params_local <- nth(params_local_all, i)
+  params_local$Version_ID <- Version_ID
   
   # create folder structure
   dir.create(paste(path_root, Version_ID, sep = "/"))

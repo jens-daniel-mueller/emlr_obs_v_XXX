@@ -316,6 +316,18 @@ p_prop_prop(df = GLODAP,
             var2 = "cstar_nitrate") +
   facet_grid(data_source ~ basin_AIP)
 
+GLODAP %>% 
+  ggplot(aes(aou, cstar_nitrate - cstar_phosphate)) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ basin_AIP)
+
+GLODAP %>% 
+  ggplot(aes(nitrate, cstar_nitrate - cstar_phosphate)) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(data_source ~ basin_AIP)
+
 ```
 
 C* was actually calculated as: 
@@ -485,11 +497,11 @@ tcant_3d_t1 <- tcant_3d %>%
 ```{r calc_rev_fac_ratio, fig.asp=0.5}
 
 # determine mean year for both eras
-tref_mean <- c(sort(tref$median_year)[1]-50 , mean(tref$median_year))
+tref_mean <- c(sort(tref$median_year)[1]-50 , round(mean(tref$median_year)))
 
 # extract surface ocean data for second mean year
 surface <- surface %>% 
-  filter(year == mean(tref$median_year))
+  filter(year == round(mean(tref$median_year)))
 
 # extract atm pCO2 level for time before first era
 delta_pCO2_hist <- co2_atm_reccap2 %>% 
@@ -872,6 +884,79 @@ GLODAP %>%
   scale_y_reverse() +
   scale_fill_viridis_c() +
   facet_grid(basin_AIP~data_source)
+
+```
+
+```{r mean_density_profiles}
+
+gamma_profiles <- GLODAP %>%
+  mutate(depth_int = as.numeric(as.character(cut(
+    depth, seq(0, 2e4, 50),
+    seq(25, 2e4, 50)
+  )))) %>%
+  select(data_source, basin_AIP, depth_int, gamma) %>% 
+  group_by(data_source, basin_AIP, depth_int) %>% 
+  summarise(gamma_mean = mean(gamma, na.rm = TRUE),
+            gamma_sd = sd(gamma, na.rm = TRUE)) %>% 
+  ungroup()
+
+gamma_profiles_bias <- gamma_profiles %>% 
+  select(-gamma_sd) %>% 
+  pivot_wider(names_from = data_source,
+              values_from = gamma_mean) %>% 
+  mutate(gamma_bias = mod - obs)
+
+gamma_profiles %>%
+  ggplot() +
+  geom_vline(xintercept = params_local$slabs_Ind_Pac,
+             col = "grey50") +
+  geom_ribbon(
+    aes(
+      xmin = gamma_mean - gamma_sd,
+      xmax = gamma_mean + gamma_sd,
+      y = depth_int,
+      fill = data_source
+    ),
+    alpha = 0.3
+  ) +
+  geom_path(aes(gamma_mean, depth_int, col = data_source)) +
+  geom_point(aes(gamma_mean, depth_int, col = data_source)) +
+  scale_y_reverse() +
+  facet_grid(. ~ basin_AIP)
+
+gamma_profiles_bias %>% 
+  ggplot(aes(gamma_bias, depth_int)) +
+  geom_point() +
+  scale_y_reverse() +
+  facet_grid(.~basin_AIP)
+
+mean_gamma_offset_Indo_Pac <- gamma_profiles_bias %>% 
+  filter(basin_AIP %in% c("Indian", "Pacific")) %>%
+  summarise(gamma_offset = mean(gamma_bias)) %>% 
+  pull()
+
+mean_gamma_offset_Atl <- gamma_profiles_bias %>% 
+  filter(basin_AIP %in% c("Atlantic")) %>%
+  summarise(gamma_offset = mean(gamma_bias)) %>% 
+  pull()
+
+
+GLODAP <- GLODAP %>%
+  mutate(
+    gamma = if_else(
+      basin_AIP %in% c("Indian", "Pacific") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Indo_Pac,
+      gamma
+    ),
+    gamma = if_else(
+      basin_AIP %in% c("Atlantic") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Atl,
+      gamma
+    )
+  )
+
 
 ```
 
@@ -1332,6 +1417,16 @@ GLODAP_grid_era  %>%
 GLODAP_grid_era_gamma  %>%
   write_csv(paste(path_version_data,
                   "GLODAPv2.2020_clean_obs_grid_era_gamma.csv",
+                  sep = ""))
+
+mean_gamma_offset_Atl  %>%
+  write_rds(paste(path_version_data,
+                  "mean_gamma_offset_Atl.rds",
+                  sep = ""))
+
+mean_gamma_offset_Indo_Pac  %>%
+  write_rds(paste(path_version_data,
+                  "mean_gamma_offset_Indo_Pac.rds",
                   sep = ""))
 
 co2_atm_tref %>%  write_csv(paste(path_version_data,

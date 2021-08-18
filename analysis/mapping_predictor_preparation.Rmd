@@ -232,6 +232,20 @@ model_predictors_surface <- climatology %>%
 ```
 
 
+```{r load_gamma_offset_values}
+
+mean_gamma_offset_Atl  <-
+  read_rds(paste(path_version_data,
+                  "mean_gamma_offset_Atl.rds",
+                  sep = ""))
+
+mean_gamma_offset_Indo_Pac  <-
+  read_rds(paste(path_version_data,
+                  "mean_gamma_offset_Indo_Pac.rds",
+                  sep = ""))
+```
+
+
 # Join data
 
 ## WOA18 + GLODAP
@@ -290,6 +304,44 @@ The predictor field was split into two parts:
 1. Deep water: neutral densities >= `r params_local$gamma_min` and depth >= `r params_local$depth_min`m
 2. Shallow water: rest
 
+```{r apply_gamma_offset_mod}
+
+predictors <- predictors %>%
+  mutate(
+    gamma = if_else(
+      basin_AIP %in% c("Indian", "Pacific") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Indo_Pac,
+      gamma
+    ),
+    gamma = if_else(
+      basin_AIP %in% c("Atlantic") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Atl,
+      gamma
+    )
+  )
+
+predictors_surface <- predictors_surface %>%
+  mutate(
+    gamma = if_else(
+      basin_AIP %in% c("Indian", "Pacific") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Indo_Pac,
+      gamma
+    ),
+    gamma = if_else(
+      basin_AIP %in% c("Atlantic") &
+        data_source == "mod",
+      gamma - mean_gamma_offset_Atl,
+      gamma
+    )
+  )
+
+```
+
+
+
 ```{r split_WOA18_GLODAP_predictors_deep_surface}
 
 # predictors for deep waters
@@ -326,7 +378,7 @@ Plots below are generated to control successful merging of data sets.
 
 predictors %>%
   group_split(data_source) %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(~ p_map_climatology(
     df = .x,
     var = "phosphate",
