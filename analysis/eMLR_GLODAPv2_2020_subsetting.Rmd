@@ -661,7 +661,8 @@ for (i_parameter in unique(samples_out$parameter)) {
   
   print(
   GLODAP %>%
-    count(is.na(!!sym(i_parameter)))
+    count(is.na(!!sym(i_parameter))) %>% 
+    pull(n)
   )
   
   GLODAP <- GLODAP %>%
@@ -674,7 +675,8 @@ for (i_parameter in unique(samples_out$parameter)) {
   
   print(
   GLODAP %>%
-    count(is.na(!!sym(i_parameter)))
+    count(is.na(!!sym(i_parameter))) %>% 
+    pull(n)
   )
   
 }
