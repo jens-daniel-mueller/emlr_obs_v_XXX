@@ -381,7 +381,7 @@ cruise_stats <- cruise_stats %>%
   arrange(mean_offset_rank)
 
 # calculate offset parameters across all observations
-GLODAP_stats <- cruise_stats %>%
+cruise_stats_global <- cruise_stats %>%
   group_by(parameter) %>%
   summarise(
     mean_offset_max = sd(mean_offset, na.rm = TRUE) *
@@ -394,7 +394,7 @@ GLODAP_stats <- cruise_stats %>%
 
 # rank offsets and calculate offset thresholds
 cruise_stats <- full_join(cruise_stats,
-                          GLODAP_stats) %>%
+                          cruise_stats_global) %>%
   mutate(cruise = as.factor(cruise))
 
 
@@ -414,10 +414,10 @@ cruise_stats <- cruise_stats %>%
 
 cruise_stats %>% 
   ggplot() +
-  geom_vline(data = GLODAP_stats,
+  geom_vline(data = cruise_stats_global,
              aes(xintercept = mean_offset_max * c(1),
              col = "threshold")) +
-  geom_vline(data = GLODAP_stats,
+  geom_vline(data = cruise_stats_global,
              aes(xintercept = mean_offset_max * c(-1),
              col = "threshold")) +
   geom_histogram(aes(mean_offset, fill = cruise_flag)) +
@@ -522,6 +522,9 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_cruises}
 
+GLODAP %>% 
+  distinct(cruise)
+
 cruise_out <- cruise_stats %>% 
   filter(cruise_flag == "removed") %>% 
   distinct(cruise) %>% 
@@ -556,20 +559,40 @@ stats_CANYON_B_cleaning_cruises
 
 ```{r filter_samples}
 
-cruise_stats %>% 
-  ggplot() +
-  geom_vline(aes(xintercept = sd_offset_max,
-             col = "threshold")) +
-  geom_histogram(aes(sd_offset)) +
-  facet_grid(. ~ parameter, scales = "free_x") +
-  scale_color_manual(values = "red") +
-  scale_fill_brewer(palette = "Set1", direction = -1) +
-  theme(legend.title = element_blank())
+sample_stats <- GLODAP_combined %>%
+  group_by(parameter) %>%
+  summarise(
+    mean_offset = mean(offset, na.rm = TRUE),
+    sd_offset = sd(offset, na.rm = TRUE)
+  ) %>%
+  ungroup() %>% 
+  mutate(sd_offset_max = sd_offset * params_local$CANYON_B_sample_SD)
+
+
+GLODAP_combined %>%
+  ggplot(aes(offset)) +
+  geom_histogram() +
+  geom_vline(data = sample_stats,
+             aes(xintercept = sd_offset_max*c(-1))) +
+  geom_vline(data = sample_stats,
+             aes(xintercept = sd_offset_max*c(1))) +
+  scale_y_continuous(trans = "log10") +
+  facet_grid(. ~ parameter, scales = "free_x")
+
+# cruise_stats %>% 
+#   ggplot() +
+#   geom_vline(aes(xintercept = sd_offset_max,
+#              col = "threshold")) +
+#   geom_histogram(aes(sd_offset)) +
+#   facet_grid(. ~ parameter, scales = "free_x") +
+#   scale_color_manual(values = "red") +
+#   scale_fill_brewer(palette = "Set1", direction = -1) +
+#   theme(legend.title = element_blank())
 
 
 GLODAP_combined <-
   full_join(GLODAP_combined %>% mutate(cruise = as.factor(cruise)),
-            cruise_stats)
+            sample_stats)
 
 GLODAP_combined <- GLODAP_combined %>%
   mutate(sample_flag = if_else(abs(offset) <= sd_offset_max,
@@ -591,8 +614,7 @@ GLODAP_combined %>%
 
 samples_out <- GLODAP_combined %>% 
   filter(sample_flag == "removed") %>% 
-  distinct(row_number) %>% 
-  pull()
+  distinct(row_number, parameter)
 
 stats_CANYON_B_cleaning_samples <- GLODAP_combined %>% 
   group_by(parameter) %>% 
@@ -627,18 +649,38 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_samples}
 
-GLODAP <- GLODAP %>% 
-  mutate(sample_flag = if_else(row_number %in% samples_out,
-                                "removed",
-                                "included"))
+for (i_parameter in unique(samples_out$parameter)) {
+  i_parameter <- unique(samples_out$parameter)[1]
+  
+  i_row_number <- samples_out %>% 
+    filter(parameter == i_parameter) %>% 
+    pull(row_number)
+  
+  GLODAP %>% 
+    count(is.na(!!sym(i_parameter)))
+  
+  GLODAP <- GLODAP %>% 
+    mutate(!!sym(i_parameter) := if_else(row_number %in% i_row_number,
+                                         NaN,
+                                         !!sym(i_parameter)))
+  
+  GLODAP %>% 
+    count(is.na(!!sym(i_parameter)))
+  
+}
 
-nrow(GLODAP %>% filter(sample_flag == "removed")) /
-  nrow(GLODAP) * 100
+# GLODAP <- GLODAP %>% 
+#   mutate(sample_flag = if_else(row_number %in% samples_out,
+#                                 "removed",
+#                                 "included"))
+# 
+# nrow(GLODAP %>% filter(sample_flag == "removed")) /
+#   nrow(GLODAP) * 100
 
 
 ```
 
-```{r final_data_removal}
+```{r final_data_removal, eval=FALSE}
 
 GLODAP %>% 
   filter(sample_flag == "removed",
@@ -783,7 +825,7 @@ Rows with missing tco2 observations were already removed in the preprocessing. T
 
 ```{r tco2_na_subset}
 
-GLODAP_stats <- GLODAP %>% 
+cruise_stats_global <- GLODAP %>% 
   summarise(tco2_values = n())
 
 GLODAP_obs_grid <- GLODAP %>% 
@@ -853,11 +895,11 @@ map +
 GLODAP <- GLODAP %>%
   filter(tco2qc %in% params_local$flag_qc)
 
-GLODAP_stats_temp <- GLODAP %>%
+cruise_stats_global_temp <- GLODAP %>%
   summarise(tco2_flag = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -899,11 +941,11 @@ GLODAP <- GLODAP %>%
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>% 
+cruise_stats_global_temp <- GLODAP %>% 
   summarise(talk_values = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -967,11 +1009,11 @@ GLODAP <- GLODAP %>%
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>%
+cruise_stats_global_temp <- GLODAP %>%
   summarise(talk_flag = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -1023,11 +1065,11 @@ GLODAP <- GLODAP %>%
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>% 
+cruise_stats_global_temp <- GLODAP %>% 
   summarise(phosphate_values = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -1091,11 +1133,11 @@ GLODAP <- GLODAP %>%
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>%
+cruise_stats_global_temp <- GLODAP %>%
   summarise(phosphate_flag = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -1194,12 +1236,12 @@ GLODAP <- GLODAP %>%
 
 ##
 
-GLODAP_stats_temp <- GLODAP %>%
+cruise_stats_global_temp <- GLODAP %>%
   summarise(eMLR_variables = n())
 
-GLODAP_stats <- cbind(GLODAP_stats, GLODAP_stats_temp)
+cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
 
-rm(GLODAP_stats_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -1307,9 +1349,9 @@ cruise_stats  %>%  write_csv(paste(
   sep = ""
 ))
 
-GLODAP_stats  %>%  write_csv(paste(
+cruise_stats_global  %>%  write_csv(paste(
   path_version_data,
-  "CANYON_B_cleaning_GLODAP_stats.csv",
+  "CANYON_B_cleaning_cruise_stats_global.csv",
   sep = ""
 ))
 
@@ -1358,21 +1400,21 @@ Number of observations at various steps of data cleaning.
 
 ```{r GLODAP_cleaning_stats}
 
-GLODAP_stats_long <- GLODAP_stats %>%
-  pivot_longer(1:length(GLODAP_stats),
+cruise_stats_global_long <- cruise_stats_global %>%
+  pivot_longer(1:length(cruise_stats_global),
                names_to = "parameter",
                values_to = "n")
 
-GLODAP_stats_long <- GLODAP_stats_long %>%
+cruise_stats_global_long <- cruise_stats_global_long %>%
   mutate(parameter = fct_reorder(parameter, n))
 
-GLODAP_stats_long %>% 
+cruise_stats_global_long %>% 
   ggplot(aes(parameter, n/1000)) +
   geom_col() +
   coord_flip() +
   theme(axis.title.y = element_blank())
 
-rm(GLODAP_stats_long)
+rm(cruise_stats_global_long)
 
 ```
 
