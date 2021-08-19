@@ -932,12 +932,14 @@ gamma_profiles_bias %>%
 
 mean_gamma_offset_Indo_Pac <- gamma_profiles_bias %>% 
   filter(basin_AIP %in% c("Indian", "Pacific")) %>%
-  summarise(gamma_offset = mean(gamma_bias)) %>% 
+  summarise(gamma_offset = mean(gamma_bias,
+                                na.rm = TRUE)) %>% 
   pull()
 
 mean_gamma_offset_Atl <- gamma_profiles_bias %>% 
   filter(basin_AIP %in% c("Atlantic")) %>%
-  summarise(gamma_offset = mean(gamma_bias)) %>% 
+  summarise(gamma_offset = mean(gamma_bias,
+                                na.rm = TRUE)) %>% 
   pull()
 
 
