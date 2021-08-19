@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020 subsetting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">18 August, 2021</h4>
+<h4 class="date">19 August, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-18
+<strong>Last updated:</strong> 2021-08-19
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d618d30565711832abb23433a02c92d992e7770targetblank4d618d3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d618d30565711832abb23433a02c92d992e7770" target="_blank">4d618d3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3fdf621d77758f53791c5fbf1500b8a811aa64b5targetblank3fdf621a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4d618d30565711832abb23433a02c92d992e7770targetblank4d618d3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3fdf621d77758f53791c5fbf1500b8a811aa64b5" target="_blank">3fdf621</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4d618d30565711832abb23433a02c92d992e7770" target="_blank">4d618d3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4d618d30565711832abb23433a02c92d992e7770/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">4d618d3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+<td>
+test with gap filling of removed outliers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a03f2f003fa5cd1f58f6d0cb3d3721def174bcaf/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">a03f2f0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4949,7 +4983,7 @@ map +
 </div>
 <div id="canyon-b-cleaning" class="section level2" number="3.3">
 <h2 number="3.3"><span class="header-section-number">3.3</span> CANYON-B cleaning</h2>
-<p>Data cleaning based on comparison to CANYOB-B predictions is done individually for each variable required in the eMLR approach and constrained to samples collected deeper than 1000 m.</p>
+<p>Data cleaning based on comparison to CANYOB-B predictions is done individually for each variable required in the eMLR approach and constrained to samples collected deeper than 0 m.</p>
 <pre class="r"><code># join data frames
 GLODAP_combined_raw &lt;- left_join(GLODAP,
                                  GLODAP_CB)
@@ -7154,7 +7188,7 @@ cruise_stats &lt;- cruise_stats %&gt;%
   arrange(mean_offset_rank)
 
 # calculate offset parameters across all observations
-GLODAP_stats &lt;- cruise_stats %&gt;%
+cruise_stats_global &lt;- cruise_stats %&gt;%
   group_by(parameter) %&gt;%
   summarise(
     mean_offset_max = sd(mean_offset, na.rm = TRUE) *
@@ -7167,7 +7201,7 @@ GLODAP_stats &lt;- cruise_stats %&gt;%
 
 # rank offsets and calculate offset thresholds
 cruise_stats &lt;- full_join(cruise_stats,
-                          GLODAP_stats) %&gt;%
+                          cruise_stats_global) %&gt;%
   mutate(cruise = as.factor(cruise))</code></pre>
 </div>
 <div id="filter-cruises" class="section level3" number="3.3.5">
@@ -7181,10 +7215,10 @@ cruise_stats &lt;- cruise_stats %&gt;%
 
 cruise_stats %&gt;% 
   ggplot() +
-  geom_vline(data = GLODAP_stats,
+  geom_vline(data = cruise_stats_global,
              aes(xintercept = mean_offset_max * c(1),
              col = &quot;threshold&quot;)) +
-  geom_vline(data = GLODAP_stats,
+  geom_vline(data = cruise_stats_global,
              aes(xintercept = mean_offset_max * c(-1),
              col = &quot;threshold&quot;)) +
   geom_histogram(aes(mean_offset, fill = cruise_flag)) +
@@ -9037,6 +9071,22 @@ jens-daniel-mueller
 </div>
 </div>
 <p>The ratio (%) of removed observations is:</p>
+<pre class="r"><code>GLODAP %&gt;% 
+  distinct(cruise)</code></pre>
+<pre><code>[38;5;246m# A tibble: 459 × 1[39m
+   cruise
+    [3m[38;5;246m&lt;dbl&gt;[39m[23m
+[38;5;250m 1[39m    379
+[38;5;250m 2[39m    533
+[38;5;250m 3[39m    472
+[38;5;250m 4[39m    118
+[38;5;250m 5[39m    721
+[38;5;250m 6[39m    534
+[38;5;250m 7[39m     24
+[38;5;250m 8[39m    473
+[38;5;250m 9[39m    163
+[38;5;250m10[39m    412
+[38;5;246m# … with 449 more rows[39m</code></pre>
 <pre class="r"><code>cruise_out &lt;- cruise_stats %&gt;% 
   filter(cruise_flag == &quot;removed&quot;) %&gt;% 
   distinct(cruise) %&gt;% 
@@ -9061,19 +9111,29 @@ stats_CANYON_B_cleaning_cruises</code></pre>
 <pre><code>[38;5;246m# A tibble: 1 × 2[39m
   cruise_removal_ratio cruise_removal_n
                  [3m[38;5;246m&lt;dbl&gt;[39m[23m            [3m[38;5;246m&lt;int&gt;[39m[23m
-[38;5;250m1[39m               0.053[4m9[24m                4</code></pre>
+[38;5;250m1[39m                0.153                9</code></pre>
 </div>
 <div id="filter-samples" class="section level3" number="3.3.6">
 <h3 number="3.3.6"><span class="header-section-number">3.3.6</span> Filter samples</h3>
-<pre class="r"><code>cruise_stats %&gt;% 
-  ggplot() +
-  geom_vline(aes(xintercept = sd_offset_max,
-             col = &quot;threshold&quot;)) +
-  geom_histogram(aes(sd_offset)) +
-  facet_grid(. ~ parameter, scales = &quot;free_x&quot;) +
-  scale_color_manual(values = &quot;red&quot;) +
-  scale_fill_brewer(palette = &quot;Set1&quot;, direction = -1) +
-  theme(legend.title = element_blank())</code></pre>
+<pre class="r"><code>sample_stats &lt;- GLODAP_combined %&gt;%
+  group_by(parameter) %&gt;%
+  summarise(
+    mean_offset = mean(offset, na.rm = TRUE),
+    sd_offset = sd(offset, na.rm = TRUE)
+  ) %&gt;%
+  ungroup() %&gt;% 
+  mutate(sd_offset_max = sd_offset * params_local$CANYON_B_sample_SD)
+
+
+GLODAP_combined %&gt;%
+  ggplot(aes(offset)) +
+  geom_histogram() +
+  geom_vline(data = sample_stats,
+             aes(xintercept = sd_offset_max*c(-1))) +
+  geom_vline(data = sample_stats,
+             aes(xintercept = sd_offset_max*c(1))) +
+  scale_y_continuous(trans = &quot;log10&quot;) +
+  facet_grid(. ~ parameter, scales = &quot;free_x&quot;)</code></pre>
 <p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/filter_samples-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-filter_samples-1">
@@ -9189,9 +9249,20 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>GLODAP_combined &lt;-
+<pre class="r"><code># cruise_stats %&gt;% 
+#   ggplot() +
+#   geom_vline(aes(xintercept = sd_offset_max,
+#              col = &quot;threshold&quot;)) +
+#   geom_histogram(aes(sd_offset)) +
+#   facet_grid(. ~ parameter, scales = &quot;free_x&quot;) +
+#   scale_color_manual(values = &quot;red&quot;) +
+#   scale_fill_brewer(palette = &quot;Set1&quot;, direction = -1) +
+#   theme(legend.title = element_blank())
+
+
+GLODAP_combined &lt;-
   full_join(GLODAP_combined %&gt;% mutate(cruise = as.factor(cruise)),
-            cruise_stats)
+            sample_stats)
 
 GLODAP_combined &lt;- GLODAP_combined %&gt;%
   mutate(sample_flag = if_else(abs(offset) &lt;= sd_offset_max,
@@ -9386,8 +9457,7 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>samples_out &lt;- GLODAP_combined %&gt;% 
   filter(sample_flag == &quot;removed&quot;) %&gt;% 
-  distinct(row_number) %&gt;% 
-  pull()
+  distinct(row_number, parameter)
 
 stats_CANYON_B_cleaning_samples &lt;- GLODAP_combined %&gt;% 
   group_by(parameter) %&gt;% 
@@ -9398,21 +9468,21 @@ stats_CANYON_B_cleaning_samples</code></pre>
 [38;5;246m# Groups:   parameter [5][39m
    parameter sample_flag      n
    [3m[38;5;246m&lt;chr&gt;[39m[23m     [3m[38;5;246m&lt;chr&gt;[39m[23m        [3m[38;5;246m&lt;int&gt;[39m[23m
-[38;5;250m 1[39m nitrate   included    [4m1[24m[4m0[24m[4m7[24m939
-[38;5;250m 2[39m nitrate   removed       [4m3[24m267
-[38;5;250m 3[39m nitrate   [31mNA[39m            [4m7[24m443
-[38;5;250m 4[39m phosphate included    [4m1[24m[4m0[24m[4m0[24m151
-[38;5;250m 5[39m phosphate removed       [4m3[24m321
-[38;5;250m 6[39m phosphate [31mNA[39m           [4m1[24m[4m5[24m177
-[38;5;250m 7[39m silicate  included    [4m1[24m[4m0[24m[4m7[24m468
-[38;5;250m 8[39m silicate  removed       [4m4[24m365
-[38;5;250m 9[39m silicate  [31mNA[39m            [4m6[24m816
-[38;5;250m10[39m talk      included    [4m1[24m[4m0[24m[4m3[24m083
-[38;5;250m11[39m talk      removed       [4m7[24m263
-[38;5;250m12[39m talk      [31mNA[39m            [4m8[24m303
-[38;5;250m13[39m tco2      included    [4m1[24m[4m1[24m[4m5[24m915
-[38;5;250m14[39m tco2      removed       [4m1[24m472
-[38;5;250m15[39m tco2      [31mNA[39m            [4m1[24m262</code></pre>
+[38;5;250m 1[39m nitrate   included    [4m1[24m[4m9[24m[4m3[24m053
+[38;5;250m 2[39m nitrate   removed       [4m7[24m152
+[38;5;250m 3[39m nitrate   [31mNA[39m           [4m1[24m[4m5[24m079
+[38;5;250m 4[39m phosphate included    [4m1[24m[4m7[24m[4m7[24m884
+[38;5;250m 5[39m phosphate removed       [4m8[24m376
+[38;5;250m 6[39m phosphate [31mNA[39m           [4m2[24m[4m9[24m024
+[38;5;250m 7[39m silicate  included    [4m1[24m[4m9[24m[4m2[24m093
+[38;5;250m 8[39m silicate  removed       [4m8[24m326
+[38;5;250m 9[39m silicate  [31mNA[39m           [4m1[24m[4m4[24m865
+[38;5;250m10[39m talk      included    [4m1[24m[4m8[24m[4m8[24m754
+[38;5;250m11[39m talk      removed       [4m9[24m642
+[38;5;250m12[39m talk      [31mNA[39m           [4m1[24m[4m6[24m888
+[38;5;250m13[39m tco2      included    [4m2[24m[4m0[24m[4m0[24m846
+[38;5;250m14[39m tco2      removed      [4m1[24m[4m1[24m423
+[38;5;250m15[39m tco2      [31mNA[39m            [4m3[24m015</code></pre>
 <pre class="r"><code>grid_CANYON_B_cleaning_samples &lt;- GLODAP_combined %&gt;% 
   count(lat, lon, era, parameter, sample_flag) %&gt;% 
   pivot_wider(names_from = sample_flag,
@@ -9521,30 +9591,49 @@ jens-daniel-mueller
 </div>
 </div>
 <p>The ratio (%) of removed observations is:</p>
-<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
-  mutate(sample_flag = if_else(row_number %in% samples_out,
-                                &quot;removed&quot;,
-                                &quot;included&quot;))
+<pre class="r"><code>for (i_parameter in unique(samples_out$parameter)) {
+  i_parameter &lt;- unique(samples_out$parameter)[1]
+  
+  i_row_number &lt;- samples_out %&gt;% 
+    filter(parameter == i_parameter) %&gt;% 
+    pull(row_number)
+  
+  GLODAP %&gt;% 
+    count(is.na(!!sym(i_parameter)))
+  
+  GLODAP &lt;- GLODAP %&gt;% 
+    mutate(!!sym(i_parameter) := if_else(row_number %in% i_row_number,
+                                         NaN,
+                                         !!sym(i_parameter)))
+  
+  GLODAP %&gt;% 
+    count(is.na(!!sym(i_parameter)))
+  
+}
 
-nrow(GLODAP %&gt;% filter(sample_flag == &quot;removed&quot;)) /
-  nrow(GLODAP) * 100</code></pre>
-<pre><code>[1] 7.87843</code></pre>
+# GLODAP &lt;- GLODAP %&gt;% 
+#   mutate(sample_flag = if_else(row_number %in% samples_out,
+#                                 &quot;removed&quot;,
+#                                 &quot;included&quot;))
+# 
+# nrow(GLODAP %&gt;% filter(sample_flag == &quot;removed&quot;)) /
+#   nrow(GLODAP) * 100</code></pre>
 <pre class="r"><code>GLODAP %&gt;% 
   filter(sample_flag == &quot;removed&quot;,
          cruise_flag == &quot;removed&quot;) %&gt;% 
-  nrow()</code></pre>
-<pre><code>[1] 47</code></pre>
-<pre class="r"><code>GLODAP %&gt;% 
+  nrow()
+
+GLODAP %&gt;% 
   filter(sample_flag == &quot;removed&quot;,
          cruise_flag == &quot;included&quot;) %&gt;% 
-  nrow()</code></pre>
-<pre><code>[1] 16914</code></pre>
-<pre class="r"><code>GLODAP %&gt;% 
+  nrow()
+
+GLODAP %&gt;% 
   filter(sample_flag == &quot;included&quot;,
          cruise_flag == &quot;removed&quot;) %&gt;% 
-  nrow()</code></pre>
-<pre><code>[1] 69</code></pre>
-<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
+  nrow()
+
+GLODAP &lt;- GLODAP %&gt;% 
   filter(sample_flag != &quot;removed&quot;,
          cruise_flag != &quot;removed&quot;)</code></pre>
 </div>
@@ -9656,7 +9745,7 @@ rm(GLODAP_filling_long, GLODAP_filling_wide)
 <div id="na" class="section level4" number="3.5.1.1">
 <h4 number="3.5.1.1"><span class="header-section-number">3.5.1.1</span> NA</h4>
 <p>Rows with missing tco2 observations were already removed in the preprocessing. The map below shows the coverage of preprocessed GLODAP data.</p>
-<pre class="r"><code>GLODAP_stats &lt;- GLODAP %&gt;% 
+<pre class="r"><code>cruise_stats_global &lt;- GLODAP %&gt;% 
   summarise(tco2_values = n())
 
 GLODAP_obs_grid &lt;- GLODAP %&gt;% 
@@ -11737,11 +11826,11 @@ jens-daniel-mueller
 GLODAP &lt;- GLODAP %&gt;%
   filter(tco2qc %in% params_local$flag_qc)
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;%
+cruise_stats_global_temp &lt;- GLODAP %&gt;%
   summarise(tco2_flag = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -12498,11 +12587,11 @@ jens-daniel-mueller
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;% 
+cruise_stats_global_temp &lt;- GLODAP %&gt;% 
   summarise(talk_values = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -13993,11 +14082,11 @@ GLODAP &lt;- GLODAP %&gt;%
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;%
+cruise_stats_global_temp &lt;- GLODAP %&gt;%
   summarise(talk_flag = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -14758,11 +14847,11 @@ jens-daniel-mueller
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;% 
+cruise_stats_global_temp &lt;- GLODAP %&gt;% 
   summarise(phosphate_values = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -16253,11 +16342,11 @@ GLODAP &lt;- GLODAP %&gt;%
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;%
+cruise_stats_global_temp &lt;- GLODAP %&gt;%
   summarise(phosphate_flag = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
-rm(GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -16351,12 +16440,12 @@ GLODAP &lt;- GLODAP %&gt;%
 
 ##
 
-GLODAP_stats_temp &lt;- GLODAP %&gt;%
+cruise_stats_global_temp &lt;- GLODAP %&gt;%
   summarise(eMLR_variables = n())
 
-GLODAP_stats &lt;- cbind(GLODAP_stats, GLODAP_stats_temp)
+cruise_stats_global &lt;- cbind(cruise_stats_global, cruise_stats_global_temp)
 
-rm(GLODAP_stats_temp)
+rm(cruise_stats_global_temp)
 
 ##
 
@@ -16419,8 +16508,8 @@ tref</code></pre>
 <pre><code>[38;5;246m# A tibble: 2 × 4[39m
   era       median_year start   end
   [3m[38;5;246m&lt;fct&gt;[39m[23m           [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;dbl&gt;[39m[23m
-[38;5;250m1[39m 2000-2009        [4m2[24m009  [4m2[24m000  [4m2[24m009
-[38;5;250m2[39m 2010-2019        [4m2[24m010  [4m2[24m010  [4m2[24m019</code></pre>
+[38;5;250m1[39m 2000-2009        [4m2[24m004  [4m2[24m000  [4m2[24m009
+[38;5;250m2[39m 2010-2019        [4m2[24m014  [4m2[24m010  [4m2[24m019</code></pre>
 </div>
 </div>
 <div id="write-files" class="section level2" number="3.7">
@@ -16453,9 +16542,9 @@ cruise_stats  %&gt;%  write_csv(paste(
   sep = &quot;&quot;
 ))
 
-GLODAP_stats  %&gt;%  write_csv(paste(
+cruise_stats_global  %&gt;%  write_csv(paste(
   path_version_data,
-  &quot;CANYON_B_cleaning_GLODAP_stats.csv&quot;,
+  &quot;CANYON_B_cleaning_cruise_stats_global.csv&quot;,
   sep = &quot;&quot;
 ))
 
@@ -17003,15 +17092,15 @@ jens-daniel-mueller
 <div id="cleaning-stats" class="section level2" number="4.2">
 <h2 number="4.2"><span class="header-section-number">4.2</span> Cleaning stats</h2>
 <p>Number of observations at various steps of data cleaning.</p>
-<pre class="r"><code>GLODAP_stats_long &lt;- GLODAP_stats %&gt;%
-  pivot_longer(1:length(GLODAP_stats),
+<pre class="r"><code>cruise_stats_global_long &lt;- cruise_stats_global %&gt;%
+  pivot_longer(1:length(cruise_stats_global),
                names_to = &quot;parameter&quot;,
                values_to = &quot;n&quot;)
 
-GLODAP_stats_long &lt;- GLODAP_stats_long %&gt;%
+cruise_stats_global_long &lt;- cruise_stats_global_long %&gt;%
   mutate(parameter = fct_reorder(parameter, n))
 
-GLODAP_stats_long %&gt;% 
+cruise_stats_global_long %&gt;% 
   ggplot(aes(parameter, n/1000)) +
   geom_col() +
   coord_flip() +
@@ -17681,7 +17770,7 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>rm(GLODAP_stats_long)</code></pre>
+<pre class="r"><code>rm(cruise_stats_global_long)</code></pre>
 </div>
 <div id="assign-coarse-spatial-grid" class="section level2" number="4.3">
 <h2 number="4.3"><span class="header-section-number">4.3</span> Assign coarse spatial grid</h2>
@@ -18666,6 +18755,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a03f2f003fa5cd1f58f6d0cb3d3721def174bcaf/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">a03f2f0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9335b3141b52ae7e77c5d0007fdb5961b45f9170/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/coverage_histogram_temporal-1.png" target="_blank">9335b31</a>
