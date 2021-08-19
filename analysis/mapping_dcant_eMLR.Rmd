@@ -426,7 +426,7 @@ predictors_surface %>%
 
 predictors_surface %>%
   group_split(data_source) %>%
-  head(1) %>%
+  # head(1) %>%
   map( ~
          p_section_climatology_regular(
            df = .x,
@@ -457,6 +457,8 @@ dcant_surface <- dcant_surface %>%
   mutate(dcant = (1 / rev_fac) *
            (TCO2 / pCO2) * d_pCO2_tref)
 
+surface_rev_fac <- dcant_surface
+
 # calculate positive cant
 dcant_surface <- dcant_surface %>%
   mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>% 
@@ -474,6 +476,7 @@ dcant_surface <- full_join(
 
 ```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
 
+# harmonize variable naming and formatting
 surface_mod <- surface_mod %>% 
   rename(tco2 = dissicos,
          talk = talkos,
@@ -488,13 +491,16 @@ surface_mod <- surface_mod %>%
 surface_obs <- surface_obs %>% 
   select(lon, lat, year, temp, tco2, talk, pco2 = pCO2)
 
+# combine model and observation-based data
 surface <- bind_rows(
   surface_mod %>% mutate(data_source = "mod"),
   surface_obs %>% mutate(data_source = "obs")
 )
 
+# combine with era definition
 surface <- expand_grid(surface, tref)
 
+# determine era averages
 surface <- surface %>%
   filter(year >= start & year <= end) %>% 
   select(-c(start, end, year, era))
@@ -504,7 +510,7 @@ surface <- surface %>%
   summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE))) %>% 
   ungroup()
 
-
+# produce wide format
 surface_wide <- surface %>% 
   pivot_longer(tco2:cstar,
                names_to = "parameter",
@@ -512,17 +518,20 @@ surface_wide <- surface %>%
   pivot_wider(names_from = median_year,
               values_from = value)
 
+# calculate decadel changed
 surface_wide <- surface_wide %>% 
   mutate(d = !!sym(as.character(sort(tref$median_year)[2])) -
            !!sym(as.character(sort(tref$median_year)[1])))
 
+
+# plot decadel trends
 surface_trend <- surface_wide %>% 
   select(lon, lat, parameter, data_source, d)
 
 surface_trend %>%
   group_by(parameter) %>%
   group_split() %>%
-  # head(1) %>%
+  head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
@@ -531,6 +540,22 @@ surface_trend %>%
       facet_grid(data_source~.) +
       labs(title = paste("Decadel change:", tref$era[1], "to", tref$era[2]))
   )
+
+surface_pco2 <- surface_trend %>% 
+  filter(parameter == "pco2") %>% 
+  select(lat, lon, data_source, d_pco2_era = d)
+
+surface_pco2 <- full_join(
+  surface_pco2,
+  surface_rev_fac %>% 
+    select(lon, lat, data_source, rev_fac, TCO2, pCO2)
+)
+
+# calculate dcant
+surface_pco2 <- surface_pco2 %>%
+  mutate(dcant_pco2 = (1 / rev_fac) *
+           (TCO2 / pCO2) * d_pco2_era) %>% 
+  drop_na()
 
 
 ```
@@ -570,19 +595,28 @@ dcant_surface %>%
 
 ### Surf, equi, truth
 
-```{r surf_equi_truth}
+```{r surf_equi_truth, fig.asp=1.2}
 
 surface_dcant_comparison <- bind_rows(
   surface_trend %>%
     filter(data_source == "mod",
            parameter == "cstar") %>%
     select(lon, lat, dcant = d) %>%
-    mutate(data_source = "surface_obs"),
+    mutate(data_source = "cstar"),
+  surface_trend %>%
+    filter(data_source == "mod",
+           parameter == "tco2") %>%
+    select(lon, lat, dcant = d) %>%
+    mutate(data_source = "tco2"),
   dcant_surface %>%
     filter(data_source == "mod",
            depth == 5) %>%
     select(lon, lat, dcant) %>%
-    mutate(data_source = "surface_equi"),
+    mutate(data_source = "atm_equi"),
+  surface_pco2 %>%
+    filter(data_source == "mod") %>%
+    select(lon, lat, dcant = dcant_pco2) %>%
+    mutate(data_source = "spco2"),
   dcant_surface_mod_truth %>%
     select(lon, lat, dcant) %>%
     mutate(data_source = "mod_truth")
@@ -602,10 +636,12 @@ p_map_dcant_slab(df = surface_dcant_comparison,
 surface_dcant_comparison_bias <- surface_dcant_comparison %>% 
   pivot_wider(names_from = data_source,
               values_from = dcant) %>% 
-  mutate(surface_obs_bias = surface_obs - mod_truth,
-         surface_equi_bias = surface_equi - mod_truth) %>% 
-  select(lon, lat, surface_obs_bias, surface_equi_bias) %>% 
-  pivot_longer(surface_obs_bias:surface_equi_bias,
+  mutate(cstar_bias = cstar - mod_truth,
+         tco2_bias = tco2 - mod_truth,
+         atm_equi_bias = atm_equi - mod_truth,
+         spco2_bias = spco2 - mod_truth) %>% 
+  select(lon, lat, cstar_bias:spco2_bias) %>% 
+  pivot_longer(cstar_bias:spco2_bias,
                names_to = "data_source",
                values_to = "dcant_bias")
 
