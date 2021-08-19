@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "test with gap filling of removed outliers",
+message = "test with gap filling after weak removal of outliers",
 republish = TRUE)
 
 
