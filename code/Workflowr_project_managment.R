@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added cstar-based dcant estimate")
+wflow_publish(all = TRUE, message = "replace cleaned data with canyon-B")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "without P, AIP basins",
+message = "test with gap filling of removed outliers",
 republish = TRUE)
 
 
@@ -61,11 +61,14 @@ files <- c(
   "analysis_anomalous_changes.Rmd"
 )
 
-Version_IDs_temp <- list.files(
+Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_13")
+  pattern = "v_12")
+Version_IDs_2 <- list.files(
+  path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
+  pattern = "v_22")
 
-Version_IDs <- c(Version_IDs, Version_IDs_temp)
+Version_IDs <- cbind(Version_IDs_1, Version_IDs_2)
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {

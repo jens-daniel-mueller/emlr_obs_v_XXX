@@ -755,18 +755,24 @@ GLODAP_filling_wide <- GLODAP_filling_long %>%
          filled_ratio = 100*filled/total,
          missing_ratio = 100*missing/total)
 
+print(
 map + 
   geom_raster(data = GLODAP_filling_wide,
               aes(lon, lat, fill = filled_ratio)) +
   facet_grid(parameter ~ era) +
   scale_fill_viridis_c(direction = -1)
+)
 
+print(
 map + 
   geom_raster(data = GLODAP_filling_wide,
               aes(lon, lat, fill = missing_ratio)) +
   facet_grid(parameter ~ era) +
   scale_fill_viridis_c(direction = -1)
+)
 
+
+print(
 GLODAP_filling_long %>% 
   group_by(era, parameter, filling) %>% 
   summarise(n = sum(n)) %>% 
@@ -775,6 +781,7 @@ GLODAP_filling_long %>%
   geom_col() +
   facet_grid(era~.) +
   scale_fill_viridis_d()
+)
 
 GLODAP <- GLODAP %>% 
   select(!ends_with("_CANYONB")) %>% 
