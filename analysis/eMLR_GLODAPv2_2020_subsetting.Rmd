@@ -649,33 +649,35 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_samples}
 
+
 for (i_parameter in unique(samples_out$parameter)) {
-  i_parameter <- unique(samples_out$parameter)[1]
+  # i_parameter <- unique(samples_out$parameter)[1]
   
-  i_row_number <- samples_out %>% 
-    filter(parameter == i_parameter) %>% 
+  i_row_number <- samples_out %>%
+    filter(parameter == i_parameter) %>%
     pull(row_number)
   
-  GLODAP %>% 
-    count(is.na(!!sym(i_parameter)))
+  print(paste(i_parameter, ", NA data before sample filter:"))
   
-  GLODAP <- GLODAP %>% 
+  print(
+  GLODAP %>%
+    count(is.na(!!sym(i_parameter)))
+  )
+  
+  GLODAP <- GLODAP %>%
     mutate(!!sym(i_parameter) := if_else(row_number %in% i_row_number,
                                          NaN,
                                          !!sym(i_parameter)))
   
-  GLODAP %>% 
+  
+  print(paste(i_parameter, ", NA data before sample filter:"))
+  
+  print(
+  GLODAP %>%
     count(is.na(!!sym(i_parameter)))
+  )
   
 }
-
-# GLODAP <- GLODAP %>% 
-#   mutate(sample_flag = if_else(row_number %in% samples_out,
-#                                 "removed",
-#                                 "included"))
-# 
-# nrow(GLODAP %>% filter(sample_flag == "removed")) /
-#   nrow(GLODAP) * 100
 
 
 ```
