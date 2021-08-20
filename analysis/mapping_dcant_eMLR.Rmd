@@ -487,7 +487,11 @@ surface_mod <- surface_mod %>%
          phosphate = phosphate * 1e3) %>% 
   mutate(cstar = b_cstar_phosphate(tco2 = tco2,
                                    phosphate = phosphate,
-                                   talk = talk))
+                                   talk = talk),
+         cstar_phosphate = - params_local$rCP * phosphate,
+         cstar_talk = - 0.5 * (talk - (params_local$rNP * phosphate)))
+
+
 surface_obs <- surface_obs %>% 
   select(lon, lat, year, temp, tco2, talk, pco2 = pCO2)
 
@@ -512,7 +516,7 @@ surface <- surface %>%
 
 # produce wide format
 surface_wide <- surface %>% 
-  pivot_longer(tco2:cstar,
+  pivot_longer(tco2:cstar_talk,
                names_to = "parameter",
                values_to = "value") %>% 
   pivot_wider(names_from = median_year,
@@ -531,7 +535,7 @@ surface_trend <- surface_wide %>%
 surface_trend %>%
   group_by(parameter) %>%
   group_split() %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
@@ -595,7 +599,7 @@ dcant_surface %>%
 
 ### Surf, equi, truth
 
-```{r surf_equi_truth, fig.asp=1.2}
+```{r surf_equi_truth, fig.asp=1.5}
 
 surface_dcant_comparison <- bind_rows(
   surface_trend %>%
@@ -603,6 +607,16 @@ surface_dcant_comparison <- bind_rows(
            parameter == "cstar") %>%
     select(lon, lat, dcant = d) %>%
     mutate(data_source = "cstar"),
+  surface_trend %>%
+    filter(data_source == "mod",
+           parameter == "cstar_talk") %>%
+    select(lon, lat, dcant = d) %>%
+    mutate(data_source = "cstar_talk"),
+  surface_trend %>%
+    filter(data_source == "mod",
+           parameter == "cstar_phosphate") %>%
+    select(lon, lat, dcant = d) %>%
+    mutate(data_source = "cstar_phosphate"),
   surface_trend %>%
     filter(data_source == "mod",
            parameter == "tco2") %>%

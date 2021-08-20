@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "replace cleaned data with canyon-B")
+wflow_publish(all = TRUE, message = "details surface estimates")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "test with gap filling after weak removal of outliers",
+message = "including gamma 26 slab, and all surface equi",
 republish = TRUE)
 
 
