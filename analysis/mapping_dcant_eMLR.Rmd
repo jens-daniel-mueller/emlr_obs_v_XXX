@@ -104,7 +104,7 @@ tref  <-
 
 
 variables <-
-  c("dissicos", "talkos", "po4os", "spco2", "tos")
+  c("dissicos", "talkos", "po4os", "spco2", "tos", "sos")
 
 for (i_variable in variables) {
   
@@ -482,7 +482,8 @@ surface_mod <- surface_mod %>%
          talk = talkos,
          phosphate = po4os,
          pco2 = spco2,
-         temp = tos) %>% 
+         temp = tos,
+         sal = sos) %>% 
   mutate(tco2 = tco2 * 1e3,
          phosphate = phosphate * 1e3) %>% 
   mutate(cstar = b_cstar_phosphate(tco2 = tco2,
@@ -607,16 +608,16 @@ surface_dcant_comparison <- bind_rows(
            parameter == "cstar") %>%
     select(lon, lat, dcant = d) %>%
     mutate(data_source = "cstar"),
-  surface_trend %>%
-    filter(data_source == "mod",
-           parameter == "cstar_talk") %>%
-    select(lon, lat, dcant = d) %>%
-    mutate(data_source = "cstar_talk"),
-  surface_trend %>%
-    filter(data_source == "mod",
-           parameter == "cstar_phosphate") %>%
-    select(lon, lat, dcant = d) %>%
-    mutate(data_source = "cstar_phosphate"),
+  # surface_trend %>%
+  #   filter(data_source == "mod",
+  #          parameter == "cstar_talk") %>%
+  #   select(lon, lat, dcant = d) %>%
+  #   mutate(data_source = "cstar_talk"),
+  # surface_trend %>%
+  #   filter(data_source == "mod",
+  #          parameter == "cstar_phosphate") %>%
+  #   select(lon, lat, dcant = d) %>%
+  #   mutate(data_source = "cstar_phosphate"),
   surface_trend %>%
     filter(data_source == "mod",
            parameter == "tco2") %>%
