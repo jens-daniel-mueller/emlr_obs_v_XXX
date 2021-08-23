@@ -142,6 +142,11 @@ co2_atm_tref <-
                  "co2_atm_tref.csv",
                  sep = ""))
 
+disequi_pCO2_tref <-
+  read_csv(paste(path_version_data,
+                 "disequi_pCO2_tref.csv",
+                 sep = ""))
+
 ```
 
 ## MLR models
@@ -472,6 +477,47 @@ dcant_surface <- full_join(
 
 ```
 
+```{r calc_dcant_surface_disequi, eval=surface_data}
+
+# extract disequilibrium change of pCO2
+disequi_pCO2_tref <- disequi_pCO2_tref %>% 
+  arrange(era) %>% 
+  group_by(data_source) %>% 
+  mutate(delta_disequi_pco2 = mean_delta_pCO2 - lag(mean_delta_pCO2)) %>% 
+  ungroup() %>% 
+  drop_na() %>% 
+  select(data_source, delta_disequi_pco2)
+
+# calculate increase in atm pCO2 between eras
+co2_atm_tref <- expand_grid(
+  co2_atm_tref,
+  disequi_pCO2_tref
+  )
+
+co2_atm_tref <- co2_atm_tref %>% 
+  mutate(d_pCO2_tref_disequi = d_pCO2_tref + delta_disequi_pco2) %>% 
+  select(data_source, d_pCO2_tref_disequi)
+
+dcant_surface_disequi <- full_join(predictors_surface, co2_atm_tref)
+
+# calculate cant
+dcant_surface_disequi <- dcant_surface_disequi %>%
+  mutate(dcant = (1 / rev_fac) *
+           (TCO2 / pCO2) * d_pCO2_tref_disequi)
+
+surface_rev_fac_disequi <- dcant_surface_disequi
+
+# calculate positive cant
+dcant_surface_disequi <- dcant_surface_disequi %>%
+  mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>%
+  select(lon, lat, data_source, dcant, dcant_pos)
+
+
+dcant_surface_disequi <- full_join(dcant_surface_disequi,
+                                   predictors_surface_all_depth)
+
+```
+
 ### Sea surface observations
 
 ```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
@@ -628,6 +674,11 @@ surface_dcant_comparison <- bind_rows(
            depth == 5) %>%
     select(lon, lat, dcant) %>%
     mutate(data_source = "atm_equi"),
+  dcant_surface_disequi %>%
+    filter(data_source == "mod",
+           depth == 5) %>%
+    select(lon, lat, dcant) %>%
+    mutate(data_source = "atm_disequi"),
   surface_pco2 %>%
     filter(data_source == "mod") %>%
     select(lon, lat, dcant = dcant_pco2) %>%
@@ -654,6 +705,7 @@ surface_dcant_comparison_bias <- surface_dcant_comparison %>%
   mutate(cstar_bias = cstar - mod_truth,
          tco2_bias = tco2 - mod_truth,
          atm_equi_bias = atm_equi - mod_truth,
+         atm_disequi_bias = atm_disequi - mod_truth,
          spco2_bias = spco2 - mod_truth) %>% 
   select(lon, lat, cstar_bias:spco2_bias) %>% 
   pivot_longer(cstar_bias:spco2_bias,
