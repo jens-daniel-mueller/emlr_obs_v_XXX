@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">19 August, 2021</h4>
+<h4 class="date">23 August, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-19
+<strong>Last updated:</strong> 2021-08-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1a3562afb89cab4e6d3c1ad26de09235ad9adf83targetblank1a3562aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1a3562afb89cab4e6d3c1ad26de09235ad9adf83" target="_blank">1a3562a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0e3fb847c4a11252ba348f200c854f8ef2cf8981targetblank0e3fb84a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0e3fb847c4a11252ba348f200c854f8ef2cf8981" target="_blank">0e3fb84</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree1a3562afb89cab4e6d3c1ad26de09235ad9adf83targetblank1a3562aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0e3fb847c4a11252ba348f200c854f8ef2cf8981targetblank0e3fb84a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/1a3562afb89cab4e6d3c1ad26de09235ad9adf83" target="_blank">1a3562a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0e3fb847c4a11252ba348f200c854f8ef2cf8981" target="_blank">0e3fb84</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -590,10 +590,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -632,6 +628,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e3fb847c4a11252ba348f200c854f8ef2cf8981/analysis/eMLR_data_preparation.Rmd" target="_blank">0e3fb84</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-23
+</td>
+<td>
+surface delta cant with disequilibrium
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/eMLR_data_preparation.html" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -6098,10 +6128,6 @@ co2_atm_tref &lt;- co2_atm_tref %&gt;%
   mutate(delta_pCO2_atm = pCO2_tref - 
            lag(pCO2_tref, default = params_local$preind_atm_pCO2))
 
-# define ratio of changes in revelle factor
-# rev_fac_ratio &lt;- 0.92
-# print(c(&quot;Revelle factor ratio (fixed):&quot;, rev_fac_ratio))
-
 # derive change in atm-sea disequilibrium pCO2
 delta_pco2_annual &lt;- right_join(delta_pco2_annual,
                                 GLODAP %&gt;%
@@ -6256,6 +6282,7 @@ disequi_pCO2_tref &lt;- bind_rows(
   disequi_pCO2_pi,
   disequi_pCO2_tref
 )
+
 rm(disequi_pCO2_pi)
 
 disequi_pCO2_tref &lt;- disequi_pCO2_tref %&gt;% 
@@ -11297,6 +11324,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/mean_density_profiles-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/mean_density_profiles-1.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -11559,6 +11597,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-1.png" target="_blank">77f4ba7</a>
@@ -11913,6 +11962,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-2.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/coarse_grid-2.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -12227,6 +12287,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-1.png" target="_blank">77f4ba7</a>
@@ -12588,6 +12659,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-2.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-2.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -12936,6 +13018,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-3.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-3.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -13042,6 +13135,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-4.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-4.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -13135,6 +13239,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-5.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-5.png" target="_blank">77f4ba7</a>
@@ -13243,6 +13358,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-6.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-6.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -13347,6 +13473,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-7.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-7.png" target="_blank">77f4ba7</a>
@@ -13455,6 +13592,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-8.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-8.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -13559,6 +13707,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-9.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-9.png" target="_blank">77f4ba7</a>
@@ -13667,6 +13826,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-10.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-10.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -13771,6 +13941,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-11.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-11.png" target="_blank">77f4ba7</a>
@@ -13890,6 +14071,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-12.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-12.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14005,6 +14197,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-13.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-13.png" target="_blank">77f4ba7</a>
@@ -14124,6 +14327,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-14.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-14.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14239,6 +14453,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-15.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-15.png" target="_blank">77f4ba7</a>
@@ -14385,6 +14610,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-16.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-16.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14502,6 +14738,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-17.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-17.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14606,6 +14853,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-18.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-18.png" target="_blank">77f4ba7</a>
@@ -14714,6 +14972,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-19.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-19.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14820,6 +15089,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-20.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-20.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -14924,6 +15204,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-21.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-21.png" target="_blank">77f4ba7</a>
@@ -15043,6 +15334,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-22.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-22.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -15158,6 +15460,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-23.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-23.png" target="_blank">77f4ba7</a>
@@ -15277,6 +15590,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-24.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-24.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -15392,6 +15716,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-25.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-25.png" target="_blank">77f4ba7</a>
@@ -15511,6 +15846,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-26.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-26.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -15626,6 +15972,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-27.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-27.png" target="_blank">77f4ba7</a>
@@ -15745,6 +16102,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-28.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/rarefication-28.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -15862,6 +16230,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-29.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a03f2f003fa5cd1f58f6d0cb3d3721def174bcaf/docs/figure/eMLR_data_preparation.Rmd/rarefication-29.png" target="_blank">a03f2f0</a>
 </td>
 <td>
@@ -15944,6 +16323,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/rarefication-30.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a03f2f003fa5cd1f58f6d0cb3d3721def174bcaf/docs/figure/eMLR_data_preparation.Rmd/rarefication-30.png" target="_blank">a03f2f0</a>
@@ -16058,6 +16448,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-1.png" target="_blank">77f4ba7</a>
@@ -16912,6 +17313,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-2.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -17764,6 +18176,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-3.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/obs_gamma_slab-3.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -18172,6 +18595,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/histogram_predictor-1.png" target="_blank">77f4ba7</a>
@@ -19232,6 +19666,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-1.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -20090,6 +20535,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-2.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-2.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -20871,6 +21327,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-3.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-3.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -20989,6 +21456,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-4.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/Residuals_global_c_star-4.png" target="_blank">77f4ba7</a>
@@ -21134,6 +21612,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/ranked_cstar_rmse-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/ranked_cstar_rmse-1.png" target="_blank">77f4ba7</a>
@@ -21937,6 +22426,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/534854b0a750d49585dfe1d0b8dbf781f32ad114/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">534854b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/77f4ba7b95df8a93ff471c0b654e0250ef46b28e/docs/figure/eMLR_data_preparation.Rmd/cstar_rmse_removed_cruises-1.png" target="_blank">77f4ba7</a>
 </td>
 <td>
@@ -22316,6 +22816,10 @@ co2_atm_tref %&gt;%  write_csv(paste(path_version_data,
                                   &quot;co2_atm_tref.csv&quot;,
                                   sep = &quot;&quot;))
 
+disequi_pCO2_tref  %&gt;%  write_csv(paste(path_version_data,
+                                        &quot;disequi_pCO2_tref.csv&quot;,
+                                        sep = &quot;&quot;))
+
 tcant_3d %&gt;%  write_csv(paste(path_version_data,
                              &quot;projected_tcant_3d_tref.csv&quot;,
                              sep = &quot;&quot;))
@@ -22374,28 +22878,29 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 RColorBrewer_1.1-2       httr_1.4.2              
  [4] rprojroot_2.0.2          tools_4.0.3              backports_1.1.10        
- [7] utf8_1.1.4               R6_2.5.0                 DBI_1.1.0               
-[10] colorspace_2.0-2         withr_2.3.0              tidyselect_1.1.0        
-[13] compiler_4.0.3           git2r_0.27.1             cli_3.0.1               
-[16] rvest_0.3.6              xml2_1.3.2               labeling_0.4.2          
-[19] scales_1.1.1             checkmate_2.0.0          digest_0.6.27           
-[22] rmarkdown_2.10           pkgconfig_2.0.3          htmltools_0.5.0         
-[25] highr_0.8                dbplyr_1.4.4             rlang_0.4.10            
-[28] readxl_1.3.1             rstudioapi_0.13          farver_2.0.3            
-[31] generics_0.1.0           jsonlite_1.7.1           magrittr_1.5            
-[34] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
-[37] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
-[40] whisker_0.4              yaml_2.2.1               MASS_7.3-53             
-[43] grid_4.0.3               blob_1.2.1               parallel_4.0.3          
-[46] promises_1.1.1           crayon_1.3.4             lattice_0.20-41         
-[49] haven_2.3.1              hms_0.5.3                knitr_1.33              
-[52] pillar_1.6.2             reprex_0.3.0             glue_1.4.2              
-[55] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.14.0       
-[58] modelr_0.1.8             vctrs_0.3.8              tweenr_1.0.2            
-[61] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
-[64] polyclip_1.10-0          assertthat_0.2.1         xfun_0.25               
-[67] RcppEigen_0.3.3.7.0      later_1.2.0              viridisLite_0.3.0       
-[70] ellipsis_0.3.2           here_0.1                </code></pre>
+ [7] bslib_0.2.5.1            utf8_1.1.4               R6_2.5.0                
+[10] DBI_1.1.0                colorspace_2.0-2         withr_2.3.0             
+[13] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
+[16] cli_3.0.1                rvest_0.3.6              xml2_1.3.2              
+[19] labeling_0.4.2           sass_0.4.0               scales_1.1.1            
+[22] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.10          
+[25] pkgconfig_2.0.3          htmltools_0.5.1.1        highr_0.8               
+[28] dbplyr_1.4.4             rlang_0.4.11             readxl_1.3.1            
+[31] rstudioapi_0.13          jquerylib_0.1.4          generics_0.1.0          
+[34] farver_2.0.3             jsonlite_1.7.1           magrittr_1.5            
+[37] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[40] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
+[43] whisker_0.4              yaml_2.2.1               MASS_7.3-53             
+[46] grid_4.0.3               blob_1.2.1               parallel_4.0.3          
+[49] promises_1.1.1           crayon_1.3.4             lattice_0.20-41         
+[52] haven_2.3.1              hms_0.5.3                knitr_1.33              
+[55] pillar_1.6.2             reprex_0.3.0             glue_1.4.2              
+[58] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.14.0       
+[61] modelr_0.1.8             vctrs_0.3.8              tweenr_1.0.2            
+[64] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
+[67] polyclip_1.10-0          assertthat_0.2.1         xfun_0.25               
+[70] RcppEigen_0.3.3.7.0      later_1.2.0              viridisLite_0.3.0       
+[73] ellipsis_0.3.2           here_0.1                </code></pre>
 </div>
 </div>
 
