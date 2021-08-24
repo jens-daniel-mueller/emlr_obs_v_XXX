@@ -615,7 +615,7 @@ surface_pco2 <- surface_pco2 %>%
 
 ```{r dcant_surface_climatology_map, fig.asp=0.6, eval=surface_data}
 
-dcant_surface %>%
+dcant_surface_disequi %>%
   group_split(data_source) %>%
   # head(1) %>%
   map( ~
@@ -630,7 +630,7 @@ dcant_surface %>%
 
 ```{r dcant_surface_climatology_sections, fig.asp=1, eval=surface_data}
 
-dcant_surface %>%
+dcant_surface_disequi %>%
   group_split(data_source) %>%
   # head(1) %>%
   map( ~
@@ -793,7 +793,7 @@ The averaging function is also applied to the surface data, although only one va
 ```{r calc_dcant_mean_surface, eval=surface_data}
 
 dcant_surface_average <-
-  m_dcant_3d_average(dcant_surface)
+  m_dcant_3d_average(dcant_surface_disequi)
 
 dcant_surface_average <- m_cut_gamma(dcant_surface_average, "gamma")
 rm(dcant_surface)
