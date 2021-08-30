@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping dcant eMLR</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">24 August, 2021</h4>
+<h4 class="date">30 August, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-24
+<strong>Last updated:</strong> 2021-08-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea2eefa68c21c3666d1e162ebc001a29c24e351aetargetblanka2eefa6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a2eefa68c21c3666d1e162ebc001a29c24e351ae" target="_blank">a2eefa6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeec2c293df46a5c5c750fb2246af1006b10ad30b5targetblankec2c293a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ec2c293df46a5c5c750fb2246af1006b10ad30b5" target="_blank">ec2c293</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea2eefa68c21c3666d1e162ebc001a29c24e351aetargetblanka2eefa6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeec2c293df46a5c5c750fb2246af1006b10ad30b5targetblankec2c293a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a2eefa68c21c3666d1e162ebc001a29c24e351ae" target="_blank">a2eefa6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ec2c293df46a5c5c750fb2246af1006b10ad30b5" target="_blank">ec2c293</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -592,9 +592,7 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
-    Modified:   analysis/config_parameterization_local.Rmd
     Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -633,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ec2c293df46a5c5c750fb2246af1006b10ad30b5/analysis/mapping_dcant_eMLR.Rmd" target="_blank">ec2c293</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-30
+</td>
+<td>
+rerun with surface dic regression approach
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/mapping_dcant_eMLR.html" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1874,7 +1906,12 @@ surface_obs &lt;- read_csv(paste0(
 <div id="atm.-pco2" class="section level2" number="2.2">
 <h2 number="2.2"><span class="header-section-number">2.2</span> Atm. pCO2</h2>
 <p>Required only to estimate the change of dcant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.</p>
-<pre class="r"><code>co2_atm_tref &lt;-
+<pre class="r"><code>co2_atm &lt;-
+  read_csv(paste(path_preprocessing,
+                 &quot;co2_atm.csv&quot;,
+                 sep = &quot;&quot;))
+
+co2_atm_tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;co2_atm_tref.csv&quot;,
                  sep = &quot;&quot;))
@@ -3303,6 +3340,8 @@ co2_atm_tref &lt;- co2_atm_tref %&gt;%
   drop_na() %&gt;%
   select(d_pCO2_tref)
 
+co2_atm_tref_change &lt;- co2_atm_tref
+
 dcant_surface &lt;- full_join(predictors_surface, co2_atm_tref,
                            by = character())
 
@@ -3384,11 +3423,82 @@ surface_obs &lt;- surface_obs %&gt;%
 
 # combine model and observation-based data
 surface &lt;- bind_rows(
-  surface_mod %&gt;% mutate(data_source = &quot;mod&quot;),
-  surface_obs %&gt;% mutate(data_source = &quot;obs&quot;)
-)
+  surface_mod %&gt;% mutate(data_source = &quot;mod&quot;) %&gt;% drop_na(),
+  surface_obs %&gt;% mutate(data_source = &quot;obs&quot;) %&gt;% drop_na()
+)</code></pre>
+<pre class="r"><code>surface_tco2_regression_fit &lt;- 
+  full_join(surface, co2_atm %&gt;% rename(pco2_atm = pCO2)) %&gt;% 
+  filter(year &gt;= 1990) %&gt;% 
+  select(data_source, lon, lat, pco2_atm, tco2) %&gt;% 
+  drop_na() %&gt;% 
+  group_by(data_source, lon, lat) %&gt;% 
+  nest()
 
-# combine with era definition
+surface_tco2_regression_fit &lt;- surface_tco2_regression_fit %&gt;%
+  mutate(
+    fit = map(data,
+              ~ lm(tco2 ~ pco2_atm, data = .x)),
+    tidied = map(fit, tidy)
+    # glanced = map(fit, glance)
+    # augmented = map(fit, augment)
+  )
+
+# extract tidy model output (model coefficients)
+surface_tco2_regression_tidy &lt;-surface_tco2_regression_fit %&gt;%
+  select(-c(data, fit)) %&gt;%
+  unnest(tidied) %&gt;% 
+  filter(term == &quot;pco2_atm&quot;) %&gt;% 
+  rename(slope = estimate)
+
+surface_tco2_regression_tidy %&gt;% 
+  ggplot(aes(slope)) +
+  geom_histogram()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>surface_tco2_regression_tidy &lt;- surface_tco2_regression_tidy %&gt;% 
+  filter(slope &gt; -1,
+         slope &lt; 2)
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = slope)) +
+  facet_grid(.~ data_source) +
+  scale_fill_divergent()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = surface_tco2_regression_tidy %&gt;% filter(slope &gt; 0),
+              aes(lon, lat, fill = slope)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = p.value)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = std.error)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(surface_tco2_regression_fit)
+
+surface_tco2_regression_tidy &lt;- surface_tco2_regression_tidy %&gt;% 
+  select(data_source, lat, lon, slope)
+
+d_co2_atm &lt;- co2_atm_tref_change %&gt;% pull(d_pCO2_tref)
+
+surface_tco2_regression_tidy &lt;- surface_tco2_regression_tidy %&gt;% 
+  mutate(d_tco2 = slope * d_co2_atm)
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy %&gt;% filter(slope &gt; 0),
+              aes(lon, lat, fill = d_tco2)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_long_term_tco2_trends-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># combine with era definition
 surface &lt;- expand_grid(surface, tref)
 
 # determine era averages
@@ -4547,6 +4657,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_map-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_map-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -4774,6 +4895,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_map-2.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_map-2.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -4986,6 +5118,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-1.png" target="_blank">deb425c</a>
@@ -5259,6 +5402,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-2.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/dcant_surface_climatology_sections-2.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -5519,6 +5673,10 @@ jens-daniel-mueller
     filter(data_source == &quot;mod&quot;) %&gt;%
     select(lon, lat, dcant = dcant_pco2) %&gt;%
     mutate(data_source = &quot;spco2&quot;),
+  surface_tco2_regression_tidy %&gt;%
+    filter(data_source == &quot;mod&quot;) %&gt;%
+    select(lon, lat, dcant = d_tco2) %&gt;%
+    mutate(data_source = &quot;tco2_regression&quot;),
   dcant_surface_mod_truth %&gt;%
     select(lon, lat, dcant) %&gt;%
     mutate(data_source = &quot;mod_truth&quot;)
@@ -5716,9 +5874,10 @@ jens-daniel-mueller
          tco2_bias = tco2 - mod_truth,
          atm_equi_bias = atm_equi - mod_truth,
          atm_disequi_bias = atm_disequi - mod_truth,
-         spco2_bias = spco2 - mod_truth) %&gt;% 
-  select(lon, lat, cstar_bias:spco2_bias) %&gt;% 
-  pivot_longer(cstar_bias:spco2_bias,
+         spco2_bias = spco2 - mod_truth,
+         tco2_regression_bias = tco2_regression - mod_truth) %&gt;% 
+  select(lon, lat, cstar_bias:tco2_regression_bias) %&gt;% 
+  pivot_longer(cstar_bias:tco2_regression_bias,
                names_to = &quot;data_source&quot;,
                values_to = &quot;dcant_bias&quot;)
 
@@ -7235,6 +7394,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -7624,6 +7794,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories_surface-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories_surface-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -7908,6 +8089,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-1.png" target="_blank">deb425c</a>
@@ -8212,6 +8404,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-2.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-2.png" target="_blank">deb425c</a>
@@ -8551,6 +8754,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-3.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-3.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -8888,6 +9102,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-4.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-4.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -9223,6 +9448,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-5.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-5.png" target="_blank">deb425c</a>
@@ -9572,6 +9808,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">deb425c</a>
@@ -9949,6 +10196,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_global_surface-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_global_surface-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -10297,6 +10555,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP_fig-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP_fig-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -10533,6 +10802,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-1.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -10747,6 +11027,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-2.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-2.png" target="_blank">deb425c</a>
@@ -10965,6 +11256,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-3.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-3.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -11179,6 +11481,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-4.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-4.png" target="_blank">deb425c</a>
@@ -11397,6 +11710,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-5.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-5.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -11611,6 +11935,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-6.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-6.png" target="_blank">deb425c</a>
@@ -11829,6 +12164,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-7.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-7.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -12021,6 +12367,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-1.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-1.png" target="_blank">deb425c</a>
@@ -12239,6 +12596,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-2.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-2.png" target="_blank">deb425c</a>
 </td>
 <td>
@@ -12365,6 +12733,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-3.png" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/deb425c7fa03fc1eba1cf34fc9b8ad33d21b9f85/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-3.png" target="_blank">deb425c</a>
@@ -12546,12 +12925,12 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] marelac_2.1.10  shape_1.4.5     seacarb_3.2.14  oce_1.2-0      
- [5] gsw_1.0-5       testthat_2.3.2  ggforce_0.3.3   metR_0.9.0     
- [9] scico_1.2.0     patchwork_1.1.1 collapse_1.5.0  forcats_0.5.0  
-[13] stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4     readr_1.4.0    
-[17] tidyr_1.1.3     tibble_3.1.3    ggplot2_3.3.5   tidyverse_1.3.0
-[21] workflowr_1.6.2
+ [1] broom_0.7.9     marelac_2.1.10  shape_1.4.5     seacarb_3.2.14 
+ [5] oce_1.2-0       gsw_1.0-5       testthat_2.3.2  ggforce_0.3.3  
+ [9] metR_0.9.0      scico_1.2.0     patchwork_1.1.1 collapse_1.5.0 
+[13] forcats_0.5.0   stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4    
+[17] readr_1.4.0     tidyr_1.1.3     tibble_3.1.3    ggplot2_3.3.5  
+[21] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
  [1] fs_1.5.0                 lubridate_1.7.9          RColorBrewer_1.1-2      
@@ -12577,9 +12956,9 @@ loaded via a namespace (and not attached):
 [61] RcppArmadillo_0.10.1.2.0 data.table_1.14.0        modelr_0.1.8            
 [64] vctrs_0.3.8              tweenr_1.0.2             httpuv_1.5.4            
 [67] cellranger_1.1.0         gtable_0.3.0             polyclip_1.10-0         
-[70] assertthat_0.2.1         xfun_0.25                broom_0.7.9             
-[73] RcppEigen_0.3.3.7.0      later_1.2.0              viridisLite_0.3.0       
-[76] ellipsis_0.3.2           here_0.1                </code></pre>
+[70] assertthat_0.2.1         xfun_0.25                RcppEigen_0.3.3.7.0     
+[73] later_1.2.0              viridisLite_0.3.0        ellipsis_0.3.2          
+[76] here_0.1                </code></pre>
 </div>
 </div>
 

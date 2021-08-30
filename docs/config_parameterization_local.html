@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">24 August, 2021</h4>
+<h4 class="date">30 August, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-24
+<strong>Last updated:</strong> 2021-08-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea2eefa68c21c3666d1e162ebc001a29c24e351aetargetblanka2eefa6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a2eefa68c21c3666d1e162ebc001a29c24e351ae" target="_blank">a2eefa6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeec2c293df46a5c5c750fb2246af1006b10ad30b5targetblankec2c293a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ec2c293df46a5c5c750fb2246af1006b10ad30b5" target="_blank">ec2c293</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea2eefa68c21c3666d1e162ebc001a29c24e351aetargetblanka2eefa6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeec2c293df46a5c5c750fb2246af1006b10ad30b5targetblankec2c293a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a2eefa68c21c3666d1e162ebc001a29c24e351ae" target="_blank">a2eefa6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ec2c293df46a5c5c750fb2246af1006b10ad30b5" target="_blank">ec2c293</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -632,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ec2c293df46a5c5c750fb2246af1006b10ad30b5/analysis/config_parameterization_local.Rmd" target="_blank">ec2c293</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-30
+</td>
+<td>
+rerun with surface dic regression approach
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/6e17588aba72b39a76e8699f0184f5fb22ac79d4/docs/config_parameterization_local.html" target="_blank">6e17588</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -5848,13 +5882,13 @@ params_local &lt;-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 20,
     # start years for eras
-    era_start = c(1982, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
     MLR_basins = &quot;AIP&quot;,
     # gap filling of NA values in GLODAP
@@ -5902,6 +5936,7 @@ params_local &lt;-
 slabs_Atl &lt;- lst(slabs_Atl =
       c(
           -Inf,
+          26.00,
           26.50,
           26.75,
           27.00,
@@ -5916,6 +5951,17 @@ slabs_Atl &lt;- lst(slabs_Atl =
           28.20,
           Inf
         )
+      # slabs_Atl =
+      # c(
+      #     -Inf,
+      #     26.50,
+      #     27.00,
+      #     27.50,
+      #     27.85,
+      #     28.05,
+      #     28.15,
+      #     Inf
+      #   )
       )
 
 # neutral density thresholds to cut the Indo-Pacific ocean into slabs
@@ -5923,6 +5969,7 @@ slabs_Ind_Pac &lt;- lst(
   slabs_Ind_Pac =
     c(
       -Inf,
+      26.00,
       26.50,
       26.75,
       27.00,
@@ -5935,6 +5982,16 @@ slabs_Ind_Pac &lt;- lst(
       28.10,
       Inf
     )
+    # slabs_Ind_Pac =
+    # c(
+    #   -Inf,
+    #   26.50,
+    #   27.00,
+    #   27.50,
+    #   27.85,
+    #   28.05,
+    #   Inf
+    # )
 )
 
 # Predictors for MLR model
@@ -5951,62 +6008,77 @@ MLR_predictors &lt;- lst(c(
 GLODAPv2_version = &quot;2021&quot;
 
 # f flags accepted for GLODAP data
-flag_f = lst(c(0, 2, 9))
+flag_f = lst(flag_f = c(0, 2, 9)
+             # flag_f = c(2)
+             )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(c(1, 0))
+flag_qc = lst(flag_qc = c(1, 0)
+              # flag_qc = c(1)
+              )
 
 # Shallowest depth for data to be included in MLR fitting
-depth_min = 150
+depth_min = lst(
+  depth_min = 100
+  # depth_min = 150
+  )
 
 # Shallowest water depth for data to be included in MLR fitting
 bottomdepth_min = 0
 
 # Lowest neutral density to map dcant with eMLR approach
-gamma_min = 26
+gamma_min = lst(
+  # gamma_min = 26,
+  gamma_min = Inf
+)
 
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
 CANYON_B_cruise_mean = lst(
-  CANYON_B_cruise_mean = 5,
-  CANYON_B_cruise_mean = 3,
-  CANYON_B_cruise_mean = 1
+  CANYON_B_cruise_mean = 2
+  # CANYON_B_cruise_mean = 3,
+  # CANYON_B_cruise_mean = 1
 )
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 5,
+  CANYON_B_sample_SD = 4,
   CANYON_B_sample_SD = 3,
+  CANYON_B_sample_SD = 2,
   CANYON_B_sample_SD = 1
 )
 
 # minimum sampling depth to apply CANYON-B offset threshold
-CANYON_B_depth = 1000
+CANYON_B_depth = 0
 
 # threshold for the cruise rmse from a global MLR model of the target variable
-target_global_rmse_max = 30
+target_global_rmse_max = lst(
+  target_global_rmse_max = 50,
+  # target_global_rmse_max = 30,
+  # target_global_rmse_max = 15
+)
 
 # start years for eras
-era_start = lst(era_start = c(2000, 2010))
+era_start = lst(era_start = c(1982, 2000))
 
 # end years for eras
-era_end = lst(era_end = c(2009, 2019))
+era_end = lst(era_end = c(1999, 2009))
 
 # manually define tref1, set to NULL to use median year
-tref1 = 2004
+tref1 = 1994
 
 # manually define tref2, set to NULL to use median year
-tref2 = 2014
+tref2 = 2004
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
   # MLR_basins = &quot;1&quot;,
   # MLR_basins = &quot;2&quot;,
-  # MLR_basins = &quot;AIP&quot;,
+  MLR_basins = &quot;AIP&quot;
   # MLR_basins = &quot;5&quot;,
   # MLR_basins = &quot;SO&quot;,
   # MLR_basins = &quot;SO_5&quot;,
-  MLR_basins = &quot;SO_AIP&quot;
+  # MLR_basins = &quot;SO_AIP&quot;
 )
 
 # gap filling of NA values in GLODAP
@@ -6017,7 +6089,8 @@ rarefication = &quot;coarse_grid&quot;
 
 # rarefication approach threshold
 rarefication_threshold = lst(
-  rarefication_threshold = 20
+  # rarefication_threshold = 20,
+  rarefication_threshold = 50
 )
 
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
@@ -6036,7 +6109,11 @@ MLR_number = 10
 MLR_function = &quot;lm&quot;
 
 # Maximum VIF of fitted MLR models to be included
-vif_max = 500
+vif_max = lst(
+  vif_max = 1000
+  # vif_max = 100,
+  # vif_max = 10
+)
 
 # Criterion to select best MLR fits, either &quot;rmse&quot; or &quot;aic&quot;
 MLR_criterion = &quot;rmse&quot;
@@ -6108,7 +6185,9 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 1
   
-  Version_ID &lt;- paste0(&quot;v_12&quot;,i)
+  Version_ID &lt;- sprintf(&quot;v_11%02d&quot;, i)
+  
+  # Version_ID &lt;- paste0(&quot;v_12&quot;,i)
   
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
