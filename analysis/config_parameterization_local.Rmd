@@ -99,13 +99,13 @@ params_local <-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 20,
     # start years for eras
-    era_start = c(1982, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -159,6 +159,7 @@ params_local <-
 slabs_Atl <- lst(slabs_Atl =
       c(
           -Inf,
+          26.00,
           26.50,
           26.75,
           27.00,
@@ -173,6 +174,17 @@ slabs_Atl <- lst(slabs_Atl =
           28.20,
           Inf
         )
+      # slabs_Atl =
+      # c(
+      #     -Inf,
+      #     26.50,
+      #     27.00,
+      #     27.50,
+      #     27.85,
+      #     28.05,
+      #     28.15,
+      #     Inf
+      #   )
       )
 
 # neutral density thresholds to cut the Indo-Pacific ocean into slabs
@@ -180,6 +192,7 @@ slabs_Ind_Pac <- lst(
   slabs_Ind_Pac =
     c(
       -Inf,
+      26.00,
       26.50,
       26.75,
       27.00,
@@ -192,6 +205,16 @@ slabs_Ind_Pac <- lst(
       28.10,
       Inf
     )
+    # slabs_Ind_Pac =
+    # c(
+    #   -Inf,
+    #   26.50,
+    #   27.00,
+    #   27.50,
+    #   27.85,
+    #   28.05,
+    #   Inf
+    # )
 )
 
 # Predictors for MLR model
@@ -208,62 +231,77 @@ MLR_predictors <- lst(c(
 GLODAPv2_version = "2021"
 
 # f flags accepted for GLODAP data
-flag_f = lst(c(0, 2, 9))
+flag_f = lst(flag_f = c(0, 2, 9)
+             # flag_f = c(2)
+             )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(c(1, 0))
+flag_qc = lst(flag_qc = c(1, 0)
+              # flag_qc = c(1)
+              )
 
 # Shallowest depth for data to be included in MLR fitting
-depth_min = 150
+depth_min = lst(
+  depth_min = 100
+  # depth_min = 150
+  )
 
 # Shallowest water depth for data to be included in MLR fitting
 bottomdepth_min = 0
 
 # Lowest neutral density to map dcant with eMLR approach
-gamma_min = 26
+gamma_min = lst(
+  # gamma_min = 26,
+  gamma_min = Inf
+)
 
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
 CANYON_B_cruise_mean = lst(
-  CANYON_B_cruise_mean = 5,
-  CANYON_B_cruise_mean = 3,
-  CANYON_B_cruise_mean = 1
+  CANYON_B_cruise_mean = 2
+  # CANYON_B_cruise_mean = 3,
+  # CANYON_B_cruise_mean = 1
 )
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 5,
+  CANYON_B_sample_SD = 4,
   CANYON_B_sample_SD = 3,
+  CANYON_B_sample_SD = 2,
   CANYON_B_sample_SD = 1
 )
 
 # minimum sampling depth to apply CANYON-B offset threshold
-CANYON_B_depth = 1000
+CANYON_B_depth = 0
 
 # threshold for the cruise rmse from a global MLR model of the target variable
-target_global_rmse_max = 30
+target_global_rmse_max = lst(
+  target_global_rmse_max = 50,
+  # target_global_rmse_max = 30,
+  # target_global_rmse_max = 15
+)
 
 # start years for eras
-era_start = lst(era_start = c(2000, 2010))
+era_start = lst(era_start = c(1982, 2000))
 
 # end years for eras
-era_end = lst(era_end = c(2009, 2019))
+era_end = lst(era_end = c(1999, 2009))
 
 # manually define tref1, set to NULL to use median year
-tref1 = 2004
+tref1 = 1994
 
 # manually define tref2, set to NULL to use median year
-tref2 = 2014
+tref2 = 2004
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
   # MLR_basins = "1",
   # MLR_basins = "2",
-  # MLR_basins = "AIP",
+  MLR_basins = "AIP"
   # MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  MLR_basins = "SO_AIP"
+  # MLR_basins = "SO_AIP"
 )
 
 # gap filling of NA values in GLODAP
@@ -274,7 +312,8 @@ rarefication = "coarse_grid"
 
 # rarefication approach threshold
 rarefication_threshold = lst(
-  rarefication_threshold = 20
+  # rarefication_threshold = 20,
+  rarefication_threshold = 50
 )
 
 # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
@@ -293,7 +332,11 @@ MLR_number = 10
 MLR_function = "lm"
 
 # Maximum VIF of fitted MLR models to be included
-vif_max = 500
+vif_max = lst(
+  vif_max = 1000
+  # vif_max = 100,
+  # vif_max = 10
+)
 
 # Criterion to select best MLR fits, either "rmse" or "aic"
 MLR_criterion = "rmse"
@@ -365,7 +408,9 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 1
   
-  Version_ID <- paste0("v_12",i)
+  Version_ID <- sprintf("v_11%02d", i)
+  
+  # Version_ID <- paste0("v_12",i)
   
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID

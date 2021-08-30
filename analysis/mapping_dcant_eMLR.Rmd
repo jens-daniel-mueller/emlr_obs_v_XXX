@@ -67,6 +67,8 @@ path_model_preprocessing    <-
 ```{r load_libraries_specific, include=FALSE}
 library(seacarb)
 library(marelac)
+library(broom)
+
 ```
 
 # Version ID
@@ -136,6 +138,11 @@ surface_obs <- read_csv(paste0(
 Required only to estimate the change of dcant in surface water and assuming that the ocean pCO2 trend follows the atmospheric forcing.
 
 ```{r read_atm_pCO2}
+
+co2_atm <-
+  read_csv(paste(path_preprocessing,
+                 "co2_atm.csv",
+                 sep = ""))
 
 co2_atm_tref <-
   read_csv(paste(path_version_data,
@@ -454,6 +461,8 @@ co2_atm_tref <- co2_atm_tref %>%
   drop_na() %>%
   select(d_pCO2_tref)
 
+co2_atm_tref_change <- co2_atm_tref
+
 dcant_surface <- full_join(predictors_surface, co2_atm_tref,
                            by = character())
 
@@ -520,7 +529,8 @@ dcant_surface_disequi <- full_join(dcant_surface_disequi,
 
 ### Sea surface observations
 
-```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
+```{r prepare_surface_data, eval=surface_data}
+
 
 # harmonize variable naming and formatting
 surface_mod <- surface_mod %>% 
@@ -544,9 +554,89 @@ surface_obs <- surface_obs %>%
 
 # combine model and observation-based data
 surface <- bind_rows(
-  surface_mod %>% mutate(data_source = "mod"),
-  surface_obs %>% mutate(data_source = "obs")
+  surface_mod %>% mutate(data_source = "mod") %>% drop_na(),
+  surface_obs %>% mutate(data_source = "obs") %>% drop_na()
 )
+
+```
+
+```{r calc_long_term_tco2_trends}
+
+surface_tco2_regression_fit <- 
+  full_join(surface, co2_atm %>% rename(pco2_atm = pCO2)) %>% 
+  filter(year >= 1990) %>% 
+  select(data_source, lon, lat, pco2_atm, tco2) %>% 
+  drop_na() %>% 
+  group_by(data_source, lon, lat) %>% 
+  nest()
+
+surface_tco2_regression_fit <- surface_tco2_regression_fit %>%
+  mutate(
+    fit = map(data,
+              ~ lm(tco2 ~ pco2_atm, data = .x)),
+    tidied = map(fit, tidy)
+    # glanced = map(fit, glance)
+    # augmented = map(fit, augment)
+  )
+
+# extract tidy model output (model coefficients)
+surface_tco2_regression_tidy <-surface_tco2_regression_fit %>%
+  select(-c(data, fit)) %>%
+  unnest(tidied) %>% 
+  filter(term == "pco2_atm") %>% 
+  rename(slope = estimate)
+
+surface_tco2_regression_tidy %>% 
+  ggplot(aes(slope)) +
+  geom_histogram()
+
+surface_tco2_regression_tidy <- surface_tco2_regression_tidy %>% 
+  filter(slope > -1,
+         slope < 2)
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = slope)) +
+  facet_grid(.~ data_source) +
+  scale_fill_divergent()
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy %>% filter(slope > 0),
+              aes(lon, lat, fill = slope)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = p.value)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy,
+              aes(lon, lat, fill = std.error)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()
+
+rm(surface_tco2_regression_fit)
+
+surface_tco2_regression_tidy <- surface_tco2_regression_tidy %>% 
+  select(data_source, lat, lon, slope)
+
+d_co2_atm <- co2_atm_tref_change %>% pull(d_pCO2_tref)
+
+surface_tco2_regression_tidy <- surface_tco2_regression_tidy %>% 
+  mutate(d_tco2 = slope * d_co2_atm)
+
+map +
+  geom_raster(data = surface_tco2_regression_tidy %>% filter(slope > 0),
+              aes(lon, lat, fill = d_tco2)) +
+  facet_grid(.~ data_source) +
+  scale_fill_viridis_c()
+
+```
+
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
 
 # combine with era definition
 surface <- expand_grid(surface, tref)
@@ -683,6 +773,10 @@ surface_dcant_comparison <- bind_rows(
     filter(data_source == "mod") %>%
     select(lon, lat, dcant = dcant_pco2) %>%
     mutate(data_source = "spco2"),
+  surface_tco2_regression_tidy %>%
+    filter(data_source == "mod") %>%
+    select(lon, lat, dcant = d_tco2) %>%
+    mutate(data_source = "tco2_regression"),
   dcant_surface_mod_truth %>%
     select(lon, lat, dcant) %>%
     mutate(data_source = "mod_truth")
@@ -706,9 +800,10 @@ surface_dcant_comparison_bias <- surface_dcant_comparison %>%
          tco2_bias = tco2 - mod_truth,
          atm_equi_bias = atm_equi - mod_truth,
          atm_disequi_bias = atm_disequi - mod_truth,
-         spco2_bias = spco2 - mod_truth) %>% 
-  select(lon, lat, cstar_bias:spco2_bias) %>% 
-  pivot_longer(cstar_bias:spco2_bias,
+         spco2_bias = spco2 - mod_truth,
+         tco2_regression_bias = tco2_regression - mod_truth) %>% 
+  select(lon, lat, cstar_bias:tco2_regression_bias) %>% 
+  pivot_longer(cstar_bias:tco2_regression_bias,
                names_to = "data_source",
                values_to = "dcant_bias")
 
