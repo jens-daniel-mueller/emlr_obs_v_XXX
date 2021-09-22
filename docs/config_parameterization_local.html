@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed69f5d5f68f1c3823c39ed2775eae20d6fe0a28dtargetblankd69f5d5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d69f5d5f68f1c3823c39ed2775eae20d6fe0a28d" target="_blank">d69f5d5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeef591b4cd298d85b8b7fdad4349b5b391b2eb384targetblankef591b4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ef591b4cd298d85b8b7fdad4349b5b391b2eb384" target="_blank">ef591b4</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed69f5d5f68f1c3823c39ed2775eae20d6fe0a28dtargetblankd69f5d5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeef591b4cd298d85b8b7fdad4349b5b391b2eb384targetblankef591b4a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d69f5d5f68f1c3823c39ed2775eae20d6fe0a28d" target="_blank">d69f5d5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ef591b4cd298d85b8b7fdad4349b5b391b2eb384" target="_blank">ef591b4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,7 +593,6 @@ Ignored files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -632,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ef591b4cd298d85b8b7fdad4349b5b391b2eb384/analysis/config_parameterization_local.Rmd" target="_blank">ef591b4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+rerun with alternative rmse vif selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/config_parameterization_local.html" target="_blank">c0bbbe4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -6185,10 +6218,11 @@ MLR_function = &quot;lm&quot;
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  vif_max = 1000,
-  vif_max = 500,
-  vif_max = 100,
-  vif_max = 10
+  # vif_max = Inf,
+  vif_max = 1000#,
+  # vif_max = 500,
+  # vif_max = 100,
+  # vif_max = 10
 )
 
 # Criterion to select best MLR fits, either &quot;rmse&quot; or &quot;aic&quot;
@@ -6259,13 +6293,14 @@ params_local_all &lt;-
 path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 
 for (i in 1:length(params_local_all)) {
-  # i &lt;- 1
+  # i &lt;- 5
   
-  Version_ID &lt;- sprintf(&quot;v_15%02d&quot;, i)
-  
+  Version_ID &lt;- sprintf(&quot;v_25%02d&quot;, i)
+
   # Version_ID &lt;- paste0(&quot;v_12&quot;,i)
   
   params_local &lt;- nth(params_local_all, i)
+  # params_local &lt;- nth(params_local_all, 1)
   params_local$Version_ID &lt;- Version_ID
   
   # create folder structure
