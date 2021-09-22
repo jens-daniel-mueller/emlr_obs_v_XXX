@@ -340,10 +340,11 @@ MLR_function = "lm"
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  vif_max = 1000,
-  vif_max = 500,
-  vif_max = 100,
-  vif_max = 10
+  # vif_max = Inf,
+  vif_max = 1000#,
+  # vif_max = 500,
+  # vif_max = 100,
+  # vif_max = 10
 )
 
 # Criterion to select best MLR fits, either "rmse" or "aic"
@@ -414,13 +415,14 @@ params_local_all <-
 path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 
 for (i in 1:length(params_local_all)) {
-  # i <- 1
+  # i <- 5
   
-  Version_ID <- sprintf("v_15%02d", i)
-  
+  Version_ID <- sprintf("v_25%02d", i)
+
   # Version_ID <- paste0("v_12",i)
   
   params_local <- nth(params_local_all, i)
+  # params_local <- nth(params_local_all, 1)
   params_local$Version_ID <- Version_ID
   
   # create folder structure

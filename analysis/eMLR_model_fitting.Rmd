@@ -383,6 +383,127 @@ lm_best %>%
 
 ```
 
+## Alternative model selection
+
+```{r vif_rmse_model_selection, fig.asp=2}
+
+GLODAP_glanced %>% 
+  filter(data_source == "obs",
+         era == "2010-2019") %>% 
+  ggplot(aes(rmse, log10(vif_max))) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ basin)
+
+GLODAP_glanced %>% 
+  filter(data_source == "obs",
+         era == "2010-2019") %>% 
+  ggplot(aes(rmse, r.squared)) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ basin)
+
+# calculate RMSE sum for adjacent eras
+lm_all_new <- GLODAP_glanced  %>%
+  select(data_source, basin, gamma_slab, model, era, AIC, BIC, rmse) %>% 
+  arrange(era) %>% 
+  group_by(data_source, basin, gamma_slab, model) %>% 
+  mutate(rmse_sum = rmse + lag(rmse),
+         aic_sum = AIC + lag(AIC),
+         bic_sum = BIC + lag(BIC)
+         ) %>% 
+  ungroup() %>% 
+  select(-c(era)) %>% 
+  drop_na()
+
+lm_best_rmse_sum_max <- lm_all_new %>%
+  group_by(data_source, basin, gamma_slab) %>%
+  slice_min(order_by = rmse_sum,
+            with_ties = FALSE,
+            n = 1) %>%
+  ungroup() %>%
+  arrange(basin, gamma_slab, model) %>% 
+  mutate(rmse_sum_max = rmse_sum*1.1) %>% 
+  select(data_source, basin, gamma_slab, rmse_sum_max)
+
+lm_best_new <- 
+  full_join(lm_all_new, lm_best_rmse_sum_max) %>% 
+  filter(rmse_sum < rmse_sum_max)
+
+GLODAP_glanced_new <- 
+  left_join(lm_best_new %>% select(data_source, basin, gamma_slab, model),
+            GLODAP_glanced) 
+
+GLODAP_glanced_new %>% 
+  filter(data_source == "obs",
+         era == "2010-2019") %>% 
+  ggplot(aes(rmse, log10(vif_max))) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ basin)
+
+GLODAP_glanced_new %>% 
+  filter(data_source == "obs",
+         era == "2010-2019") %>% 
+  ggplot(aes(rmse, r.squared)) +
+  geom_bin2d() +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ basin)
+
+# GLODAP_glanced_new %>%
+#   group_by(data_source, basin, gamma_slab) %>%
+#   count() %>% 
+#   arrange(n)
+
+lm_best_new <- GLODAP_glanced_new %>%
+  select(data_source, basin, gamma_slab, model, era, rmse, vif_max) %>%
+  arrange(era) %>%
+  group_by(data_source, basin, gamma_slab, model) %>%
+  mutate(
+    vif_max_sum = vif_max + lag(vif_max)
+  ) %>%
+  ungroup() %>%
+  select(-c(era)) %>%
+  drop_na() %>%
+  group_by(data_source, basin, gamma_slab) %>%
+  slice_min(order_by = vif_max_sum,
+            with_ties = FALSE,
+            n = params_local$MLR_number) %>%
+  ungroup() %>%
+  arrange(basin, gamma_slab, model)
+
+# ggplot() +
+#   geom_point(data = GLODAP_glanced %>%
+#                filter(data_source == "obs",
+#                       era == "2010-2019"),
+#              aes(rmse, log10(vif_max), col = "all")) +
+#   geom_point(
+#     data = GLODAP_glanced_new %>%
+#       filter(data_source == "obs",
+#              era == "2010-2019"),
+#     aes(rmse, log10(vif_max), col = "rmse max")
+#   ) +
+#   geom_point(
+#     data = GLODAP_glanced_clean_new %>%
+#       filter(data_source == "obs",
+#              era == "2010-2019"),
+#     aes(rmse, log10(vif_max), col = "rmse + vif max")
+#   ) +
+#   facet_grid(gamma_slab ~ basin)
+
+lm_all <- lm_all_new
+
+lm_best <- 
+  left_join(lm_best_new %>% select(-c(vif_max, vif_max_sum)),
+            lm_all)
+
+GLODAP_glanced_clean <- GLODAP_glanced_new
+
+```
+
+
+
+
 ## Target variable coefficients
 
 A data frame to map the target variable is prepared.
@@ -658,13 +779,12 @@ lm_all %>%
 
 ## RMSE vs VIF
 
-
 ```{r rmse_vs_VIF_all_models, fig.asp=2}
 
 GLODAP_glanced %>%
   group_by(data_source) %>%
   group_split() %>%
-  head(1) %>% 
+  # head(1) %>% 
   map(
     ~ ggplot(data = .x,
              aes(rmse, log10(vif_max), col = as.factor(n_predictors))) +
@@ -678,14 +798,12 @@ GLODAP_glanced %>%
 
 ```
 
-
-
 ```{r rmse_vs_VIF_clean_models, fig.asp=2}
 
 GLODAP_glanced_clean %>%
   group_by(data_source) %>%
   group_split() %>%
-  head(1) %>% 
+  # head(1) %>% 
   map(
     ~ ggplot(data = .x,
              aes(rmse, log10(vif_max), col = as.factor(n_predictors))) +
