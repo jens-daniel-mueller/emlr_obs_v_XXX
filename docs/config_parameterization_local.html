@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">30 August, 2021</h4>
+<h4 class="date">22 September, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-08-30
+<strong>Last updated:</strong> 2021-09-22
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree905d7be021b6eeb12d9233c894eac91a47f569d5targetblank905d7bea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/905d7be021b6eeb12d9233c894eac91a47f569d5" target="_blank">905d7be</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed69f5d5f68f1c3823c39ed2775eae20d6fe0a28dtargetblankd69f5d5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d69f5d5f68f1c3823c39ed2775eae20d6fe0a28d" target="_blank">d69f5d5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree905d7be021b6eeb12d9233c894eac91a47f569d5targetblank905d7bea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed69f5d5f68f1c3823c39ed2775eae20d6fe0a28dtargetblankd69f5d5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/905d7be021b6eeb12d9233c894eac91a47f569d5" target="_blank">905d7be</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d69f5d5f68f1c3823c39ed2775eae20d6fe0a28d" target="_blank">d69f5d5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,6 +593,7 @@ Ignored files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -631,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d69f5d5f68f1c3823c39ed2775eae20d6fe0a28d/analysis/config_parameterization_local.Rmd" target="_blank">d69f5d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+rerun with 7 predictors
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9eac9697997d0dd8cc4c73267fb83558c4118fcd/docs/config_parameterization_local.html" target="_blank">9eac969</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-08-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -5900,28 +5935,28 @@ params_local &lt;-
     # qc flags accepted for GLODAP data
     flag_qc = c(1,0),
     # Shallowest depth for data to be included in MLR fitting
-    depth_min = 150,
+    depth_min = 100,
     # Shallowest water depth for data to be included in MLR fitting
     bottomdepth_min = 0,
     # Lowest neutral density to map dcant with eMLR approach
     gamma_min = Inf,
     # CANYON-B offset threshold
     # (factor applied to standard deviation of all cruise offsets)
-    CANYON_B_cruise_mean = 5,
+    CANYON_B_cruise_mean = 2,
     # (factor applied to median of standard deviations of all cruise offsets)
-    CANYON_B_sample_SD = 3,
+    CANYON_B_sample_SD = 4,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 0,
     # threshold for the cruise rmse from a global MLR model of the target variable
-    target_global_rmse_max = 20,
+    target_global_rmse_max = 50,
     # start years for eras
-    era_start = c(1982, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
     MLR_basins = &quot;AIP&quot;,
     # gap filling of NA values in GLODAP
@@ -5935,9 +5970,9 @@ params_local &lt;-
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
-    MLR_predictors_max = 5,
+    MLR_predictors_max = 7,
     # Minimum number of MLR predictors
-    MLR_predictors_min = 2,
+    MLR_predictors_min = 3,
     # Total number of MLR fits taken into account
     MLR_number = 10,
     # function used to fit linear regression models: &quot;lm&quot;, &quot;rlm&quot;
@@ -6075,10 +6110,10 @@ CANYON_B_cruise_mean = lst(
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 4,
-  CANYON_B_sample_SD = 3,
-  CANYON_B_sample_SD = 2,
-  CANYON_B_sample_SD = 1
+  CANYON_B_sample_SD = 4
+  # CANYON_B_sample_SD = 3,
+  # CANYON_B_sample_SD = 2,
+  # CANYON_B_sample_SD = 1
 )
 
 # minimum sampling depth to apply CANYON-B offset threshold
@@ -6086,22 +6121,27 @@ CANYON_B_depth = 0
 
 # threshold for the cruise rmse from a global MLR model of the target variable
 target_global_rmse_max = lst(
-  target_global_rmse_max = 50,
+  target_global_rmse_max = 50
   # target_global_rmse_max = 30,
-  # target_global_rmse_max = 15
+  # target_global_rmse_max = 20,
+  # target_global_rmse_max = 10
 )
 
 # start years for eras
 era_start = lst(era_start = c(1982, 2000))
+era_start = lst(era_start = c(2000, 2010))
 
 # end years for eras
 era_end = lst(era_end = c(1999, 2009))
+era_end = lst(era_end = c(2009, 2019))
 
 # manually define tref1, set to NULL to use median year
 tref1 = 1994
+tref1 = 2004
 
 # manually define tref2, set to NULL to use median year
 tref2 = 2004
+tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
@@ -6122,7 +6162,9 @@ rarefication = &quot;coarse_grid&quot;
 
 # rarefication approach threshold
 rarefication_threshold = lst(
+  # rarefication_threshold = 10,
   # rarefication_threshold = 20,
+  # rarefication_threshold = 35,
   rarefication_threshold = 50
 )
 
@@ -6143,9 +6185,10 @@ MLR_function = &quot;lm&quot;
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  vif_max = 1000
-  # vif_max = 100,
-  # vif_max = 10
+  vif_max = 1000,
+  vif_max = 500,
+  vif_max = 100,
+  vif_max = 10
 )
 
 # Criterion to select best MLR fits, either &quot;rmse&quot; or &quot;aic&quot;
@@ -6218,7 +6261,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 1
   
-  Version_ID &lt;- sprintf(&quot;v_11%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_15%02d&quot;, i)
   
   # Version_ID &lt;- paste0(&quot;v_12&quot;,i)
   
