@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "including gamma 26 slab, and all surface equi",
+message = "rerun with 7 predictors",
 republish = TRUE)
 
 
@@ -63,12 +63,16 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_12")
+  pattern = "v_15")#[20:23]
+
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_22")
+  pattern = "v_25")#[16:23]
 
-Version_IDs <- cbind(Version_IDs_1, Version_IDs_2)
+Version_IDs <- c(
+  Version_IDs_1,
+  Version_IDs_2
+  )
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
