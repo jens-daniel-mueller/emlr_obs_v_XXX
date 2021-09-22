@@ -661,12 +661,41 @@ lm_all %>%
 
 ```{r rmse_vs_VIF_all_models, fig.asp=2}
 
-GLODAP_glanced %>% 
-  ggplot(aes(rmse, log10(vif_max),col=data_source)) +
-  geom_hline(yintercept = 1) +
-  geom_point() +
-  scale_color_brewer(palette = "Set1") +
-  facet_grid(gamma_slab~basin)
+GLODAP_glanced %>%
+  group_by(data_source) %>%
+  group_split() %>%
+  head(1) %>% 
+  map(
+    ~ ggplot(data = .x,
+             aes(rmse, log10(vif_max), col = as.factor(n_predictors))) +
+      geom_hline(yintercept = log10(params_local$vif_max)) +
+      geom_point() +
+      scale_color_viridis_d(name = "n_predictors") +
+      labs(title = "All models",
+           subtitle = paste("data_source:", unique(.x$data_source))) +
+      facet_grid(gamma_slab ~ basin)
+  )
+
+```
+
+
+
+```{r rmse_vs_VIF_clean_models, fig.asp=2}
+
+GLODAP_glanced_clean %>%
+  group_by(data_source) %>%
+  group_split() %>%
+  head(1) %>% 
+  map(
+    ~ ggplot(data = .x,
+             aes(rmse, log10(vif_max), col = as.factor(n_predictors))) +
+      geom_hline(yintercept = log10(params_local$vif_max)) +
+      geom_point() +
+      scale_color_viridis_d(name = "n_predictors") +
+      labs(title = "Selected models",
+           subtitle = paste("data_source:", unique(.x$data_source))) +
+      facet_grid(gamma_slab ~ basin)
+  )
 
 ```
 
