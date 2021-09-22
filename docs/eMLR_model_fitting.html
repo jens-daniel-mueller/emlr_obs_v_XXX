@@ -574,16 +574,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeef591b4cd298d85b8b7fdad4349b5b391b2eb384targetblankef591b4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ef591b4cd298d85b8b7fdad4349b5b391b2eb384" target="_blank">ef591b4</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee56c3c587892d4f76a3a1ac708579da19cac60a7targetblanke56c3c5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e56c3c587892d4f76a3a1ac708579da19cac60a7" target="_blank">e56c3c5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeef591b4cd298d85b8b7fdad4349b5b391b2eb384targetblankef591b4a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee56c3c587892d4f76a3a1ac708579da19cac60a7targetblanke56c3c5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ef591b4cd298d85b8b7fdad4349b5b391b2eb384" target="_blank">ef591b4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e56c3c587892d4f76a3a1ac708579da19cac60a7" target="_blank">e56c3c5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -633,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e56c3c587892d4f76a3a1ac708579da19cac60a7/analysis/eMLR_model_fitting.Rmd" target="_blank">e56c3c5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+rerun with classical rmse vif selection
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/5a36231d8598ce0599412601b73e5e4d13890481/docs/eMLR_model_fitting.html" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -29194,17 +29228,17 @@ cstar_tref ~ sal + temp + oxygen + silicate
   ggplot(aes(rmse, log10(vif_max))) +
   geom_bin2d() +
   scale_fill_viridis_c() +
-  facet_grid(gamma_slab ~ basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/vif_rmse_model_selection-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>GLODAP_glanced %&gt;% 
+  facet_grid(gamma_slab ~ basin)
+
+GLODAP_glanced %&gt;% 
   filter(data_source == &quot;obs&quot;,
          era == &quot;2010-2019&quot;) %&gt;% 
   ggplot(aes(rmse, r.squared)) +
   geom_bin2d() +
   scale_fill_viridis_c() +
-  facet_grid(gamma_slab ~ basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/vif_rmse_model_selection-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># calculate RMSE sum for adjacent eras
+  facet_grid(gamma_slab ~ basin)
+
+# calculate RMSE sum for adjacent eras
 lm_all_new &lt;- GLODAP_glanced  %&gt;%
   select(data_source, basin, gamma_slab, model, era, AIC, BIC, rmse) %&gt;% 
   arrange(era) %&gt;% 
@@ -29241,17 +29275,17 @@ GLODAP_glanced_new %&gt;%
   ggplot(aes(rmse, log10(vif_max))) +
   geom_bin2d() +
   scale_fill_viridis_c() +
-  facet_grid(gamma_slab ~ basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/vif_rmse_model_selection-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>GLODAP_glanced_new %&gt;% 
+  facet_grid(gamma_slab ~ basin)
+
+GLODAP_glanced_new %&gt;% 
   filter(data_source == &quot;obs&quot;,
          era == &quot;2010-2019&quot;) %&gt;% 
   ggplot(aes(rmse, r.squared)) +
   geom_bin2d() +
   scale_fill_viridis_c() +
-  facet_grid(gamma_slab ~ basin)</code></pre>
-<p><img src="figure/eMLR_model_fitting.Rmd/vif_rmse_model_selection-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># GLODAP_glanced_new %&gt;%
+  facet_grid(gamma_slab ~ basin)
+
+# GLODAP_glanced_new %&gt;%
 #   group_by(data_source, basin, gamma_slab) %&gt;%
 #   count() %&gt;% 
 #   arrange(n)
@@ -31408,6 +31442,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-1.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -32581,6 +32626,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/eMLR_predictor_model_quality_best-2.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -33452,6 +33508,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_all_models-1.png" target="_blank">c0bbbe4</a>
@@ -34850,6 +34917,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/rmse_correlation_across_eras_best_models-1.png" target="_blank">c0bbbe4</a>
@@ -36414,53 +36492,53 @@ lm_best_predictor_counts %&gt;%
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26,26.5]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
@@ -36474,93 +36552,93 @@ lm_best_predictor_counts %&gt;%
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">1</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
       <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">79.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">97.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">71.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">76.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">69.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">74.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">82.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">101.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">91.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">99.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">87.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="8" class="gt_group_heading">Indian - mod</td>
@@ -36568,132 +36646,132 @@ lm_best_predictor_counts %&gt;%
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26,26.5]</td>
-      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
-      <td class="gt_row gt_center">1</td>
-      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">3</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
       <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">1</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">63.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">91.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">64.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">53.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">53.00</td>
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">90.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">68.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">79.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">76.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">83.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">84.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">93.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="8" class="gt_group_heading">Pacific - mod</td>
@@ -36701,10 +36779,10 @@ lm_best_predictor_counts %&gt;%
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
       <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">9</td>
     </tr>
@@ -36714,200 +36792,200 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
-      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">8</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">1</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">1</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">57.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">62.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">58.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">71.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">68.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">75.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">80.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">65.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">72.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">55.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">76.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">94.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">99.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">96.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="8" class="gt_group_heading">Atlantic - obs</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26,26.5]</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">2</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">NA</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">5</td>
     </tr>
@@ -36915,7 +36993,7 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
       <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
@@ -36925,7 +37003,7 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
       <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
@@ -36933,53 +37011,53 @@ lm_best_predictor_counts %&gt;%
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1,28.15]</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.15,28.2]</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">NA</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.2, Inf]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">3</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">73.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">64.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">135.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">77.00</td>
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">91.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">84.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">103.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">86.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">134.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">108.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">106.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">98.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="8" class="gt_group_heading">Indian - obs</td>
@@ -36987,11 +37065,11 @@ lm_best_predictor_counts %&gt;%
     <tr>
       <td class="gt_row gt_left gt_stub">(-Inf,26]</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
@@ -37000,119 +37078,119 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">3</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">5</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">NA</td>
+      <td class="gt_row gt_center">3</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">70.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">73.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">74.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">47.00</td>
       <td class="gt_row gt_center gt_summary_row gt_first_summary_row">120.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">66.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">75.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">75.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">79.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">91.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">105.00</td>
     </tr>
     <tr class="gt_group_heading_row">
       <td colspan="8" class="gt_group_heading">Pacific - obs</td>
@@ -37122,9 +37200,9 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">7</td>
-      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
@@ -37133,29 +37211,29 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.5,26.75]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(26.75,27]</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">9</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27,27.25]</td>
@@ -37164,88 +37242,88 @@ lm_best_predictor_counts %&gt;%
       <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.25,27.5]</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">9</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">6</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.5,27.75]</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
       <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.75,27.85]</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">10</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.85,27.95]</td>
       <td class="gt_row gt_center">6</td>
-      <td class="gt_row gt_center">1</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">9</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(27.95,28.05]</td>
+      <td class="gt_row gt_center">7</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">2</td>
       <td class="gt_row gt_center">5</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">8</td>
       <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.05,28.1]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">NA</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">8</td>
+      <td class="gt_row gt_center">9</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_stub">(28.1, Inf]</td>
-      <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_center">3</td>
-      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">6</td>
+      <td class="gt_row gt_center">4</td>
       <td class="gt_row gt_center">10</td>
-      <td class="gt_row gt_center">8</td>
-      <td class="gt_row gt_center">4</td>
-      <td class="gt_row gt_center">4</td>
+      <td class="gt_row gt_center">10</td>
+      <td class="gt_row gt_center">7</td>
+      <td class="gt_row gt_center">7</td>
     </tr>
     <tr>
       <td class="gt_row gt_stub gt_right gt_summary_row gt_first_summary_row">total</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">66.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">&mdash;</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">59.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">118.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">78.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">57.00</td>
-      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">86.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">71.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">79.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">60.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">119.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">87.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">88.00</td>
+      <td class="gt_row gt_center gt_summary_row gt_first_summary_row">93.00</td>
     </tr>
   </tbody>
   
@@ -37285,6 +37363,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_all_models-1.png" target="_blank">c0bbbe4</a>
@@ -38483,6 +38572,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/aic_vs_rmse_selected_models-1.png" target="_blank">c0bbbe4</a>
@@ -39696,6 +39796,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/BIC_vs_AIC_all_models-1.png" target="_blank">c0bbbe4</a>
@@ -41509,6 +41620,43 @@ jens-daniel-mueller
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rmse_vs_VIF_all_models-2">
+Past versions of rmse_vs_VIF_all_models-2.png
+</button>
+</p>
+<div id="fig-rmse_vs_VIF_all_models-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_all_models-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>GLODAP_glanced_clean %&gt;%
   group_by(data_source) %&gt;%
   group_split() %&gt;%
@@ -41549,6 +41697,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_clean_models-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ce9412c325418398dcf06c33210f8ec3693cbc19/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_clean_models-1.png" target="_blank">ce9412c</a>
 </td>
 <td>
@@ -41565,6 +41724,43 @@ jens-daniel-mueller
 <pre><code>
 [[2]]</code></pre>
 <p><img src="figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_clean_models-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rmse_vs_VIF_clean_models-2">
+Past versions of rmse_vs_VIF_clean_models-2.png
+</button>
+</p>
+<div id="fig-rmse_vs_VIF_clean_models-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/rmse_vs_VIF_clean_models-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="residual-patterns" class="section level2" number="8.6">
 <h2 number="8.6"><span class="header-section-number">8.6</span> Residual patterns</h2>
@@ -42350,6 +42546,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_property_property-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_property_property-1.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -42722,6 +42929,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_histogram-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/fitted_vs_actual_best_histogram-1.png" target="_blank">c0bbbe4</a>
@@ -43110,6 +43328,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_full_range-1.png" target="_blank">c0bbbe4</a>
@@ -44209,6 +44438,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_y_range_limit-1.png" target="_blank">c0bbbe4</a>
@@ -45329,6 +45569,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-1.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -46368,6 +46619,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-2.png" target="_blank">c0bbbe4</a>
@@ -47444,6 +47706,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-3.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -48186,6 +48459,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-4.png" target="_blank">c0bbbe4</a>
@@ -48998,6 +49282,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-5.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-5.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -49388,6 +49683,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-6.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/residual_patterns_by_model_domain-6.png" target="_blank">c0bbbe4</a>
@@ -49805,6 +50111,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-1.png" target="_blank">c0bbbe4</a>
@@ -50848,6 +51165,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-2.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -51636,6 +51964,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-3.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual-3.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -52042,6 +52381,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/latitudinal_residual_offset-1.png" target="_blank">c0bbbe4</a>
@@ -53157,6 +53507,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-1.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -53580,6 +53941,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-2.png" target="_blank">c0bbbe4</a>
@@ -54007,6 +54379,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-3.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-3.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -54430,6 +54813,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-4.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-4.png" target="_blank">c0bbbe4</a>
@@ -54857,6 +55251,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-5.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-5.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -55280,6 +55685,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-6.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-6.png" target="_blank">c0bbbe4</a>
@@ -55707,6 +56123,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-7.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-7.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -56130,6 +56557,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-8.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-8.png" target="_blank">c0bbbe4</a>
@@ -56557,6 +56995,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-9.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-9.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -56980,6 +57429,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-10.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-10.png" target="_blank">c0bbbe4</a>
@@ -57407,6 +57867,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-11.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-11.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -57832,6 +58303,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-12.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-12.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -58244,6 +58726,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-13.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-13.png" target="_blank">c0bbbe4</a>
@@ -58671,6 +59164,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-14.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-14.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -59096,6 +59600,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-15.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-15.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -59497,6 +60012,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-16.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-16.png" target="_blank">c0bbbe4</a>
@@ -59924,6 +60450,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-17.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-17.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -60347,6 +60884,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-18.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-18.png" target="_blank">c0bbbe4</a>
@@ -60774,6 +61322,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-19.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-19.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -61197,6 +61756,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-20.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-20.png" target="_blank">c0bbbe4</a>
@@ -61624,6 +62194,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-21.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-21.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -62049,6 +62630,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-22.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-22.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -62472,6 +63064,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-23.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-23.png" target="_blank">c0bbbe4</a>
@@ -62910,6 +63513,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-24.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-24.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -63333,6 +63947,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-25.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-25.png" target="_blank">c0bbbe4</a>
@@ -63760,6 +64385,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-26.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-26.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -64183,6 +64819,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-27.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-27.png" target="_blank">c0bbbe4</a>
@@ -64610,6 +65257,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-28.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-28.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -65035,6 +65693,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-29.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-29.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -65427,6 +66096,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-30.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/spatial_residual-30.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -65810,6 +66490,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-1.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-1.png" target="_blank">c0bbbe4</a>
@@ -66237,6 +66928,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-2.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-2.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -66660,6 +67362,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-3.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-3.png" target="_blank">c0bbbe4</a>
@@ -67087,6 +67800,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-4.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-4.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -67510,6 +68234,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-5.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-5.png" target="_blank">c0bbbe4</a>
@@ -67937,6 +68672,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-6.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-6.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -68360,6 +69106,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-7.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-7.png" target="_blank">c0bbbe4</a>
@@ -68787,6 +69544,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-8.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-8.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -69210,6 +69978,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-9.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-9.png" target="_blank">c0bbbe4</a>
@@ -69637,6 +70416,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-10.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-10.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -70060,6 +70850,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-11.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-11.png" target="_blank">c0bbbe4</a>
@@ -70487,6 +71288,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-12.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-12.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -70899,6 +71711,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-13.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-13.png" target="_blank">c0bbbe4</a>
@@ -71324,6 +72147,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-14.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-14.png" target="_blank">c0bbbe4</a>
@@ -72154,6 +72988,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-16.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-16.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -72579,6 +73424,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-17.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-17.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -72991,6 +73847,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-18.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-18.png" target="_blank">c0bbbe4</a>
@@ -73418,6 +74285,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-19.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-19.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -73841,6 +74719,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-20.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-20.png" target="_blank">c0bbbe4</a>
@@ -74268,6 +75157,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-21.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-21.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -74691,6 +75591,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-22.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-22.png" target="_blank">c0bbbe4</a>
@@ -75118,6 +76029,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-23.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-23.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -75541,6 +76463,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-24.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-24.png" target="_blank">c0bbbe4</a>
@@ -75968,6 +76901,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-25.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-25.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -76391,6 +77335,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-26.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-26.png" target="_blank">c0bbbe4</a>
@@ -76818,6 +77773,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-27.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-27.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -77230,6 +78196,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-28.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-28.png" target="_blank">c0bbbe4</a>
@@ -77657,6 +78634,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-29.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-29.png" target="_blank">c0bbbe4</a>
 </td>
 <td>
@@ -78047,6 +79035,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5a36231d8598ce0599412601b73e5e4d13890481/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-30.png" target="_blank">5a36231</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c0bbbe4e40f0502befe979deccf1c37e728d5a99/docs/figure/eMLR_model_fitting.Rmd/Spatial_residual_offset-30.png" target="_blank">c0bbbe4</a>
