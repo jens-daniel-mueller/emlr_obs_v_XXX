@@ -84,28 +84,28 @@ params_local <-
     # qc flags accepted for GLODAP data
     flag_qc = c(1,0),
     # Shallowest depth for data to be included in MLR fitting
-    depth_min = 150,
+    depth_min = 100,
     # Shallowest water depth for data to be included in MLR fitting
     bottomdepth_min = 0,
     # Lowest neutral density to map dcant with eMLR approach
     gamma_min = Inf,
     # CANYON-B offset threshold
     # (factor applied to standard deviation of all cruise offsets)
-    CANYON_B_cruise_mean = 5,
+    CANYON_B_cruise_mean = 2,
     # (factor applied to median of standard deviations of all cruise offsets)
-    CANYON_B_sample_SD = 3,
+    CANYON_B_sample_SD = 4,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 0,
     # threshold for the cruise rmse from a global MLR model of the target variable
-    target_global_rmse_max = 20,
+    target_global_rmse_max = 50,
     # start years for eras
-    era_start = c(1982, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -119,9 +119,9 @@ params_local <-
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
-    MLR_predictors_max = 5,
+    MLR_predictors_max = 7,
     # Minimum number of MLR predictors
-    MLR_predictors_min = 2,
+    MLR_predictors_min = 3,
     # Total number of MLR fits taken into account
     MLR_number = 10,
     # function used to fit linear regression models: "lm", "rlm"
@@ -265,10 +265,10 @@ CANYON_B_cruise_mean = lst(
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 4,
-  CANYON_B_sample_SD = 3,
-  CANYON_B_sample_SD = 2,
-  CANYON_B_sample_SD = 1
+  CANYON_B_sample_SD = 4
+  # CANYON_B_sample_SD = 3,
+  # CANYON_B_sample_SD = 2,
+  # CANYON_B_sample_SD = 1
 )
 
 # minimum sampling depth to apply CANYON-B offset threshold
@@ -276,22 +276,27 @@ CANYON_B_depth = 0
 
 # threshold for the cruise rmse from a global MLR model of the target variable
 target_global_rmse_max = lst(
-  target_global_rmse_max = 50,
+  target_global_rmse_max = 50
   # target_global_rmse_max = 30,
-  # target_global_rmse_max = 15
+  # target_global_rmse_max = 20,
+  # target_global_rmse_max = 10
 )
 
 # start years for eras
 era_start = lst(era_start = c(1982, 2000))
+era_start = lst(era_start = c(2000, 2010))
 
 # end years for eras
 era_end = lst(era_end = c(1999, 2009))
+era_end = lst(era_end = c(2009, 2019))
 
 # manually define tref1, set to NULL to use median year
 tref1 = 1994
+tref1 = 2004
 
 # manually define tref2, set to NULL to use median year
 tref2 = 2004
+tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
@@ -312,7 +317,9 @@ rarefication = "coarse_grid"
 
 # rarefication approach threshold
 rarefication_threshold = lst(
+  # rarefication_threshold = 10,
   # rarefication_threshold = 20,
+  # rarefication_threshold = 35,
   rarefication_threshold = 50
 )
 
@@ -333,9 +340,10 @@ MLR_function = "lm"
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  vif_max = 1000
-  # vif_max = 100,
-  # vif_max = 10
+  vif_max = 1000,
+  vif_max = 500,
+  vif_max = 100,
+  vif_max = 10
 )
 
 # Criterion to select best MLR fits, either "rmse" or "aic"
@@ -408,7 +416,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 1
   
-  Version_ID <- sprintf("v_11%02d", i)
+  Version_ID <- sprintf("v_15%02d", i)
   
   # Version_ID <- paste0("v_12",i)
   

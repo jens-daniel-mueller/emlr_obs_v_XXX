@@ -206,7 +206,7 @@ if (params_local$MLR_function == "rlm") {
 GLODAP_nested_lm_fit <- GLODAP_nested_lm %>% 
   mutate(
     fit = map2(.x = data, .y = model, 
-               ~ rlm(as.formula(.y), data = .x))
+               ~ MASS::rlm(as.formula(.y), data = .x))
   )
 }
 
