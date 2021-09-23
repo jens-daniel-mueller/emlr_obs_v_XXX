@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020 subsetting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">22 September, 2021</h4>
+<h4 class="date">23 September, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-09-22
+<strong>Last updated:</strong> 2021-09-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee56c3c587892d4f76a3a1ac708579da19cac60a7targetblanke56c3c5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e56c3c587892d4f76a3a1ac708579da19cac60a7" target="_blank">e56c3c5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreece93600c3d31a7bb772255eeef477474e1e1f5f4targetblankce93600a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ce93600c3d31a7bb772255eeef477474e1e1f5f4" target="_blank">ce93600</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee56c3c587892d4f76a3a1ac708579da19cac60a7targetblanke56c3c5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreece93600c3d31a7bb772255eeef477474e1e1f5f4targetblankce93600a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e56c3c587892d4f76a3a1ac708579da19cac60a7" target="_blank">e56c3c5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ce93600c3d31a7bb772255eeef477474e1e1f5f4" target="_blank">ce93600</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,6 +593,7 @@ Ignored files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -631,6 +632,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ce93600c3d31a7bb772255eeef477474e1e1f5f4/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">ce93600</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-23
+</td>
+<td>
+test 1990 cutoff for first era
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/410dd46d625c6e4288015b969fb8d6d524f1c402/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">410dd46</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-09-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -5213,6 +5248,34 @@ GLODAP_CB &lt;-
 <div id="filter-eras" class="section level2" number="3.1">
 <h2 number="3.1"><span class="header-section-number">3.1</span> Filter eras</h2>
 <p>Samples were assigned to following eras:</p>
+<pre class="r"><code>GLODAP_grid &lt;- GLODAP %&gt;% 
+  count(lat, lon, year)
+
+map +
+  geom_raster(data = GLODAP_grid %&gt;% filter(year &lt; 1990),
+              aes(lon, lat, fill=&quot;&lt;1990&quot;)) +
+  geom_raster(data = GLODAP_grid %&gt;% filter(year &gt;= 1990 &amp; year &lt; 2000),
+              aes(lon, lat, fill=&quot;1990-1999&quot;)) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.title = element_blank())</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/check_first_era_data_distribution-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = GLODAP_grid %&gt;% filter(year &gt;= 2000 &amp; year &lt; 2010),
+              aes(lon, lat, fill=&quot;2000-2009&quot;)) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.title = element_blank())</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/check_first_era_data_distribution-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = GLODAP_grid %&gt;% filter(year &gt;= 2010 &amp; year &lt; 2020),
+              aes(lon, lat, fill=&quot;2010-2019&quot;)) +
+  scale_fill_brewer(palette = &quot;Set1&quot;) +
+  theme(legend.title = element_blank())</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/check_first_era_data_distribution-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon, lat)) +
+  facet_wrap(~ year, ncol=3)</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/grid_by_year-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># create labels for era
 era_labels &lt;- bind_cols(
   start = params_local$era_start,
@@ -5227,8 +5290,8 @@ era_labels</code></pre>
 <pre><code>[38;5;246m# A tibble: 2 × 3[39m
   start   end era      
   [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;fct&gt;[39m[23m    
-[38;5;250m1[39m  [4m2[24m000  [4m2[24m009 2000-2009
-[38;5;250m2[39m  [4m2[24m010  [4m2[24m019 2010-2019</code></pre>
+[38;5;250m1[39m  [4m1[24m990  [4m1[24m999 1990-1999
+[38;5;250m2[39m  [4m2[24m000  [4m2[24m009 2000-2009</code></pre>
 <pre class="r"><code># filter GLODAP data within eras
 GLODAP &lt;- expand_grid(
   GLODAP,
@@ -10643,20 +10706,20 @@ jens-daniel-mueller
 <p>The ratio (%) of removed observations is:</p>
 <pre class="r"><code>GLODAP %&gt;% 
   distinct(cruise)</code></pre>
-<pre><code>[38;5;246m# A tibble: 461 × 1[39m
+<pre><code>[38;5;246m# A tibble: 452 × 1[39m
    cruise
     [3m[38;5;246m&lt;dbl&gt;[39m[23m
-[38;5;250m 1[39m    379
-[38;5;250m 2[39m    533
-[38;5;250m 3[39m    472
-[38;5;250m 4[39m    118
-[38;5;250m 5[39m    721
-[38;5;250m 6[39m    534
-[38;5;250m 7[39m     24
-[38;5;250m 8[39m    473
-[38;5;250m 9[39m    163
-[38;5;250m10[39m    412
-[38;5;246m# … with 451 more rows[39m</code></pre>
+[38;5;250m 1[39m     28
+[38;5;250m 2[39m    335
+[38;5;250m 3[39m    669
+[38;5;250m 4[39m    191
+[38;5;250m 5[39m    688
+[38;5;250m 6[39m    678
+[38;5;250m 7[39m    670
+[38;5;250m 8[39m    671
+[38;5;250m 9[39m    192
+[38;5;250m10[39m     30
+[38;5;246m# … with 442 more rows[39m</code></pre>
 <pre class="r"><code>cruise_out &lt;- cruise_stats %&gt;% 
   filter(cruise_flag == &quot;removed&quot;) %&gt;% 
   distinct(cruise) %&gt;% 
@@ -10681,7 +10744,7 @@ stats_CANYON_B_cleaning_cruises</code></pre>
 <pre><code>[38;5;246m# A tibble: 1 × 2[39m
   cruise_removal_ratio cruise_removal_n
                  [3m[38;5;246m&lt;dbl&gt;[39m[23m            [3m[38;5;246m&lt;int&gt;[39m[23m
-[38;5;250m1[39m                 10.2               76</code></pre>
+[38;5;250m1[39m                 8.65               82</code></pre>
 </div>
 <div id="filter-samples" class="section level3" number="3.3.6">
 <h3 number="3.3.6"><span class="header-section-number">3.3.6</span> Filter samples</h3>
@@ -11401,21 +11464,21 @@ stats_CANYON_B_cleaning_samples</code></pre>
 [38;5;246m# Groups:   parameter [5][39m
    parameter sample_flag      n
    [3m[38;5;246m&lt;chr&gt;[39m[23m     [3m[38;5;246m&lt;chr&gt;[39m[23m        [3m[38;5;246m&lt;int&gt;[39m[23m
-[38;5;250m 1[39m nitrate   included    [4m2[24m[4m1[24m[4m2[24m736
-[38;5;250m 2[39m nitrate   removed       [4m1[24m726
-[38;5;250m 3[39m nitrate   [31mNA[39m           [4m1[24m[4m6[24m579
-[38;5;250m 4[39m phosphate included    [4m1[24m[4m9[24m[4m8[24m303
-[38;5;250m 5[39m phosphate removed       [4m1[24m245
-[38;5;250m 6[39m phosphate [31mNA[39m           [4m3[24m[4m1[24m493
-[38;5;250m 7[39m silicate  included    [4m2[24m[4m1[24m[4m3[24m131
-[38;5;250m 8[39m silicate  removed       [4m1[24m448
-[38;5;250m 9[39m silicate  [31mNA[39m           [4m1[24m[4m6[24m462
-[38;5;250m10[39m talk      included    [4m2[24m[4m0[24m[4m9[24m776
-[38;5;250m11[39m talk      removed       [4m2[24m468
-[38;5;250m12[39m talk      [31mNA[39m           [4m1[24m[4m8[24m797
-[38;5;250m13[39m tco2      included    [4m2[24m[4m2[24m[4m6[24m371
-[38;5;250m14[39m tco2      removed       [4m1[24m184
-[38;5;250m15[39m tco2      [31mNA[39m            [4m3[24m486</code></pre>
+[38;5;250m 1[39m nitrate   included    [4m2[24m[4m0[24m[4m1[24m441
+[38;5;250m 2[39m nitrate   removed       [4m1[24m802
+[38;5;250m 3[39m nitrate   [31mNA[39m           [4m2[24m[4m4[24m574
+[38;5;250m 4[39m phosphate included    [4m1[24m[4m8[24m[4m3[24m426
+[38;5;250m 5[39m phosphate removed       [4m1[24m577
+[38;5;250m 6[39m phosphate [31mNA[39m           [4m4[24m[4m2[24m814
+[38;5;250m 7[39m silicate  included    [4m2[24m[4m0[24m[4m1[24m998
+[38;5;250m 8[39m silicate  removed       [4m1[24m780
+[38;5;250m 9[39m silicate  [31mNA[39m           [4m2[24m[4m4[24m039
+[38;5;250m10[39m talk      included    [4m1[24m[4m7[24m[4m4[24m819
+[38;5;250m11[39m talk      removed       [4m1[24m111
+[38;5;250m12[39m talk      [31mNA[39m           [4m5[24m[4m1[24m887
+[38;5;250m13[39m tco2      included    [4m2[24m[4m1[24m[4m7[24m522
+[38;5;250m14[39m tco2      removed       [4m1[24m302
+[38;5;250m15[39m tco2      [31mNA[39m            [4m8[24m993</code></pre>
 <pre class="r"><code>grid_CANYON_B_cleaning_samples &lt;- GLODAP_combined %&gt;% 
   count(lat, lon, era, parameter, sample_flag) %&gt;% 
   pivot_wider(names_from = sample_flag,
@@ -11676,25 +11739,25 @@ jens-daniel-mueller
   
 }</code></pre>
 <pre><code>[1] &quot;silicate , NA data before sample filter:&quot;
-[1] 217006  14035
+[1] 209445  18372
 [1] &quot;silicate , NA data before sample filter:&quot;
-[1] 215558  15483
-[1] &quot;tco2 , NA data before sample filter:&quot;
-[1] 231041
-[1] &quot;tco2 , NA data before sample filter:&quot;
-[1] 229857   1184
-[1] &quot;phosphate , NA data before sample filter:&quot;
-[1] 201486  29555
-[1] &quot;phosphate , NA data before sample filter:&quot;
-[1] 200241  30800
-[1] &quot;talk , NA data before sample filter:&quot;
-[1] 214829  16212
-[1] &quot;talk , NA data before sample filter:&quot;
-[1] 212361  18680
+[1] 207665  20152
 [1] &quot;nitrate , NA data before sample filter:&quot;
-[1] 216644  14397
+[1] 209142  18675
 [1] &quot;nitrate , NA data before sample filter:&quot;
-[1] 214918  16123</code></pre>
+[1] 207340  20477
+[1] &quot;talk , NA data before sample filter:&quot;
+[1] 180192  47625
+[1] &quot;talk , NA data before sample filter:&quot;
+[1] 179081  48736
+[1] &quot;tco2 , NA data before sample filter:&quot;
+[1] 227817
+[1] &quot;tco2 , NA data before sample filter:&quot;
+[1] 226515   1302
+[1] &quot;phosphate , NA data before sample filter:&quot;
+[1] 188950  38867
+[1] &quot;phosphate , NA data before sample filter:&quot;
+[1] 187373  40444</code></pre>
 <pre class="r"><code>GLODAP %&gt;% 
   filter(sample_flag == &quot;removed&quot;,
          cruise_flag == &quot;removed&quot;) %&gt;% 
@@ -19389,8 +19452,8 @@ tref</code></pre>
 <pre><code>[38;5;246m# A tibble: 2 × 2[39m
   era       median_year
   [3m[38;5;246m&lt;fct&gt;[39m[23m           [3m[38;5;246m&lt;dbl&gt;[39m[23m
-[38;5;250m1[39m 2000-2009        [4m2[24m005
-[38;5;250m2[39m 2010-2019        [4m2[24m014</code></pre>
+[38;5;250m1[39m 1990-1999        [4m1[24m995
+[38;5;250m2[39m 2000-2009        [4m2[24m005</code></pre>
 </div>
 <div id="fixed-tref" class="section level3" number="3.6.2">
 <h3 number="3.6.2"><span class="header-section-number">3.6.2</span> Fixed tref</h3>
@@ -19421,8 +19484,8 @@ tref</code></pre>
 <pre><code>[38;5;246m# A tibble: 2 × 4[39m
   era       median_year start   end
   [3m[38;5;246m&lt;fct&gt;[39m[23m           [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;dbl&gt;[39m[23m
-[38;5;250m1[39m 2000-2009        [4m2[24m004  [4m2[24m000  [4m2[24m009
-[38;5;250m2[39m 2010-2019        [4m2[24m014  [4m2[24m010  [4m2[24m019</code></pre>
+[38;5;250m1[39m 1990-1999        [4m1[24m994  [4m1[24m990  [4m1[24m999
+[38;5;250m2[39m 2000-2009        [4m2[24m004  [4m2[24m000  [4m2[24m009</code></pre>
 </div>
 </div>
 <div id="write-files" class="section level2" number="3.7">
