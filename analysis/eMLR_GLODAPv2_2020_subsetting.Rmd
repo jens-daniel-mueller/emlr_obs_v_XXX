@@ -129,6 +129,44 @@ GLODAP_CB <-
 
 Samples were assigned to following eras:
 
+```{r check_first_era_data_distribution}
+
+GLODAP_grid <- GLODAP %>% 
+  count(lat, lon, year)
+
+map +
+  geom_raster(data = GLODAP_grid %>% filter(year < 1990),
+              aes(lon, lat, fill="<1990")) +
+  geom_raster(data = GLODAP_grid %>% filter(year >= 1990 & year < 2000),
+              aes(lon, lat, fill="1990-1999")) +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.title = element_blank())
+
+map +
+  geom_raster(data = GLODAP_grid %>% filter(year >= 2000 & year < 2010),
+              aes(lon, lat, fill="2000-2009")) +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.title = element_blank())
+
+map +
+  geom_raster(data = GLODAP_grid %>% filter(year >= 2010 & year < 2020),
+              aes(lon, lat, fill="2010-2019")) +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.title = element_blank())
+
+```
+
+```{r grid_by_year, fig.asp=5}
+
+map +
+  geom_raster(data = GLODAP_grid,
+              aes(lon, lat)) +
+  facet_wrap(~ year, ncol=3)
+
+```
+
+
+
 ```{r assign_eras}
 
 # create labels for era

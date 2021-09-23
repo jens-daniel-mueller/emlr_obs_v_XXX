@@ -99,13 +99,13 @@ params_local <-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 50,
     # start years for eras
-    era_start = c(2000, 2010),
+    era_start = c(1990, 2000),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(1999, 2009),
     # manually define tref1, set to NULL to use median year
-    tref1 = 2004,
+    tref1 = 1994,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2014,
+    tref2 = 2004,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -284,10 +284,13 @@ target_global_rmse_max = lst(
 
 # start years for eras
 era_start = lst(era_start = c(1982, 2000))
+era_start = lst(era_start = c(1982, 2010))
 era_start = lst(era_start = c(2000, 2010))
+
 
 # end years for eras
 era_end = lst(era_end = c(1999, 2009))
+era_end = lst(era_end = c(1999, 2019))
 era_end = lst(era_end = c(2009, 2019))
 
 # manually define tref1, set to NULL to use median year
@@ -300,13 +303,13 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  # MLR_basins = "1",
-  # MLR_basins = "2",
-  MLR_basins = "AIP"
-  # MLR_basins = "5",
-  # MLR_basins = "SO",
-  # MLR_basins = "SO_5",
-  # MLR_basins = "SO_AIP"
+  MLR_basins = "1",
+  MLR_basins = "2",
+  MLR_basins = "AIP",
+  MLR_basins = "5",
+  MLR_basins = "SO",
+  MLR_basins = "SO_5",
+  MLR_basins = "SO_AIP"
 )
 
 # gap filling of NA values in GLODAP
@@ -417,12 +420,9 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 5
   
-  Version_ID <- sprintf("v_25%02d", i)
+  Version_ID <- sprintf("v_31%02d", i)
 
-  # Version_ID <- paste0("v_12",i)
-  
   params_local <- nth(params_local_all, i)
-  # params_local <- nth(params_local_all, 1)
   params_local$Version_ID <- Version_ID
   
   # create folder structure
