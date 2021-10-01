@@ -65,6 +65,7 @@ path_version_figures  <-
 ```{r load_libraries_specific, include = FALSE}
 library(lubridate)
 library(gt)
+library(kableExtra)
 ```
 
 ```{r select_basin_mask, include=FALSE}
@@ -127,36 +128,11 @@ GLODAP_CB <-
 
 ## Filter eras
 
-Samples were assigned to following eras:
 
-```{r check_first_era_data_distribution}
+```{r grid_by_year, fig.asp=3}
 
 GLODAP_grid <- GLODAP %>% 
   count(lat, lon, year)
-
-map +
-  geom_raster(data = GLODAP_grid %>% filter(year < 1990),
-              aes(lon, lat, fill="<1990")) +
-  geom_raster(data = GLODAP_grid %>% filter(year >= 1990 & year < 2000),
-              aes(lon, lat, fill="1990-1999")) +
-  scale_fill_brewer(palette = "Set1") +
-  theme(legend.title = element_blank())
-
-map +
-  geom_raster(data = GLODAP_grid %>% filter(year >= 2000 & year < 2010),
-              aes(lon, lat, fill="2000-2009")) +
-  scale_fill_brewer(palette = "Set1") +
-  theme(legend.title = element_blank())
-
-map +
-  geom_raster(data = GLODAP_grid %>% filter(year >= 2010 & year < 2020),
-              aes(lon, lat, fill="2010-2019")) +
-  scale_fill_brewer(palette = "Set1") +
-  theme(legend.title = element_blank())
-
-```
-
-```{r grid_by_year, fig.asp=5}
 
 map +
   geom_raster(data = GLODAP_grid,
@@ -164,8 +140,6 @@ map +
   facet_wrap(~ year, ncol=3)
 
 ```
-
-
 
 ```{r assign_eras}
 
@@ -179,7 +153,10 @@ era_labels <- era_labels %>%
          end = if_else(end == Inf, max(GLODAP$year), end),
          era = as.factor(paste(start, end, sep = "-")))
 
-era_labels
+era_labels %>% 
+  kbl() %>% 
+  kable_styling()
+  
 
 # filter GLODAP data within eras
 GLODAP <- expand_grid(
@@ -325,7 +302,7 @@ GLODAP_combined <- GLODAP_combined %>%
   filter(parameter %in% c("tco2", "talk", params_local$MLR_predictors))
 
 GLODAP_combined <- left_join(GLODAP_combined,
-                             GLODAP %>% distinct(row_number, era))
+                             GLODAP %>% select(row_number, era))
 
 
 ```
@@ -439,6 +416,8 @@ cruise_stats <- full_join(cruise_stats,
 ```
 
 ### Filter cruises
+
+The following approach was tested but is currently not applied:
 
 Cruises are removed, when the mean offset of the observation from the value predicted with CANYON-B is higher than `r params_local$CANYON_B_max` times the standard deviation of all cruise mean offsets.
 
@@ -560,9 +539,6 @@ The ratio (%) of removed observations is:
 
 ```{r CANYON_B_remove_cruises}
 
-GLODAP %>% 
-  distinct(cruise)
-
 cruise_out <- cruise_stats %>% 
   filter(cruise_flag == "removed") %>% 
   distinct(cruise) %>% 
@@ -588,7 +564,9 @@ stats_CANYON_B_cleaning_cruises <- tibble(
   cruise_removal_n = length(cruise_out)
 )
 
-stats_CANYON_B_cleaning_cruises
+stats_CANYON_B_cleaning_cruises %>% 
+  kbl() %>% 
+  kable_styling()
 
 ```
 
@@ -658,7 +636,9 @@ stats_CANYON_B_cleaning_samples <- GLODAP_combined %>%
   group_by(parameter) %>% 
   count(sample_flag)
 
-stats_CANYON_B_cleaning_samples
+stats_CANYON_B_cleaning_samples %>% 
+  kbl() %>% 
+  kable_styling()
 
 ```
 
@@ -675,7 +655,8 @@ grid_CANYON_B_cleaning_samples <- GLODAP_combined %>%
 map +
     geom_raster(data = grid_CANYON_B_cleaning_samples,
                 aes(lon, lat, fill = removal_ratio)) +
-    scale_fill_viridis_c(direction = -1) +
+    scale_fill_viridis_c(direction = -1,
+                         na.value = "red") +
     facet_grid(parameter ~ era) +
     labs(title = "Maps of removed samples") +
     theme(legend.title = element_blank())
@@ -709,7 +690,7 @@ for (i_parameter in unique(samples_out$parameter)) {
                                          !!sym(i_parameter)))
   
   
-  print(paste(i_parameter, ", NA data before sample filter:"))
+  print(paste(i_parameter, ", NA data after sample filter:"))
   
   print(
   GLODAP %>%
@@ -733,6 +714,10 @@ GLODAP %>%
   filter(sample_flag == "removed",
          cruise_flag == "included") %>% 
   nrow()
+
+# the code below would completely remove rows
+# making it impossible to replace with CANYON-B estimates
+# this is not done any more
 
 GLODAP %>% 
   filter(sample_flag == "included",
@@ -802,7 +787,8 @@ map +
   geom_raster(data = GLODAP_filling_wide,
               aes(lon, lat, fill = filled_ratio)) +
   facet_grid(parameter ~ era) +
-  scale_fill_viridis_c(direction = -1)
+  scale_fill_viridis_c(direction = -1,
+                       na.value = "red")
 )
 
 print(
@@ -810,7 +796,8 @@ map +
   geom_raster(data = GLODAP_filling_wide,
               aes(lon, lat, fill = missing_ratio)) +
   facet_grid(parameter ~ era) +
-  scale_fill_viridis_c(direction = -1)
+  scale_fill_viridis_c(direction = -1,
+                       na.value = "red")
 )
 
 
