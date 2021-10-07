@@ -67,6 +67,7 @@ library(marelac)
 library(lubridate)
 library(broom)
 library(seacarb)
+library(kableExtra)
 ```
 
 
@@ -651,7 +652,9 @@ disequi_pCO2_change <- disequi_pCO2_change %>%
   mutate(alpha = delta_pCO2_atm_ratio * xeta_ratio * rev_fac_ratio) %>% 
   select(-c(pCO2_tref, delta_pCO2_atm_ratio))
 
-disequi_pCO2_change
+disequi_pCO2_change %>% 
+  kbl() %>% 
+  kable_styling()
 
 alpha_df <- disequi_pCO2_change %>% 
   select(data_source, alpha) %>% 
@@ -1048,6 +1051,45 @@ GLODAP_cruise %>%
 rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 ```
+
+# C* distributions
+
+```{r Indian_ocean_quality_check}
+
+GLODAP_data_distribution <- GLODAP %>%
+  filter(data_source == "obs") %>%
+  select(era,
+         basin_AIP,
+         gamma_slab,
+         tco2,
+         talk,
+         phosphate,
+         cstar,
+         cstar_tref) %>%
+  pivot_longer(tco2:cstar_tref,
+               values_to = "value",
+               names_to = "parameter")
+
+
+GLODAP_data_distribution %>%
+  group_split(basin_AIP, gamma_slab) %>%
+  # head(1) %>% 
+  map(
+    ~ ggplot(data = .x) +
+      geom_density(aes(value, fill = era, col = era),
+                   alpha = 0.2) +
+      facet_wrap(~ parameter,
+                 scales = "free") +
+      labs(title = paste(
+        "basin_AIP:", unique(.x$basin_AIP),
+        "| gamma_slab:", unique(.x$gamma_slab)
+      ))
+  )
+
+rm(GLODAP_data_distribution)
+
+```
+
 
 # Rarefication
 

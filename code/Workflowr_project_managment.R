@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "code cleaning")
+wflow_publish(all = TRUE, message = "check data distribution")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -63,11 +63,11 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_10")[8]
+  pattern = "v_14")#[8]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_26")
+  pattern = "v_24")
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
@@ -75,8 +75,8 @@ Version_IDs_3 <- list.files(
 
 Version_IDs <- c(
   Version_IDs_1,
-  Version_IDs_2,
-  Version_IDs_3
+  Version_IDs_2
+  #Version_IDs_3
   )
 
 Version_IDs <- c(
