@@ -1052,6 +1052,37 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 ```
 
+# Reoccupation filter
+
+```{r filter_reoccupied_observations, fig.asp=2}
+
+GLODAP_grid <- GLODAP %>% 
+  distinct(lon, lat, gamma_slab, era)
+
+GLODAP_grid <- GLODAP_grid %>% 
+  group_by(lat, lon, gamma_slab) %>% 
+  mutate(n = n()) %>% 
+  ungroup() %>% 
+  mutate(era_label = if_else(n==1, era, "both"))
+
+map+
+  geom_raster(data = GLODAP_grid,
+              aes(lon, lat)) +
+  facet_grid(gamma_slab ~ era_label)
+  # scale_fill_manual(values = c("grey30", "grey70", "red"))
+
+GLODAP_grid <- GLODAP_grid %>% 
+  filter(era_label == "both") %>% 
+  distinct(lat, lon, gamma_slab)
+
+GLODAP <- left_join(GLODAP_grid, GLODAP)
+
+rm(GLODAP_grid)
+
+```
+
+
+
 # C* distributions
 
 ## basin, gamma slab
