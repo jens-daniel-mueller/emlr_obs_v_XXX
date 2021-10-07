@@ -205,10 +205,44 @@ climatology <-
   read_csv(paste0(path_model_preprocessing,
                   "climatology_runA_2007.csv"))
 
+```
+
+
+```{r load_gamma_offset_values}
+
+mean_gamma_offset_Atl  <-
+  read_rds(paste(path_version_data,
+                  "mean_gamma_offset_Atl.rds",
+                  sep = ""))
+
+mean_gamma_offset_Indo_Pac  <-
+  read_rds(paste(path_version_data,
+                  "mean_gamma_offset_Indo_Pac.rds",
+                  sep = ""))
+```
+
+
+```{r apply_gamma_offset_mod}
+
+climatology <- climatology %>%
+  mutate(
+    gamma = if_else(
+      basin_AIP %in% c("Indian", "Pacific"),
+      gamma - mean_gamma_offset_Indo_Pac,
+      gamma
+    ),
+    gamma = if_else(
+      basin_AIP %in% c("Atlantic"),
+      gamma - mean_gamma_offset_Atl,
+      gamma
+    )
+  )
+
 climatology <- climatology %>%
   select(lon, lat, depth, gamma)
 
 ```
+
 
 # dcant calculation
 
