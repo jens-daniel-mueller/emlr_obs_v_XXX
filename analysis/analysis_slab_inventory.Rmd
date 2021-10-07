@@ -251,7 +251,7 @@ Please note that:
 dcant_slab %>%
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  head(3) %>%
+  # head(3) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -292,7 +292,7 @@ dcant_slab %>%
 
 dcant_slab_bias %>%
   group_split(gamma_slab) %>%
-  head(3) %>%
+  # head(3) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -329,7 +329,7 @@ dcant_slab %>%
   filter(data_source %in% c("mod", "obs")) %>% 
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  head(3) %>%
+  # head(3) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
