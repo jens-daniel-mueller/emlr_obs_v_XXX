@@ -95,6 +95,19 @@ dcant_zonal_mod_truth <-
 dcant_zonal <- bind_rows(dcant_zonal,
                         dcant_zonal_mod_truth)
 
+dcant_profile <-
+  read_csv(paste(path_version_data,
+                 "dcant_profile.csv",
+                 sep = ""))
+
+dcant_profile_mod_truth <-
+  read_csv(paste(path_version_data,
+                 "dcant_profile_mod_truth.csv",
+                 sep = ""))
+
+dcant_profile <- bind_rows(dcant_profile,
+                        dcant_profile_mod_truth)
+
 dcant_zonal_method <-
   read_csv(paste(path_version_data,
                  "dcant_zonal_method.csv",
@@ -214,6 +227,27 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 }
   
 ```
+
+## Profiles
+
+
+```{r dcant_profiles}
+
+dcant_profile %>%
+  ggplot(aes(dcant, depth,
+             col = data_source, fill=data_source)) +
+  geom_vline(xintercept = 0) +
+  geom_ribbon(aes(xmin = dcant - dcant_sd,
+                  xmax = dcant + dcant_sd),
+              alpha = 0.2,
+              col = "transparent") +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
+
 
 ## Surface
 

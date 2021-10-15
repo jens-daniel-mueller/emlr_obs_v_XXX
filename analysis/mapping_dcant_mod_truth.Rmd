@@ -498,6 +498,26 @@ dcant_zonal_method_cstar <- dcant_zonal_method_cstar %>%
 
 ```
 
+
+## Profiles
+
+For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r calc_cant_profiles}
+
+dcant_profile <- dcant_3d %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(data_source, basin_AIP, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+```
+
+
+
 ## Inventories
 
 To calculate dcant column inventories, we:  
@@ -967,6 +987,11 @@ dcant_zonal %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_mod_truth.csv", sep = ""))
 
+dcant_profile %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_mod_truth.csv", sep = ""))
+
 dcant_zonal_method %>%
   filter(data_source == "mod_truth") %>%
   write_csv(paste(path_version_data,
@@ -976,6 +1001,11 @@ dcant_zonal %>%
   filter(data_source == "mod_truth_cc") %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_mod_truth_cc.csv", sep = ""))
+
+dcant_profile %>%
+  filter(data_source == "mod_truth_cc") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_mod_truth_cc.csv", sep = ""))
 
 dcant_zonal_method %>%
   filter(data_source == "mod_truth_cc") %>%

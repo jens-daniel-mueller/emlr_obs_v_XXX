@@ -422,6 +422,30 @@ dcant_slab_budget %>%
   facet_wrap(~ basin_AIP)
 
 dcant_slab_budget %>% 
+  ggplot(aes(gamma_slab, dcant)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis_d(direction = -1) +
+  scale_x_discrete(limits = rev) +
+  facet_grid(data_source ~ basin_AIP)
+
+dcant_slab_budget %>% 
+  ggplot(aes(gamma_slab, slab_volume)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis_d(direction = -1) +
+  scale_x_discrete(limits = rev) +
+  facet_grid(data_source ~ basin_AIP)
+
+dcant_slab_budget %>% 
+  ggplot(aes(gamma_slab, dcant/slab_volume)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_viridis_d(direction = -1) +
+  scale_x_discrete(limits = rev) +
+  facet_grid(data_source ~ basin_AIP)
+
+dcant_slab_budget %>% 
   ggplot(aes(data_source, dcant, fill = gamma_slab)) +
   geom_hline(yintercept = 0, col = "red") +
   geom_col() +

@@ -957,6 +957,24 @@ dcant_zonal_method <- dcant_zonal_method %>%
 
 ```
 
+
+## Profiles
+
+For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r calc_cant_profiles}
+
+dcant_profile <- dcant_3d %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(data_source, basin_AIP, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+```
+
 ## Mean dcant sections by coefficient
 
 For each basin and era combination, the zonal mean is calculated for the term of each predictor.
@@ -1223,6 +1241,10 @@ dcant_predictor_3d %>%
 dcant_zonal %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal.csv", sep = ""))
+
+dcant_profile %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile.csv", sep = ""))
 
 dcant_zonal_method %>%
   write_csv(paste(path_version_data,
