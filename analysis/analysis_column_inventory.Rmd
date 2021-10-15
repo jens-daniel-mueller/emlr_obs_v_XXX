@@ -98,7 +98,9 @@ dcant_inv_cstar <-
                  sep = ""))
 
 dcant_inv <- bind_rows(dcant_inv_read, dcant_inv_mod_truth)
-dcant_inv_cstar <- bind_rows(dcant_inv_read, dcant_inv_cstar)
+dcant_inv_cstar <- bind_rows(dcant_inv_mod_truth, dcant_inv_cstar)
+dcant_inv_cstar <- bind_rows(dcant_inv_read %>% filter(data_source == "mod")
+                             , dcant_inv_cstar)
 
 dcant_inv_method <-
   read_csv(paste(path_version_data,
@@ -242,9 +244,69 @@ dcant_inv_method %>%
 
 ```
 
-## Cstar no3
+# dcant from Cstar
 
-```{r dcant_all_inventory_map_cstar_no3, fig.asp=0.5}
+```{r absolute_dcant_inv}
+
+dcant_inv_cstar %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_map_cant_inv(
+    df = .x,
+      var = "dcant",
+      col = "continuous",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+
+```
+
+
+## no3 vs mod_truth
+
+```{r dcant_all_inventory_map_cstar_no3_mod_truth, fig.asp=0.5}
+
+dcant_inv_bias_cstar <- dcant_inv_cstar %>%
+  filter(data_source %in% c("mod_truth", "no3")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod_truth - no3) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_cstar,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: mod_truth - NO3")
+
+```
+
+
+## po4 vs mod_truth
+
+```{r dcant_all_inventory_map_cstar_po4_mod_truth, fig.asp=0.5}
+
+dcant_inv_bias_cstar <- dcant_inv_cstar %>%
+  filter(data_source %in% c("mod_truth", "po4")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod_truth - po4) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_cstar,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: mod - mod_truth")
+
+
+```
+
+## no3 vs mod
+
+```{r dcant_all_inventory_map_cstar_no3_mod, fig.asp=0.5}
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
   filter(data_source %in% c("mod", "no3")) %>%
@@ -258,24 +320,14 @@ p_map_cant_inv(
     df = dcant_inv_bias_cstar,
     var = "dcant_bias",
     col = "bias",
-    subtitle_text = "data_source: mod - mod_truth")
-
-dcant_inv_cstar %>%
-  group_split(data_source) %>%
-  # head(1) %>% 
-  map(~ p_map_cant_inv(
-    df = .x,
-      var = "dcant",
-      col = "continuous",
-    subtitle_text = paste("data_source:", unique(.x$data_source))
-  ))
+    subtitle_text = "data_source: mod - NO3")
 
 ```
 
 
-## Cstar po4
+## po4 vs mod
 
-```{r dcant_all_inventory_map_cstar_po4, fig.asp=0.5}
+```{r dcant_all_inventory_map_cstar_po4_mod, fig.asp=0.5}
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
   filter(data_source %in% c("mod", "po4")) %>%
@@ -289,17 +341,30 @@ p_map_cant_inv(
     df = dcant_inv_bias_cstar,
     var = "dcant_bias",
     col = "bias",
-    subtitle_text = "data_source: mod - mod_truth")
+    subtitle_text = "data_source: mod - po4")
 
-dcant_inv_cstar %>%
-  group_split(data_source) %>%
-  # head(1) %>% 
-  map(~ p_map_cant_inv(
-    df = .x,
-      var = "dcant",
-      col = "continuous",
-    subtitle_text = paste("data_source:", unique(.x$data_source))
-  ))
+
+```
+
+
+## po4 vs no3
+
+```{r dcant_all_inventory_map_cstar_po4_no3, fig.asp=0.5}
+
+dcant_inv_bias_cstar <- dcant_inv_cstar %>%
+  filter(data_source %in% c("no3", "po4")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = no3 - po4) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias_cstar,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: no3 - po4")
+
 
 ```
 

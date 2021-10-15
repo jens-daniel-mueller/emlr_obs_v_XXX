@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "plot all slab concentration distributions")
+wflow_publish(all = TRUE, message = "revised cstar-based dcant fields")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "check data distribution",
+message = "use all cruises, adjust model truth gamma levels",
 republish = TRUE)
 
 
