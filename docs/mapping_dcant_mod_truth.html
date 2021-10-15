@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping cant</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">07 October, 2021</h4>
+<h4 class="date">15 October, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-10-07
+<strong>Last updated:</strong> 2021-10-15
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree084ed7763ce1f501db30d5f6b63d67749fcb6dcctargetblank084ed77a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/084ed7763ce1f501db30d5f6b63d67749fcb6dcc" target="_blank">084ed77</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree42b7c39091f0b30f3db3681c0ebebe24e6056c3etargetblank42b7c39a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/42b7c39091f0b30f3db3681c0ebebe24e6056c3e" target="_blank">42b7c39</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree084ed7763ce1f501db30d5f6b63d67749fcb6dcctargetblank084ed77a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree42b7c39091f0b30f3db3681c0ebebe24e6056c3etargetblank42b7c39a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/084ed7763ce1f501db30d5f6b63d67749fcb6dcc" target="_blank">084ed77</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/42b7c39091f0b30f3db3681c0ebebe24e6056c3e" target="_blank">42b7c39</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -631,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/42b7c39091f0b30f3db3681c0ebebe24e6056c3e/analysis/mapping_dcant_mod_truth.Rmd" target="_blank">42b7c39</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-15
+</td>
+<td>
+analysed mean dcant profiles
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/046c556b9b3934d0a57a731f39e39f4fbe3b1344/docs/mapping_dcant_mod_truth.html" target="_blank">046c556</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3572,8 +3606,20 @@ dcant_zonal_method_cstar &lt;- dcant_zonal_method_cstar %&gt;%
   rename(dcant = dcant_mean,
          dcant_pos = dcant_pos_mean)</code></pre>
 </div>
-<div id="inventories" class="section level2" number="5.2">
-<h2 number="5.2"><span class="header-section-number">5.2</span> Inventories</h2>
+<div id="profiles" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Profiles</h2>
+<p>For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
+<pre class="r"><code>dcant_profile &lt;- dcant_3d %&gt;%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %&gt;% 
+  group_by(data_source, basin_AIP, depth) %&gt;% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %&gt;% 
+  ungroup()</code></pre>
+</div>
+<div id="inventories" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Inventories</h2>
 <p>To calculate dcant column inventories, we:</p>
 <ol style="list-style-type: decimal">
 <li>Convert Cant concentrations to volumetric units</li>
@@ -3581,8 +3627,8 @@ dcant_zonal_method_cstar &lt;- dcant_zonal_method_cstar %&gt;%
 <li>For each horizontal grid cell and era, sum cant layer inventories for different inventory depths (100, 500, 1000, 3000, 10^{4} m)</li>
 </ol>
 <p>Step 2 is performed separately for all Cant and positive Cant values only.</p>
-<div id="full-water-column" class="section level3" number="5.2.1">
-<h3 number="5.2.1"><span class="header-section-number">5.2.1</span> Full water column</h3>
+<div id="full-water-column" class="section level3" number="5.3.1">
+<h3 number="5.3.1"><span class="header-section-number">5.3.1</span> Full water column</h3>
 <pre class="r"><code>dcant_inv &lt;- dcant_3d %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
@@ -4009,8 +4055,8 @@ jens-daniel-mueller
     mutate(method = &quot;total&quot;)
 }</code></pre>
 </div>
-<div id="surface-layer" class="section level3" number="5.2.2">
-<h3 number="5.2.2"><span class="header-section-number">5.2.2</span> Surface layer</h3>
+<div id="surface-layer" class="section level3" number="5.3.2">
+<h3 number="5.3.2"><span class="header-section-number">5.3.2</span> Surface layer</h3>
 <pre class="r"><code>dcant_inv_surface &lt;- dcant_3d %&gt;%
   filter(method == &quot;surface&quot;) %&gt;% 
   group_by(data_source) %&gt;%
@@ -4472,8 +4518,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="emlr-only" class="section level3" number="5.2.3">
-<h3 number="5.2.3"><span class="header-section-number">5.2.3</span> eMLR only</h3>
+<div id="emlr-only" class="section level3" number="5.3.3">
+<h3 number="5.3.3"><span class="header-section-number">5.3.3</span> eMLR only</h3>
 <pre class="r"><code>dcant_inv &lt;- full_join(
   dcant_inv %&gt;% rename(dcant_total = dcant,
                        dcant_pos_total = dcant_pos),
@@ -6726,8 +6772,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="budgets" class="section level2" number="5.3">
-<h2 number="5.3"><span class="header-section-number">5.3</span> Budgets</h2>
+<div id="budgets" class="section level2" number="5.4">
+<h2 number="5.4"><span class="header-section-number">5.4</span> Budgets</h2>
 <p>Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.</p>
 <pre class="r"><code>dcant_budget_global &lt;- m_dcant_budget(dcant_inv)
 
@@ -11742,6 +11788,11 @@ dcant_zonal %&gt;%
   write_csv(paste(path_version_data,
                   &quot;dcant_zonal_mod_truth.csv&quot;, sep = &quot;&quot;))
 
+dcant_profile %&gt;%
+  filter(data_source == &quot;mod_truth&quot;) %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;dcant_profile_mod_truth.csv&quot;, sep = &quot;&quot;))
+
 dcant_zonal_method %&gt;%
   filter(data_source == &quot;mod_truth&quot;) %&gt;%
   write_csv(paste(path_version_data,
@@ -11751,6 +11802,11 @@ dcant_zonal %&gt;%
   filter(data_source == &quot;mod_truth_cc&quot;) %&gt;%
   write_csv(paste(path_version_data,
                   &quot;dcant_zonal_mod_truth_cc.csv&quot;, sep = &quot;&quot;))
+
+dcant_profile %&gt;%
+  filter(data_source == &quot;mod_truth_cc&quot;) %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;dcant_profile_mod_truth_cc.csv&quot;, sep = &quot;&quot;))
 
 dcant_zonal_method %&gt;%
   filter(data_source == &quot;mod_truth_cc&quot;) %&gt;%
@@ -11902,30 +11958,35 @@ loaded via a namespace (and not attached):
  [1] fs_1.5.0                 gsw_1.0-5                lubridate_1.7.9         
  [4] RColorBrewer_1.1-2       httr_1.4.2               rprojroot_2.0.2         
  [7] tools_4.0.3              backports_1.1.10         bslib_0.2.5.1           
-[10] utf8_1.1.4               R6_2.5.0                 DBI_1.1.0               
-[13] colorspace_2.0-2         withr_2.3.0              tidyselect_1.1.0        
-[16] compiler_4.0.3           git2r_0.27.1             cli_3.0.1               
-[19] rvest_0.3.6              xml2_1.3.2               isoband_0.2.2           
-[22] labeling_0.4.2           sass_0.4.0               scales_1.1.1            
-[25] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.10          
-[28] oce_1.2-0                pkgconfig_2.0.3          htmltools_0.5.1.1       
-[31] highr_0.8                dbplyr_1.4.4             rlang_0.4.11            
-[34] readxl_1.3.1             rstudioapi_0.13          jquerylib_0.1.4         
-[37] generics_0.1.0           farver_2.0.3             jsonlite_1.7.1          
-[40] magrittr_1.5             Matrix_1.2-18            Rcpp_1.0.5              
-[43] munsell_0.5.0            fansi_0.4.1              lifecycle_1.0.0         
-[46] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
-[49] MASS_7.3-53              grid_4.0.3               blob_1.2.1              
-[52] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[55] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[58] seacarb_3.2.14           knitr_1.33               pillar_1.6.2            
-[61] reprex_0.3.0             glue_1.4.2               evaluate_0.14           
-[64] RcppArmadillo_0.10.1.2.0 data.table_1.14.0        modelr_0.1.8            
-[67] vctrs_0.3.8              tweenr_1.0.2             httpuv_1.5.4            
-[70] testthat_2.3.2           cellranger_1.1.0         gtable_0.3.0            
-[73] polyclip_1.10-0          assertthat_0.2.1         xfun_0.25               
-[76] broom_0.7.9              RcppEigen_0.3.3.7.0      later_1.2.0             
-[79] viridisLite_0.3.0        ellipsis_0.3.2           here_0.1                </code></pre>
+[10] utf8_1.1.4               R6_2.5.0                 rpart_4.1-15            
+[13] Hmisc_4.4-1              DBI_1.1.0                colorspace_2.0-2        
+[16] nnet_7.3-14              withr_2.3.0              gridExtra_2.3           
+[19] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
+[22] cli_3.0.1                rvest_0.3.6              htmlTable_2.1.0         
+[25] xml2_1.3.2               isoband_0.2.2            labeling_0.4.2          
+[28] sass_0.4.0               scales_1.1.1             checkmate_2.0.0         
+[31] digest_0.6.27            foreign_0.8-80           rmarkdown_2.10          
+[34] oce_1.2-0                jpeg_0.1-8.1             base64enc_0.1-3         
+[37] pkgconfig_2.0.3          htmltools_0.5.1.1        highr_0.8               
+[40] dbplyr_1.4.4             htmlwidgets_1.5.2        rlang_0.4.11            
+[43] readxl_1.3.1             rstudioapi_0.13          jquerylib_0.1.4         
+[46] generics_0.1.0           farver_2.0.3             jsonlite_1.7.1          
+[49] magrittr_1.5             Formula_1.2-4            Matrix_1.2-18           
+[52] Rcpp_1.0.5               munsell_0.5.0            fansi_0.4.1             
+[55] lifecycle_1.0.0          stringi_1.5.3            whisker_0.4             
+[58] yaml_2.2.1               MASS_7.3-53              grid_4.0.3              
+[61] blob_1.2.1               parallel_4.0.3           promises_1.1.1          
+[64] crayon_1.3.4             lattice_0.20-41          splines_4.0.3           
+[67] haven_2.3.1              hms_0.5.3                seacarb_3.2.14          
+[70] knitr_1.33               pillar_1.6.2             reprex_0.3.0            
+[73] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[76] latticeExtra_0.6-29      data.table_1.14.0        modelr_0.1.8            
+[79] png_0.1-7                vctrs_0.3.8              tweenr_1.0.2            
+[82] httpuv_1.5.4             testthat_2.3.2           cellranger_1.1.0        
+[85] gtable_0.3.0             polyclip_1.10-0          assertthat_0.2.1        
+[88] xfun_0.25                broom_0.7.9              RcppEigen_0.3.3.7.0     
+[91] later_1.2.0              survival_3.2-7           viridisLite_0.3.0       
+[94] cluster_2.1.0            ellipsis_0.3.2           here_0.1                </code></pre>
 </div>
 </div>
 
