@@ -456,7 +456,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">07 October, 2021</h4>
+<h4 class="date">17 October, 2021</h4>
 
 </div>
 
@@ -481,7 +481,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-10-07
+<strong>Last updated:</strong> 2021-10-17
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -572,16 +572,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree084ed7763ce1f501db30d5f6b63d67749fcb6dcctargetblank084ed77a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/084ed7763ce1f501db30d5f6b63d67749fcb6dcc" target="_blank">084ed77</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeff902b903ad2510ca92ccaf76a57922d03a2b133targetblankff902b9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ff902b903ad2510ca92ccaf76a57922d03a2b133" target="_blank">ff902b9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree084ed7763ce1f501db30d5f6b63d67749fcb6dcctargetblank084ed77a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeff902b903ad2510ca92ccaf76a57922d03a2b133targetblankff902b9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/084ed7763ce1f501db30d5f6b63d67749fcb6dcc" target="_blank">084ed77</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/ff902b903ad2510ca92ccaf76a57922d03a2b133" target="_blank">ff902b9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -631,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ff902b903ad2510ca92ccaf76a57922d03a2b133/analysis/mapping_predictor_preparation.Rmd" target="_blank">ff902b9</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-17
+</td>
+<td>
+rerun with merged surface and eMLR approach
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/046c556b9b3934d0a57a731f39e39f4fbe3b1344/docs/mapping_predictor_preparation.html" target="_blank">046c556</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -3935,13 +3969,17 @@ predictors_surface &lt;- predictors_surface %&gt;%
     )
   )</code></pre>
 <pre class="r"><code># predictors for deep waters
-predictors &lt;- predictors %&gt;%
-  filter(depth &gt;= params_local$depth_min | gamma &gt;= params_local$gamma_min)
+
+# predictors &lt;- predictors %&gt;%
+#   filter(depth &gt;= params_local$depth_min | gamma &gt;= params_local$gamma_min)
 
 # predictors for surface waters
+# predictors_surface &lt;- predictors_surface %&gt;%
+#   filter(depth &lt; params_local$depth_min,
+#          gamma &lt; params_local$gamma_min)
+
 predictors_surface &lt;- predictors_surface %&gt;%
-  filter(depth &lt; params_local$depth_min,
-         gamma &lt; params_local$gamma_min)</code></pre>
+  filter(depth &lt;= 5)</code></pre>
 <div id="apply-basin-mask" class="section level2" number="4.1">
 <h2 number="4.1"><span class="header-section-number">4.1</span> Apply basin mask</h2>
 <p>Data outside the WOA18 basin mask were removed for further analysis.</p>
