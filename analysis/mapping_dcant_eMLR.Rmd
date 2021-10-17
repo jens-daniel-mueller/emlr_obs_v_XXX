@@ -241,7 +241,7 @@ rm(predictors, lm_best_dcant)
 
 ### Apply MLRs to predictor
 
-```{r calculate_cant}
+```{r calculate_dcant}
 
 dcant <- b_dcant(dcant)
 
@@ -529,7 +529,7 @@ dcant_surface_disequi <- full_join(dcant_surface_disequi,
 
 ### Sea surface observations
 
-```{r prepare_surface_data, eval=surface_data}
+```{r prepare_surface_data, eval=FALSE}
 
 
 # harmonize variable naming and formatting
@@ -560,7 +560,7 @@ surface <- bind_rows(
 
 ```
 
-```{r calc_long_term_tco2_trends}
+```{r calc_long_term_tco2_trends, eval=FALSE}
 
 surface_tco2_regression_fit <- 
   full_join(surface, co2_atm %>% rename(pco2_atm = pCO2)) %>% 
@@ -636,7 +636,7 @@ map +
 
 ```
 
-```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=surface_data}
+```{r calc_dcant_surface_based_on_surface_observations, fig.asp=1, eval=FALSE}
 
 # combine with era definition
 surface <- expand_grid(surface, tref)
@@ -703,7 +703,7 @@ surface_pco2 <- surface_pco2 %>%
 
 ### Control plots
 
-```{r dcant_surface_climatology_map, fig.asp=0.6, eval=surface_data}
+```{r dcant_surface_climatology_map, fig.asp=0.6, eval=FALSE}
 
 dcant_surface_disequi %>%
   group_split(data_source) %>%
@@ -736,7 +736,7 @@ dcant_surface_disequi %>%
 
 ### Surf, equi, truth
 
-```{r surf_equi_truth, fig.asp=1.5}
+```{r surf_equi_truth, fig.asp=1.5, eval=FALSE}
 
 surface_dcant_comparison <- bind_rows(
   surface_trend %>%
@@ -791,7 +791,7 @@ p_map_dcant_slab(df = surface_dcant_comparison,
 ```
 
 
-```{r surf_equi_truth_bias, fig.asp=1.3}
+```{r surf_equi_truth_bias, fig.asp=1.3, eval=FALSE}
 
 surface_dcant_comparison_bias <- surface_dcant_comparison %>% 
   pivot_wider(names_from = data_source,
@@ -900,15 +900,49 @@ rm(dcant_surface)
 
 ```{r join_surface_deep_dcant}
 
-if (surface_data) {
-  dcant_3d <-
-  full_join(
-    dcant_average %>% mutate(method = "eMLR"),
-    dcant_surface_average %>%  mutate(method = "surface")
-  )
-} else {
-  dcant_3d <- dcant_average %>% mutate(method = "eMLR")
-}
+dcant_surface_average <- dcant_surface_average %>% 
+  rename(dcant_surface = dcant) %>% 
+  select(data_source, lat, lon, dcant_surface)
+
+dcant_average <- dcant_average %>% 
+  rename(dcant_eMLR = dcant)
+
+# dcant_3d <- full_join(
+#   dcant_average_join %>% mutate(method = "eMLR"),
+#   dcant_surface_average_join %>% mutate(method = "surface"))
+
+dcant_3d <- full_join(
+  dcant_average,
+  dcant_surface_average)
+
+dcant_3d <- dcant_3d %>% 
+  mutate(dcant_surface = if_else(depth > params_local$depth_min,
+                                 NaN,
+                                 dcant_surface))
+
+d_min <- params_local$depth_min
+
+dcant_3d <- dcant_3d %>% 
+  mutate(dcant = if_else(
+    depth <= params_local$depth_min,
+    ((d_min - depth)/d_min * dcant_surface) +
+      ((1 - (d_min - depth)/d_min) * dcant_eMLR),
+    dcant_eMLR)) %>% 
+  select(-c(dcant_eMLR, dcant_surface)) %>% 
+  mutate(method = if_else(depth <= d_min,
+                          "surface",
+                          "eMLR"))
+
+
+# if (surface_data) {
+#   dcant_3d <-
+#   full_join(
+#     dcant_average %>% mutate(method = "eMLR"),
+#     dcant_surface_average %>%  mutate(method = "surface")
+#   )
+# } else {
+#   dcant_3d <- dcant_average %>% mutate(method = "eMLR")
+# }
 
 
 

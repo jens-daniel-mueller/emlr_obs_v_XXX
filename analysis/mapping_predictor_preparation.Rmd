@@ -345,13 +345,17 @@ predictors_surface <- predictors_surface %>%
 ```{r split_WOA18_GLODAP_predictors_deep_surface}
 
 # predictors for deep waters
-predictors <- predictors %>%
-  filter(depth >= params_local$depth_min | gamma >= params_local$gamma_min)
+
+# predictors <- predictors %>%
+#   filter(depth >= params_local$depth_min | gamma >= params_local$gamma_min)
 
 # predictors for surface waters
+# predictors_surface <- predictors_surface %>%
+#   filter(depth < params_local$depth_min,
+#          gamma < params_local$gamma_min)
+
 predictors_surface <- predictors_surface %>%
-  filter(depth < params_local$depth_min,
-         gamma < params_local$gamma_min)
+  filter(depth <= 5)
 
 
 ```
