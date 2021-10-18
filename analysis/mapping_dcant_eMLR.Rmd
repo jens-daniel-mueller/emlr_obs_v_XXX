@@ -903,11 +903,13 @@ rm(dcant_surface)
 d_min <- 100
 
 dcant_surface_average <- dcant_surface_average %>% 
-  rename(dcant_surface = dcant) %>% 
-  select(data_source, lat, lon, dcant_surface)
+  rename(dcant_surface = dcant,
+         dcant_pos_surface = dcant_pos) %>% 
+  select(data_source, lat, lon, dcant_surface, dcant_pos_surface)
 
 dcant_average <- dcant_average %>% 
-  rename(dcant_eMLR = dcant)
+  rename(dcant_eMLR = dcant,
+         dcant_pos_eMLR = dcant_pos)
 
 # dcant_3d <- full_join(
 #   dcant_average_join %>% mutate(method = "eMLR"),
@@ -920,15 +922,35 @@ dcant_3d <- full_join(
 dcant_3d <- dcant_3d %>% 
   mutate(dcant_surface = if_else(depth > d_min,
                                  NaN,
-                                 dcant_surface))
+                                 dcant_surface),
+         dcant_pos_surface = if_else(depth > d_min,
+                                 NaN,
+                                 dcant_pos_surface))
 
-dcant_3d <- dcant_3d %>% 
-  mutate(dcant = if_else(
-    depth <= d_min,
-    ((d_min - depth)/d_min * dcant_surface) +
-      ((1 - (d_min - depth)/d_min) * dcant_eMLR),
-    dcant_eMLR)) %>% 
-  select(-c(dcant_eMLR, dcant_surface)) %>% 
+
+
+
+dcant_3d <- dcant_3d %>%
+  mutate(
+    mix = (d_min - depth) / d_min,
+    dcant = if_else(depth <= d_min,
+                    (mix * dcant_surface) +
+                      ((1 - mix) * dcant_eMLR),
+                    dcant_eMLR),
+    dcant_pos = if_else(
+      depth <= d_min,
+      (mix * dcant_pos_surface) +
+        ((1 - mix) * dcant_pos_eMLR),
+      dcant_pos_eMLR
+    )
+  ) %>%
+  select(-c(
+    dcant_eMLR,
+    dcant_surface,
+    dcant_pos_eMLR,
+    dcant_pos_surface,
+    mix
+  )) %>%
   mutate(method = if_else(depth <= d_min,
                           "surface",
                           "eMLR"))
