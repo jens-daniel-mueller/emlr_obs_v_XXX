@@ -900,6 +900,8 @@ rm(dcant_surface)
 
 ```{r join_surface_deep_dcant}
 
+d_min <- 100
+
 dcant_surface_average <- dcant_surface_average %>% 
   rename(dcant_surface = dcant) %>% 
   select(data_source, lat, lon, dcant_surface)
@@ -916,15 +918,13 @@ dcant_3d <- full_join(
   dcant_surface_average)
 
 dcant_3d <- dcant_3d %>% 
-  mutate(dcant_surface = if_else(depth > params_local$depth_min,
+  mutate(dcant_surface = if_else(depth > d_min,
                                  NaN,
                                  dcant_surface))
 
-d_min <- params_local$depth_min
-
 dcant_3d <- dcant_3d %>% 
   mutate(dcant = if_else(
-    depth <= params_local$depth_min,
+    depth <= d_min,
     ((d_min - depth)/d_min * dcant_surface) +
       ((1 - (d_min - depth)/d_min) * dcant_eMLR),
     dcant_eMLR)) %>% 
