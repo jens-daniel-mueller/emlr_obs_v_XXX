@@ -84,7 +84,9 @@ params_local <-
     # qc flags accepted for GLODAP data
     flag_qc = c(1,0),
     # Shallowest depth for data to be included in MLR fitting
-    depth_min = 0,
+    depth_min = 50,
+    # Depth to extend the surface dcant estimate in mapping
+    depth_mapping = 200,
     # Shallowest water depth for data to be included in MLR fitting
     bottomdepth_min = 0,
     # Lowest neutral density to map dcant with eMLR approach
@@ -245,6 +247,11 @@ depth_min = lst(
   # depth_min = 150
   )
 
+# Depth to extend the surface dcant estimate in mapping
+depth_mapping = lst(
+  depth_mapping = 200
+  )
+
 # Shallowest water depth for data to be included in MLR fitting
 bottomdepth_min = 500
 
@@ -382,6 +389,7 @@ params_local_all <-
     flag_f,
     flag_qc,
     depth_min,
+    depth_mapping,
     bottomdepth_min,
     gamma_min,
     CANYON_B_cruise_mean,
