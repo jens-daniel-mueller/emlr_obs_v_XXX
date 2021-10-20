@@ -98,8 +98,6 @@ params_local$GLODAPv2_version
 ```
 
 
-**CAVEAT:** This file still contains neutral densities `gamma` calculated with a preliminary method. However, this is consistent with the way gamma is currently calculated in this script and should therefore be maintained until changed on all levels.
-
 ```{r read_GLODAPv2_2020_merged_master_file}
 
 GLODAP <-
@@ -127,19 +125,6 @@ GLODAP_CB <-
 # Data preparation
 
 ## Filter eras
-
-
-```{r grid_by_year, fig.asp=3}
-
-GLODAP_grid <- GLODAP %>% 
-  count(lat, lon, year)
-
-map +
-  geom_raster(data = GLODAP_grid,
-              aes(lon, lat)) +
-  facet_wrap(~ year, ncol=3)
-
-```
 
 ```{r assign_eras}
 
@@ -218,6 +203,9 @@ GLODAP <- GLODAP %>%
 
 ```
 
+### Coastal cruises
+
+Coastal cruises can be removed by defining a minimum sampling depth threshold for the entire cruises. This criterion was not applied.
 
 ```{r apply_sampling_depth_min, eval=FALSE}
 
@@ -268,25 +256,25 @@ GLODAP_combined <- GLODAP_combined_raw %>%
          starts_with("offset_"))
 
 
-# GLODAP_combined %>% 
-#   filter(cruise == 695) %>% 
-#   arrange(depth) %>% 
-#   ggplot(aes(offset_talk, depth)) +
-#   geom_point() +
-#   scale_y_reverse() +
-#   labs(title = "GLODAPv2.2021 vs CANYON-B | cruise 695")
-# 
-# GLODAP %>% 
-#   filter(cruise == 695) %>% 
-#   arrange(depth) %>% 
-#   ggplot(aes(talk, depth,
-#              fill = as.factor(talkf),
-#              col = as.factor(talkqc))) +
-#   geom_point(shape = 21) +
-#   scale_y_reverse() +
-#   scale_color_manual(values = "black", name = "talkqc") +
-#   scale_fill_manual(values = c("black", "white", "grey"), name = "talkf") +
-#   labs(title = "GLODAPv2.2021 | cruise 695")
+GLODAP_combined %>%
+  filter(cruise == 695) %>%
+  arrange(depth) %>%
+  ggplot(aes(offset_talk, depth)) +
+  geom_point() +
+  scale_y_reverse() +
+  labs(title = "GLODAPv2.2021 vs CANYON-B | cruise 695")
+
+GLODAP %>%
+  filter(cruise == 695) %>%
+  arrange(depth) %>%
+  ggplot(aes(talk, depth,
+             fill = as.factor(talkf),
+             col = as.factor(talkqc))) +
+  geom_point(shape = 21) +
+  scale_y_reverse() +
+  scale_color_manual(values = "black", name = "talkqc") +
+  scale_fill_manual(values = c("black", "white", "grey"), name = "talkf") +
+  labs(title = "GLODAPv2.2021 | cruise 695")
 
 
 # pivot to long format

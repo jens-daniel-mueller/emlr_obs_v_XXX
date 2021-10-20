@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised cstar-based dcant fields")
+wflow_publish(all = TRUE, message = "corrected tco2 and talk qc flags in preprocessing")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -32,8 +32,25 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "use all cruises, adjust model truth gamma levels",
+message = "merging depth of surface approach defined in params_local",
 republish = TRUE)
+
+
+wflow_publish(here::here(
+  "analysis",
+  c(
+    "mapping_dcant_eMLR.Rmd",
+    "mapping_dcant_mod_truth.Rmd",
+    "analysis_budgets.Rmd",
+    "analysis_column_inventory.Rmd",
+    "analysis_zonal_sections.Rmd",
+    "analysis_slab_inventory.Rmd",
+    "analysis_MLR_performance.Rmd",
+    "analysis_anomalous_changes.Rmd"
+  )
+),
+message = "incl dcant_pos in merged surface and eMLR approach")
+
 
 
 # Push latest version to GitHub
@@ -63,20 +80,20 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_14")#[8]
+  pattern = "v_10")#[8]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_24")
+  pattern = "v_20")
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_30")[8]
+  pattern = "v_30")#[8]
 
 Version_IDs <- c(
   Version_IDs_1,
-  Version_IDs_2
-  #Version_IDs_3
+  Version_IDs_2,
+  Version_IDs_3
   )
 
 Version_IDs <- c(
