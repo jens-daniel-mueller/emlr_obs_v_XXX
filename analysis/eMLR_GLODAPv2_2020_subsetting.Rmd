@@ -843,7 +843,7 @@ Summary statistics were calculated during cleaning process.
 
 ### NA maps
 
-```{r NA_maps}
+```{r NA_maps, fig.asp=2}
 
 GLODAP_NA <- GLODAP %>% 
   select(lon, lat, era, tco2, talk, params_local$MLR_predictors) %>% 
@@ -854,7 +854,7 @@ GLODAP_NA <- GLODAP %>%
   count(lat, lon, era, parameter, NA_flag)
 
 GLODAP_NA %>%
-  group_split(parameter) %>%
+  group_split(NA_flag) %>%
   # head(1) %>%
   map(
     ~ map +
@@ -868,8 +868,8 @@ GLODAP_NA %>%
       theme(legend.position = "bottom",
             axis.text = element_blank(),
             axis.ticks = element_blank()) +
-      labs(title = paste("parameter:", unique(.x$parameter))) +
-      facet_grid(NA_flag ~ era)
+      labs(title = paste("Flag:", unique(.x$NA_flag))) +
+      facet_grid(parameter ~ era)
       
   )
   
@@ -879,7 +879,7 @@ rm(GLODAP_NA)
 
 ### f flag maps
 
-```{r f_flag_maps, fig.asp=0.8}
+```{r f_flag_maps, fig.asp=2}
 
 GLODAP_f_flags <- GLODAP %>% 
   select(lon, lat, era, ends_with("f")) %>% 
@@ -889,7 +889,7 @@ GLODAP_f_flags <- GLODAP %>%
   count(lat, lon, era, parameter, value)
 
 GLODAP_f_flags %>%
-  group_split(parameter) %>%
+  group_split(value) %>%
   # head(1) %>%
   map(
     ~ map +
@@ -903,8 +903,8 @@ GLODAP_f_flags %>%
       theme(legend.position = "bottom",
             axis.text = element_blank(),
             axis.ticks = element_blank()) +
-      labs(title = paste("parameter:", unique(.x$parameter))) +
-      facet_grid(value ~ era)
+      labs(title = paste("f flag:", unique(.x$value))) +
+      facet_grid(parameter ~ era)
       
   )
 
@@ -914,7 +914,7 @@ rm(GLODAP_f_flags)
 
 ### qc flag maps
 
-```{r qc_flag_maps}
+```{r qc_flag_maps, fig.asp=2}
 
 GLODAP_qc_flags <- GLODAP %>% 
   select(lon, lat, era, ends_with("qc")) %>% 
@@ -924,7 +924,7 @@ GLODAP_qc_flags <- GLODAP %>%
   count(lat, lon, era, parameter, value)
 
 GLODAP_qc_flags %>%
-  group_split(parameter) %>%
+  group_split(value) %>%
   # head(1) %>%
   map(
     ~ map +
@@ -938,8 +938,8 @@ GLODAP_qc_flags %>%
       theme(legend.position = "bottom",
             axis.text = element_blank(),
             axis.ticks = element_blank()) +
-      labs(title = paste("parameter:", unique(.x$parameter))) +
-      facet_grid(value ~ era)
+      labs(title = paste("qc flag:", unique(.x$value))) +
+      facet_grid(parameter ~ era)
       
   )
 
@@ -947,456 +947,21 @@ rm(GLODAP_qc_flags)
   
 ```
 
+### Apply filter
 
+```{r apply_filter}
 
-### tco2
-
-#### NA
-
-Rows with missing tco2 observations were already removed in the preprocessing. The map below shows the coverage of preprocessed GLODAP data.
-
-```{r tco2_na_subset}
-
-cruise_stats_global <- GLODAP %>% 
-  summarise(tco2_values = n())
-
-GLODAP_obs_grid <- GLODAP %>% 
-  count(lat, lon, era) %>% 
-  mutate(cleaning_level = "tco2_values")
+GLODAP <- GLODAP %>%  
+  filter(
+    if_all(
+      c(tco2, talk, params_local$MLR_predictors, depth, gamma),
+      ~ !is.na(.)
+    ),
+    if_all(ends_with("f"), ~ . %in% params_local$flag_f),
+    if_all(ends_with("qc"), ~ . %in% params_local$flag_qc)
+  )
 
 ```
-
-
-```{r WOA18_basin_mask_GLODAP_observations_map, fig.asp=0.6}
-
-GLODAP_obs <- GLODAP %>% 
-  group_by(lat, lon) %>% 
-  summarise(n = n()) %>% 
-  ungroup()
-
-map +
-  geom_raster(data = basinmask, aes(lon, lat, fill = basin)) +
-  geom_raster(data = GLODAP_obs, aes(lon, lat)) +
-  scale_fill_brewer(palette = "Dark2") +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-rm(GLODAP_obs)
-
-```
-
-#### f flag
-
-```{r tco2_f_subset, fig.asp=0.6}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, tco2f)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ tco2f) +
-  theme(legend.position = "top")
-
-rm(GLODAP_obs_grid_temp)
-
-GLODAP <- GLODAP %>%
-  filter(tco2f %in% params_local$flag_f)
-
-```
-
-#### qc flag
-
-```{r tco2_qc_subset, fig.asp=0.6}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, tco2qc)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ tco2qc) +
-  theme(legend.position = "top")
-
-##
-
-GLODAP <- GLODAP %>%
-  filter(tco2qc %in% params_local$flag_qc)
-
-cruise_stats_global_temp <- GLODAP %>%
-  summarise(tco2_flag = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era) %>%
-  mutate(cleaning_level = "tco2_flag")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-```
-
-
-### talk
-
-#### NA
-
-```{r talk_na_subset, fig.asp=0.6}
-
-GLODAP <- GLODAP %>% 
-  mutate(talkna = if_else(is.na(talk), "NA", "Value"))
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, talkna)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ talkna) +
-  theme(legend.position = "top")
-
-GLODAP <- GLODAP %>% 
-  select(-talkna) %>% 
-  filter(!is.na(talk))
-
-##
-
-cruise_stats_global_temp <- GLODAP %>% 
-  summarise(talk_values = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>% 
-  count(lat, lon, era) %>% 
-  mutate(cleaning_level = "talk_values")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-
-```
-
-#### f flag
-
-```{r talk_f_subset, fig.asp=0.6}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, talkf)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ talkf) +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-
-# ###
-
-GLODAP <- GLODAP %>%
-  filter(talkf %in% params_local$flag_f)
-
-
-```
-
-#### qc flag
-
-```{r talk_qc_subset, fig.asp=0.6}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, talkqc)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ talkqc) +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-###
-
-GLODAP <- GLODAP %>%
-  filter(talkqc %in% params_local$flag_qc)
-
-##
-
-cruise_stats_global_temp <- GLODAP %>%
-  summarise(talk_flag = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era) %>%
-  mutate(cleaning_level = "talk_flag")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-```
-
-
-### Phosphate
-
-Phosphate was used as predictor:
-
-```{r check_phosphate_predictor}
-
-P_used <- "phosphate" %in% params_local$MLR_predictors
-P_used
-
-```
-
-
-#### NA
-
-```{r phosphate_na_subset, fig.asp=0.6, eval=P_used}
-
-GLODAP <- GLODAP %>% 
-  mutate(phosphatena = if_else(is.na(phosphate), "NA", "Value"))
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, phosphatena)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era ~ phosphatena) +
-  theme(legend.position = "top")
-
-GLODAP <- GLODAP %>% 
-  select(-phosphatena) %>% 
-  filter(!is.na(phosphate))
-
-##
-
-cruise_stats_global_temp <- GLODAP %>% 
-  summarise(phosphate_values = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>% 
-  count(lat, lon, era) %>% 
-  mutate(cleaning_level = "phosphate_values")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-
-```
-
-#### f flag
-
-```{r phosphate_f_subset, fig.asp=0.6, eval=P_used}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, phosphatef)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-    scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era~phosphatef) +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-###
-
-GLODAP <- GLODAP %>%
-  filter(phosphatef %in% params_local$flag_f)
-
-
-```
-
-#### qc flag
-
-```{r phosphate_qc_subset, fig.asp=0.6, eval=P_used}
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era, phosphateqc)
-
-map +
-  geom_raster(data = GLODAP_obs_grid_temp, aes(lon, lat, fill = n)) +
-    scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  facet_grid(era~phosphateqc) +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-
-###
-
-GLODAP <- GLODAP %>%
-  filter(phosphateqc %in% params_local$flag_qc)
-
-##
-
-cruise_stats_global_temp <- GLODAP %>%
-  summarise(phosphate_flag = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era) %>%
-  mutate(cleaning_level = "phosphate_flag")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-```
-
-
-### eMLR variables
-
-Variables required as predictors for the MLR fits, are subsetted for NAs and flags.
-
-```{r eMLR_subset}
-
-if ("temp" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(temp))
-}
-
-##
-
-if ("sal" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(sal))
-  
-  GLODAP <- GLODAP %>%
-    filter(salinityf %in% params_local$flag_f)
-  
-  GLODAP <- GLODAP %>%
-    filter(salinityqc %in% params_local$flag_qc)
-}
-
-##
-
-if ("silicate" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(silicate))
-  
-  GLODAP <- GLODAP %>%
-    filter(silicatef %in% params_local$flag_f)
-  
-  GLODAP <- GLODAP %>%
-    filter(silicateqc %in% params_local$flag_qc)
-}
-
-##
-
-if ("oxygen" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(oxygen))
-  
-  GLODAP <- GLODAP %>%
-    filter(oxygenf %in% params_local$flag_f)
-  
-  GLODAP <- GLODAP %>%
-    filter(oxygenqc %in% params_local$flag_qc)
-}
-
-##
-
-if ("aou" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(aou))
-  
-  GLODAP <- GLODAP %>%
-    filter(aouf %in% params_local$flag_f)
-}
-
-##
-
-if ("nitrate" %in% params_local$MLR_predictors) {
-  GLODAP <- GLODAP %>%
-    filter(!is.na(nitrate))
-  
-  GLODAP <- GLODAP %>%
-    filter(nitratef %in% params_local$flag_f)
-  
-  GLODAP <- GLODAP %>%
-    filter(nitrateqc %in% params_local$flag_qc)
-}
-
-##
-
-GLODAP <- GLODAP %>%
-  filter(!is.na(depth))
-
-GLODAP <- GLODAP %>%
-  filter(!is.na(gamma))
-
-##
-
-cruise_stats_global_temp <- GLODAP %>%
-  summarise(eMLR_variables = n())
-
-cruise_stats_global <- cbind(cruise_stats_global, cruise_stats_global_temp)
-
-rm(cruise_stats_global_temp)
-
-##
-
-GLODAP_obs_grid_temp <- GLODAP %>%
-  count(lat, lon, era) %>%
-  mutate(cleaning_level = "eMLR_variables")
-
-GLODAP_obs_grid <-
-  bind_rows(GLODAP_obs_grid, GLODAP_obs_grid_temp)
-
-rm(GLODAP_obs_grid_temp)
-
-
-```
-
-```{r remove_flag_columns}
-
-GLODAP <- GLODAP %>% 
-  select(-ends_with(c("f", "qc")))
-
-```
-
-
 
 ## Reference years (tref)
 
@@ -1530,7 +1095,7 @@ GLODAP %>%
 
 Number of observations at various steps of data cleaning.
 
-```{r GLODAP_cleaning_stats}
+```{r GLODAP_cleaning_stats, eval=FALSE}
 
 cruise_stats_global_long <- cruise_stats_global %>%
   pivot_longer(1:length(cruise_stats_global),
@@ -1654,7 +1219,7 @@ rm(GLODAP_hovmoeller_year)
 
 The following plots show the remaining data after **individual cleaning steps**, separately for each era.
 
-```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.1}
+```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.1, eval=FALSE}
 
 GLODAP_obs_grid <- GLODAP_obs_grid %>%
   mutate(cleaning_level = factor(
