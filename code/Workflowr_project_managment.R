@@ -32,24 +32,17 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "merging depth of surface approach defined in params_local",
+message = "including 1989 in first era",
 republish = TRUE)
 
 
 wflow_publish(here::here(
   "analysis",
   c(
-    "mapping_dcant_eMLR.Rmd",
-    "mapping_dcant_mod_truth.Rmd",
-    "analysis_budgets.Rmd",
-    "analysis_column_inventory.Rmd",
-    "analysis_zonal_sections.Rmd",
-    "analysis_slab_inventory.Rmd",
-    "analysis_MLR_performance.Rmd",
-    "analysis_anomalous_changes.Rmd"
+    "eMLR_GLODAPv2_2020_subsetting.Rmd"
   )
 ),
-message = "incl dcant_pos in merged surface and eMLR approach")
+message = "corrected tco2 and talk qc flags in preprocessing")
 
 
 
