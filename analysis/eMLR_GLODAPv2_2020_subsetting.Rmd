@@ -797,7 +797,7 @@ GLODAP_filling_long %>%
   coord_flip() +
   geom_col() +
   facet_grid(era~.) +
-  scale_fill_viridis_d()
+  scale_fill_brewer(palette = "Dark2")
 )
 
 GLODAP <- GLODAP %>% 
@@ -813,7 +813,7 @@ rm(GLODAP_filling_long, GLODAP_filling_wide)
 
 
 
-## Flags and missing data
+## Flags and NA
 
 Only rows (samples) for which all relevant parameters are available were selected, ie NA's were removed.
 
@@ -841,17 +841,28 @@ The cleaning process was performed successively and the maps below represent the
 
 Summary statistics were calculated during cleaning process.
 
-### NA maps
+### NA
 
-```{r NA_maps, fig.asp=2}
+```{r calc_NA}
 
 GLODAP_NA <- GLODAP %>% 
   select(lon, lat, era, tco2, talk, params_local$MLR_predictors) %>% 
   pivot_longer(tco2:silicate,
                names_to = "parameter",
                values_to = "value") %>%
-  mutate(NA_flag = if_else(is.na(value), "NA", "available")) %>% 
+  mutate(NA_flag = if_else(is.na(value), "NA", "available"))
+
+GLODAP_NA_stats <- GLODAP_NA %>% 
+  count(era, parameter, NA_flag)
+
+GLODAP_NA <- GLODAP_NA %>% 
   count(lat, lon, era, parameter, NA_flag)
+  
+```
+
+#### Maps
+
+```{r NA_maps, fig.asp=2}
 
 GLODAP_NA %>%
   group_split(NA_flag) %>%
@@ -877,16 +888,45 @@ rm(GLODAP_NA)
   
 ```
 
-### f flag maps
+#### Stats
 
-```{r f_flag_maps, fig.asp=2}
+```{r NA_stats}
+
+GLODAP_NA_stats %>% 
+  ggplot(aes(parameter, n, fill = NA_flag)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = "Dark2")
+
+rm(GLODAP_NA_stats)
+
+```
+
+
+
+### f flag
+
+```{r calc_f_flag}
 
 GLODAP_f_flags <- GLODAP %>% 
   select(lon, lat, era, ends_with("f")) %>% 
   pivot_longer(aouf:tco2f,
                names_to = "parameter",
-               values_to = "value") %>% 
+               values_to = "value")
+
+GLODAP_f_flags_stats <- GLODAP_f_flags %>% 
+  count(era, parameter, value)
+
+GLODAP_f_flags <- GLODAP_f_flags %>% 
   count(lat, lon, era, parameter, value)
+
+```
+
+
+#### Maps
+
+```{r f_flag_maps, fig.asp=2}
 
 GLODAP_f_flags %>%
   group_split(value) %>%
@@ -912,9 +952,26 @@ rm(GLODAP_f_flags)
   
 ```
 
-### qc flag maps
+#### Stats
 
-```{r qc_flag_maps, fig.asp=2}
+```{r f_flag_stats}
+
+GLODAP_f_flags_stats %>% 
+  mutate(value = as.factor(value)) %>% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = "Dark2")
+
+rm(GLODAP_f_flags_stats)
+
+```
+
+
+### qc flag
+
+```{r calc_qc_flag}
 
 GLODAP_qc_flags <- GLODAP %>% 
   select(lon, lat, era, ends_with("qc")) %>% 
@@ -922,6 +979,18 @@ GLODAP_qc_flags <- GLODAP %>%
                names_to = "parameter",
                values_to = "value") %>% 
   count(lat, lon, era, parameter, value)
+
+GLODAP_qc_flags_stats <- GLODAP_qc_flags %>% 
+  count(era, parameter, value)
+
+GLODAP_qc_flags <- GLODAP_qc_flags %>% 
+  count(lat, lon, era, parameter, value)
+
+```
+
+#### Maps
+
+```{r qc_flag_maps, fig.asp=2}
 
 GLODAP_qc_flags %>%
   group_split(value) %>%
@@ -946,6 +1015,23 @@ GLODAP_qc_flags %>%
 rm(GLODAP_qc_flags)
   
 ```
+
+#### Stats
+
+```{r qc_flag_stats}
+
+GLODAP_qc_flags_stats %>% 
+  mutate(value = as.factor(value)) %>% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = "Dark2")
+
+rm(GLODAP_qc_flags_stats)
+
+```
+
 
 ### Apply filter
 
@@ -1091,30 +1177,6 @@ GLODAP %>%
 ```
 
 
-## Cleaning stats
-
-Number of observations at various steps of data cleaning.
-
-```{r GLODAP_cleaning_stats, eval=FALSE}
-
-cruise_stats_global_long <- cruise_stats_global %>%
-  pivot_longer(1:length(cruise_stats_global),
-               names_to = "parameter",
-               values_to = "n")
-
-cruise_stats_global_long <- cruise_stats_global_long %>%
-  mutate(parameter = fct_reorder(parameter, n))
-
-cruise_stats_global_long %>% 
-  ggplot(aes(parameter, n/1000)) +
-  geom_col() +
-  coord_flip() +
-  theme(axis.title.y = element_blank())
-
-rm(cruise_stats_global_long)
-
-```
-
 
 ## Assign coarse spatial grid
 
@@ -1214,33 +1276,6 @@ rm(GLODAP_hovmoeller_year)
 ```
 
 ## Coverage maps by era
-
-### Subsetting process
-
-The following plots show the remaining data after **individual cleaning steps**, separately for each era.
-
-```{r coverage_maps_era_subsetting_era_cleaning_level, fig.asp=1.1, eval=FALSE}
-
-GLODAP_obs_grid <- GLODAP_obs_grid %>%
-  mutate(cleaning_level = factor(
-           cleaning_level,
-           unique(GLODAP_obs_grid$cleaning_level)
-         ))
-
-map +
-  geom_raster(data = GLODAP_obs_grid %>%
-                filter(cleaning_level == "tco2_values") %>%
-                select(-cleaning_level),
-              aes(lon, lat, fill = "tco2_values")) +
-  geom_raster(data = GLODAP_obs_grid %>%
-                filter(cleaning_level != "tco2_values"),
-              aes(lon, lat, fill = "subset")) +
-  scale_fill_brewer(palette = "Set1", name = "") +
-  facet_grid(cleaning_level ~ era) +
-  theme(legend.position = "top",
-        axis.title = element_blank())
-
-```
 
 ### Final input data
 

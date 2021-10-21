@@ -32,7 +32,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "including 1989 in first era",
+message = "rerun with new subsetting",
 republish = TRUE)
 
 
