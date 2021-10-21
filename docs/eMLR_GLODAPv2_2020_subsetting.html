@@ -574,16 +574,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecb7624bb25f2f1af22d98b71224fddb9af62aa2ctargetblankcb7624ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cb7624bb25f2f1af22d98b71224fddb9af62aa2c" target="_blank">cb7624b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7f4df08a60313a5eab3d78e0f29842156535ff5targetblankd7f4df0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7f4df08a60313a5eab3d78e0f29842156535ff5" target="_blank">d7f4df0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecb7624bb25f2f1af22d98b71224fddb9af62aa2ctargetblankcb7624ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7f4df08a60313a5eab3d78e0f29842156535ff5targetblankd7f4df0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cb7624bb25f2f1af22d98b71224fddb9af62aa2c" target="_blank">cb7624b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7f4df08a60313a5eab3d78e0f29842156535ff5" target="_blank">d7f4df0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -592,9 +592,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -633,6 +630,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d7f4df08a60313a5eab3d78e0f29842156535ff5/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">d7f4df0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-21
+</td>
+<td>
+revised flag mapping
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/f9280c73fc4edb802d5057c3b25f8e77bffbf715/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">f9280c7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -14868,7 +14899,7 @@ GLODAP_filling_long %&gt;%
   coord_flip() +
   geom_col() +
   facet_grid(era~.) +
-  scale_fill_viridis_d()
+  scale_fill_brewer(palette = &quot;Dark2&quot;)
 )
 
 GLODAP &lt;- GLODAP %&gt;% 
@@ -15477,8 +15508,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="flags-and-missing-data" class="section level2" number="3.5">
-<h2 number="3.5"><span class="header-section-number">3.5</span> Flags and missing data</h2>
+<div id="flags-and-na" class="section level2" number="3.5">
+<h2 number="3.5"><span class="header-section-number">3.5</span> Flags and NA</h2>
 <p>Only rows (samples) for which all relevant parameters are available were selected, ie NA’s were removed.</p>
 <p>According to Olsen et al (2020), flags within the merged master file identify:</p>
 <ul>
@@ -15502,17 +15533,23 @@ jens-daniel-mueller
 </ul>
 <p>The cleaning process was performed successively and the maps below represent the data coverage at various cleaning levels.</p>
 <p>Summary statistics were calculated during cleaning process.</p>
-<div id="na-maps" class="section level3" number="3.5.1">
-<h3 number="3.5.1"><span class="header-section-number">3.5.1</span> NA maps</h3>
+<div id="na" class="section level3" number="3.5.1">
+<h3 number="3.5.1"><span class="header-section-number">3.5.1</span> NA</h3>
 <pre class="r"><code>GLODAP_NA &lt;- GLODAP %&gt;% 
   select(lon, lat, era, tco2, talk, params_local$MLR_predictors) %&gt;% 
   pivot_longer(tco2:silicate,
                names_to = &quot;parameter&quot;,
                values_to = &quot;value&quot;) %&gt;%
-  mutate(NA_flag = if_else(is.na(value), &quot;NA&quot;, &quot;available&quot;)) %&gt;% 
-  count(lat, lon, era, parameter, NA_flag)
+  mutate(NA_flag = if_else(is.na(value), &quot;NA&quot;, &quot;available&quot;))
 
-GLODAP_NA %&gt;%
+GLODAP_NA_stats &lt;- GLODAP_NA %&gt;% 
+  count(era, parameter, NA_flag)
+
+GLODAP_NA &lt;- GLODAP_NA %&gt;% 
+  count(lat, lon, era, parameter, NA_flag)</code></pre>
+<div id="maps" class="section level4" number="3.5.1.1">
+<h4 number="3.5.1.1"><span class="header-section-number">3.5.1.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_NA %&gt;%
   group_split(NA_flag) %&gt;%
   # head(1) %&gt;%
   map(
@@ -15634,16 +15671,34 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_NA)  </code></pre>
 </div>
-<div id="f-flag-maps" class="section level3" number="3.5.2">
-<h3 number="3.5.2"><span class="header-section-number">3.5.2</span> f flag maps</h3>
+<div id="stats" class="section level4" number="3.5.1.2">
+<h4 number="3.5.1.2"><span class="header-section-number">3.5.1.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_NA_stats %&gt;% 
+  ggplot(aes(parameter, n, fill = NA_flag)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/NA_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_NA_stats)</code></pre>
+</div>
+</div>
+<div id="f-flag" class="section level3" number="3.5.2">
+<h3 number="3.5.2"><span class="header-section-number">3.5.2</span> f flag</h3>
 <pre class="r"><code>GLODAP_f_flags &lt;- GLODAP %&gt;% 
   select(lon, lat, era, ends_with(&quot;f&quot;)) %&gt;% 
   pivot_longer(aouf:tco2f,
                names_to = &quot;parameter&quot;,
-               values_to = &quot;value&quot;) %&gt;% 
-  count(lat, lon, era, parameter, value)
+               values_to = &quot;value&quot;)
 
-GLODAP_f_flags %&gt;%
+GLODAP_f_flags_stats &lt;- GLODAP_f_flags %&gt;% 
+  count(era, parameter, value)
+
+GLODAP_f_flags &lt;- GLODAP_f_flags %&gt;% 
+  count(lat, lon, era, parameter, value)</code></pre>
+<div id="maps-1" class="section level4" number="3.5.2.1">
+<h4 number="3.5.2.1"><span class="header-section-number">3.5.2.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_f_flags %&gt;%
   group_split(value) %&gt;%
   # head(1) %&gt;%
   map(
@@ -15849,8 +15904,21 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_f_flags)</code></pre>
 </div>
-<div id="qc-flag-maps" class="section level3" number="3.5.3">
-<h3 number="3.5.3"><span class="header-section-number">3.5.3</span> qc flag maps</h3>
+<div id="stats-1" class="section level4" number="3.5.2.2">
+<h4 number="3.5.2.2"><span class="header-section-number">3.5.2.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_f_flags_stats %&gt;% 
+  mutate(value = as.factor(value)) %&gt;% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/f_flag_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_f_flags_stats)</code></pre>
+</div>
+</div>
+<div id="qc-flag" class="section level3" number="3.5.3">
+<h3 number="3.5.3"><span class="header-section-number">3.5.3</span> qc flag</h3>
 <pre class="r"><code>GLODAP_qc_flags &lt;- GLODAP %&gt;% 
   select(lon, lat, era, ends_with(&quot;qc&quot;)) %&gt;% 
   pivot_longer(nitrateqc:tco2qc,
@@ -15858,7 +15926,14 @@ jens-daniel-mueller
                values_to = &quot;value&quot;) %&gt;% 
   count(lat, lon, era, parameter, value)
 
-GLODAP_qc_flags %&gt;%
+GLODAP_qc_flags_stats &lt;- GLODAP_qc_flags %&gt;% 
+  count(era, parameter, value)
+
+GLODAP_qc_flags &lt;- GLODAP_qc_flags %&gt;% 
+  count(lat, lon, era, parameter, value)</code></pre>
+<div id="maps-2" class="section level4" number="3.5.3.1">
+<h4 number="3.5.3.1"><span class="header-section-number">3.5.3.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_qc_flags %&gt;%
   group_split(value) %&gt;%
   # head(1) %&gt;%
   map(
@@ -15979,6 +16054,19 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>rm(GLODAP_qc_flags)</code></pre>
+</div>
+<div id="stats-2" class="section level4" number="3.5.3.2">
+<h4 number="3.5.3.2"><span class="header-section-number">3.5.3.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_qc_flags_stats %&gt;% 
+  mutate(value = as.factor(value)) %&gt;% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/qc_flag_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_qc_flags_stats)</code></pre>
+</div>
 </div>
 <div id="apply-filter" class="section level3" number="3.5.4">
 <h3 number="3.5.4"><span class="header-section-number">3.5.4</span> Apply filter</h3>
@@ -16775,35 +16863,16 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="cleaning-stats" class="section level2" number="4.2">
-<h2 number="4.2"><span class="header-section-number">4.2</span> Cleaning stats</h2>
-<p>Number of observations at various steps of data cleaning.</p>
-<pre class="r"><code>cruise_stats_global_long &lt;- cruise_stats_global %&gt;%
-  pivot_longer(1:length(cruise_stats_global),
-               names_to = &quot;parameter&quot;,
-               values_to = &quot;n&quot;)
-
-cruise_stats_global_long &lt;- cruise_stats_global_long %&gt;%
-  mutate(parameter = fct_reorder(parameter, n))
-
-cruise_stats_global_long %&gt;% 
-  ggplot(aes(parameter, n/1000)) +
-  geom_col() +
-  coord_flip() +
-  theme(axis.title.y = element_blank())
-
-rm(cruise_stats_global_long)</code></pre>
-</div>
-<div id="assign-coarse-spatial-grid" class="section level2" number="4.3">
-<h2 number="4.3"><span class="header-section-number">4.3</span> Assign coarse spatial grid</h2>
+<div id="assign-coarse-spatial-grid" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> Assign coarse spatial grid</h2>
 <p>For the following plots, the cleaned data set was re-opened and observations were gridded spatially to intervals of:</p>
 <ul>
 <li>5° x 5°</li>
 </ul>
 <pre class="r"><code>GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)</code></pre>
 </div>
-<div id="histogram-zonal-coverage" class="section level2" number="4.4">
-<h2 number="4.4"><span class="header-section-number">4.4</span> Histogram Zonal coverage</h2>
+<div id="histogram-zonal-coverage" class="section level2" number="4.3">
+<h2 number="4.3"><span class="header-section-number">4.3</span> Histogram Zonal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
   group_by(era, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -17880,8 +17949,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_histogram_lat)</code></pre>
 </div>
-<div id="histogram-temporal-coverage" class="section level2" number="4.5">
-<h2 number="4.5"><span class="header-section-number">4.5</span> Histogram temporal coverage</h2>
+<div id="histogram-temporal-coverage" class="section level2" number="4.4">
+<h2 number="4.4"><span class="header-section-number">4.4</span> Histogram temporal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_year &lt;- GLODAP %&gt;%
   group_by(year, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -19016,8 +19085,8 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_histogram_year,
    era_median_year)</code></pre>
 </div>
-<div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="4.6">
-<h2 number="4.6"><span class="header-section-number">4.6</span> Zonal temporal coverage (Hovmoeller)</h2>
+<div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="4.5">
+<h2 number="4.5"><span class="header-section-number">4.5</span> Zonal temporal coverage (Hovmoeller)</h2>
 <pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
   group_by(year, lat_grid, basin_AIP) %&gt;%
   tally() %&gt;%
@@ -20097,32 +20166,10 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_hovmoeller_year)</code></pre>
 </div>
-<div id="coverage-maps-by-era" class="section level2" number="4.7">
-<h2 number="4.7"><span class="header-section-number">4.7</span> Coverage maps by era</h2>
-<div id="subsetting-process" class="section level3" number="4.7.1">
-<h3 number="4.7.1"><span class="header-section-number">4.7.1</span> Subsetting process</h3>
-<p>The following plots show the remaining data after <strong>individual cleaning steps</strong>, separately for each era.</p>
-<pre class="r"><code>GLODAP_obs_grid &lt;- GLODAP_obs_grid %&gt;%
-  mutate(cleaning_level = factor(
-           cleaning_level,
-           unique(GLODAP_obs_grid$cleaning_level)
-         ))
-
-map +
-  geom_raster(data = GLODAP_obs_grid %&gt;%
-                filter(cleaning_level == &quot;tco2_values&quot;) %&gt;%
-                select(-cleaning_level),
-              aes(lon, lat, fill = &quot;tco2_values&quot;)) +
-  geom_raster(data = GLODAP_obs_grid %&gt;%
-                filter(cleaning_level != &quot;tco2_values&quot;),
-              aes(lon, lat, fill = &quot;subset&quot;)) +
-  scale_fill_brewer(palette = &quot;Set1&quot;, name = &quot;&quot;) +
-  facet_grid(cleaning_level ~ era) +
-  theme(legend.position = &quot;top&quot;,
-        axis.title = element_blank())</code></pre>
-</div>
-<div id="final-input-data" class="section level3" number="4.7.2">
-<h3 number="4.7.2"><span class="header-section-number">4.7.2</span> Final input data</h3>
+<div id="coverage-maps-by-era" class="section level2" number="4.6">
+<h2 number="4.6"><span class="header-section-number">4.6</span> Coverage maps by era</h2>
+<div id="final-input-data" class="section level3" number="4.6.1">
+<h3 number="4.6.1"><span class="header-section-number">4.6.1</span> Final input data</h3>
 <p>The following plots show the remaining data density in each grid cell <strong>after all cleaning steps</strong>, separately for each era.</p>
 <pre class="r"><code>GLODAP_tco2_grid &lt;- GLODAP %&gt;%
   count(lat, lon)
@@ -21225,8 +21272,8 @@ jens-daniel-mueller
        width = 5)</code></pre>
 </div>
 </div>
-<div id="model-vs-observation" class="section level2" number="4.8">
-<h2 number="4.8"><span class="header-section-number">4.8</span> Model vs observation</h2>
+<div id="model-vs-observation" class="section level2" number="4.7">
+<h2 number="4.7"><span class="header-section-number">4.7</span> Model vs observation</h2>
 <pre class="r"><code>variables &lt;-
   c(
     &quot;temp&quot;,
