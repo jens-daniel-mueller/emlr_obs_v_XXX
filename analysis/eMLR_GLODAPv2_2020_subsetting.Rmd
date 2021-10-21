@@ -841,6 +841,110 @@ The cleaning process was performed successively and the maps below represent the
 
 Summary statistics were calculated during cleaning process.
 
+```{r NA_maps}
+
+GLODAP_NA <- GLODAP %>% 
+  select(lon, lat, era, tco2, talk, params_local$MLR_predictors) %>% 
+  pivot_longer(tco2:silicate,
+               names_to = "parameter",
+               values_to = "value") %>%
+  mutate(NA_flag = if_else(is.na(value), "NA", "available")) %>% 
+  count(lat, lon, era, parameter, NA_flag)
+
+GLODAP_NA %>%
+  group_split(parameter) %>%
+  head(1) %>%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10"
+      ) +
+      theme(legend.position = "bottom",
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste("parameter:", unique(.x$parameter))) +
+      facet_grid(NA_flag ~ era)
+      
+  )
+  
+rm(GLODAP_NA)  
+  
+```
+
+
+```{r f_flag_maps}
+
+GLODAP_f_flags <- GLODAP %>% 
+  select(lon, lat, era, ends_with("f")) %>% 
+  pivot_longer(aouf:tco2f,
+               names_to = "parameter",
+               values_to = "value") %>% 
+  count(lat, lon, era, parameter, value)
+
+GLODAP_f_flags %>%
+  group_split(parameter) %>%
+  # head(1) %>%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10"
+      ) +
+      theme(legend.position = "bottom",
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste("parameter:", unique(.x$parameter))) +
+      facet_grid(value ~ era)
+      
+  )
+
+rm(GLODAP_f_flags)
+  
+```
+
+
+```{r qc_flag_maps}
+
+GLODAP_qc_flags <- GLODAP %>% 
+  select(lon, lat, era, ends_with("qc")) %>% 
+  pivot_longer(nitrateqc:tco2qc,
+               names_to = "parameter",
+               values_to = "value") %>% 
+  count(lat, lon, era, parameter, value)
+
+GLODAP_qc_flags %>%
+  group_split(parameter) %>%
+  # head(1) %>%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = "magma",
+        direction = -1,
+        trans = "log10"
+      ) +
+      theme(legend.position = "bottom",
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste("parameter:", unique(.x$parameter))) +
+      facet_grid(value ~ era)
+      
+  )
+
+rm(GLODAP_qc_flags)
+  
+```
+
+
+
 ### tco2
 
 #### NA
