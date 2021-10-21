@@ -841,6 +841,8 @@ The cleaning process was performed successively and the maps below represent the
 
 Summary statistics were calculated during cleaning process.
 
+### NA maps
+
 ```{r NA_maps}
 
 GLODAP_NA <- GLODAP %>% 
@@ -853,7 +855,7 @@ GLODAP_NA <- GLODAP %>%
 
 GLODAP_NA %>%
   group_split(parameter) %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
@@ -875,8 +877,9 @@ rm(GLODAP_NA)
   
 ```
 
+### f flag maps
 
-```{r f_flag_maps}
+```{r f_flag_maps, fig.asp=0.8}
 
 GLODAP_f_flags <- GLODAP %>% 
   select(lon, lat, era, ends_with("f")) %>% 
@@ -909,6 +912,7 @@ rm(GLODAP_f_flags)
   
 ```
 
+### qc flag maps
 
 ```{r qc_flag_maps}
 
