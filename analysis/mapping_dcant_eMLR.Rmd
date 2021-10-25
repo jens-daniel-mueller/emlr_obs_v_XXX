@@ -915,7 +915,7 @@ dcant_average <- dcant_average %>%
 #   dcant_average_join %>% mutate(method = "eMLR"),
 #   dcant_surface_average_join %>% mutate(method = "surface"))
 
-dcant_3d <- full_join(
+dcant_3d <- left_join(
   dcant_average,
   dcant_surface_average)
 
@@ -1071,7 +1071,7 @@ dcant_inv <- dcant_3d %>%
   unnest(inv)
 
 p_map_cant_inv(df = dcant_inv,
-               var = "dcant_pos",
+               var = "dcant",
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
@@ -1097,7 +1097,7 @@ dcant_inv_surface <- dcant_3d %>%
 
 p_map_cant_inv(df = dcant_inv_surface %>% 
                  filter(inv_depth < 1000),
-               var = "dcant_pos",
+               var = "dcant",
                subtitle_text = "for predefined integration depths",
                breaks = c(-Inf,seq(0,4,0.5), Inf)) +
   facet_grid(inv_depth ~ data_source)
@@ -1159,6 +1159,36 @@ dcant_inv %>%
 ```
 
 
+### Discrete layers
+
+```{r dcant_layer_inventories, fig.asp=1}
+
+dcant_inv_layer <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv_layer(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+dcant_inv_layer <- dcant_inv_layer %>% 
+  mutate(inv_depth = fct_inorder(as.factor(inv_depth)))
+
+p_map_cant_inv(df = dcant_inv_layer,
+               var = "dcant",
+               subtitle_text = "for predefined integration depths",
+               # breaks = c(-Inf, seq(0,7,1), Inf)
+               ) +
+  facet_grid(inv_depth ~ data_source)
+
+if (surface_data == FALSE){
+  dcant_inv <- dcant_inv %>% 
+    mutate(method = "total")
+}
+
+
+```
+
+
 ## Budgets
 
 Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
@@ -1185,7 +1215,7 @@ dcant_budget_global %>%
   ggplot(aes(estimate, value, fill=method)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
-  facet_grid(.~data_source)
+  facet_grid(~data_source)
 
 ```
 
@@ -1212,6 +1242,29 @@ dcant_budget_basin_AIP %>%
   facet_grid(estimate~data_source)
 
 ```
+
+
+```{r budget_depth_layer}
+
+dcant_budget_basin_AIP_layer <-
+  dcant_inv_layer %>%
+  mutate(method = "layer") %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_AIP_layer %>%
+  filter(estimate == "dcant") %>% 
+  ggplot(aes(value, inv_depth, fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  scale_y_discrete(limits = rev) +
+  facet_grid(~data_source)
+
+```
+
 
 
 ```{r budget_MLR_regions}
@@ -1281,6 +1334,34 @@ dcant_budget_lat_grid %>%
 ```
 
 
+```{r budget_lon_grid}
+
+dcant_budget_lon_grid <- 
+  dcant_inv %>% 
+  m_grid_horizontal_coarse() %>%
+  group_by(lon_grid, basin_AIP) %>% 
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+```{r budget_lon_grid_fig, fig.asp=1, eval=surface_data}
+
+dcant_budget_lon_grid %>%
+  filter(
+    inv_depth == params_global$inventory_depth_standard,
+    method %in% c("surface", "eMLR")
+  ) %>%
+  ggplot(aes(lon_grid, value, fill = method)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(estimate ~ data_source)
+
+```
+
+
 
 # Write csv
 
@@ -1321,6 +1402,10 @@ dcant_inv %>%
   write_csv(paste(path_version_data,
                   "dcant_inv_method.csv", sep = ""))
 
+dcant_inv_layer %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_layer.csv", sep = ""))
+
 dcant_budget_global %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_global.csv", sep = ""))
@@ -1328,6 +1413,10 @@ dcant_budget_global %>%
 dcant_budget_basin_AIP %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_basin_AIP.csv", sep = ""))
+
+dcant_budget_basin_AIP_layer %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_layer.csv", sep = ""))
 
 dcant_budget_basin_MLR %>%
   write_csv(paste(path_version_data,
@@ -1337,7 +1426,19 @@ dcant_budget_lat_grid %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_lat_grid.csv", sep = ""))
 
+dcant_budget_lon_grid %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_lon_grid.csv", sep = ""))
+
 
 ```
 
+```{r test, eval=FALSE}
+
+map +
+  geom_raster(data = dcant_3d %>% filter(is.na(depth)),
+              aes(lon, lat))
+
+
+```
 
