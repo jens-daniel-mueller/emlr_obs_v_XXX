@@ -74,6 +74,10 @@ basinmask <- basinmask %>%
   filter(MLR_basins == params_local$MLR_basins) %>% 
   select(-c(MLR_basins, basin_AIP))
 
+map +
+  geom_raster(data = basinmask,
+              aes(lon, lat, fill = basin))
+
 ```
 
 # Version ID
