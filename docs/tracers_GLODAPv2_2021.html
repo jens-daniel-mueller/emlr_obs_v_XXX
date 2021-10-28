@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jens Daniel Müller" />
+
+
+<title>GLODAPv2_2021 halogenated tracers</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">eMLR obs v_XXX</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Config
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="config_dependencies.html">Dependencies</a>
+    </li>
+    <li>
+      <a href="config_parameterization_local.html">Parameterization</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    eMLR
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="eMLR_GLODAPv2_2020_subsetting.html">GLODAP subsetting</a>
+    </li>
+    <li>
+      <a href="eMLR_data_preparation.html">Data preparation</a>
+    </li>
+    <li>
+      <a href="eMLR_assumption_testing.html">Assumption testing</a>
+    </li>
+    <li>
+      <a href="eMLR_model_fitting.html">Model fitting</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mapping
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mapping_predictor_preparation.html">Predictor preparation</a>
+    </li>
+    <li>
+      <a href="mapping_dcant_eMLR.html">dcant eMLR</a>
+    </li>
+    <li>
+      <a href="mapping_dcant_mod_truth.html">dcant model_truth</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="analysis_budgets.html">Budgets</a>
+    </li>
+    <li>
+      <a href="analysis_column_inventory.html">Column inventory maps</a>
+    </li>
+    <li>
+      <a href="analysis_zonal_sections.html">Zonal sections</a>
+    </li>
+    <li>
+      <a href="analysis_slab_inventory.html">Slab inventories</a>
+    </li>
+    <li>
+      <a href="analysis_MLR_performance.html">MLR performance</a>
+    </li>
+    <li>
+      <a href="analysis_anomalous_changes.html">Anomalous changes</a>
+    </li>
+    <li>
+      <a href="tracers_GLODAPv2_2021.html">Halogenated tracer</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+<li>
+  <a href="https://jens-daniel-mueller.github.io/">
+    <span class="fa fa-home"></span>
+     
+    Jens' homepage
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">GLODAPv2_2021 halogenated tracers</h1>
+<h4 class="author">Jens Daniel Müller</h4>
+<h4 class="date">28 October, 2021</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-10-28
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>emlr_obs_v_XXX/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20200707code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20200707)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20200707code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20200707)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0b144066241b06136c684e19d156977ca4e9abc0targetblank0b14406a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0b144066241b06136c684e19d156977ca4e9abc0" target="_blank">0b14406</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0b144066241b06136c684e19d156977ca4e9abc0targetblank0b14406a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0b144066241b06136c684e19d156977ca4e9abc0" target="_blank">0b14406</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/tracers_GLODAPv2_2021.Rmd</code>) and HTML (<code>docs/tracers_GLODAPv2_2021.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0b144066241b06136c684e19d156977ca4e9abc0/analysis/tracers_GLODAPv2_2021.Rmd" target="_blank">0b14406</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-28
+</td>
+<td>
+added tracer plots and test without O2 data
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="version-id" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Version ID</h1>
+<p>The results displayed on this site correspond to the Version_ID:</p>
+<pre class="r"><code>params$Version_ID</code></pre>
+<pre><code>[1] &quot;v_XXX&quot;</code></pre>
+</div>
+<div id="read-files" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Read files</h1>
+<p>Main data source for this project is the preprocessed version of GLODAPv2:</p>
+<pre class="r"><code>params_local$GLODAPv2_version</code></pre>
+<pre><code>[1] &quot;2021&quot;</code></pre>
+<pre class="r"><code>GLODAP &lt;-
+  read_csv(
+    paste0(
+      path_preprocessing,
+      &quot;GLODAPv2.&quot;,
+      params_local$GLODAPv2_version,
+      &quot;_preprocessed_tracer.csv&quot;),
+    guess_max = 1e5
+  )</code></pre>
+</div>
+<div id="data-preparation" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Data preparation</h1>
+<div id="filter-eras" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Filter eras</h2>
+<pre class="r"><code># create labels for era
+era_labels &lt;- bind_cols(
+  start = params_local$era_start,
+  end = params_local$era_end)
+
+era_labels &lt;- era_labels %&gt;% 
+  mutate(start = if_else(start == -Inf, max(GLODAP$year), start),
+         end = if_else(end == Inf, max(GLODAP$year), end),
+         era = as.factor(paste(start, end, sep = &quot;-&quot;)))
+
+# filter GLODAP data within eras
+GLODAP &lt;- expand_grid(
+  GLODAP,
+  era_labels
+)
+
+# select data within each era
+GLODAP &lt;- GLODAP %&gt;% 
+  filter(year &gt;= start &amp; year &lt;= end)
+
+GLODAP &lt;- GLODAP %&gt;% 
+  select(-c(start, end))</code></pre>
+</div>
+<div id="spatial-boundaries" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Spatial boundaries</h2>
+<div id="basin-mask" class="section level3" number="3.2.1">
+<h3 number="3.2.1"><span class="header-section-number">3.2.1</span> Basin mask</h3>
+<p>The basin mask from the World Ocean Atlas was used. For details consult the data base subsection for <a href="https://jens-daniel-mueller.github.io/Cant_eMLR/read_World_Ocean_Atlas_2018.html">WOA18</a> data.</p>
+<p>Please note that some GLODAP observations were made outside the WOA18 basin mask (i.e. in marginal seas) and will be removed for further analysis.</p>
+<pre class="r"><code># use only data inside basinmask
+GLODAP &lt;- inner_join(GLODAP, basinmask)</code></pre>
+</div>
+</div>
+<div id="flags-and-na" class="section level2" number="3.3">
+<h2 number="3.3"><span class="header-section-number">3.3</span> Flags and NA</h2>
+<p>Only rows (samples) for which all relevant parameters are available were selected, ie NA’s were removed.</p>
+<p>According to Olsen et al (2020), flags within the merged master file identify:</p>
+<ul>
+<li><p>f:</p>
+<ul>
+<li>2: Acceptable</li>
+<li>0: Interpolated (nutrients/oxygen) or calculated (CO[2] variables)</li>
+<li>9: Data not used (so, only NA data should have this flag)</li>
+</ul></li>
+<li><p>qc:</p>
+<ul>
+<li>1: Adjusted or unadjusted data</li>
+<li>0: Data appear of good quality but have not been subjected to full secondary QC</li>
+<li>data with poor or uncertain quality are excluded.</li>
+</ul></li>
+</ul>
+<p>Following flagging criteria were taken into account:</p>
+<ul>
+<li>flag_f: 2, 9, 0</li>
+<li>flag_qc: 1, 0</li>
+</ul>
+<p>The cleaning process was performed successively and the maps below represent the data coverage at various cleaning levels.</p>
+<p>Summary statistics were calculated during cleaning process.</p>
+<div id="na" class="section level3" number="3.3.1">
+<h3 number="3.3.1"><span class="header-section-number">3.3.1</span> NA</h3>
+<pre class="r"><code>GLODAP_NA &lt;- GLODAP %&gt;%
+  select(lon, lat, era, cfc11, cfc12, cfc113, ccl4, sf6) %&gt;%
+  pivot_longer(cfc11:sf6,
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;value&quot;) %&gt;%
+  mutate(NA_flag = if_else(is.na(value), &quot;NA&quot;, &quot;available&quot;),
+         parameter = fct_inorder(as.factor(parameter)))
+
+GLODAP_NA_stats &lt;- GLODAP_NA %&gt;% 
+  count(era, parameter, NA_flag)
+
+GLODAP_NA &lt;- GLODAP_NA %&gt;% 
+  count(lat, lon, era, parameter, NA_flag)</code></pre>
+<div id="maps" class="section level4" number="3.3.1.1">
+<h4 number="3.3.1.1"><span class="header-section-number">3.3.1.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_NA %&gt;%
+  group_split(NA_flag) %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = &quot;magma&quot;,
+        direction = -1,
+        trans = &quot;log10&quot;
+      ) +
+      theme(legend.position = &quot;bottom&quot;,
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste(&quot;Flag:&quot;, unique(.x$NA_flag))) +
+      facet_grid(parameter ~ era)
+      
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/NA_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/NA_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_NA)  </code></pre>
+</div>
+<div id="stats" class="section level4" number="3.3.1.2">
+<h4 number="3.3.1.2"><span class="header-section-number">3.3.1.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_NA_stats %&gt;% 
+  ggplot(aes(parameter, n, fill = NA_flag)) +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/NA_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_NA_stats)</code></pre>
+</div>
+</div>
+<div id="f-flag" class="section level3" number="3.3.2">
+<h3 number="3.3.2"><span class="header-section-number">3.3.2</span> f flag</h3>
+<pre class="r"><code>GLODAP_f_flags &lt;- GLODAP %&gt;% 
+  select(lon, lat, era, ends_with(&quot;f&quot;)) %&gt;% 
+  pivot_longer(cfc11f:sf6f,
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;value&quot;) %&gt;% 
+  mutate(parameter = fct_inorder(as.factor(parameter)))
+
+GLODAP_f_flags_stats &lt;- GLODAP_f_flags %&gt;% 
+  count(era, parameter, value)
+
+GLODAP_f_flags &lt;- GLODAP_f_flags %&gt;% 
+  count(lat, lon, era, parameter, value)</code></pre>
+<div id="maps-1" class="section level4" number="3.3.2.1">
+<h4 number="3.3.2.1"><span class="header-section-number">3.3.2.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_f_flags %&gt;%
+  group_split(value) %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = &quot;magma&quot;,
+        direction = -1,
+        trans = &quot;log10&quot;
+      ) +
+      theme(legend.position = &quot;bottom&quot;,
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste(&quot;f flag:&quot;, unique(.x$value))) +
+      facet_grid(parameter ~ era)
+      
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/f_flag_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/f_flag_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_f_flags)</code></pre>
+</div>
+<div id="stats-1" class="section level4" number="3.3.2.2">
+<h4 number="3.3.2.2"><span class="header-section-number">3.3.2.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_f_flags_stats %&gt;% 
+  mutate(value = as.factor(value)) %&gt;% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/f_flag_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_f_flags_stats)</code></pre>
+</div>
+</div>
+<div id="qc-flag" class="section level3" number="3.3.3">
+<h3 number="3.3.3"><span class="header-section-number">3.3.3</span> qc flag</h3>
+<pre class="r"><code>GLODAP_qc_flags &lt;- GLODAP %&gt;% 
+  select(lon, lat, era, ends_with(&quot;qc&quot;)) %&gt;% 
+  pivot_longer(cfc11qc:ccl4qc,
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;value&quot;) %&gt;% 
+  mutate(parameter = fct_inorder(as.factor(parameter))) %&gt;% 
+  count(lat, lon, era, parameter, value)
+
+GLODAP_qc_flags_stats &lt;- GLODAP_qc_flags %&gt;% 
+  count(era, parameter, value)
+
+GLODAP_qc_flags &lt;- GLODAP_qc_flags %&gt;% 
+  count(lat, lon, era, parameter, value)</code></pre>
+<div id="maps-2" class="section level4" number="3.3.3.1">
+<h4 number="3.3.3.1"><span class="header-section-number">3.3.3.1</span> Maps</h4>
+<pre class="r"><code>GLODAP_qc_flags %&gt;%
+  group_split(value) %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ map +
+      geom_raster(data = .x,
+                  aes(lon, lat, fill = n)) +
+      scale_fill_viridis_c(
+        option = &quot;magma&quot;,
+        direction = -1,
+        trans = &quot;log10&quot;
+      ) +
+      theme(legend.position = &quot;bottom&quot;,
+            axis.text = element_blank(),
+            axis.ticks = element_blank()) +
+      labs(title = paste(&quot;qc flag:&quot;, unique(.x$value))) +
+      facet_grid(parameter ~ era)
+      
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/qc_flag_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/qc_flag_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_qc_flags)</code></pre>
+</div>
+<div id="stats-2" class="section level4" number="3.3.3.2">
+<h4 number="3.3.3.2"><span class="header-section-number">3.3.3.2</span> Stats</h4>
+<pre class="r"><code>GLODAP_qc_flags_stats %&gt;% 
+  mutate(value = as.factor(value)) %&gt;% 
+  ggplot(aes(parameter, n, fill = value)) +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  geom_col() +
+  facet_grid(era~.) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/qc_flag_stats-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_qc_flags_stats)</code></pre>
+</div>
+</div>
+<div id="apply-filter" class="section level3" number="3.3.4">
+<h3 number="3.3.4"><span class="header-section-number">3.3.4</span> Apply filter</h3>
+<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;%  
+  filter(
+    if_all(
+      c(tco2, talk, params_local$MLR_predictors, depth, gamma),
+      ~ !is.na(.)
+    ),
+    if_all(ends_with(&quot;f&quot;), ~ . %in% params_local$flag_f),
+    if_all(ends_with(&quot;qc&quot;), ~ . %in% params_local$flag_qc)
+  )</code></pre>
+</div>
+</div>
+</div>
+<div id="indian-ocean" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Indian Ocean</h1>
+<div id="ns-section" class="section level2" number="4.1">
+<h2 number="4.1"><span class="header-section-number">4.1</span> NS section</h2>
+<pre class="r"><code>GLODAP_grid_Indian &lt;- GLODAP %&gt;% 
+  filter(basin_AIP == &quot;Indian&quot;,
+         lon &gt; 70,
+         lon &lt; 100,
+         cruise %in% c(249, 250, 352, 353)) %&gt;%
+  mutate(cruise = as.factor(cruise)) %&gt;% 
+  distinct(era, lon, lat, cruise, year = as.factor(year(date)))
+
+map +
+  geom_tile(data = GLODAP_grid_Indian,
+            aes(lon, lat, fill = year)) +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_NS &lt;- GLODAP %&gt;% 
+  filter(cruise %in% c(249, 250, 352, 353),
+         !is.na(cfc12)) 
+
+IO_NS %&gt;% 
+  ggplot(aes(cfc12)) +
+  geom_histogram() +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_NS %&gt;% 
+  ggplot(aes(lat , depth, col = cfc12)) +
+  geom_point() +
+  scale_color_viridis_c(trans = &quot;log10&quot;) +
+  scale_y_reverse() +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_NS_grid &lt;- IO_NS %&gt;% 
+  mutate(depth_grid = cut(depth,
+                          seq(0,1e4,200),
+                          seq(100,1e4,200)),
+         depth_grid = as.numeric(as.character(depth_grid)),
+         lat_grid = cut(lat,
+                          seq(-100,100,2),
+                          seq(-99,100,2)),
+         lat_grid = as.numeric(as.character(lat_grid))) %&gt;% 
+  group_by(lat_grid, depth_grid, era) %&gt;% 
+  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %&gt;% 
+  ungroup()
+
+
+IO_NS_grid %&gt;% 
+  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
+  geom_raster() +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_NS_grid_offset &lt;- IO_NS_grid %&gt;% 
+  pivot_wider(names_from = era,
+              values_from = cfc12) %&gt;% 
+  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+
+
+IO_NS_grid_offset %&gt;% 
+  # drop_na() %&gt;%
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_divergent(mid = &quot;grey80&quot;,
+                       na.value = &quot;black&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_NS_grid_offset %&gt;% 
+  mutate(delta_cfc12 = cut(delta_cfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_viridis_d(na.value = &quot;grey&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ew-section" class="section level2" number="4.2">
+<h2 number="4.2"><span class="header-section-number">4.2</span> EW section</h2>
+<pre class="r"><code>GLODAP_grid_Indian &lt;- GLODAP %&gt;% 
+  filter(basin_AIP == &quot;Indian&quot;,
+         lat &gt; -25,
+         lat &lt; -15,
+         cruise %in% c(252, 488)
+         ) %&gt;%
+  mutate(cruise = as.factor(cruise)) %&gt;% 
+  distinct(era, lon, lat, cruise, year = as.factor(year(date)))
+
+map +
+  geom_tile(data = GLODAP_grid_Indian,
+            aes(lon, lat, fill = year)) +
+  facet_wrap(~ era)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_EW &lt;- GLODAP %&gt;% 
+  filter(cruise %in% c(252, 488),
+         !is.na(cfc12)) 
+
+IO_EW %&gt;% 
+  ggplot(aes(cfc12)) +
+  geom_histogram() +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_EW %&gt;% 
+  ggplot(aes(lon , depth, col = cfc12)) +
+  geom_point() +
+  scale_color_viridis_c(trans = &quot;log10&quot;) +
+  scale_y_reverse() +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_EW_grid &lt;- IO_EW %&gt;% 
+  mutate(depth_grid = cut(depth,
+                          seq(0,1e4,200),
+                          seq(100,1e4,200)),
+         depth_grid = as.numeric(as.character(depth_grid)),
+         lon_grid = cut(lon,
+                          seq(-100,200,2),
+                          seq(-99,200,2)),
+         lon_grid = as.numeric(as.character(lon_grid))) %&gt;% 
+  group_by(lon_grid, depth_grid, era) %&gt;% 
+  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %&gt;% 
+  ungroup()
+
+
+IO_EW_grid %&gt;% 
+  ggplot(aes(lon_grid , depth_grid, fill = cfc12)) +
+  geom_tile() +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_EW_grid_offset &lt;- IO_EW_grid %&gt;% 
+  pivot_wider(names_from = era,
+              values_from = cfc12) %&gt;% 
+  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+
+
+IO_EW_grid_offset %&gt;% 
+  # drop_na() %&gt;%
+  ggplot(aes(lon_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_divergent(mid = &quot;grey80&quot;,
+                       na.value = &quot;black&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>IO_EW_grid_offset %&gt;% 
+  mutate(delta_cfc12 = cut(delta_cfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
+  ggplot(aes(lon_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_viridis_d(na.value = &quot;grey&quot;) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="overview-plots" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Overview plots</h1>
+<div id="number-of-overservations" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Number of overservations</h2>
+<pre class="r"><code>GLODAP %&gt;% 
+  group_by(era, basin_AIP) %&gt;% 
+  count() %&gt;% 
+  ggplot(aes(basin_AIP, n, fill = era)) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/counts-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="assign-coarse-spatial-grid" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Assign coarse spatial grid</h2>
+<p>For the following plots, the cleaned data set was re-opened and observations were gridded spatially to intervals of:</p>
+<ul>
+<li>5° x 5°</li>
+</ul>
+<pre class="r"><code>GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)</code></pre>
+</div>
+<div id="histogram-zonal-coverage" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Histogram Zonal coverage</h2>
+<pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
+  group_by(era, lat_grid, basin_AIP) %&gt;%
+  tally() %&gt;%
+  ungroup()
+
+GLODAP_histogram_lat %&gt;%
+  ggplot(aes(lat_grid, n, fill = era)) +
+  geom_col() +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  facet_wrap( ~ basin_AIP) +
+  coord_flip(expand = 0) +
+  theme(legend.position = &quot;top&quot;,
+        legend.title = element_blank())</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/coverage_histogram_zonal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_histogram_lat)</code></pre>
+</div>
+<div id="histogram-temporal-coverage" class="section level2" number="5.4">
+<h2 number="5.4"><span class="header-section-number">5.4</span> Histogram temporal coverage</h2>
+<pre class="r"><code>GLODAP_histogram_year &lt;- GLODAP %&gt;%
+  group_by(year, basin_AIP) %&gt;%
+  tally() %&gt;%
+  ungroup()
+
+GLODAP_histogram_year %&gt;%
+  ggplot() +
+  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
+  geom_col(aes(year, n,
+               fill = basin_AIP)) +
+  scale_fill_brewer(palette = &quot;Dark2&quot;) +
+  scale_shape_manual(values = 24, name = &quot;&quot;) +
+  scale_y_continuous() +
+  coord_cartesian(expand = 0) +
+  theme(
+    legend.position = &quot;top&quot;,
+    legend.direction = &quot;vertical&quot;,
+    legend.title = element_blank(),
+    axis.title.x = element_blank()
+  )</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/coverage_histogram_temporal-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_histogram_year,
+   era_median_year)</code></pre>
+</div>
+<div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="5.5">
+<h2 number="5.5"><span class="header-section-number">5.5</span> Zonal temporal coverage (Hovmoeller)</h2>
+<pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
+  group_by(year, lat_grid, basin_AIP) %&gt;%
+  tally() %&gt;%
+  ungroup()
+
+GLODAP_hovmoeller_year %&gt;%
+  ggplot(aes(year, lat_grid, fill = n)) +
+  geom_tile() +
+  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
+  scale_fill_viridis_c(option = &quot;magma&quot;,
+                       direction = -1,
+                       trans = &quot;log10&quot;) +
+  coord_cartesian(expand = 0) +
+  facet_wrap( ~ basin_AIP, ncol = 1) +
+  theme(legend.position = &quot;top&quot;,
+        axis.title.x = element_blank())</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/coverage_hovmoeller-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_hovmoeller_year)</code></pre>
+</div>
+<div id="coverage-maps-by-era" class="section level2" number="5.6">
+<h2 number="5.6"><span class="header-section-number">5.6</span> Coverage maps by era</h2>
+<div id="final-input-data" class="section level3" number="5.6.1">
+<h3 number="5.6.1"><span class="header-section-number">5.6.1</span> Final input data</h3>
+<p>The following plots show the remaining data density in each grid cell <strong>after all cleaning steps</strong>, separately for each era.</p>
+<pre class="r"><code>GLODAP_tco2_grid &lt;- GLODAP %&gt;%
+  count(lat, lon)
+
+map +
+  geom_bin2d(data = GLODAP,
+             aes(lon, lat),
+             binwidth = c(1,1)) +
+  scale_fill_viridis_c(option = &quot;magma&quot;, direction = -1, trans = &quot;log10&quot;) +
+  facet_wrap(~era, ncol = 1) +
+  labs(title = &quot;Cleaned GLODAP observations&quot;,
+       subtitle = paste(&quot;Version:&quot;, params_local$Version_ID)) +
+  theme(axis.title = element_blank())</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/coverage_maps_era_clean-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.3 (2020-10-10)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: openSUSE Leap 15.2
+
+Matrix products: default
+BLAS:   /usr/local/R-4.0.3/lib64/R/lib/libRblas.so
+LAPACK: /usr/local/R-4.0.3/lib64/R/lib/libRlapack.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] lubridate_1.7.9 ggforce_0.3.3   metR_0.9.0      scico_1.2.0    
+ [5] patchwork_1.1.1 collapse_1.5.0  forcats_0.5.0   stringr_1.4.0  
+ [9] dplyr_1.0.5     purrr_0.3.4     readr_1.4.0     tidyr_1.1.3    
+[13] tibble_3.1.3    ggplot2_3.3.5   tidyverse_1.3.0 workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] fs_1.5.0                 RColorBrewer_1.1-2       httr_1.4.2              
+ [4] rprojroot_2.0.2          tools_4.0.3              backports_1.1.10        
+ [7] bslib_0.2.5.1            utf8_1.1.4               R6_2.5.0                
+[10] DBI_1.1.0                colorspace_2.0-2         withr_2.3.0             
+[13] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
+[16] cli_3.0.1                rvest_0.3.6              xml2_1.3.2              
+[19] labeling_0.4.2           sass_0.4.0               scales_1.1.1            
+[22] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.10          
+[25] pkgconfig_2.0.3          htmltools_0.5.1.1        dbplyr_1.4.4            
+[28] highr_0.8                rlang_0.4.11             readxl_1.3.1            
+[31] rstudioapi_0.13          jquerylib_0.1.4          generics_0.1.0          
+[34] farver_2.0.3             jsonlite_1.7.1           magrittr_1.5            
+[37] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[40] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
+[43] whisker_0.4              yaml_2.2.1               MASS_7.3-53             
+[46] grid_4.0.3               blob_1.2.1               parallel_4.0.3          
+[49] promises_1.1.1           crayon_1.3.4             lattice_0.20-41         
+[52] haven_2.3.1              hms_0.5.3                knitr_1.33              
+[55] pillar_1.6.2             reprex_0.3.0             glue_1.4.2              
+[58] evaluate_0.14            RcppArmadillo_0.10.1.2.0 data.table_1.14.0       
+[61] modelr_0.1.8             vctrs_0.3.8              tweenr_1.0.2            
+[64] httpuv_1.5.4             cellranger_1.1.0         gtable_0.3.0            
+[67] polyclip_1.10-0          assertthat_0.2.1         xfun_0.25               
+[70] broom_0.7.9              RcppEigen_0.3.3.7.0      later_1.2.0             
+[73] viridisLite_0.3.0        ellipsis_0.3.2           here_0.1                </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
