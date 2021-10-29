@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83cf7926067e536eb0c758411954f1aae33b51f4targetblank83cf792a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83cf7926067e536eb0c758411954f1aae33b51f4" target="_blank">83cf792</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5f400fbc89669b81be1a26d05853195a7401b76btargetblank5f400fba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5f400fbc89669b81be1a26d05853195a7401b76b" target="_blank">5f400fb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree83cf7926067e536eb0c758411954f1aae33b51f4targetblank83cf792a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5f400fbc89669b81be1a26d05853195a7401b76btargetblank5f400fba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/83cf7926067e536eb0c758411954f1aae33b51f4" target="_blank">83cf792</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5f400fbc89669b81be1a26d05853195a7401b76b" target="_blank">5f400fb</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -595,6 +595,10 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -633,6 +637,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5f400fbc89669b81be1a26d05853195a7401b76b/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">5f400fb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+<td>
+test adjustment removal
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -16743,8 +16781,12 @@ jens-daniel-mueller
 
 adjustment_grid &lt;-
   left_join(GLODAP %&gt;% distinct(lon, lat, era, cruise),
-            GLODAP_adustments)
+            GLODAP_adustments) %&gt;%
+  filter(abs(tco2_adj) &gt; 7,
+         abs(alkalinity_adj) &gt; 7)
 
+cruise_out_adjustment &lt;- adjustment_grid %&gt;% 
+  distinct(cruise)
 
 adjustment_grid %&gt;% 
   pivot_longer(salinity_adj:c13_adj,
@@ -16752,7 +16794,7 @@ adjustment_grid %&gt;%
                values_to = &quot;adjustment&quot;) %&gt;% 
   filter(!is.na(adjustment)) %&gt;% 
   group_split(parameter) %&gt;% 
-  # head(1) %&gt;% 
+  # head(1) %&gt;%
   map(
     ~map +
       geom_tile(data = .x,
@@ -16785,6 +16827,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-1.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-1.png" target="_blank">b7839e8</a>
@@ -16827,6 +16880,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-2.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-2.png" target="_blank">b7839e8</a>
 </td>
 <td>
@@ -16865,6 +16929,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-3.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-3.png" target="_blank">b7839e8</a>
@@ -16907,6 +16982,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-4.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-4.png" target="_blank">b7839e8</a>
 </td>
 <td>
@@ -16945,6 +17031,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-5.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-5.png" target="_blank">b7839e8</a>
@@ -16987,6 +17084,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-6.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-6.png" target="_blank">b7839e8</a>
 </td>
 <td>
@@ -17027,207 +17135,18 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/7740fcc4a992d0dbc155b9b968d2cfc70079ee1a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-7.png" target="_blank">7740fcc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-29
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-7.png" target="_blank">b7839e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[8]]</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-8.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cruise_adjustments_map-8">
-Past versions of cruise_adjustments_map-8.png
-</button>
-</p>
-<div id="fig-cruise_adjustments_map-8" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-8.png" target="_blank">b7839e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[9]]</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-9.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cruise_adjustments_map-9">
-Past versions of cruise_adjustments_map-9.png
-</button>
-</p>
-<div id="fig-cruise_adjustments_map-9" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-9.png" target="_blank">b7839e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[10]]</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-10.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cruise_adjustments_map-10">
-Past versions of cruise_adjustments_map-10.png
-</button>
-</p>
-<div id="fig-cruise_adjustments_map-10" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-10.png" target="_blank">b7839e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[11]]</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-11.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cruise_adjustments_map-11">
-Past versions of cruise_adjustments_map-11.png
-</button>
-</p>
-<div id="fig-cruise_adjustments_map-11" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-11.png" target="_blank">b7839e8</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-29
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[12]]</code></pre>
-<p><img src="figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-12.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cruise_adjustments_map-12">
-Past versions of cruise_adjustments_map-12.png
-</button>
-</p>
-<div id="fig-cruise_adjustments_map-12" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7839e8c11ff4cf6c87ea5865e78797ff22b739a/docs/figure/eMLR_GLODAPv2_2020_subsetting.Rmd/cruise_adjustments_map-12.png" target="_blank">b7839e8</a>
 </td>
 <td>
 jens-daniel-mueller
@@ -17739,6 +17658,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
+  filter(!(cruise %in% (cruise_out_adjustment %&gt;% pull())))</code></pre>
 </div>
 </div>
 <div id="reference-years-tref" class="section level2" number="3.7">
