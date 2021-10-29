@@ -1070,8 +1070,12 @@ GLODAP_adustments <- GLODAP_adustments %>%
 
 adjustment_grid <-
   left_join(GLODAP %>% distinct(lon, lat, era, cruise),
-            GLODAP_adustments)
+            GLODAP_adustments) %>%
+  filter(abs(tco2_adj) > 7,
+         abs(alkalinity_adj) > 7)
 
+cruise_out_adjustment <- adjustment_grid %>% 
+  distinct(cruise)
 
 adjustment_grid %>% 
   pivot_longer(salinity_adj:c13_adj,
@@ -1079,7 +1083,7 @@ adjustment_grid %>%
                values_to = "adjustment") %>% 
   filter(!is.na(adjustment)) %>% 
   group_split(parameter) %>% 
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~map +
       geom_tile(data = .x,
@@ -1113,6 +1117,13 @@ adjustment_histo %>%
       scale_y_log10() +
       facet_grid(parameter ~ era)
   )
+
+```
+
+```{r apply_adjustment_filter}
+
+GLODAP <- GLODAP %>% 
+  filter(!(cruise %in% (cruise_out_adjustment %>% pull())))
 
 ```
 
