@@ -1054,9 +1054,9 @@ rm(lat_section, GLODAP_cruise, cruises_meridional)
 
 # Reoccupation filter
 
-Testes, but not applied.
+Reoccupation filter was applied: `r params_local$rarefication == "reoccupation"`
 
-```{r filter_reoccupied_observations, fig.asp=2, eval=FALSE}
+```{r filter_reoccupied_observations, fig.asp=2}
 
 GLODAP_grid <- GLODAP %>% 
   distinct(lon, lat, gamma_slab, era)
@@ -1069,15 +1069,19 @@ GLODAP_grid <- GLODAP_grid %>%
 
 map+
   geom_raster(data = GLODAP_grid,
-              aes(lon, lat)) +
-  facet_grid(gamma_slab ~ era_label)
-  # scale_fill_manual(values = c("grey30", "grey70", "red"))
+              aes(lon, lat, fill = era_label)) +
+  facet_wrap(~ gamma_slab, ncol = 2) +
+  scale_fill_brewer(palette = "Set1", direction = -1)
 
 GLODAP_grid <- GLODAP_grid %>% 
   filter(era_label == "both") %>% 
   distinct(lat, lon, gamma_slab)
 
-GLODAP <- left_join(GLODAP_grid, GLODAP)
+if (params_local$rarefication == "reoccupation") {
+
+  GLODAP <- left_join(GLODAP_grid, GLODAP)
+  
+}
 
 rm(GLODAP_grid)
 

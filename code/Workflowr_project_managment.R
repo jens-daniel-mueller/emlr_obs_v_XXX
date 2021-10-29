@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised flag mapping")
+wflow_publish(all = TRUE, message = "added adjustment plots")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -17,6 +17,7 @@ wflow_publish(here::here(
     "index.Rmd",
     "config_dependencies.Rmd",
     "config_parameterization_local.Rmd",
+    "tracers_GLODAPv2_2021.Rmd",
     "eMLR_GLODAPv2_2020_subsetting.Rmd",
     "eMLR_data_preparation.Rmd",
     "eMLR_assumption_testing.Rmd",
@@ -32,7 +33,7 @@ wflow_publish(here::here(
     "analysis_anomalous_changes.Rmd"
   )
 ),
-message = "rerun with new subsetting",
+message = "added tracer plots and test without O2 data",
 republish = TRUE)
 
 
@@ -77,7 +78,7 @@ Version_IDs_1 <- list.files(
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_20")
+  pattern = "v_2i")
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",

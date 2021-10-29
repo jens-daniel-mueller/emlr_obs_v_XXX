@@ -123,6 +123,11 @@ GLODAP_CB <-
     )
   )
 
+GLODAP_adustments  <-
+  read_csv(paste(path_preprocessing,
+                  "GLODAPv2.2021_adustments.csv",
+                  sep = ""))
+
 ```
 
 
@@ -1052,6 +1057,65 @@ GLODAP <- GLODAP %>%
   )
 
 ```
+
+
+## Cruise adjustments
+
+### Maps
+
+```{r cruise_adjustments_map, fig.asp=0.5}
+
+GLODAP_adustments <- GLODAP_adustments %>%
+  select(-c(ctd_salinity_adj, ph_adj, pco2_adj, ctd_oxygen_adj))
+
+adjustment_grid <-
+  left_join(GLODAP %>% distinct(lon, lat, era, cruise),
+            GLODAP_adustments)
+
+
+adjustment_grid %>% 
+  pivot_longer(salinity_adj:c13_adj,
+               names_to = "parameter",
+               values_to = "adjustment") %>% 
+  filter(!is.na(adjustment)) %>% 
+  group_split(parameter) %>% 
+  # head(1) %>% 
+  map(
+    ~map +
+      geom_tile(data = .x,
+                aes(lon, lat, fill = adjustment)) +
+      labs(title = paste("parameter:", unique(.x$parameter))) +
+      scale_fill_divergent(mid = "grey") +
+      facet_grid(era ~ .)
+  )
+
+
+```
+
+### Histograms
+
+```{r cruise_adjustments_histogram, fig.asp=0.5}
+
+adjustment_histo <-
+  left_join(GLODAP %>% distinct(era, cruise),
+            GLODAP_adustments)
+
+
+adjustment_histo %>%
+  pivot_longer(salinity_adj:c13_adj,
+               names_to = "parameter",
+               values_to = "adjustment") %>%
+  group_split(parameter) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(adjustment)) +
+      geom_histogram() +
+      scale_y_log10() +
+      facet_grid(parameter ~ era)
+  )
+
+```
+
 
 ## Reference years (tref)
 
