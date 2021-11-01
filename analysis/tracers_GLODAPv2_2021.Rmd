@@ -402,7 +402,7 @@ GLODAP <- GLODAP %>%
 
 ## NS section
 
-```{r cfc12_Indian_NS}
+```{r cfc12_Indian_NS, eval=FALSE}
 
 GLODAP_grid_Indian <- GLODAP %>% 
   filter(basin_AIP == "Indian",
@@ -463,7 +463,6 @@ IO_NS_grid_offset <- IO_NS_grid %>%
 
 
 IO_NS_grid_offset %>% 
-  # drop_na() %>%
   ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = "grey80",
@@ -484,7 +483,7 @@ IO_NS_grid_offset %>%
 
 ## EW section
 
-```{r cfc12_Indian_EW}
+```{r cfc12_Indian_EW, eval=FALSE}
 
 GLODAP_grid_Indian <- GLODAP %>% 
   filter(basin_AIP == "Indian",
@@ -565,6 +564,70 @@ IO_EW_grid_offset %>%
 
 ```
 
+# Zonal section
+
+```{r zonal_sections, fig.asp=1}
+
+zonal_sections <- GLODAP %>% 
+  mutate(depth_grid = cut(depth,
+                          seq(0,1e4,500),
+                          seq(250,1e4,500)),
+         depth_grid = as.numeric(as.character(depth_grid)),
+         lat_grid = cut(lat,
+                          seq(-100,100,5),
+                          seq(-97.5,100,5)),
+         lat_grid = as.numeric(as.character(lat_grid))) %>% 
+  group_by(lat_grid, depth_grid, era, basin_AIP) %>% 
+  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %>% 
+  ungroup()
+
+zonal_sections_offset <- zonal_sections %>% 
+  pivot_wider(names_from = era,
+              values_from = cfc12) %>% 
+  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+
+
+zonal_sections %>% 
+  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
+  geom_tile() +
+  scale_fill_viridis_c(trans = "log10") +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP ~ era)
+
+zonal_sections_offset %>% 
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_divergent(mid = "grey80",
+                       na.value = "black"
+                       ) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP ~ .)
+
+zonal_sections_offset %>% 
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_divergent(mid = "grey80",
+                       na.value = "black",
+                       limits = c(-0.1, 0.1)
+                       ) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP ~ .)
+
+zonal_sections_offset %>%
+  mutate(delta_cfc12 = cut(
+    delta_cfc12,
+    c(-Inf, 0.002, 0.01, 0.02, 0.05, 0.2, Inf))) %>%
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  geom_raster() +
+  scale_fill_viridis_d(na.value = "grey") +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(basin_AIP ~ .)
+
+```
 
 
 # Overview plots

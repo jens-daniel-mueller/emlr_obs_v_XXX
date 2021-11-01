@@ -112,9 +112,9 @@ params_local <-
     MLR_basins = "IO_test_lat",
     # gap filling of NA values in GLODAP
     gap_filling = "CANYON-B",
-    # cruise adjustment thresholds
-    cruise_adjustment_relative = Inf,
-    cruise_adjustment_absolute = 10,
+    # cruise adjustment thresholds, not applied when Inf
+    cruise_adjustment_relative = Inf, # levels as absolute factor -1
+    cruise_adjustment_absolute = 10, # levels in absolute µM
     # rarefication approach
     # options: "coarse_grid" (horizontal 5x5 grid);
     # "reoccupation" (only 1x1 grids sampled in both eras)
@@ -328,6 +328,10 @@ MLR_basins = lst(
 # gap filling of NA values in GLODAP
 gap_filling = "CANYON-B"
 
+# cruise adjustment thresholds, not applied when Inf
+cruise_adjustment_relative = Inf # levels as absolute factor -1
+cruise_adjustment_absolute = 10 # levels in absolute µM
+
 # rarefication approach
 rarefication = "coarse_grid"
 
@@ -408,9 +412,11 @@ params_local_all <-
     tref2,
     MLR_basins,
     gap_filling,
+    cruise_adjustment_relative.
+    cruise_adjustment_absolute,
     rarefication,
     rarefication_threshold,
-    MLR_target,
+    MLR_target, 
     MLR_predictors_max,
     MLR_predictors_min,
     MLR_number,

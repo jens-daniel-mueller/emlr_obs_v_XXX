@@ -123,7 +123,7 @@ GLODAP_CB <-
     )
   )
 
-GLODAP_adustments  <-
+GLODAP_adjustments  <-
   read_csv(paste(path_preprocessing,
                   "GLODAPv2.2021_adustments.csv",
                   sep = ""))
@@ -1065,23 +1065,23 @@ GLODAP <- GLODAP %>%
 
 ```{r cruise_adjustments_map}
 
-GLODAP_adustments <- GLODAP_adustments %>%
-  select(-c(ctd_salinity_adj, ph_adj, pco2_adj, ctd_oxygen_adj))
+GLODAP_adjustments <- GLODAP_adjustments %>%
+  select(-c(ctd_salinity_adj, ph_adj, pco2_adj, ctd_oxygen_adj, c13_adj))
 
 adjustment_grid <-
   left_join(GLODAP %>% distinct(lon, lat, era, cruise),
-            GLODAP_adustments)
+            GLODAP_adjustments)
 
-cruise_out_adjustment <- GLODAP_adustments %>% 
-  filter(if_any(c(tco2_adj, talk_adj), ~ abs(.) > params_local$cruise_adjustment_absolute)) %>% 
-  distinct(cruise, first_station, last_station)
-
-adjustment_grid %>% 
-  pivot_longer(salinity_adj:c13_adj,
+adjustment_grid <- adjustment_grid %>% 
+  pivot_longer(ends_with("_adj"),
                names_to = "parameter",
                values_to = "adjustment") %>% 
-  filter(!is.na(adjustment),
-         parameter %in% paste0(c("tco2", "talk", "salinity"), "_adj")) %>% 
+  filter(!is.na(adjustment))
+
+relative_adjustment_parameters <- c("tco2", "talk", "salinity")
+
+adjustment_grid %>% 
+  filter(parameter %in% paste0(relative_adjustment_parameters, "_adj")) %>% 
   group_split(parameter) %>% 
   # head(1) %>%
   map(
@@ -1094,13 +1094,9 @@ adjustment_grid %>%
   )
 
 adjustment_grid %>% 
-  pivot_longer(salinity_adj:c13_adj,
-               names_to = "parameter",
-               values_to = "adjustment") %>% 
-  filter(!is.na(adjustment),
-         !(parameter %in% paste0(c("tco2", "talk", "salinity"), "_adj"))) %>% 
+  filter(!(parameter %in% paste0(relative_adjustment_parameters, "_adj"))) %>% 
   group_split(parameter) %>% 
-  head(2) %>%
+  # head(1) %>%
   map(
     ~map +
       geom_tile(data = .x,
@@ -1110,6 +1106,7 @@ adjustment_grid %>%
       facet_grid(era ~ .)
   )
 
+rm(adjustment_grid, relative_adjustment_parameters)
 
 ```
 
@@ -1119,11 +1116,11 @@ adjustment_grid %>%
 
 adjustment_histo <-
   left_join(GLODAP %>% distinct(era, cruise),
-            GLODAP_adustments)
+            GLODAP_adjustments)
 
 
 adjustment_histo %>%
-  pivot_longer(salinity_adj:c13_adj,
+  pivot_longer(ends_with("_adj"),
                names_to = "parameter",
                values_to = "adjustment") %>%
   group_split(parameter) %>%
@@ -1135,9 +1132,32 @@ adjustment_histo %>%
       facet_grid(parameter ~ era)
   )
 
+rm(adjustment_histo)
+
 ```
 
+### Apply filter
+
 ```{r apply_adjustment_filter, eval=FALSE}
+
+
+cruise_out_adjustment <- GLODAP_adjustments %>%
+  filter(
+    if_any(
+      c(tco2_adj, talk_adj),
+      ~ abs(.) > params_local$cruise_adjustment_absolute
+    ) |
+      if_any(
+        c(phosphate_adj,
+          nitrate_adj,
+          silicate_adj,
+          oxygen_adj),
+        ~ abs(. -1) > params_local$cruise_adjustment_relative
+      )
+  ) %>%
+  distinct(cruise, first_station, last_station) %>% 
+  mutate(adjustment_flag = "remove")
+
 
 GLODAP <- GLODAP %>% 
   filter(!(cruise %in% (cruise_out_adjustment %>% pull())))
