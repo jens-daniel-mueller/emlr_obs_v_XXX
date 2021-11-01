@@ -1070,18 +1070,18 @@ GLODAP_adustments <- GLODAP_adustments %>%
 
 adjustment_grid <-
   left_join(GLODAP %>% distinct(lon, lat, era, cruise),
-            GLODAP_adustments) %>%
-  filter(abs(tco2_adj) > 7,
-         abs(alkalinity_adj) > 7)
+            GLODAP_adustments)
 
-cruise_out_adjustment <- adjustment_grid %>% 
-  distinct(cruise)
+cruise_out_adjustment <- GLODAP_adustments %>% 
+  filter(if_any(c(tco2_adj, talk_adj), ~ abs(.) > params_local$cruise_adjustment_absolute)) %>% 
+  distinct(cruise, first_station, last_station)
 
 adjustment_grid %>% 
   pivot_longer(salinity_adj:c13_adj,
                names_to = "parameter",
                values_to = "adjustment") %>% 
-  filter(!is.na(adjustment)) %>% 
+  filter(!is.na(adjustment),
+         parameter %in% paste0(c("tco2", "talk", "salinity"), "_adj")) %>% 
   group_split(parameter) %>% 
   # head(1) %>%
   map(
@@ -1090,6 +1090,23 @@ adjustment_grid %>%
                 aes(lon, lat, fill = adjustment)) +
       labs(title = paste("parameter:", unique(.x$parameter))) +
       scale_fill_divergent(mid = "grey") +
+      facet_grid(era ~ .)
+  )
+
+adjustment_grid %>% 
+  pivot_longer(salinity_adj:c13_adj,
+               names_to = "parameter",
+               values_to = "adjustment") %>% 
+  filter(!is.na(adjustment),
+         !(parameter %in% paste0(c("tco2", "talk", "salinity"), "_adj"))) %>% 
+  group_split(parameter) %>% 
+  head(2) %>%
+  map(
+    ~map +
+      geom_tile(data = .x,
+                aes(lon, lat, fill = adjustment)) +
+      labs(title = paste("parameter:", unique(.x$parameter))) +
+      scale_fill_divergent(mid = "grey", midpoint = 1) +
       facet_grid(era ~ .)
   )
 
@@ -1120,7 +1137,7 @@ adjustment_histo %>%
 
 ```
 
-```{r apply_adjustment_filter}
+```{r apply_adjustment_filter, eval=FALSE}
 
 GLODAP <- GLODAP %>% 
   filter(!(cruise %in% (cruise_out_adjustment %>% pull())))
