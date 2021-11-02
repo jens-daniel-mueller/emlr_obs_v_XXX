@@ -1198,10 +1198,12 @@ GLODAP_adjustment_rows <- GLODAP_adjustment_filter %>%
 GLODAP_adjustment_grid <- GLODAP_adjustment_filter %>% 
   distinct(lon, lat, era)
 
-map +
-  geom_tile(data = GLODAP_adjustment_grid,
-            aes(lon, lat)) +
-  facet_grid(era ~ .)
+if (nrow(GLODAP_adjustment_grid) > 0) {
+  print(map +
+          geom_tile(data = GLODAP_adjustment_grid,
+                    aes(lon, lat)) +
+          facet_grid(era ~ .))
+}
 
 
 GLODAP <- GLODAP %>% 
