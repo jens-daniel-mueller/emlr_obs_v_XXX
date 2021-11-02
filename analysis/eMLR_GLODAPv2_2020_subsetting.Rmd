@@ -74,10 +74,6 @@ basinmask <- basinmask %>%
   filter(MLR_basins == params_local$MLR_basins) %>% 
   select(-c(MLR_basins, basin_AIP))
 
-map +
-  geom_raster(data = basinmask,
-              aes(lon, lat, fill = basin))
-
 ```
 
 # Version ID
@@ -1138,15 +1134,21 @@ rm(adjustment_histo)
 
 ### Apply filter
 
-```{r apply_adjustment_filter, eval=FALSE}
+```{r apply_adjustment_filter, fig.asp=1}
 
-
-cruise_out_adjustment <- GLODAP_adjustments %>%
+# identify stations exceeding adjustment threshold
+stations_out_adjustment_absolute <- GLODAP_adjustments %>%
   filter(
     if_any(
       c(tco2_adj, talk_adj),
       ~ abs(.) > params_local$cruise_adjustment_absolute
-    ) |
+    )
+  ) %>%
+  distinct(cruise, first_station, last_station) %>% 
+  mutate(adjustment_flag = "remove")
+
+stations_out_adjustment_relative <- GLODAP_adjustments %>%
+  filter(
       if_any(
         c(phosphate_adj,
           nitrate_adj,
@@ -1158,9 +1160,52 @@ cruise_out_adjustment <- GLODAP_adjustments %>%
   distinct(cruise, first_station, last_station) %>% 
   mutate(adjustment_flag = "remove")
 
+stations_out_adjustment <- full_join(
+  stations_out_adjustment_absolute,
+  stations_out_adjustment_relative
+)
+
+rm(
+  stations_out_adjustment_absolute,
+  stations_out_adjustment_relative
+)
+
+
+# join with GLODAP data table
+GLODAP_adjustment_filter <- left_join(GLODAP,
+                                      stations_out_adjustment) %>%
+  arrange(cruise)
+
+# replace last_station value with last stations if NA 
+GLODAP_adjustment_filter <- GLODAP_adjustment_filter %>% 
+  group_by(cruise) %>% 
+  mutate(last_station = if_else(is.na(last_station),
+                                max(station),
+                                last_station)) %>% 
+  ungroup()
+
+# filter rows with high adjustment
+GLODAP_adjustment_filter <- GLODAP_adjustment_filter %>% 
+  filter(station >= first_station,
+         station <= last_station,
+         adjustment_flag == "remove")
+
+# pull rows exceeding adjustment
+GLODAP_adjustment_rows <- GLODAP_adjustment_filter %>% 
+  pull(row_number)
+
+# coordinates exceeding adjustment
+GLODAP_adjustment_grid <- GLODAP_adjustment_filter %>% 
+  distinct(lon, lat, era)
+
+map +
+  geom_tile(data = GLODAP_adjustment_grid,
+            aes(lon, lat)) +
+  facet_grid(era ~ .)
+
 
 GLODAP <- GLODAP %>% 
-  filter(!(cruise %in% (cruise_out_adjustment %>% pull())))
+  filter(!(row_number %in% GLODAP_adjustment_rows))
 
 ```
 
