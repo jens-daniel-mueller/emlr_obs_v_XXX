@@ -402,6 +402,8 @@ GLODAP <- GLODAP %>%
 
 ## NS section
 
+### Absolute
+
 ```{r cfc12_Indian_NS}
 
 GLODAP_grid_Indian <- GLODAP %>% 
@@ -456,6 +458,13 @@ IO_NS_grid %>%
   coord_cartesian(expand = 0) +
   facet_grid(era ~ .)
 
+
+```
+
+### Change
+
+```{r cfc12_Indian_NS_offset, fig.asp=0.4}
+
 IO_NS_grid_offset <- IO_NS_grid %>% 
   pivot_wider(names_from = era,
               values_from = cfc12) %>% 
@@ -482,6 +491,8 @@ IO_NS_grid_offset %>%
 ```
 
 ## EW section
+
+### Absolute
 
 ```{r cfc12_Indian_EW}
 
@@ -538,6 +549,12 @@ IO_EW_grid %>%
   coord_cartesian(expand = 0) +
   facet_grid(era ~ .)
 
+
+```
+
+### Change
+
+```{r cfc12_Indian_EW_offset, fig.asp=0.4}
 IO_EW_grid_offset <- IO_EW_grid %>% 
   pivot_wider(names_from = era,
               values_from = cfc12) %>% 
@@ -564,7 +581,9 @@ IO_EW_grid_offset %>%
 
 ```
 
-# Zonal section
+## Zonal section
+
+### Absolute
 
 ```{r zonal_sections, fig.asp=1}
 
@@ -581,40 +600,52 @@ zonal_sections <- GLODAP %>%
   summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %>% 
   ungroup()
 
+p_cfc12_absolut <- zonal_sections %>% 
+  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
+  geom_tile() +
+  scale_fill_viridis_c(trans = "log10") +
+  scale_y_reverse() +
+  labs(x = "Latitude (°N)", y = "Depth (m)") +
+  coord_fixed(ratio = 1e-2, expand = 0) +
+  facet_grid(basin_AIP ~ era) +
+  theme(legend.position = "top")
+
+p_cfc12_absolut 
+
+```
+
+### Change
+
+```{r zonal_sections_offset, fig.asp=1}
+
 zonal_sections_offset <- zonal_sections %>% 
   pivot_wider(names_from = era,
               values_from = cfc12) %>% 
   mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
 
 
-zonal_sections %>% 
-  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
-  geom_tile() +
-  scale_fill_viridis_c(trans = "log10") +
-  scale_y_reverse() +
-  coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP ~ era)
-
 zonal_sections_offset %>% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
-  geom_raster() +
-  scale_fill_divergent(mid = "grey80",
-                       na.value = "black"
-                       ) +
-  scale_y_reverse() +
+  ggplot(aes(delta_cfc12)) +
+  geom_histogram() +
+  scale_y_log10() +
   coord_cartesian(expand = 0) +
   facet_grid(basin_AIP ~ .)
 
-zonal_sections_offset %>% 
+p_cfc12_offset <- zonal_sections_offset %>% 
   ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = "grey80",
                        na.value = "black",
-                       limits = c(-0.1, 0.1)
-                       ) +
+                       limits = c(-1,1)*0.5) +
+  labs(x = "Latitude (°N)", y = "Depth (m)") +
   scale_y_reverse() +
-  coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP ~ .)
+  coord_fixed(ratio = 1e-2, expand = 0) +
+  facet_grid(basin_AIP ~ .) +
+  theme(legend.position = "top") +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank())
+
+p_cfc12_offset
 
 zonal_sections_offset %>%
   mutate(delta_cfc12 = cut(
@@ -624,8 +655,8 @@ zonal_sections_offset %>%
   geom_raster() +
   scale_fill_viridis_d(na.value = "grey") +
   scale_y_reverse() +
-  coord_cartesian(expand = 0) +
-  facet_grid(basin_AIP ~ .)
+  facet_grid(basin_AIP ~ .) +
+  coord_fixed(ratio = 1e-2, expand = 0)
 
 ```
 
