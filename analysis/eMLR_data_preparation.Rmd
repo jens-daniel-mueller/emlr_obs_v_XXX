@@ -1095,37 +1095,85 @@ rm(GLODAP_grid)
 
 ```{r cstar_profiles, fig.asp=3}
 
-GLODAP_profiles <- GLODAP %>% 
-  filter(basin_AIP == "Indian",
-         depth > 1000,
+GLODAP_profiles_IO_sub <- GLODAP %>% 
+  filter(depth > 1000,
          data_source == "obs") %>% 
-  arrange(cruise, station, depth)
+  count(cruise, basin_AIP, era) %>% 
+  arrange(-n) %>%
+  group_by(basin_AIP, era) %>% 
+  slice_max(n, n = 10) %>% 
+  ungroup() %>% 
+  pull(cruise)
 
-# GLODAP_profiles %>% 
-#   count(cruise, station, depth, cast) %>% 
-#   filter(n > 1)
+GLODAP_profiles <- GLODAP %>%
+  filter(data_source == "obs",
+         depth > 1000) %>%
+  filter(cruise %in% GLODAP_profiles_IO_sub)
+
+rm(GLODAP_profiles_IO_sub)
 
 GLODAP_profiles %>%
   arrange(depth, station) %>%
   ggplot(aes(cstar_tref, depth,
-             group = interaction(station))) +
-  scale_color_discrete(guide = "none") +
+             group = interaction(station),
+             col = basin_AIP)) +
+  scale_color_brewer(palette = "Dark2") +
   geom_path() +
-  # geom_point() +
   scale_y_reverse() +
-  facet_wrap(~ interaction(era, cruise),
-             ncol = 4)
-
+  facet_wrap(~ interaction(era, cruise), ncol = 3)
 
 map +
   geom_tile(data = GLODAP_profiles %>%
               distinct(lat, lon, era, cruise),
             aes(lon, lat)) +
   facet_wrap( ~ interaction(era, cruise),
-              ncol = 4)
+              ncol = 3)
 
+rm(GLODAP_profiles)
 
 ```
+
+## Slab distribution
+
+
+```{r cstar_slab_distribution, fig.asp=3}
+
+cstar_grid <- m_grid_horizontal_coarse(GLODAP)
+
+cstar_grid <- cstar_grid %>%
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>%
+  summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>%
+  ungroup()
+  
+map +
+  geom_raster(
+    data = cstar_grid %>%
+      filter(data_source == "obs"),
+    aes(lon_grid, lat_grid, fill = cstar_tref)
+  ) +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ era)
+
+cstar_grid_offset <- cstar_grid %>% 
+  pivot_wider(names_from = era,
+              values_from = cstar_tref) %>% 
+  mutate(delta_cstar := !!sym(tref$era[2]) - !!sym(tref$era[1]))
+
+map +
+  geom_raster(
+    data = cstar_grid_offset %>%
+      filter(data_source == "obs"),
+    aes(lon_grid, lat_grid, fill = delta_cstar)
+  ) +
+  scale_fill_divergent(mid = "grey70",
+                       na.value = "white") +
+  facet_grid(gamma_slab ~ .)
+
+rm(cstar_grid, cstar_grid_offset)
+
+```
+
+
 
 
 ## basin, gamma slab
