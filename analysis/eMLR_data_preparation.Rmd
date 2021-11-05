@@ -1091,6 +1091,43 @@ rm(GLODAP_grid)
 
 # C* distributions
 
+## Profiles
+
+```{r cstar_profiles, fig.asp=3}
+
+GLODAP_profiles <- GLODAP %>% 
+  filter(basin_AIP == "Indian",
+         depth > 1000,
+         data_source == "obs") %>% 
+  arrange(cruise, station, depth)
+
+# GLODAP_profiles %>% 
+#   count(cruise, station, depth, cast) %>% 
+#   filter(n > 1)
+
+GLODAP_profiles %>%
+  arrange(depth, station) %>%
+  ggplot(aes(cstar_tref, depth,
+             group = interaction(station))) +
+  scale_color_discrete(guide = "none") +
+  geom_path() +
+  # geom_point() +
+  scale_y_reverse() +
+  facet_wrap(~ interaction(era, cruise),
+             ncol = 4)
+
+
+map +
+  geom_tile(data = GLODAP_profiles %>%
+              distinct(lat, lon, era, cruise),
+            aes(lon, lat)) +
+  facet_wrap( ~ interaction(era, cruise),
+              ncol = 4)
+
+
+```
+
+
 ## basin, gamma slab
 
 ```{r cstar_distributions}
