@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefc1d8fd82f664b92319eb017b6a172c53e5c731dtargetblankfc1d8fda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fc1d8fd82f664b92319eb017b6a172c53e5c731d" target="_blank">fc1d8fd</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree213b967281146de1220fe9c0b08f3b5634dfdf78targetblank213b967a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/213b967281146de1220fe9c0b08f3b5634dfdf78" target="_blank">213b967</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefc1d8fd82f664b92319eb017b6a172c53e5c731dtargetblankfc1d8fda" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree213b967281146de1220fe9c0b08f3b5634dfdf78targetblank213b967a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fc1d8fd82f664b92319eb017b6a172c53e5c731d" target="_blank">fc1d8fd</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/213b967281146de1220fe9c0b08f3b5634dfdf78" target="_blank">213b967</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -633,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/213b967281146de1220fe9c0b08f3b5634dfdf78/analysis/eMLR_data_preparation.Rmd" target="_blank">213b967</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-05
+</td>
+<td>
+plotted C* gamma slab maps
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/4132be4938e3f277cce6492052d876fde6f74780/docs/eMLR_data_preparation.html" target="_blank">4132be4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -15748,37 +15782,153 @@ rm(GLODAP_grid)</code></pre>
 <h1 number="7"><span class="header-section-number">7</span> C* distributions</h1>
 <div id="profiles" class="section level2" number="7.1">
 <h2 number="7.1"><span class="header-section-number">7.1</span> Profiles</h2>
-<pre class="r"><code>GLODAP_profiles &lt;- GLODAP %&gt;% 
-  filter(basin_AIP == &quot;Indian&quot;,
-         depth &gt; 1000,
+<pre class="r"><code>GLODAP_profiles_IO_sub &lt;- GLODAP %&gt;% 
+  filter(depth &gt; 1000,
          data_source == &quot;obs&quot;) %&gt;% 
-  arrange(cruise, station, depth)
+  count(cruise, basin_AIP, era) %&gt;% 
+  arrange(-n) %&gt;%
+  group_by(basin_AIP, era) %&gt;% 
+  slice_max(n, n = 10) %&gt;% 
+  ungroup() %&gt;% 
+  pull(cruise)
 
-# GLODAP_profiles %&gt;% 
-#   count(cruise, station, depth, cast) %&gt;% 
-#   filter(n &gt; 1)
+GLODAP_profiles &lt;- GLODAP %&gt;%
+  filter(data_source == &quot;obs&quot;,
+         depth &gt; 1000) %&gt;%
+  filter(cruise %in% GLODAP_profiles_IO_sub)
+
+rm(GLODAP_profiles_IO_sub)
 
 GLODAP_profiles %&gt;%
   arrange(depth, station) %&gt;%
   ggplot(aes(cstar_tref, depth,
-             group = interaction(station))) +
-  scale_color_discrete(guide = &quot;none&quot;) +
+             group = interaction(station),
+             col = basin_AIP)) +
+  scale_color_brewer(palette = &quot;Dark2&quot;) +
   geom_path() +
-  # geom_point() +
   scale_y_reverse() +
-  facet_wrap(~ interaction(era, cruise),
-             ncol = 4)</code></pre>
+  facet_wrap(~ interaction(era, cruise), ncol = 3)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_profiles-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_profiles-1">
+Past versions of cstar_profiles-1.png
+</button>
+</p>
+<div id="fig-cstar_profiles-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4132be4938e3f277cce6492052d876fde6f74780/docs/figure/eMLR_data_preparation.Rmd/cstar_profiles-1.png" target="_blank">4132be4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>map +
   geom_tile(data = GLODAP_profiles %&gt;%
               distinct(lat, lon, era, cruise),
             aes(lon, lat)) +
   facet_wrap( ~ interaction(era, cruise),
-              ncol = 4)</code></pre>
+              ncol = 3)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_profiles-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_profiles-2">
+Past versions of cstar_profiles-2.png
+</button>
+</p>
+<div id="fig-cstar_profiles-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4132be4938e3f277cce6492052d876fde6f74780/docs/figure/eMLR_data_preparation.Rmd/cstar_profiles-2.png" target="_blank">4132be4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-05
+</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="basin-gamma-slab" class="section level2" number="7.2">
-<h2 number="7.2"><span class="header-section-number">7.2</span> basin, gamma slab</h2>
+</div>
+<pre class="r"><code>rm(GLODAP_profiles)</code></pre>
+</div>
+<div id="slab-distribution" class="section level2" number="7.2">
+<h2 number="7.2"><span class="header-section-number">7.2</span> Slab distribution</h2>
+<pre class="r"><code>cstar_grid &lt;- m_grid_horizontal_coarse(GLODAP)
+
+cstar_grid &lt;- cstar_grid %&gt;%
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %&gt;%
+  summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %&gt;%
+  ungroup()
+  
+map +
+  geom_raster(
+    data = cstar_grid %&gt;%
+      filter(data_source == &quot;obs&quot;),
+    aes(lon_grid, lat_grid, fill = cstar_tref)
+  ) +
+  scale_fill_viridis_c() +
+  facet_grid(gamma_slab ~ era)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cstar_grid_offset &lt;- cstar_grid %&gt;% 
+  pivot_wider(names_from = era,
+              values_from = cstar_tref) %&gt;% 
+  mutate(delta_cstar := !!sym(tref$era[2]) - !!sym(tref$era[1]))
+
+map +
+  geom_raster(
+    data = cstar_grid_offset %&gt;%
+      filter(data_source == &quot;obs&quot;),
+    aes(lon_grid, lat_grid, fill = delta_cstar)
+  ) +
+  scale_fill_divergent(mid = &quot;grey70&quot;,
+                       na.value = &quot;white&quot;) +
+  facet_grid(gamma_slab ~ .)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(cstar_grid, cstar_grid_offset)</code></pre>
+</div>
+<div id="basin-gamma-slab" class="section level2" number="7.3">
+<h2 number="7.3"><span class="header-section-number">7.3</span> basin, gamma slab</h2>
 <pre class="r"><code>GLODAP_data_distribution &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
@@ -22822,8 +22972,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_data_distribution)</code></pre>
 </div>
-<div id="basin-cruise" class="section level2" number="7.3">
-<h2 number="7.3"><span class="header-section-number">7.3</span> basin, cruise</h2>
+<div id="basin-cruise" class="section level2" number="7.4">
+<h2 number="7.4"><span class="header-section-number">7.4</span> basin, cruise</h2>
 <pre class="r"><code>GLODAP_data_distribution_cruise &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
