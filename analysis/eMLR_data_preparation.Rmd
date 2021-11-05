@@ -1175,9 +1175,10 @@ map +
   geom_raster(data = left_join(cstar_SD,
                                GLODAP %>%
                                  distinct(cruise, station, lon, lat)),
-              aes(lon, lat, fill = cut(cstar_sd, c(0,2,5,10,Inf)))) +
+              aes(lon, lat, fill = cut(cstar_sd, c(0, 2.5, 5, Inf)))) +
   facet_grid(data_source ~ era) +
-  scale_fill_viridis_d(direction = -1)
+  scale_fill_viridis_d(direction = -1, name = "cstar SD") +
+  theme(legend.position = "bottom")
 
 
 ```
