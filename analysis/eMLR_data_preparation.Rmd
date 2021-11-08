@@ -1217,19 +1217,32 @@ map +
 
 cruise_SD_out <- cstar_SD %>% 
   filter(data_source == "obs",
-         cstar_SD >= 3) %>% 
+         cstar_SD >= 5) %>% 
   distinct(cruise, station, era, basin_AIP) %>% 
   mutate(flag_SD = "removed")
 
-
+grid_pre <- GLODAP %>% 
+  distinct(lon, lat, era)
 
 GLODAP <-
   full_join(GLODAP,
             cruise_SD_out) %>%
-  filter(flag_SD == "removed") %>%
+  filter(is.na(flag_SD)) %>%
   select(-flag_SD)
 
-rm(cstar_SD)
+grid_post <- GLODAP %>% 
+  distinct(lon, lat, era)
+
+map +
+  geom_tile(data = grid_pre,
+            aes(lon, lat, fill = "pre")) +
+  geom_tile(data = grid_post,
+            aes(lon, lat, fill = "post")) +
+  scale_fill_brewer(palette = "Set1") +
+  facet_grid(era ~ .)
+
+
+rm(cstar_SD, grid_post, grid_pre)
 
 ```
 
