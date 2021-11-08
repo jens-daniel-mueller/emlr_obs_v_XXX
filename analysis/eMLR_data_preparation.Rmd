@@ -1137,12 +1137,13 @@ rm(GLODAP_profiles)
 
 cstar_SD <- GLODAP %>% 
   filter(depth >= 2000,
-         depth <= 4000) %>% 
+         depth <= 5000) %>% 
   group_by(cruise, station, data_source) %>%
   mutate(cstar_offset = cstar_tref - mean(cstar_tref, na.rm = TRUE)) %>% 
   ungroup() %>% 
   group_by(cruise, station, data_source, era, basin_AIP) %>% 
   summarise(cstar_sd = sd(cstar_offset, na.rm = TRUE),
+            cstar_mean = mean(cstar_tref, na.rm = TRUE),
             n = n()) %>% 
   ungroup()
 
@@ -1150,7 +1151,7 @@ cstar_SD %>%
   ggplot() +
   geom_histogram(aes(n, fill = era),
                  position = "dodge") +
-  facet_grid(basin_AIP ~ .)
+  facet_grid(basin_AIP ~ data_source)
 
 cstar_SD <- cstar_SD %>% 
   filter(n >= 3) %>% 
@@ -1163,27 +1164,74 @@ cstar_SD %>%
   ggplot() +
   geom_histogram(aes(cstar_sd, fill=era),
                  position = "dodge") +
-  facet_grid(basin_AIP ~ .)
+  facet_grid(basin_AIP ~ data_source)
+
+  
+cstar_SD %>% 
+  ggplot() +
+  geom_histogram(aes(cstar_mean, fill=era),
+                 position = "dodge") +
+  facet_grid(basin_AIP ~ data_source)
+
+cstar_SD %>% 
+  ggplot() +
+  geom_density(aes(cstar_mean,
+                   fill=era,
+                   col=era),
+               alpha = 0.2) +
+  facet_grid(basin_AIP ~ data_source,
+             scales = "free_y")
 
 
 cstar_SD %>%  
   ggplot() +
-  geom_point(aes(cstar_sd_rank ,cstar_sd, col=era)) +
+  geom_point(aes(cstar_sd_rank, cstar_sd, col=era)) +
   facet_grid(basin_AIP ~ data_source)
+
+cstar_SD %>%  
+  filter(data_source == "obs") %>% 
+  ggplot(aes(cstar_sd ,cstar_mean)) +
+  geom_bin_2d() +
+  facet_grid(basin_AIP ~ era,
+             scales = "free_y") +
+  scale_fill_viridis_c() +
+  geom_smooth(col = "red")
 
 map +
   geom_raster(data = left_join(cstar_SD,
                                GLODAP %>%
                                  distinct(cruise, station, lon, lat)),
-              aes(lon, lat, fill = cut(cstar_sd, c(0, 2.5, 5, Inf)))) +
+              aes(lon, lat, fill = cut(cstar_sd, c(0, 3, 6, Inf)))) +
   facet_grid(data_source ~ era) +
-  scale_fill_viridis_d(direction = -1, name = "cstar SD") +
+  scale_fill_viridis_d(direction = -1,
+                       name = "cstar SD",
+                       option = "magma") +
   theme(legend.position = "bottom")
 
 
 ```
 
+### Apply scatter filter
 
+```{r deep_profile_cstar_scatter_filter}
+
+cruise_SD_out <- cstar_SD %>% 
+  filter(data_source == "obs",
+         cstar_SD >= 3) %>% 
+  distinct(cruise, station, era, basin_AIP) %>% 
+  mutate(flag_SD = "removed")
+
+
+
+GLODAP <-
+  full_join(GLODAP,
+            cruise_SD_out) %>%
+  filter(flag_SD == "removed") %>%
+  select(-flag_SD)
+
+rm(cstar_SD)
+
+```
 
 
 
