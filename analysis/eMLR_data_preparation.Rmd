@@ -1133,9 +1133,9 @@ rm(GLODAP_profiles)
 
 ```
 
-```{r cstar_sd}
+```{r cstar_station_stats}
 
-cstar_SD <- GLODAP %>% 
+cstar_station_stats <- GLODAP %>% 
   filter(depth >= 2000,
          depth <= 5000) %>% 
   group_by(cruise, station, data_source) %>%
@@ -1147,33 +1147,33 @@ cstar_SD <- GLODAP %>%
             n = n()) %>% 
   ungroup()
 
-cstar_SD %>%
+cstar_station_stats %>%
   ggplot() +
   geom_histogram(aes(n, fill = era),
                  position = "dodge") +
   facet_grid(basin_AIP ~ data_source)
 
-cstar_SD <- cstar_SD %>% 
+cstar_station_stats <- cstar_station_stats %>% 
   filter(n >= 3) %>% 
   group_by(basin_AIP, era) %>% 
   mutate(cstar_sd_rank = rank(cstar_sd)) %>% 
   ungroup()
 
   
-cstar_SD %>% 
+cstar_station_stats %>% 
   ggplot() +
   geom_histogram(aes(cstar_sd, fill=era),
                  position = "dodge") +
   facet_grid(basin_AIP ~ data_source)
 
   
-cstar_SD %>% 
+cstar_station_stats %>% 
   ggplot() +
   geom_histogram(aes(cstar_mean, fill=era),
                  position = "dodge") +
   facet_grid(basin_AIP ~ data_source)
 
-cstar_SD %>% 
+cstar_station_stats %>% 
   ggplot() +
   geom_density(aes(cstar_mean,
                    fill=era,
@@ -1183,14 +1183,14 @@ cstar_SD %>%
              scales = "free_y")
 
 
-cstar_SD %>%  
+cstar_station_stats %>%  
   ggplot() +
   geom_point(aes(cstar_sd_rank, cstar_sd, col=era)) +
   facet_grid(basin_AIP ~ data_source)
 
-cstar_SD %>%  
+cstar_station_stats %>%  
   filter(data_source == "obs") %>% 
-  ggplot(aes(cstar_sd ,cstar_mean)) +
+  ggplot(aes(cstar_sd, cstar_mean)) +
   geom_bin_2d() +
   facet_grid(basin_AIP ~ era,
              scales = "free_y") +
@@ -1198,7 +1198,7 @@ cstar_SD %>%
   geom_smooth(col = "red")
 
 map +
-  geom_raster(data = left_join(cstar_SD,
+  geom_raster(data = left_join(cstar_station_stats,
                                GLODAP %>%
                                  distinct(cruise, station, lon, lat)),
               aes(lon, lat, fill = cut(cstar_sd, c(0, 3, 6, Inf)))) +
@@ -1215,9 +1215,9 @@ map +
 
 ```{r deep_profile_cstar_scatter_filter}
 
-cruise_SD_out <- cstar_SD %>% 
+cruise_SD_out <- cstar_station_stats %>% 
   filter(data_source == "obs",
-         cstar_SD >= 5) %>% 
+         cstar_sd >= params_local$cstar_deep_sd) %>% 
   distinct(cruise, station, era, basin_AIP) %>% 
   mutate(flag_SD = "removed")
 
@@ -1242,7 +1242,7 @@ map +
   facet_grid(era ~ .)
 
 
-rm(cstar_SD, grid_post, grid_pre)
+rm(cstar_station_stats, grid_post, grid_pre)
 
 ```
 
@@ -1251,38 +1251,51 @@ rm(cstar_SD, grid_post, grid_pre)
 ## Slab distribution
 
 
-```{r cstar_slab_distribution, fig.asp=3}
+```{r cstar_slab_distribution}
 
 cstar_grid <- m_grid_horizontal_coarse(GLODAP)
 
 cstar_grid <- cstar_grid %>%
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>%
+  group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
   summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>%
-  ungroup()
+  ungroup() %>% 
+  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
   
-map +
-  geom_raster(
-    data = cstar_grid %>%
-      filter(data_source == "obs"),
-    aes(lon_grid, lat_grid, fill = cstar_tref)
-  ) +
-  scale_fill_viridis_c() +
-  facet_grid(gamma_slab ~ era)
+cstar_grid %>%
+  filter(data_source == "obs",
+         basin_AIP == "Indian") %>%
+  group_split(basin_AIP, gamma_slab) %>%
+  # head(1) %>%
+  map( ~ map +
+         geom_tile(data = .x,
+                   aes(lon_grid, lat_grid, fill = cstar_tref)) +
+         scale_fill_viridis_c() +
+         labs(title = paste("basin_AIP", unique(.x$basin_AIP),
+                            "| gamma_slab", unique(.x$gamma_slab))) +
+         xlim(c(20,150)) +
+         facet_grid(. ~ era)
+       )
 
 cstar_grid_offset <- cstar_grid %>% 
   pivot_wider(names_from = era,
               values_from = cstar_tref) %>% 
   mutate(delta_cstar := !!sym(tref$era[2]) - !!sym(tref$era[1]))
 
-map +
-  geom_raster(
-    data = cstar_grid_offset %>%
-      filter(data_source == "obs"),
-    aes(lon_grid, lat_grid, fill = delta_cstar)
-  ) +
-  scale_fill_divergent(mid = "grey70",
+cstar_grid_offset %>%
+  filter(data_source == "obs",
+         basin_AIP == "Indian") %>%
+  group_split(basin_AIP, gamma_slab) %>%
+  # head(1) %>%
+  map( ~ map +
+         geom_tile(data = .x,
+                   aes(lon_grid, lat_grid, fill = delta_cstar)) +
+           scale_fill_divergent(mid = "grey70",
                        na.value = "white") +
-  facet_grid(gamma_slab ~ .)
+         labs(title = paste("basin_AIP", unique(.x$basin_AIP),
+                            "| gamma_slab", unique(.x$gamma_slab))) +
+         xlim(c(20,150))
+       )
+
 
 rm(cstar_grid, cstar_grid_offset)
 
