@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2021 halogenated tracers</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">08 November, 2021</h4>
+<h4 class="date">11 November, 2021</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-11-08
+<strong>Last updated:</strong> 2021-11-11
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb40db3d1f6e18fb3714459051b0daee6915c719dtargetblankb40db3da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b40db3d1f6e18fb3714459051b0daee6915c719d" target="_blank">b40db3d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4e794446b351d125582eeda77fe4e8b0d1a4286ctargetblank4e79444a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4e794446b351d125582eeda77fe4e8b0d1a4286c" target="_blank">4e79444</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeb40db3d1f6e18fb3714459051b0daee6915c719dtargetblankb40db3da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree4e794446b351d125582eeda77fe4e8b0d1a4286ctargetblank4e79444a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/b40db3d1f6e18fb3714459051b0daee6915c719d" target="_blank">b40db3d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/4e794446b351d125582eeda77fe4e8b0d1a4286c" target="_blank">4e79444</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,9 +593,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -634,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4e794446b351d125582eeda77fe4e8b0d1a4286c/analysis/tracers_GLODAPv2_2021.Rmd" target="_blank">4e79444</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+<td>
+read gridded cfc12 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/d3cb92d9fd923d0e97971f6ebff3fa6d4b6bff09/docs/tracers_GLODAPv2_2021.html" target="_blank">d3cb92d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -967,6 +998,9 @@ added tracer plots and test without O2 data
       &quot;_preprocessed_tracer.csv&quot;),
     guess_max = 1e5
   )</code></pre>
+<pre class="r"><code>pCFC_12_3d &lt;-
+  read_csv(paste(path_preprocessing,
+                  &quot;K04_pCFC_12_3d.csv&quot;, sep = &quot;&quot;))</code></pre>
 </div>
 <div id="data-preparation" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Data preparation</h1>
@@ -1033,8 +1067,8 @@ GLODAP &lt;- inner_join(GLODAP, basinmask)</code></pre>
 <div id="na" class="section level3" number="3.3.1">
 <h3 number="3.3.1"><span class="header-section-number">3.3.1</span> NA</h3>
 <pre class="r"><code>GLODAP_NA &lt;- GLODAP %&gt;%
-  select(lon, lat, era, cfc11, cfc12, cfc113, ccl4, sf6) %&gt;%
-  pivot_longer(cfc11:sf6,
+  select(lon, lat, era, pcfc11, pcfc12, pcfc113, pccl4, psf6) %&gt;%
+  pivot_longer(pcfc11:psf6,
                names_to = &quot;parameter&quot;,
                values_to = &quot;value&quot;) %&gt;%
   mutate(NA_flag = if_else(is.na(value), &quot;NA&quot;, &quot;available&quot;),
@@ -1626,10 +1660,10 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>IO_NS &lt;- GLODAP %&gt;% 
   filter(cruise %in% c(249, 250, 352, 353),
-         !is.na(cfc12)) 
+         !is.na(pcfc12)) 
 
 IO_NS %&gt;% 
-  ggplot(aes(cfc12)) +
+  ggplot(aes(pcfc12)) +
   geom_histogram() +
   facet_grid(era ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-2.png" width="672" style="display: block; margin: auto;" /></p>
@@ -1693,7 +1727,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>IO_NS %&gt;% 
-  ggplot(aes(lat , depth, col = cfc12)) +
+  ggplot(aes(lat , depth, col = pcfc12)) +
   geom_point() +
   scale_color_viridis_c(trans = &quot;log10&quot;) +
   scale_y_reverse() +
@@ -1768,14 +1802,14 @@ jens-daniel-mueller
                           seq(-99,100,2)),
          lat_grid = as.numeric(as.character(lat_grid))) %&gt;% 
   group_by(lat_grid, depth_grid, era) %&gt;% 
-  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %&gt;% 
+  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
   ungroup()
 
 
 IO_NS_grid %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
+  ggplot(aes(lat_grid , depth_grid, fill = pcfc12)) +
   geom_raster() +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   scale_y_reverse() +
   coord_cartesian(expand = 0) +
   facet_grid(era ~ .)</code></pre>
@@ -1844,100 +1878,26 @@ jens-daniel-mueller
 <h3 number="4.1.2"><span class="header-section-number">4.1.2</span> Change</h3>
 <pre class="r"><code>IO_NS_grid_offset &lt;- IO_NS_grid %&gt;% 
   pivot_wider(names_from = era,
-              values_from = cfc12) %&gt;% 
-  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+              values_from = pcfc12) %&gt;% 
+  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
 
 
 IO_NS_grid_offset %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = &quot;grey80&quot;,
                        na.value = &quot;black&quot;) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_NS_offset-1">
-Past versions of cfc12_Indian_NS_offset-1.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_NS_offset-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1d4c6579e58930affedaac10d5e8a0d0cf4c15c0/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS_offset-1.png" target="_blank">1d4c657</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_NS_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>IO_NS_grid_offset %&gt;% 
-  mutate(delta_cfc12 = cut(delta_cfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
+  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_NS_offset-2">
-Past versions of cfc12_Indian_NS_offset-2.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_NS_offset-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1d4c6579e58930affedaac10d5e8a0d0cf4c15c0/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS_offset-2.png" target="_blank">1d4c657</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_NS_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="ew-section" class="section level2" number="4.2">
@@ -1957,200 +1917,23 @@ map +
   geom_tile(data = GLODAP_grid_Indian,
             aes(lon, lat, fill = year)) +
   facet_wrap(~ era)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW-1">
-Past versions of cfc12_Indian_EW-1.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e032dc17b0785be1bcdeb2b8ae0cf3a64a895ac/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-1.png" target="_blank">0e032dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ceea35b1be37e8dde332b181da40796838d8122b/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-1.png" target="_blank">ceea35b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/973192ced41bb730446a3fdd5368b475552e393c/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-1.png" target="_blank">973192c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>IO_EW &lt;- GLODAP %&gt;% 
   filter(cruise %in% c(252, 488),
-         !is.na(cfc12)) 
+         !is.na(pcfc12)) 
 
 IO_EW %&gt;% 
-  ggplot(aes(cfc12)) +
+  ggplot(aes(pcfc12)) +
   geom_histogram() +
   facet_grid(era ~ .)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW-2">
-Past versions of cfc12_Indian_EW-2.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e032dc17b0785be1bcdeb2b8ae0cf3a64a895ac/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-2.png" target="_blank">0e032dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ceea35b1be37e8dde332b181da40796838d8122b/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-2.png" target="_blank">ceea35b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/973192ced41bb730446a3fdd5368b475552e393c/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-2.png" target="_blank">973192c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>IO_EW %&gt;% 
-  ggplot(aes(lon , depth, col = cfc12)) +
+  ggplot(aes(lon , depth, col = pcfc12)) +
   geom_point() +
-  scale_color_viridis_c(trans = &quot;log10&quot;) +
+  scale_color_viridis_c() +
   scale_y_reverse() +
   facet_grid(era ~ .)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW-3">
-Past versions of cfc12_Indian_EW-3.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e032dc17b0785be1bcdeb2b8ae0cf3a64a895ac/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-3.png" target="_blank">0e032dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ceea35b1be37e8dde332b181da40796838d8122b/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-3.png" target="_blank">ceea35b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/973192ced41bb730446a3fdd5368b475552e393c/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-3.png" target="_blank">973192c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>IO_EW_grid &lt;- IO_EW %&gt;% 
   mutate(depth_grid = cut(depth,
                           seq(0,1e4,200),
@@ -2161,177 +1944,44 @@ jens-daniel-mueller
                           seq(-99,200,2)),
          lon_grid = as.numeric(as.character(lon_grid))) %&gt;% 
   group_by(lon_grid, depth_grid, era) %&gt;% 
-  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %&gt;% 
+  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
   ungroup()
 
 
 IO_EW_grid %&gt;% 
-  ggplot(aes(lon_grid , depth_grid, fill = cfc12)) +
+  ggplot(aes(lon_grid , depth_grid, fill = pcfc12)) +
   geom_tile() +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   scale_y_reverse() +
   coord_cartesian(expand = 0) +
   facet_grid(era ~ .)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW-4">
-Past versions of cfc12_Indian_EW-4.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e032dc17b0785be1bcdeb2b8ae0cf3a64a895ac/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-4.png" target="_blank">0e032dc</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ceea35b1be37e8dde332b181da40796838d8122b/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-4.png" target="_blank">ceea35b</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-01
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/973192ced41bb730446a3fdd5368b475552e393c/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW-4.png" target="_blank">973192c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-10-28
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-4.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="change-1" class="section level3" number="4.2.2">
 <h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Change</h3>
 <pre class="r"><code>IO_EW_grid_offset &lt;- IO_EW_grid %&gt;% 
   pivot_wider(names_from = era,
-              values_from = cfc12) %&gt;% 
-  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+              values_from = pcfc12) %&gt;% 
+  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
 
 
 IO_EW_grid_offset %&gt;% 
   # drop_na() %&gt;%
-  ggplot(aes(lon_grid , depth_grid, fill = delta_cfc12)) +
+  ggplot(aes(lon_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = &quot;grey80&quot;,
                        na.value = &quot;black&quot;) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW_offset-1">
-Past versions of cfc12_Indian_EW_offset-1.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW_offset-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1d4c6579e58930affedaac10d5e8a0d0cf4c15c0/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW_offset-1.png" target="_blank">1d4c657</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>IO_EW_grid_offset %&gt;% 
-  mutate(delta_cfc12 = cut(delta_cfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
-  ggplot(aes(lon_grid , depth_grid, fill = delta_cfc12)) +
+  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
+  ggplot(aes(lon_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_EW_offset-2">
-Past versions of cfc12_Indian_EW_offset-2.png
-</button>
-</p>
-<div id="fig-cfc12_Indian_EW_offset-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1d4c6579e58930affedaac10d5e8a0d0cf4c15c0/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_EW_offset-2.png" target="_blank">1d4c657</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-04
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="zonal-section" class="section level2" number="4.3">
@@ -2348,20 +1998,20 @@ jens-daniel-mueller
                           seq(-97.5,100,5)),
          lat_grid = as.numeric(as.character(lat_grid))) %&gt;% 
   group_by(lat_grid, depth_grid, era, basin_AIP) %&gt;% 
-  summarise(cfc12 = mean(cfc12, na.rm = TRUE)) %&gt;% 
+  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
   ungroup()
 
-p_cfc12_absolut &lt;- zonal_sections %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = cfc12)) +
+p_pcfc12_absolut &lt;- zonal_sections %&gt;% 
+  ggplot(aes(lat_grid , depth_grid, fill = pcfc12)) +
   geom_tile() +
-  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  scale_fill_viridis_c() +
   scale_y_reverse() +
   labs(x = &quot;Latitude (°N)&quot;, y = &quot;Depth (m)&quot;) +
   coord_fixed(ratio = 1e-2, expand = 0) +
   facet_grid(basin_AIP ~ era) +
   theme(legend.position = &quot;left&quot;)
 
-p_cfc12_absolut </code></pre>
+p_pcfc12_absolut </code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/zonal_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_sections-1">
@@ -2427,12 +2077,12 @@ jens-daniel-mueller
 <h3 number="4.3.2"><span class="header-section-number">4.3.2</span> Change</h3>
 <pre class="r"><code>zonal_sections_offset &lt;- zonal_sections %&gt;% 
   pivot_wider(names_from = era,
-              values_from = cfc12) %&gt;% 
-  mutate(delta_cfc12 = `2000-2009` - `1989-1999`)
+              values_from = pcfc12) %&gt;% 
+  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
 
 
 zonal_sections_offset %&gt;% 
-  ggplot(aes(delta_cfc12)) +
+  ggplot(aes(delta_pcfc12)) +
   geom_histogram() +
   scale_y_log10() +
   coord_cartesian(expand = 0) +
@@ -2486,12 +2136,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>p_cfc12_offset &lt;- zonal_sections_offset %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+<pre class="r"><code>p_pcfc12_offset &lt;- zonal_sections_offset %&gt;% 
+  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = &quot;grey80&quot;,
                        na.value = &quot;black&quot;,
-                       limits = c(-1,1)*0.5) +
+                       limits = c(-1,1)*100) +
   labs(x = &quot;Latitude (°N)&quot;, y = &quot;Depth (m)&quot;) +
   scale_y_reverse() +
   coord_fixed(ratio = 1e-2, expand = 0) +
@@ -2499,7 +2149,7 @@ jens-daniel-mueller
   theme(axis.text.y = element_blank(),
         axis.title.y = element_blank())
 
-p_cfc12_offset</code></pre>
+p_pcfc12_offset</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/zonal_sections_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_sections_offset-2">
@@ -2561,10 +2211,10 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>zonal_sections_offset %&gt;%
-  mutate(delta_cfc12 = cut(
-    delta_cfc12,
+  mutate(delta_pcfc12 = cut(
+    delta_pcfc12,
     c(-Inf, 0.002, 0.01, 0.02, 0.05, 0.2, Inf))) %&gt;%
-  ggplot(aes(lat_grid , depth_grid, fill = delta_cfc12)) +
+  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
