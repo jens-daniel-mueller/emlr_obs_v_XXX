@@ -116,6 +116,16 @@ pCFC_12_3d <-
 
 ```
 
+```{r read_dcant_eMLR_3d_field}
+
+dcant_3d <-
+  read_csv(paste(path_version_data,
+                 "dcant_3d.csv",
+                 sep = ""))
+
+```
+
+
 
 # Data preparation
 
@@ -590,9 +600,9 @@ IO_EW_grid_offset %>%
 
 ```
 
-## Zonal section
+# Zonal sections
 
-### Absolute
+## Absolute
 
 ```{r zonal_sections, fig.asp=1}
 
@@ -623,7 +633,7 @@ p_pcfc12_absolut
 
 ```
 
-### Change
+## Change
 
 ```{r zonal_sections_offset, fig.asp=0.6}
 
@@ -667,6 +677,74 @@ zonal_sections_offset %>%
   coord_fixed(ratio = 1e-2, expand = 0)
 
 ```
+
+# Interior relation to dCant
+
+```{r dcant_CFC12_correlation, fig.asp=0.5}
+
+dcant_3d <- dcant_3d %>% 
+  filter(data_source == "obs") %>% 
+  select(lon, lat, depth, basin_AIP, dcant, gamma_slab)
+
+unique(dcant_3d$depth)
+unique(pCFC_12_3d$depth)
+
+CFC_dcant <- inner_join(
+  dcant_3d,
+  pCFC_12_3d
+)
+
+CFC_dcant <- CFC_dcant %>% 
+  mutate(depth_grid = cut(depth, seq(0, 1e4, 1000), right = FALSE))
+
+
+```
+
+
+```{r dcant_CFC12_correlation_gamma, fig.asp=2.5}
+
+CFC_dcant %>%
+  ggplot(aes(pCFC_12, dcant)) +
+  geom_hline(yintercept = 0) +
+  geom_bin2d() +
+  geom_smooth(col = "red", se = FALSE) +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(gamma_slab ~ basin_AIP)
+
+```
+
+```{r dcant_CFC12_correlation_depth, fig.asp=1.5}
+
+CFC_dcant %>%
+  ggplot(aes(pCFC_12, dcant)) +
+  geom_hline(yintercept = 0) +
+  geom_bin2d() +
+  geom_smooth(col = "red", se = FALSE) +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(depth_grid ~ basin_AIP)
+
+```
+
+
+```{r dcant_CFC12_correlation_depth_gamma, fig.asp=0.5}
+
+CFC_dcant %>%
+  group_split(gamma_slab, depth_grid) %>%
+  # head(4) %>% 
+  map(
+    ~ ggplot(data = .x,
+             aes(pCFC_12, dcant)) +
+      geom_hline(yintercept = 0) +
+      geom_bin2d() +
+      geom_smooth(col = "red", se=FALSE) +
+      scale_fill_viridis_c(trans = "log10") +
+      labs(title = paste("gamma_slab", unique(.x$gamma_slab),
+                         "| depth_grid", unique(.x$depth_grid))) +
+      facet_grid(. ~ basin_AIP)
+  )
+
+```
+
 
 
 # Overview plots
