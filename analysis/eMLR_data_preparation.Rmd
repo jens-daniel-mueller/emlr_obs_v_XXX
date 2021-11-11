@@ -1331,6 +1331,71 @@ rm(cstar_grid, cstar_grid_offset)
 
 ```
 
+## Zonal section
+
+### Absolute
+
+```{r zonal_sections, fig.asp=1}
+
+zonal_sections <- GLODAP %>% 
+  mutate(depth_grid = cut(depth,
+                          seq(0,1e4,500),
+                          seq(250,1e4,500)),
+         depth_grid = as.numeric(as.character(depth_grid)),
+         lat_grid = cut(lat,
+                          seq(-100,100,5),
+                          seq(-97.5,100,5)),
+         lat_grid = as.numeric(as.character(lat_grid))) %>% 
+  group_by(lat_grid, depth_grid, era, basin_AIP) %>% 
+  summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>% 
+  ungroup()
+
+p_cstar_tref_absolut <- zonal_sections %>% 
+  ggplot(aes(lat_grid , depth_grid, fill = cstar_tref)) +
+  geom_tile() +
+  scale_fill_viridis_c(trans = "log10") +
+  scale_y_reverse() +
+  labs(x = "Latitude (°N)", y = "Depth (m)") +
+  coord_fixed(ratio = 1e-2, expand = 0) +
+  facet_grid(basin_AIP ~ era) +
+  theme(legend.position = "left")
+
+p_cstar_tref_absolut 
+
+```
+
+### Change
+
+```{r zonal_sections_offset, fig.asp=0.6}
+
+zonal_sections_offset <- zonal_sections %>%
+  pivot_wider(names_from = era,
+              values_from = cstar_tref) %>%
+  mutate(delta_cstar_tref = `2000-2009` - `1989-1999`) %>%
+  mutate(delta_cstar_tref = cut(delta_cstar_tref,
+                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>% 
+  filter(!is.na(delta_cstar_tref))
+
+
+p_cstar_tref_offset <- zonal_sections_offset %>%
+  ggplot(aes(lat_grid , depth_grid, fill = delta_cstar_tref)) +
+  geom_raster() +
+  scale_fill_brewer(palette = "RdBu",
+                    drop = FALSE,
+                    direction = -1) +
+  labs(x = "Latitude (°N)", y = "Depth (m)") +
+  scale_y_reverse() +
+  coord_fixed(ratio = 1e-2, expand = 0) +
+  facet_grid(basin_AIP ~ .) +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank())
+
+p_cstar_tref_offset
+
+```
+
+
+
 
 ## Density distributions
 
