@@ -1290,7 +1290,7 @@ cstar_grid %>%
 
 ### Offset
 
-```{r cstar_slab_distribution_offset, fig.asp=0.5}
+```{r cstar_slab_distribution_offset, fig.asp=0.6}
 
 cstar_grid_offset <- cstar_grid %>% 
   pivot_wider(names_from = era,
@@ -1300,7 +1300,8 @@ cstar_grid_offset <- cstar_grid %>%
 
 cstar_grid_offset %>%
   filter(data_source == "obs",
-         basin_AIP == "Indian") %>%
+         basin_AIP == "Indian",
+         !is.na(delta_cstar)) %>%
   mutate(delta_cstar = cut(delta_cstar,
                            c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
   group_split(basin_AIP, gamma_slab) %>%
@@ -1331,9 +1332,9 @@ rm(cstar_grid, cstar_grid_offset)
 ```
 
 
+## Density distributions
 
-
-## basin, gamma slab
+### basin, gamma slab
 
 ```{r cstar_distributions}
 
@@ -1371,7 +1372,7 @@ rm(GLODAP_data_distribution)
 
 ```
 
-## basin, cruise
+### basin, cruise
 
 ```{r cstar_distributions_cruise, fig.asp=1}
 
