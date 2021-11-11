@@ -1250,51 +1250,80 @@ rm(cstar_station_stats, grid_post, grid_pre)
 
 ## Slab distribution
 
+### Absolute
 
-```{r cstar_slab_distribution}
+```{r cstar_slab_distribution_absolute}
 
 cstar_grid <- m_grid_horizontal_coarse(GLODAP)
 
 cstar_grid <- cstar_grid %>%
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
   summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>%
-  ungroup() %>% 
+  ungroup() %>%
   mutate(gamma_slab = fct_relevel(gamma_slab, sort))
-  
+
 cstar_grid %>%
   filter(data_source == "obs",
          basin_AIP == "Indian") %>%
   group_split(basin_AIP, gamma_slab) %>%
   # head(1) %>%
-  map( ~ map +
-         geom_tile(data = .x,
-                   aes(lon_grid, lat_grid, fill = cstar_tref)) +
-         scale_fill_viridis_c() +
-         labs(title = paste("basin_AIP", unique(.x$basin_AIP),
-                            "| gamma_slab", unique(.x$gamma_slab))) +
-         xlim(c(20,150)) +
-         facet_grid(. ~ era)
-       )
+  map(
+    ~ map +
+      geom_tile(
+        data = .x,
+        aes(lon_grid, lat_grid, fill = cstar_tref),
+        col = "grey20"
+      ) +
+      scale_fill_viridis_c() +
+      labs(title = paste(
+        "basin_AIP",
+        unique(.x$basin_AIP),
+        "| gamma_slab",
+        unique(.x$gamma_slab)
+      )) +
+      xlim(c(20, 150)) +
+      facet_grid(. ~ era)
+  )
+
+
+```
+
+### Offset
+
+```{r cstar_slab_distribution_offset, fig.asp=0.5}
 
 cstar_grid_offset <- cstar_grid %>% 
   pivot_wider(names_from = era,
               values_from = cstar_tref) %>% 
   mutate(delta_cstar := !!sym(tref$era[2]) - !!sym(tref$era[1]))
 
+
 cstar_grid_offset %>%
   filter(data_source == "obs",
          basin_AIP == "Indian") %>%
+  mutate(delta_cstar = cut(delta_cstar,
+                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
   group_split(basin_AIP, gamma_slab) %>%
   # head(1) %>%
-  map( ~ map +
-         geom_tile(data = .x,
-                   aes(lon_grid, lat_grid, fill = delta_cstar)) +
-           scale_fill_divergent(mid = "grey70",
-                       na.value = "white") +
-         labs(title = paste("basin_AIP", unique(.x$basin_AIP),
-                            "| gamma_slab", unique(.x$gamma_slab))) +
-         xlim(c(20,150))
-       )
+  map(
+    ~ map +
+      geom_tile(
+        data = .x,
+        aes(lon_grid, lat_grid, fill = delta_cstar),
+        col = "grey20"
+      ) +
+      # scale_fill_divergent_discretised(na.value = "white") +
+      scale_fill_brewer(palette = "RdBu",
+                        drop = FALSE,
+                        direction = -1) +
+      labs(title = paste(
+        "basin_AIP",
+        unique(.x$basin_AIP),
+        "| gamma_slab",
+        unique(.x$gamma_slab)
+      )) +
+      xlim(c(20, 150))
+  )
 
 
 rm(cstar_grid, cstar_grid_offset)
