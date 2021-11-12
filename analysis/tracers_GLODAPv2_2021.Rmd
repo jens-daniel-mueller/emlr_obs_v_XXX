@@ -781,7 +781,7 @@ CFC_dcant %>%
 
 ## Zonal sections
 
-```{r zonal_mean_sections}
+```{r zonal_mean_sections, fig.asp=1}
 
 CFC_dcant_zonal <- m_zonal_mean_sd(
   CFC_dcant %>% 
@@ -789,38 +789,45 @@ CFC_dcant_zonal <- m_zonal_mean_sd(
 )
 
 
+CFC_dcant_zonal <- CFC_dcant_zonal %>%
+  mutate(pCFC_12_mean_pos = if_else(pCFC_12_mean < 0, 0, pCFC_12_mean),
+         dcant_mean_pos = if_else(dcant_mean < 0, 0, dcant_mean),
+         dcant_per_CFC = dcant_mean_pos / pCFC_12_mean_pos,
+         dcant_per_CFC_log = log10(dcant_per_CFC))
+
 
 CFC_dcant_zonal %>%
-  group_split(basin_AIP) %>%
-  # head(1) %>%
-  map( ~ p_section_zonal_continous_depth(
-    df = .x,
-    var = "dcant_mean",
-    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
-  ))
+  p_section_zonal_continous_depth(
+    var = "dcant_mean_pos",
+    title_text = NULL) +
+  facet_grid(basin_AIP ~ .)
+
 
 CFC_dcant_zonal %>%
-  group_split(basin_AIP) %>%
-  # head(1) %>%
-  map( ~ p_section_zonal_continous_depth(
-    df = .x,
-    var = "pCFC_12_mean",
+  p_section_zonal_continous_depth(
+    var = "pCFC_12_mean_pos",
     breaks = NULL,
     legend_title = "pCFC_12",
-    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
-  ))
+    title_text = NULL
+  ) +
+  facet_grid(basin_AIP ~ .)
+
+
+CFC_dcant_zonal %>% 
+  ggplot(aes(dcant_per_CFC)) +
+  geom_histogram() +
+  scale_y_log10() +
+  facet_grid(.~ basin_AIP)
+
 
 CFC_dcant_zonal %>%
-  mutate(dcant_per_CFC = dcant_mean / pCFC_12_mean) %>% 
-  group_split(basin_AIP) %>%
-  # head(1) %>%
-  map( ~ p_section_zonal_continous_depth(
-    df = .x,
-    var = "dcant_per_CFC",
+  p_section_zonal_continous_depth(
+    var = "dcant_per_CFC_log",
     breaks = NULL,
-    legend_title = "pCFC_12",
-    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
-  ))
+    legend_title = "log10\ndcant /\npCFC_12",
+    title_text = NULL
+  ) +
+  facet_grid(basin_AIP ~ .)
 
 ```
 
