@@ -790,10 +790,20 @@ CFC_dcant_zonal <- m_zonal_mean_sd(
 
 
 CFC_dcant_zonal <- CFC_dcant_zonal %>%
-  mutate(pCFC_12_mean_pos = if_else(pCFC_12_mean < 0, 0, pCFC_12_mean),
-         dcant_mean_pos = if_else(dcant_mean < 0, 0, dcant_mean),
-         dcant_per_CFC = dcant_mean_pos / pCFC_12_mean_pos,
-         dcant_per_CFC_log = log10(dcant_per_CFC))
+  mutate(
+    pCFC_12_mean_pos = if_else(pCFC_12_mean < 0, 0, pCFC_12_mean),
+    dcant_mean_pos = if_else(dcant_mean < 0, 0, dcant_mean),
+    dcant_per_CFC = dcant_mean_pos / pCFC_12_mean_pos,
+    dcant_per_CFC_log = log10(dcant_per_CFC)
+  ) %>%
+  mutate(
+    dcant_per_CFC_log = if_else(dcant_mean_pos == 0,
+                            0,
+                            dcant_per_CFC_log),
+    dcant_per_CFC_log = if_else(pCFC_12_mean_pos == 0,
+                            max(dcant_per_CFC_log, na.rm = TRUE),
+                            dcant_per_CFC_log)
+  )
 
 
 CFC_dcant_zonal %>%
@@ -831,14 +841,18 @@ CFC_dcant_zonal %>%
   facet_grid(basin_AIP ~ .)
 
 CFC_dcant_zonal %>%
+  filter(dcant_per_CFC_log > -4) %>%
   p_section_zonal_continous_depth(
     var = "dcant_per_CFC_log",
     breaks = NULL,
     legend_title = "log10\ndcant /\npCFC_12",
     title_text = NULL
   ) +
-  coord_cartesian(ylim = c(1000, 0),
-                  expand = 0) +
+  scale_y_reverse(
+    limits = c(1000, 0),
+    breaks = seq(0, 900, 200),
+    name = "Depth (m)"
+  ) +
   facet_grid(basin_AIP ~ .)
 
 ```
