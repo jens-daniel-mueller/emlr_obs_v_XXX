@@ -727,7 +727,7 @@ CFC_dcant <- inner_join(
   pCFC_12_3d
 )
 
-CFC_dcant <- CFC_dcant %>% 
+CFC_dcant <- CFC_dcant %>%
   mutate(depth_grid = cut(depth, seq(0, 1e4, 1000), right = FALSE))
 
 ```
@@ -791,19 +791,33 @@ CFC_dcant_zonal <- m_zonal_mean_sd(
 
 CFC_dcant_zonal <- CFC_dcant_zonal %>%
   mutate(
-    pCFC_12_mean_pos = if_else(pCFC_12_mean < 0, 0, pCFC_12_mean),
     dcant_mean_pos = if_else(dcant_mean < 0, 0, dcant_mean),
-    dcant_per_CFC = dcant_mean_pos / pCFC_12_mean_pos,
+    dcant_per_CFC = dcant_mean_pos / pCFC_12_mean,
     dcant_per_CFC_log = log10(dcant_per_CFC)
-  ) %>%
-  mutate(
-    dcant_per_CFC_log = if_else(dcant_mean_pos == 0,
-                            0,
-                            dcant_per_CFC_log),
-    dcant_per_CFC_log = if_else(pCFC_12_mean_pos == 0,
-                            max(dcant_per_CFC_log, na.rm = TRUE),
-                            dcant_per_CFC_log)
   )
+
+# dcant_per_CFC_log_min <- CFC_dcant_zonal %>% 
+#   filter(dcant_per_CFC_log != -Inf) %>% 
+#   slice_min(dcant_per_CFC_log) %>% 
+#   pull(dcant_per_CFC_log)
+# 
+# dcant_per_CFC_log_max <- CFC_dcant_zonal %>% 
+#   filter(dcant_per_CFC_log != Inf) %>% 
+#   slice_max(dcant_per_CFC_log) %>% 
+#   pull(dcant_per_CFC_log)
+# 
+# 
+# CFC_dcant_zonal <- CFC_dcant_zonal %>%
+#   mutate(
+#     dcant_per_CFC_log = if_else(dcant_mean_pos == 0,
+#                                 dcant_per_CFC_log_min,
+#                                 dcant_per_CFC_log),
+#     dcant_per_CFC_log = if_else(
+#       pCFC_12_mean == 0,
+#       dcant_per_CFC_log_max,
+#       dcant_per_CFC_log
+#     )
+#   )
 
 
 CFC_dcant_zonal %>%
@@ -815,7 +829,7 @@ CFC_dcant_zonal %>%
 
 CFC_dcant_zonal %>%
   p_section_zonal_continous_depth(
-    var = "pCFC_12_mean_pos",
+    var = "pCFC_12_mean",
     breaks = NULL,
     legend_title = "pCFC_12",
     title_text = NULL
@@ -823,15 +837,8 @@ CFC_dcant_zonal %>%
   facet_grid(basin_AIP ~ .)
 
 
-CFC_dcant_zonal %>% 
-  ggplot(aes(dcant_per_CFC)) +
-  geom_histogram() +
-  scale_y_log10() +
-  facet_grid(.~ basin_AIP)
-
-
 CFC_dcant_zonal %>%
-  filter(dcant_per_CFC_log > -4) %>%
+  # filter(dcant_per_CFC_log > -4) %>%
   p_section_zonal_continous_depth(
     var = "dcant_per_CFC_log",
     breaks = NULL,
@@ -841,7 +848,7 @@ CFC_dcant_zonal %>%
   facet_grid(basin_AIP ~ .)
 
 CFC_dcant_zonal %>%
-  filter(dcant_per_CFC_log > -4) %>%
+  # filter(dcant_per_CFC_log > -4) %>%
   p_section_zonal_continous_depth(
     var = "dcant_per_CFC_log",
     breaks = NULL,
