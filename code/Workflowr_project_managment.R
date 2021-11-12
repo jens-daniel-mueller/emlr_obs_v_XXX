@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "update plot correlation of dCant to cfc12 data")
+wflow_publish(all = TRUE, message = "add pseudo-log transformation and zonal mean mapping function")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test scattered C* filter",
+message = "rerun standard config with tracer analysis",
 republish = TRUE)
 
 
