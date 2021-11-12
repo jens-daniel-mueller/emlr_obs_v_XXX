@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2021 halogenated tracers</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">11 November, 2021</h4>
+<h4 class="date">12 November, 2021</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-11-11
+<strong>Last updated:</strong> 2021-11-12
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree16330811a1004ac2e2412b37687dd62c77e7e822targetblank1633081a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/16330811a1004ac2e2412b37687dd62c77e7e822" target="_blank">1633081</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2127c9dc74907cb1951a26a8e13b1b6416a43b39targetblank2127c9da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2127c9dc74907cb1951a26a8e13b1b6416a43b39" target="_blank">2127c9d</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree16330811a1004ac2e2412b37687dd62c77e7e822targetblank1633081a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2127c9dc74907cb1951a26a8e13b1b6416a43b39targetblank2127c9da" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/16330811a1004ac2e2412b37687dd62c77e7e822" target="_blank">1633081</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2127c9dc74907cb1951a26a8e13b1b6416a43b39" target="_blank">2127c9d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,10 +593,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -635,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2127c9dc74907cb1951a26a8e13b1b6416a43b39/analysis/tracers_GLODAPv2_2021.Rmd" target="_blank">2127c9d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-12
+</td>
+<td>
+add pseudo-log transformation and zonal mean mapping function
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/98d9e3333bc24870d499f89a91a2b6dbd47829bb/docs/tracers_GLODAPv2_2021.html" target="_blank">98d9e33</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1864,10 +1894,9 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>IO_NS %&gt;% 
-  ggplot(aes(lat , depth, col = pcfc12)) +
-  geom_point() +
-  scale_color_viridis_c(trans = &quot;log10&quot;) +
-  scale_y_reverse() +
+  filter(pcfc12 &lt; 2) %&gt;% 
+  ggplot(aes(pcfc12)) +
+  geom_histogram() +
   facet_grid(era ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1940,26 +1969,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>IO_NS_grid &lt;- IO_NS %&gt;% 
-  mutate(depth_grid = cut(depth,
-                          seq(0,1e4,200),
-                          seq(100,1e4,200)),
-         depth_grid = as.numeric(as.character(depth_grid)),
-         lat_grid = cut(lat,
-                          seq(-100,100,2),
-                          seq(-99,100,2)),
-         lat_grid = as.numeric(as.character(lat_grid))) %&gt;% 
-  group_by(lat_grid, depth_grid, era) %&gt;% 
-  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
-  ungroup()
-
-
-IO_NS_grid %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = pcfc12)) +
-  geom_raster() +
-  scale_fill_viridis_c() +
+<pre class="r"><code>IO_NS %&gt;% 
+  ggplot(aes(lat , depth, col = pcfc12)) +
+  geom_point() +
+  scale_color_viridis_c(trans = &quot;pseudo_log&quot;,
+                        breaks = c(0,10,100)) +
   scale_y_reverse() +
-  coord_cartesian(expand = 0) +
   facet_grid(era ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -2032,20 +2047,111 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>IO_NS_grid &lt;- IO_NS %&gt;% 
+  select(lat, lon, depth, era, basin_AIP, pcfc12) %&gt;% 
+  group_by(era) %&gt;%
+  nest() %&gt;%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd_bottle(.x))) %&gt;%
+  select(-data) %&gt;%
+  unnest(zonal)
+
+IO_NS_grid %&gt;% 
+  ggplot(aes(lat , depth, fill = pcfc12_mean)) +
+  geom_raster() +
+  scale_fill_viridis_c(trans = &quot;pseudo_log&quot;,
+                        breaks = c(0,10,100)) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cfc12_Indian_NS-5">
+Past versions of cfc12_Indian_NS-5.png
+</button>
+</p>
+<div id="fig-cfc12_Indian_NS-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1d4c6579e58930affedaac10d5e8a0d0cf4c15c0/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" target="_blank">1d4c657</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-04
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0e032dc17b0785be1bcdeb2b8ae0cf3a64a895ac/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" target="_blank">0e032dc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-04
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ceea35b1be37e8dde332b181da40796838d8122b/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" target="_blank">ceea35b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-01
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/973192ced41bb730446a3fdd5368b475552e393c/docs/figure/tracers_GLODAPv2_2021.Rmd/cfc12_Indian_NS-5.png" target="_blank">973192c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-10-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="change" class="section level3" number="4.1.2">
 <h3 number="4.1.2"><span class="header-section-number">4.1.2</span> Change</h3>
 <pre class="r"><code>IO_NS_grid_offset &lt;- IO_NS_grid %&gt;% 
+  select(-pcfc12_sd) %&gt;% 
   pivot_wider(names_from = era,
-              values_from = pcfc12) %&gt;% 
+              values_from = pcfc12_mean) %&gt;% 
   mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
 
-
-IO_NS_grid_offset %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
+IO_NS_grid_offset %&gt;%
+  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
   geom_raster() +
-  scale_fill_divergent(mid = &quot;grey80&quot;,
-                       na.value = &quot;black&quot;) +
+  scale_fill_divergent(
+    mid = &quot;grey80&quot;,
+    na.value = &quot;black&quot;,
+    trans = &quot;pseudo_log&quot;,
+    breaks = c(-100, -10, 0, 10, 100)
+  ) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_NS_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -2087,8 +2193,8 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>IO_NS_grid_offset %&gt;% 
-  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
+  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 2, 5, 20, Inf))) %&gt;% 
+  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
@@ -2235,10 +2341,9 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>IO_EW %&gt;% 
-  ggplot(aes(lon , depth, col = pcfc12)) +
-  geom_point() +
-  scale_color_viridis_c() +
-  scale_y_reverse() +
+  filter(pcfc12 &lt; 2) %&gt;% 
+  ggplot(aes(pcfc12)) +
+  geom_histogram() +
   facet_grid(era ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -2278,26 +2383,11 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>IO_EW_grid &lt;- IO_EW %&gt;% 
-  mutate(depth_grid = cut(depth,
-                          seq(0,1e4,200),
-                          seq(100,1e4,200)),
-         depth_grid = as.numeric(as.character(depth_grid)),
-         lon_grid = cut(lon,
-                          seq(-100,200,2),
-                          seq(-99,200,2)),
-         lon_grid = as.numeric(as.character(lon_grid))) %&gt;% 
-  group_by(lon_grid, depth_grid, era) %&gt;% 
-  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
-  ungroup()
-
-
-IO_EW_grid %&gt;% 
-  ggplot(aes(lon_grid , depth_grid, fill = pcfc12)) +
-  geom_tile() +
-  scale_fill_viridis_c() +
+<pre class="r"><code>IO_EW %&gt;% 
+  ggplot(aes(lon , depth, col = pcfc12)) +
+  geom_point() +
+  scale_color_viridis_c() +
   scale_y_reverse() +
-  coord_cartesian(expand = 0) +
   facet_grid(era ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -2337,6 +2427,29 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>IO_EW_grid &lt;- IO_EW %&gt;% 
+  mutate(depth = cut(depth,
+                          seq(0,1e4,200),
+                          seq(100,1e4,200)),
+         depth = as.numeric(as.character(depth)),
+         lon_grid = cut(lon,
+                          seq(-100,200,2),
+                          seq(-99,200,2)),
+         lon_grid = as.numeric(as.character(lon_grid))) %&gt;% 
+  group_by(lon_grid, depth, era) %&gt;% 
+  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
+  ungroup()
+
+
+IO_EW_grid %&gt;% 
+  ggplot(aes(lon_grid , depth, fill = pcfc12)) +
+  geom_tile() +
+  scale_fill_viridis_c(trans = &quot;pseudo_log&quot;,
+                        breaks = c(0,10,100)) +
+  scale_y_reverse() +
+  coord_cartesian(expand = 0) +
+  facet_grid(era ~ .)</code></pre>
+<p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW-5.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="change-1" class="section level3" number="4.2.2">
 <h3 number="4.2.2"><span class="header-section-number">4.2.2</span> Change</h3>
@@ -2347,11 +2460,14 @@ jens-daniel-mueller
 
 
 IO_EW_grid_offset %&gt;% 
-  # drop_na() %&gt;%
-  ggplot(aes(lon_grid , depth_grid, fill = delta_pcfc12)) +
+  ggplot(aes(lon_grid , depth, fill = delta_pcfc12)) +
   geom_raster() +
-  scale_fill_divergent(mid = &quot;grey80&quot;,
-                       na.value = &quot;black&quot;) +
+  scale_fill_divergent(
+    mid = &quot;grey80&quot;,
+    na.value = &quot;black&quot;,
+    trans = &quot;pseudo_log&quot;,
+    breaks = c(-100, -10, 0, 10, 100)
+  ) +
   scale_y_reverse() +
   coord_cartesian(expand = 0)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/pcfc12_Indian_EW_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -2393,8 +2509,8 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>IO_EW_grid_offset %&gt;% 
-  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 0.02, 0.05, 0.2, Inf))) %&gt;% 
-  ggplot(aes(lon_grid , depth_grid, fill = delta_pcfc12)) +
+  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 2, 5, 20, Inf))) %&gt;% 
+  ggplot(aes(lon_grid , depth, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
@@ -2445,20 +2561,20 @@ jens-daniel-mueller
 <div id="absolute-2" class="section level2" number="5.1">
 <h2 number="5.1"><span class="header-section-number">5.1</span> Absolute</h2>
 <pre class="r"><code>zonal_sections &lt;- GLODAP %&gt;% 
-  mutate(depth_grid = cut(depth,
+  mutate(depth = cut(depth,
                           seq(0,1e4,500),
                           seq(250,1e4,500)),
-         depth_grid = as.numeric(as.character(depth_grid)),
-         lat_grid = cut(lat,
+         depth = as.numeric(as.character(depth)),
+         lat = cut(lat,
                           seq(-100,100,5),
                           seq(-97.5,100,5)),
-         lat_grid = as.numeric(as.character(lat_grid))) %&gt;% 
-  group_by(lat_grid, depth_grid, era, basin_AIP) %&gt;% 
+         lat = as.numeric(as.character(lat))) %&gt;% 
+  group_by(lat, depth, era, basin_AIP) %&gt;% 
   summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %&gt;% 
   ungroup()
 
 p_pcfc12_absolut &lt;- zonal_sections %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = pcfc12)) +
+  ggplot(aes(lat , depth, fill = pcfc12)) +
   geom_tile() +
   scale_fill_viridis_c() +
   scale_y_reverse() +
@@ -2615,7 +2731,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>p_pcfc12_offset &lt;- zonal_sections_offset %&gt;% 
-  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
+  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_divergent(mid = &quot;grey80&quot;,
                        na.value = &quot;black&quot;,
@@ -2703,7 +2819,7 @@ jens-daniel-mueller
   mutate(delta_pcfc12 = cut(
     delta_pcfc12,
     c(-Inf, 0.002, 0.01, 0.02, 0.05, 0.2, Inf))) %&gt;%
-  ggplot(aes(lat_grid , depth_grid, fill = delta_pcfc12)) +
+  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = &quot;grey&quot;) +
   scale_y_reverse() +
@@ -2783,7 +2899,7 @@ CFC_dcant &lt;- inner_join(
 )
 
 CFC_dcant &lt;- CFC_dcant %&gt;% 
-  mutate(depth_grid = cut(depth, seq(0, 1e4, 1000), right = FALSE))</code></pre>
+  mutate(depth = cut(depth, seq(0, 1e4, 1000), right = FALSE))</code></pre>
 <pre class="r"><code>CFC_dcant %&gt;%
   ggplot(aes(pCFC_12, dcant)) +
   geom_hline(yintercept = 0) +
@@ -2816,6 +2932,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/98d9e3333bc24870d499f89a91a2b6dbd47829bb/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_gamma-1.png" target="_blank">98d9e33</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/38cad1d51eeada8dc68e5a87371b2938b6766ea9/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_gamma-1.png" target="_blank">38cad1d</a>
@@ -2874,6 +3001,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/98d9e3333bc24870d499f89a91a2b6dbd47829bb/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_at_low_CFC-1.png" target="_blank">98d9e33</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/38cad1d51eeada8dc68e5a87371b2938b6766ea9/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_at_low_CFC-1.png" target="_blank">38cad1d</a>
 </td>
 <td>
@@ -2919,6 +3057,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/98d9e3333bc24870d499f89a91a2b6dbd47829bb/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_at_low_CFC-2.png" target="_blank">98d9e33</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/38cad1d51eeada8dc68e5a87371b2938b6766ea9/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_at_low_CFC-2.png" target="_blank">38cad1d</a>
 </td>
 <td>
@@ -2939,7 +3088,7 @@ jens-daniel-mueller
   geom_bin2d() +
   geom_smooth(col = &quot;red&quot;, se = FALSE) +
   scale_fill_viridis_c(trans = &quot;log10&quot;) +
-  facet_grid(depth_grid ~ basin_AIP,
+  facet_grid(depth ~ basin_AIP,
              scales = &quot;free_y&quot;) +
   coord_cartesian()</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -2967,6 +3116,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/98d9e3333bc24870d499f89a91a2b6dbd47829bb/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_depth-1.png" target="_blank">98d9e33</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/38cad1d51eeada8dc68e5a87371b2938b6766ea9/docs/figure/tracers_GLODAPv2_2021.Rmd/dcant_CFC12_correlation_depth-1.png" target="_blank">38cad1d</a>
 </td>
 <td>
@@ -2992,7 +3152,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>CFC_dcant %&gt;%
-  group_split(gamma_slab, depth_grid) %&gt;%
+  group_split(gamma_slab, depth) %&gt;%
   # head(4) %&gt;% 
   map(
     ~ ggplot(data = .x,
@@ -3002,7 +3162,7 @@ jens-daniel-mueller
       geom_smooth(col = &quot;red&quot;, se=FALSE) +
       scale_fill_viridis_c(trans = &quot;log10&quot;) +
       labs(title = paste(&quot;gamma_slab&quot;, unique(.x$gamma_slab),
-                         &quot;| depth_grid&quot;, unique(.x$depth_grid))) +
+                         &quot;| depth&quot;, unique(.x$depth))) +
       facet_grid(. ~ basin_AIP)
   )</code></pre>
 </div>
@@ -3066,12 +3226,12 @@ jens-daniel-mueller
 <div id="histogram-zonal-coverage" class="section level2" number="7.3">
 <h2 number="7.3"><span class="header-section-number">7.3</span> Histogram Zonal coverage</h2>
 <pre class="r"><code>GLODAP_histogram_lat &lt;- GLODAP %&gt;%
-  group_by(era, lat_grid, basin_AIP) %&gt;%
+  group_by(era, lat, basin_AIP) %&gt;%
   tally() %&gt;%
   ungroup()
 
 GLODAP_histogram_lat %&gt;%
-  ggplot(aes(lat_grid, n, fill = era)) +
+  ggplot(aes(lat, n, fill = era)) +
   geom_col() +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   facet_wrap( ~ basin_AIP) +
@@ -3184,12 +3344,12 @@ jens-daniel-mueller
 <div id="zonal-temporal-coverage-hovmoeller" class="section level2" number="7.5">
 <h2 number="7.5"><span class="header-section-number">7.5</span> Zonal temporal coverage (Hovmoeller)</h2>
 <pre class="r"><code>GLODAP_hovmoeller_year &lt;- GLODAP %&gt;%
-  group_by(year, lat_grid, basin_AIP) %&gt;%
+  group_by(year, lat, basin_AIP) %&gt;%
   tally() %&gt;%
   ungroup()
 
 GLODAP_hovmoeller_year %&gt;%
-  ggplot(aes(year, lat_grid, fill = n)) +
+  ggplot(aes(year, lat, fill = n)) +
   geom_tile() +
   geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
   scale_fill_viridis_c(option = &quot;magma&quot;,
