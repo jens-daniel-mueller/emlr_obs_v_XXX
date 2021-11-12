@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree52e894d5c6baa4516660e31a2bee22699b3b0813targetblank52e894da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/52e894d5c6baa4516660e31a2bee22699b3b0813" target="_blank">52e894d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree452790461bc99ad65cfa697c47ceb4f1631d2ff1targetblank4527904a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/452790461bc99ad65cfa697c47ceb4f1631d2ff1" target="_blank">4527904</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree52e894d5c6baa4516660e31a2bee22699b3b0813targetblank52e894da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree452790461bc99ad65cfa697c47ceb4f1631d2ff1targetblank4527904a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/52e894d5c6baa4516660e31a2bee22699b3b0813" target="_blank">52e894d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/452790461bc99ad65cfa697c47ceb4f1631d2ff1" target="_blank">4527904</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -631,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/452790461bc99ad65cfa697c47ceb4f1631d2ff1/analysis/tracers_GLODAPv2_2021.Rmd" target="_blank">4527904</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-12
+</td>
+<td>
+add zonal mean section of gridded dcant per CFC
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/e5a0a8fb15701b165aa0606d4180043b95d27fd0/docs/tracers_GLODAPv2_2021.html" target="_blank">e5a0a8f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3439,7 +3473,7 @@ jens-daniel-mueller
   pCFC_12_3d
 )
 
-CFC_dcant &lt;- CFC_dcant %&gt;% 
+CFC_dcant &lt;- CFC_dcant %&gt;%
   mutate(depth_grid = cut(depth, seq(0, 1e4, 1000), right = FALSE))</code></pre>
 <pre class="r"><code>CFC_dcant %&gt;%
   ggplot(aes(pCFC_12, dcant)) +
@@ -6814,19 +6848,33 @@ jens-daniel-mueller
 
 CFC_dcant_zonal &lt;- CFC_dcant_zonal %&gt;%
   mutate(
-    pCFC_12_mean_pos = if_else(pCFC_12_mean &lt; 0, 0, pCFC_12_mean),
     dcant_mean_pos = if_else(dcant_mean &lt; 0, 0, dcant_mean),
-    dcant_per_CFC = dcant_mean_pos / pCFC_12_mean_pos,
+    dcant_per_CFC = dcant_mean_pos / pCFC_12_mean,
     dcant_per_CFC_log = log10(dcant_per_CFC)
-  ) %&gt;%
-  mutate(
-    dcant_per_CFC_log = if_else(dcant_mean_pos == 0,
-                            0,
-                            dcant_per_CFC_log),
-    dcant_per_CFC_log = if_else(pCFC_12_mean_pos == 0,
-                            max(dcant_per_CFC_log, na.rm = TRUE),
-                            dcant_per_CFC_log)
   )
+
+# dcant_per_CFC_log_min &lt;- CFC_dcant_zonal %&gt;% 
+#   filter(dcant_per_CFC_log != -Inf) %&gt;% 
+#   slice_min(dcant_per_CFC_log) %&gt;% 
+#   pull(dcant_per_CFC_log)
+# 
+# dcant_per_CFC_log_max &lt;- CFC_dcant_zonal %&gt;% 
+#   filter(dcant_per_CFC_log != Inf) %&gt;% 
+#   slice_max(dcant_per_CFC_log) %&gt;% 
+#   pull(dcant_per_CFC_log)
+# 
+# 
+# CFC_dcant_zonal &lt;- CFC_dcant_zonal %&gt;%
+#   mutate(
+#     dcant_per_CFC_log = if_else(dcant_mean_pos == 0,
+#                                 dcant_per_CFC_log_min,
+#                                 dcant_per_CFC_log),
+#     dcant_per_CFC_log = if_else(
+#       pCFC_12_mean == 0,
+#       dcant_per_CFC_log_max,
+#       dcant_per_CFC_log
+#     )
+#   )
 
 
 CFC_dcant_zonal %&gt;%
@@ -6885,7 +6933,7 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>CFC_dcant_zonal %&gt;%
   p_section_zonal_continous_depth(
-    var = &quot;pCFC_12_mean_pos&quot;,
+    var = &quot;pCFC_12_mean&quot;,
     breaks = NULL,
     legend_title = &quot;pCFC_12&quot;,
     title_text = NULL
@@ -6940,11 +6988,15 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>CFC_dcant_zonal %&gt;% 
-  ggplot(aes(dcant_per_CFC)) +
-  geom_histogram() +
-  scale_y_log10() +
-  facet_grid(.~ basin_AIP)</code></pre>
+<pre class="r"><code>CFC_dcant_zonal %&gt;%
+  # filter(dcant_per_CFC_log &gt; -4) %&gt;%
+  p_section_zonal_continous_depth(
+    var = &quot;dcant_per_CFC_log&quot;,
+    breaks = NULL,
+    legend_title = &quot;log10\ndcant /\npCFC_12&quot;,
+    title_text = NULL
+  ) +
+  facet_grid(basin_AIP ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections-3">
@@ -6995,12 +7047,17 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>CFC_dcant_zonal %&gt;%
-  filter(dcant_per_CFC_log &gt; -4) %&gt;%
+  # filter(dcant_per_CFC_log &gt; -4) %&gt;%
   p_section_zonal_continous_depth(
     var = &quot;dcant_per_CFC_log&quot;,
     breaks = NULL,
     legend_title = &quot;log10\ndcant /\npCFC_12&quot;,
     title_text = NULL
+  ) +
+  scale_y_reverse(
+    limits = c(1000, 0),
+    breaks = seq(0, 900, 200),
+    name = &quot;Depth (m)&quot;
   ) +
   facet_grid(basin_AIP ~ .)</code></pre>
 <p><img src="figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
@@ -7028,6 +7085,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e5a0a8fb15701b165aa0606d4180043b95d27fd0/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-4.png" target="_blank">e5a0a8f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-12
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1b58f8e65653707e7dbdcabe7eb7dec9b82a2e5a/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-4.png" target="_blank">1b58f8e</a>
 </td>
 <td>
@@ -7051,80 +7119,6 @@ jens-daniel-mueller
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20e7603fe7fda1ae4c4dbb0517a4584a976ac2bc/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-4.png" target="_blank">20e7603</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-12
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>CFC_dcant_zonal %&gt;%
-  filter(dcant_per_CFC_log &gt; -4) %&gt;%
-  p_section_zonal_continous_depth(
-    var = &quot;dcant_per_CFC_log&quot;,
-    breaks = NULL,
-    legend_title = &quot;log10\ndcant /\npCFC_12&quot;,
-    title_text = NULL
-  ) +
-  scale_y_reverse(
-    limits = c(1000, 0),
-    breaks = seq(0, 900, 200),
-    name = &quot;Depth (m)&quot;
-  ) +
-  facet_grid(basin_AIP ~ .)</code></pre>
-<p><img src="figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-zonal_mean_sections-5">
-Past versions of zonal_mean_sections-5.png
-</button>
-</p>
-<div id="fig-zonal_mean_sections-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/1b58f8e65653707e7dbdcabe7eb7dec9b82a2e5a/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-5.png" target="_blank">1b58f8e</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/029c50af837eed95d99b546ced0d74eb7f98350e/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-5.png" target="_blank">029c50a</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2021-11-12
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/20e7603fe7fda1ae4c4dbb0517a4584a976ac2bc/docs/figure/tracers_GLODAPv2_2021.Rmd/zonal_mean_sections-5.png" target="_blank">20e7603</a>
 </td>
 <td>
 jens-daniel-mueller
