@@ -821,12 +821,24 @@ CFC_dcant_zonal %>%
 
 
 CFC_dcant_zonal %>%
+  filter(dcant_per_CFC_log > -4) %>%
   p_section_zonal_continous_depth(
     var = "dcant_per_CFC_log",
     breaks = NULL,
     legend_title = "log10\ndcant /\npCFC_12",
     title_text = NULL
   ) +
+  facet_grid(basin_AIP ~ .)
+
+CFC_dcant_zonal %>%
+  p_section_zonal_continous_depth(
+    var = "dcant_per_CFC_log",
+    breaks = NULL,
+    legend_title = "log10\ndcant /\npCFC_12",
+    title_text = NULL
+  ) +
+  coord_cartesian(ylim = c(1000, 0),
+                  expand = 0) +
   facet_grid(basin_AIP ~ .)
 
 ```
