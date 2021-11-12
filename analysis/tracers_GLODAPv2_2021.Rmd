@@ -58,6 +58,7 @@ path_version_data     <-
 ```
 
 ```{r load_libraries_specific, include = FALSE}
+
 library(lubridate)
 
 ```
@@ -125,6 +126,15 @@ dcant_3d <-
 
 ```
 
+
+```{r read_other_data}
+
+tref <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
+```
 
 
 # Data preparation
@@ -224,7 +234,7 @@ GLODAP_NA <- GLODAP_NA %>%
 
 #### Maps
 
-```{r NA_maps, fig.asp=2}
+```{r NA_maps, fig.asp=1.5}
 
 GLODAP_NA %>%
   group_split(NA_flag) %>%
@@ -290,7 +300,7 @@ GLODAP_f_flags <- GLODAP_f_flags %>%
 
 #### Maps
 
-```{r f_flag_maps, fig.asp=2}
+```{r f_flag_maps, fig.asp=1.5}
 
 GLODAP_f_flags %>%
   group_split(value) %>%
@@ -356,7 +366,7 @@ GLODAP_qc_flags <- GLODAP_qc_flags %>%
 
 #### Maps
 
-```{r qc_flag_maps, fig.asp=2}
+```{r qc_flag_maps, fig.asp=1.5}
 
 GLODAP_qc_flags %>%
   group_split(value) %>%
@@ -418,7 +428,7 @@ GLODAP <- GLODAP %>%
 
 # Indian Ocean
 
-## NS section
+## NS cruise
 
 ### Absolute
 
@@ -488,10 +498,10 @@ IO_NS_grid_offset <- IO_NS_grid %>%
   select(-pcfc12_sd) %>% 
   pivot_wider(names_from = era,
               values_from = pcfc12_mean) %>% 
-  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
+  mutate(delta_pcfc12_mean = `2000-2009` - `1989-1999`)
 
 IO_NS_grid_offset %>%
-  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
+  ggplot(aes(lat , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
   scale_fill_divergent(
     mid = "grey80",
@@ -503,17 +513,19 @@ IO_NS_grid_offset %>%
   coord_cartesian(expand = 0)
 
 IO_NS_grid_offset %>% 
-  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 2, 5, 20, Inf))) %>% 
-  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
+  mutate(delta_pcfc12_mean = cut(delta_pcfc12_mean, c(-Inf, 2, 5, 20, Inf))) %>% 
+  ggplot(aes(lat , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = "grey") +
   scale_y_reverse() +
   coord_cartesian(expand = 0)
 
+rm(IO_NS, IO_NS_grid, IO_NS_grid_offset)
+
 
 ```
 
-## EW section
+## EW cruise
 
 ### Absolute
 
@@ -531,7 +543,7 @@ GLODAP_grid_Indian <- GLODAP %>%
 map +
   geom_tile(data = GLODAP_grid_Indian,
             aes(lon, lat, fill = year)) +
-  facet_wrap(~ era)
+  facet_grid(era ~ .)
 
 
 IO_EW <- GLODAP %>% 
@@ -552,7 +564,8 @@ IO_EW %>%
 IO_EW %>% 
   ggplot(aes(lon , depth, col = pcfc12)) +
   geom_point() +
-  scale_color_viridis_c() +
+  scale_fill_viridis_c(trans = "pseudo_log",
+                        breaks = c(0,10,100)) +
   scale_y_reverse() +
   facet_grid(era ~ .)
 
@@ -589,11 +602,11 @@ IO_EW_grid %>%
 IO_EW_grid_offset <- IO_EW_grid %>% 
   pivot_wider(names_from = era,
               values_from = pcfc12) %>% 
-  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
+  mutate(delta_pcfc12_mean = `2000-2009` - `1989-1999`)
 
 
 IO_EW_grid_offset %>% 
-  ggplot(aes(lon_grid , depth, fill = delta_pcfc12)) +
+  ggplot(aes(lon_grid , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
   scale_fill_divergent(
     mid = "grey80",
@@ -605,13 +618,14 @@ IO_EW_grid_offset %>%
   coord_cartesian(expand = 0)
 
 IO_EW_grid_offset %>% 
-  mutate(delta_pcfc12 = cut(delta_pcfc12, c(-Inf, 2, 5, 20, Inf))) %>% 
-  ggplot(aes(lon_grid , depth, fill = delta_pcfc12)) +
+  mutate(delta_pcfc12_mean = cut(delta_pcfc12_mean, c(-Inf, 2, 5, 20, Inf))) %>% 
+  ggplot(aes(lon_grid , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = "grey") +
   scale_y_reverse() +
   coord_cartesian(expand = 0)
 
+rm(IO_EW, IO_EW_grid, IO_EW_grid_offset, GLODAP_grid_Indian)
 
 ```
 
@@ -622,29 +636,24 @@ IO_EW_grid_offset %>%
 ```{r zonal_sections, fig.asp=1}
 
 zonal_sections <- GLODAP %>% 
-  mutate(depth = cut(depth,
-                          seq(0,1e4,500),
-                          seq(250,1e4,500)),
-         depth = as.numeric(as.character(depth)),
-         lat = cut(lat,
-                          seq(-100,100,5),
-                          seq(-97.5,100,5)),
-         lat = as.numeric(as.character(lat))) %>% 
-  group_by(lat, depth, era, basin_AIP) %>% 
-  summarise(pcfc12 = mean(pcfc12, na.rm = TRUE)) %>% 
-  ungroup()
+  select(lat, lon, depth, era, basin_AIP, pcfc12) %>% 
+  group_by(era) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd_bottle(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
 
-p_pcfc12_absolut <- zonal_sections %>% 
-  ggplot(aes(lat , depth, fill = pcfc12)) +
+zonal_sections %>% 
+  ggplot(aes(lat , depth, fill = pcfc12_mean)) +
   geom_tile() +
-  scale_fill_viridis_c() +
+  scale_fill_viridis_c(trans = "pseudo_log",
+                        breaks = c(0,10,100)) +
   scale_y_reverse() +
   labs(x = "Latitude (°N)", y = "Depth (m)") +
   coord_fixed(ratio = 1e-2, expand = 0) +
   facet_grid(basin_AIP ~ era) +
   theme(legend.position = "left")
 
-p_pcfc12_absolut 
 
 ```
 
@@ -653,24 +662,37 @@ p_pcfc12_absolut
 ```{r zonal_sections_offset, fig.asp=0.6}
 
 zonal_sections_offset <- zonal_sections %>% 
+  select(-pcfc12_sd) %>% 
   pivot_wider(names_from = era,
-              values_from = pcfc12) %>% 
-  mutate(delta_pcfc12 = `2000-2009` - `1989-1999`)
-
+              values_from = pcfc12_mean) %>% 
+  mutate(delta_pcfc12_mean := !!sym(tref$era[2]) - !!sym(tref$era[1]))
 
 zonal_sections_offset %>% 
-  ggplot(aes(delta_pcfc12)) +
+  ggplot(aes(delta_pcfc12_mean)) +
   geom_histogram() +
   scale_y_log10() +
   coord_cartesian(expand = 0) +
   facet_grid(basin_AIP ~ .)
 
-p_pcfc12_offset <- zonal_sections_offset %>% 
-  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
+
+zonal_sections_offset %>% 
+  ggplot(aes(delta_pcfc12_mean)) +
+  geom_histogram() +
+  coord_cartesian(expand = 0) +
+  scale_x_continuous(trans = "pseudo_log",
+                     breaks = c(-100, -10, 0, 10, 100)) +
+  scale_y_log10() +
+  facet_grid(basin_AIP ~ .)
+
+zonal_sections_offset %>% 
+  ggplot(aes(lat , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
-  scale_fill_divergent(mid = "grey80",
-                       na.value = "black",
-                       limits = c(-1,1)*100) +
+  scale_fill_divergent(
+    mid = "grey80",
+    na.value = "black",
+    trans = "pseudo_log",
+    breaks = c(-100, -10, 0, 10, 100)
+  ) +
   labs(x = "Latitude (°N)", y = "Depth (m)") +
   scale_y_reverse() +
   coord_fixed(ratio = 1e-2, expand = 0) +
@@ -678,13 +700,12 @@ p_pcfc12_offset <- zonal_sections_offset %>%
   theme(axis.text.y = element_blank(),
         axis.title.y = element_blank())
 
-p_pcfc12_offset
 
 zonal_sections_offset %>%
-  mutate(delta_pcfc12 = cut(
-    delta_pcfc12,
-    c(-Inf, 0.002, 0.01, 0.02, 0.05, 0.2, Inf))) %>%
-  ggplot(aes(lat , depth, fill = delta_pcfc12)) +
+  mutate(delta_pcfc12_mean = cut(
+    delta_pcfc12_mean,
+    c(-Inf, 0.2, 1, 2, 5, 20, Inf))) %>%
+  ggplot(aes(lat , depth, fill = delta_pcfc12_mean)) +
   geom_raster() +
   scale_fill_viridis_d(na.value = "grey") +
   scale_y_reverse() +
