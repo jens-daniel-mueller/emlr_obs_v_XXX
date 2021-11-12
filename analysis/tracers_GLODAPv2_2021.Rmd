@@ -716,19 +716,19 @@ zonal_sections_offset %>%
 
 # Interior relation to dCant
 
+## Distributions
+
 ```{r dcant_CFC12_correlation, fig.asp=0.5}
 
-dcant_3d <- dcant_3d %>% 
-  filter(data_source == "obs") %>% 
-  select(lon, lat, depth, basin_AIP, dcant, gamma_slab)
-
 CFC_dcant <- inner_join(
-  dcant_3d,
+  dcant_3d %>%
+    filter(data_source == "obs") %>%
+    select(lon, lat, depth, basin_AIP, dcant, gamma, gamma_slab),
   pCFC_12_3d
 )
 
 CFC_dcant <- CFC_dcant %>% 
-  mutate(depth = cut(depth, seq(0, 1e4, 1000), right = FALSE))
+  mutate(depth_grid = cut(depth, seq(0, 1e4, 1000), right = FALSE))
 
 ```
 
@@ -757,37 +757,13 @@ CFC_dcant %>%
   facet_grid(gamma_slab ~ .) +
   labs(title = "pCFC-12 < 5")
 
-CFC_dcant %>%
-  filter(pCFC_12 < 50) %>% 
-  ggplot(aes(dcant, col = basin_AIP, fill = basin_AIP)) +
-  geom_vline(xintercept = 0) +
-  geom_density(alpha = 0.3) +
-  facet_grid(gamma_slab ~ .) +
-  labs(title = "pCFC-12 < 50")
-
 ```
 
-```{r dcant_CFC12_correlation_depth, fig.asp=1}
+```{r dcant_CFC12_correlation_depth_gamma, fig.asp=0.5}
 
 CFC_dcant %>%
-  filter(pCFC_12 < 70) %>% 
-  ggplot(aes(pCFC_12, dcant)) +
-  geom_hline(yintercept = 0) +
-  geom_bin2d() +
-  geom_smooth(col = "red", se = FALSE) +
-  scale_fill_viridis_c(trans = "log10") +
-  facet_grid(depth ~ basin_AIP,
-             scales = "free_y") +
-  coord_cartesian()
-
-```
-
-
-```{r dcant_CFC12_correlation_depth_gamma, fig.asp=0.5, eval=FALSE}
-
-CFC_dcant %>%
-  group_split(gamma_slab, depth) %>%
-  # head(4) %>% 
+  group_split(gamma_slab, depth_grid) %>%
+  # head(1) %>%
   map(
     ~ ggplot(data = .x,
              aes(pCFC_12, dcant)) +
@@ -796,9 +772,55 @@ CFC_dcant %>%
       geom_smooth(col = "red", se=FALSE) +
       scale_fill_viridis_c(trans = "log10") +
       labs(title = paste("gamma_slab", unique(.x$gamma_slab),
-                         "| depth", unique(.x$depth))) +
+                         "| depth", unique(.x$depth_grid))) +
       facet_grid(. ~ basin_AIP)
   )
+
+```
+
+
+## Zonal sections
+
+```{r zonal_mean_sections}
+
+CFC_dcant_zonal <- m_zonal_mean_sd(
+  CFC_dcant %>% 
+    select(lat, lon, depth, basin_AIP, gamma, dcant, pCFC_12)
+)
+
+
+
+CFC_dcant_zonal %>%
+  group_split(basin_AIP) %>%
+  # head(1) %>%
+  map( ~ p_section_zonal_continous_depth(
+    df = .x,
+    var = "dcant_mean",
+    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
+  ))
+
+CFC_dcant_zonal %>%
+  group_split(basin_AIP) %>%
+  # head(1) %>%
+  map( ~ p_section_zonal_continous_depth(
+    df = .x,
+    var = "pCFC_12_mean",
+    breaks = NULL,
+    legend_title = "pCFC_12",
+    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
+  ))
+
+CFC_dcant_zonal %>%
+  mutate(dcant_per_CFC = dcant_mean / pCFC_12_mean) %>% 
+  group_split(basin_AIP) %>%
+  # head(1) %>%
+  map( ~ p_section_zonal_continous_depth(
+    df = .x,
+    var = "dcant_per_CFC",
+    breaks = NULL,
+    legend_title = "pCFC_12",
+    subtitle_text = paste("basin_AIP:", unique(.x$basin_AIP))
+  ))
 
 ```
 
