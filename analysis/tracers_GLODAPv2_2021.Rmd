@@ -778,6 +778,42 @@ CFC_dcant %>%
 
 ```
 
+```{r dcant_CFC12_correlation_gamma_individual, fig.asp=0.5}
+
+CFC_dcant %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(pCFC_12, dcant)) +
+      geom_hline(yintercept = 0) +
+      geom_bin2d() +
+      geom_smooth(col = "red", se=FALSE) +
+      scale_fill_viridis_c(trans = "log10") +
+      labs(title = paste("gamma_slab", unique(.x$gamma_slab))) +
+      facet_grid(. ~ basin_AIP)
+  )
+
+```
+
+
+
+```{r dcant_CFC12_correlation_at_low_CFC_gamma, fig.asp=0.5}
+
+CFC_dcant %>%
+  filter(pCFC_12 < 5) %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(~ ggplot(data = .x,
+               aes(dcant, col = basin_AIP, fill = basin_AIP)) +
+  geom_vline(xintercept = 0) +
+  geom_density(alpha = 0.3) +
+  labs(title = paste("pCFC-12 < 5 | gamma_slab", unique(.x$gamma_slab))) +
+  coord_cartesian(xlim = c(-4,11.5))
+)
+
+```
+
 
 ## Zonal sections
 
@@ -830,6 +866,17 @@ CFC_dcant_zonal %>%
 CFC_dcant_zonal %>%
   p_section_zonal_continous_depth(
     var = "pCFC_12_mean",
+    breaks = NULL,
+    legend_title = "pCFC_12",
+    title_text = NULL
+  ) +
+  facet_grid(basin_AIP ~ .)
+
+
+CFC_dcant_zonal %>%
+  mutate(lg_pCFC_12_mean = log10(pCFC_12_mean)) %>% 
+  p_section_zonal_continous_depth(
+    var = "lg_pCFC_12_mean",
     breaks = NULL,
     legend_title = "pCFC_12",
     title_text = NULL
