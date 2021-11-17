@@ -1093,7 +1093,7 @@ rm(GLODAP_grid)
 
 ## Profiles
 
-```{r cstar_profiles, fig.asp=3}
+```{r cstar_profiles, fig.asp=3, eval=FALSE}
 
 GLODAP_profiles_IO_sub <- GLODAP %>% 
   filter(depth > 1000,
@@ -1133,7 +1133,7 @@ rm(GLODAP_profiles)
 
 ```
 
-```{r cstar_station_stats}
+```{r cstar_station_stats, eval=FALSE}
 
 cstar_station_stats <- GLODAP %>% 
   filter(depth >= 2000,
@@ -1213,7 +1213,7 @@ map +
 
 ### Apply scatter filter
 
-```{r deep_profile_cstar_scatter_filter}
+```{r deep_profile_cstar_scatter_filter, eval=FALSE}
 
 cruise_SD_out <- cstar_station_stats %>% 
   filter(data_source == "obs",
@@ -1254,27 +1254,37 @@ rm(cstar_station_stats, grid_post, grid_pre)
 
 ```{r cstar_slab_distribution_absolute}
 
-cstar_grid <- m_grid_horizontal_coarse(GLODAP)
+cstar_grid <- m_grid_horizontal_coarse(GLODAP) %>% 
+    filter(data_source == "obs")
 
 cstar_grid <- cstar_grid %>%
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
-  summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>%
+  summarise(across(c(cstar_tref, tco2, talk, phosphate), ~ mean(.x, na.rm = TRUE))) %>%
   ungroup() %>%
-  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
+  mutate(
+    talk = -0.5 * talk,
+    phosphate = -params_local$rCP * phosphate + params_local$rNP *
+      0.5 * phosphate
+  ) %>% 
+mutate(gamma_slab = fct_relevel(gamma_slab, sort))
+
+cstar_grid <- cstar_grid %>% 
+  pivot_longer(cstar_tref:phosphate,
+               names_to = "parameter",
+               values_to = "value")
 
 cstar_grid %>%
-  filter(data_source == "obs",
-         basin_AIP == "Indian") %>%
-  group_split(basin_AIP, gamma_slab) %>%
+  filter(basin_AIP == "Indian") %>%
+  group_split(basin_AIP, gamma_slab, parameter) %>%
   # head(1) %>%
   map(
     ~ map +
       geom_tile(
         data = .x,
-        aes(lon_grid, lat_grid, fill = cstar_tref),
+        aes(lon_grid, lat_grid, fill = value),
         col = "grey20"
       ) +
-      scale_fill_viridis_c() +
+      scale_fill_viridis_c(name = unique(.x$parameter)) +
       labs(title = paste(
         "basin_AIP",
         unique(.x$basin_AIP),
@@ -1292,27 +1302,35 @@ cstar_grid %>%
 
 ```{r cstar_slab_distribution_offset, fig.asp=0.5}
 
-cstar_grid_offset <- cstar_grid %>% 
+cstar_grid_offset <- cstar_grid %>%
   pivot_wider(names_from = era,
-              values_from = cstar_tref) %>% 
-  mutate(delta_cstar := !!sym(tref$era[2]) - !!sym(tref$era[1]))
+              values_from = value) %>%
+  mutate(delta_value := !!sym(tref$era[2])-!!sym(tref$era[1])) %>%
+  filter(!is.na(delta_value))
 
+cstar_grid_offset <- cstar_grid_offset %>%
+  select(-tref$era) %>%
+  pivot_wider(names_from = parameter,
+              values_from = delta_value) %>%
+  mutate(cstar_tref_sum = tco2 + talk + phosphate) %>%
+  pivot_longer(cstar_tref:cstar_tref_sum,
+               names_to = "parameter",
+               values_to = "delta_value")
 
 cstar_grid_offset %>%
-  filter(data_source == "obs",
-         !is.na(delta_cstar)) %>%
-  mutate(delta_cstar = cut(delta_cstar,
+  mutate(delta_value = cut(delta_value,
                            c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
-  group_split(gamma_slab) %>%
+  group_split(gamma_slab, parameter) %>%
   # head(1) %>%
   map(
     ~ map +
       geom_tile(
         data = .x,
-        aes(lon_grid, lat_grid, fill = delta_cstar),
+        aes(lon_grid, lat_grid, fill = delta_value),
         col = "grey20"
       ) +
-      scale_fill_brewer(palette = "RdBu",
+      scale_fill_brewer(name = unique(.x$parameter),
+                        palette = "RdBu",
                         drop = FALSE,
                         direction = -1) +
       labs(title = paste(
@@ -1325,6 +1343,7 @@ cstar_grid_offset %>%
 rm(cstar_grid, cstar_grid_offset)
 
 ```
+
 ## Zonal section
 
 ### Absolute
@@ -1467,240 +1486,6 @@ rm(GLODAP_data_distribution_cruise)
 
 ```
 
-
-# tco2
-## Slab distribution
-### Absolute
-
-```{r cstar_slab_distribution_absolute_tco2}
-
-tco2_grid <- m_grid_horizontal_coarse(GLODAP)
-
-tco2_grid <- tco2_grid %>%
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
-  summarise(tco2 = mean(tco2, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
-
-tco2_grid %>%
-  filter(data_source == "obs",
-         basin_AIP == "Indian") %>%
-  group_split(basin_AIP, gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = tco2),
-        col = "grey20"
-      ) +
-      scale_fill_viridis_c() +
-      labs(title = paste(
-        "basin_AIP",
-        unique(.x$basin_AIP),
-        "| gamma_slab",
-        unique(.x$gamma_slab)
-      )) +
-      xlim(c(20, 150)) +
-      facet_grid(. ~ era)
-  )
-
-
-```
-
-### Offset
-
-```{r tco2_slab_distribution_offset_tco2, fig.asp=0.5}
-
-tco2_grid_offset <- tco2_grid %>% 
-  pivot_wider(names_from = era,
-              values_from = tco2) %>% 
-  mutate(delta_tco2 := !!sym(tref$era[2]) - !!sym(tref$era[1]))
-
-
-tco2_grid_offset %>%
-  filter(data_source == "obs",
-         !is.na(delta_tco2)) %>%
-  mutate(delta_tco2 = cut(delta_tco2,
-                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
-  group_split(gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = delta_tco2),
-        col = "grey20"
-      ) +
-      scale_fill_brewer(palette = "RdBu",
-                        drop = FALSE,
-                        direction = -1) +
-      labs(title = paste(
-        "gamma_slab",
-        unique(.x$gamma_slab)
-      ))
-  )
-
-
-rm(tco2_grid, tco2_grid_offset)
-
-```
-
-# talk
-## Slab distribution
-### Absolute
-
-```{r cstar_slab_distribution_absolute_talk}
-
-talk_grid <- m_grid_horizontal_coarse(GLODAP)
-
-talk_grid <- talk_grid %>%
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
-  summarise(talk = mean(talk, na.rm = TRUE)*0.5) %>%
-  ungroup() %>%
-  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
-
-talk_grid %>%
-  filter(data_source == "obs",
-         basin_AIP == "Indian") %>%
-  group_split(basin_AIP, gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = talk),
-        col = "grey20"
-      ) +
-      scale_fill_viridis_c() +
-      labs(title = paste(
-        "basin_AIP",
-        unique(.x$basin_AIP),
-        "| gamma_slab",
-        unique(.x$gamma_slab)
-      )) +
-      xlim(c(20, 150)) +
-      facet_grid(. ~ era)
-  )
-
-
-```
-
-### Offset
-
-```{r talk_slab_distribution_offset_talk, fig.asp=0.5}
-
-talk_grid_offset <- talk_grid %>% 
-  pivot_wider(names_from = era,
-              values_from = talk) %>% 
-  mutate(delta_talk := !!sym(tref$era[2]) - !!sym(tref$era[1]))
-
-
-talk_grid_offset %>%
-  filter(data_source == "obs",
-         !is.na(delta_talk)) %>%
-  mutate(delta_talk = cut(delta_talk,
-                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
-  group_split(gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = delta_talk),
-        col = "grey20"
-      ) +
-      scale_fill_brewer(palette = "RdBu",
-                        drop = FALSE,
-                        direction = -1) +
-      labs(title = paste(
-        "gamma_slab",
-        unique(.x$gamma_slab)
-      ))
-  )
-
-
-rm(talk_grid, talk_grid_offset)
-
-```
-
-# phosphate
-## Slab distribution
-### Absolute
-
-```{r cstar_slab_distribution_absolute_phosphate}
-
-phosphate_grid <- m_grid_horizontal_coarse(GLODAP)
-
-phosphate_grid <- phosphate_grid %>%
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
-  summarise(phosphate = mean(phosphate, na.rm = TRUE)*params_local$rCP) %>%
-  ungroup() %>%
-  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
-
-phosphate_grid %>%
-  filter(data_source == "obs",
-         basin_AIP == "Indian") %>%
-  group_split(basin_AIP, gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = phosphate),
-        col = "grey20"
-      ) +
-      scale_fill_viridis_c() +
-      labs(title = paste(
-        "basin_AIP",
-        unique(.x$basin_AIP),
-        "| gamma_slab",
-        unique(.x$gamma_slab)
-      )) +
-      xlim(c(20, 150)) +
-      facet_grid(. ~ era)
-  )
-
-
-```
-
-### Offset
-
-```{r phosphate_slab_distribution_offset_phosphate, fig.asp=0.5}
-
-phosphate_grid_offset <- phosphate_grid %>% 
-  pivot_wider(names_from = era,
-              values_from = phosphate) %>% 
-  mutate(delta_phosphate := !!sym(tref$era[2]) - !!sym(tref$era[1]))
-
-
-phosphate_grid_offset %>%
-  filter(data_source == "obs",
-         !is.na(delta_phosphate)) %>%
-  mutate(delta_phosphate = cut(delta_phosphate,
-                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
-  group_split(gamma_slab) %>%
-  # head(1) %>%
-  map(
-    ~ map +
-      geom_tile(
-        data = .x,
-        aes(lon_grid, lat_grid, fill = delta_phosphate),
-        col = "grey20"
-      ) +
-      scale_fill_brewer(palette = "RdBu",
-                        drop = FALSE,
-                        direction = -1) +
-      labs(title = paste(
-        "gamma_slab",
-        unique(.x$gamma_slab)
-      ))
-  )
-
-
-rm(phosphate_grid, phosphate_grid_offset)
-
-```
 
 # Rarefication
 
