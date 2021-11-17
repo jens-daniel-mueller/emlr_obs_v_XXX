@@ -1349,24 +1349,36 @@ cstar_grid_offset %>%
 
 ### Correlation
 
-```{r correlations_contributions_cstar, fig.asp=3}
+```{r correlations_contributions_cstar, fig.asp=0.5}
 
-cstar_grid_offset %>% 
+cstar_grid_offset %>%
   filter(parameter != "cstar_sum",
-         basin_AIP == "Indian") %>% 
+         basin_AIP == "Indian") %>%
   pivot_wider(names_from = parameter,
-              values_from = delta_value) %>% 
+              values_from = delta_value) %>%
+  rename(delta_cstar_tref = cstar_tref) %>%
   pivot_longer(cstar_tco2:cstar_phosphate,
                names_to = "parameter",
-               values_to = "delta_cstar_component") %>% 
-  ggplot(aes(cstar_tref, delta_cstar_component)) +
-  geom_vline(xintercept = 0) +
-  geom_hline(yintercept = 0) +
-  geom_bin_2d(binwidth = 2) +
-  scale_fill_viridis_c() +
-  geom_smooth(method = "lm", se = FALSE, col="red") +
-  facet_grid(gamma_slab ~ parameter) +
-  coord_equal()
+               values_to = "delta_cstar_component") %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(delta_cstar_tref, delta_cstar_component)) +
+      geom_vline(xintercept = 0) +
+      geom_hline(yintercept = 0) +
+      geom_bin_2d(binwidth = 2) +
+      scale_fill_viridis_c() +
+      geom_smooth(method = "lm", se = FALSE, col = "red") +
+      labs(title = paste(
+        "basin_AIP:",
+        unique(.x$basin_AIP),
+        "| gamma_slab: ",
+        unique(.x$gamma_slab)
+      )) +
+      facet_grid(. ~ parameter) +
+      coord_equal()
+  )
 
 
 rm(cstar_grid, cstar_grid_offset)
@@ -1379,23 +1391,33 @@ rm(cstar_grid, cstar_grid_offset)
 ```{r latitudinal_cstar_pattern, fig.asp=0.5}
 
 GLODAP_cstar %>%
-  select(lat, era, basin_AIP, gamma_slab, starts_with("cstar_")) %>% 
+  filter(basin_AIP == "Indian") %>%
+  select(lat, era, basin_AIP, gamma_slab, starts_with("cstar_")) %>%
   pivot_longer(starts_with("cstar_"),
                names_to = "parameter",
-               values_to = "value") %>% 
+               values_to = "value") %>%
   group_split(basin_AIP, gamma_slab, parameter) %>%
   # head(1) %>%
-  map( ~ ggplot(data = .x,
-                aes(lat, value,
-                    col = era, fill = era)) +
-         geom_point(shape = 21, alpha = 0.3) +
-         geom_smooth(alpha = 0.3) + 
-         scale_color_brewer(palette = "Set1") + 
-         scale_fill_brewer(palette = "Set1") +
-         labs(title = paste("basin_AIP:", unique(.x$basin_AIP),
-                            "| gamma_slab: ", unique(.x$gamma_slab)),
-              y = unique(.x$parameter))
-       )
+  map(
+    ~ ggplot(data = .x,
+             aes(
+               lat, value,
+               col = era, fill = era
+             )) +
+      geom_point(shape = 21, alpha = 0.3) +
+      geom_smooth(alpha = 0.3) +
+      scale_color_brewer(palette = "Set1") +
+      scale_fill_brewer(palette = "Set1") +
+      labs(
+        title = paste(
+          "basin_AIP:",
+          unique(.x$basin_AIP),
+          "| gamma_slab: ",
+          unique(.x$gamma_slab)
+        ),
+        y = unique(.x$parameter)
+      )
+  )
 
 
 ```
