@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8181e94b9ef05ff0c69f9584fdd43ed00a66f3d7targetblank8181e94a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8181e94b9ef05ff0c69f9584fdd43ed00a66f3d7" target="_blank">8181e94</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8efe22930eab8954dd2209ceeac14d84893194aetargetblank8efe229a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8efe22930eab8954dd2209ceeac14d84893194ae" target="_blank">8efe229</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8181e94b9ef05ff0c69f9584fdd43ed00a66f3d7targetblank8181e94a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8efe22930eab8954dd2209ceeac14d84893194aetargetblank8efe229a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8181e94b9ef05ff0c69f9584fdd43ed00a66f3d7" target="_blank">8181e94</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8efe22930eab8954dd2209ceeac14d84893194ae" target="_blank">8efe229</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -633,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8efe22930eab8954dd2209ceeac14d84893194ae/analysis/eMLR_data_preparation.Rmd" target="_blank">8efe229</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+<td>
+added latitude plots for C* components
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/eMLR_data_preparation.html" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -16395,22 +16429,27 @@ rm(cstar_station_stats, grid_post, grid_pre)</code></pre>
 <h2 number="7.2"><span class="header-section-number">7.2</span> Slab distribution</h2>
 <div id="absolute" class="section level3" number="7.2.1">
 <h3 number="7.2.1"><span class="header-section-number">7.2.1</span> Absolute</h3>
-<pre class="r"><code>cstar_grid &lt;- m_grid_horizontal_coarse(GLODAP) %&gt;% 
-    filter(data_source == &quot;obs&quot;)
+<pre class="r"><code># calculate cstar contributions from components
+GLODAP_cstar &lt;- GLODAP %&gt;%
+  mutate(
+    cstar_tco2 = tco2,
+    cstar_talk = -0.5 * talk,
+    cstar_phosphate = -params_local$rCP * phosphate + params_local$rNP *
+      0.5 * phosphate
+  ) %&gt;%
+  select(-c(cstar, cstar_tref_delta)) %&gt;%
+  filter(data_source == &quot;obs&quot;)
+
+cstar_grid &lt;- m_grid_horizontal_coarse(GLODAP_cstar)
 
 cstar_grid &lt;- cstar_grid %&gt;%
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %&gt;%
-  summarise(across(c(cstar_tref, tco2, talk, phosphate), ~ mean(.x, na.rm = TRUE))) %&gt;%
+  summarise(across(starts_with(&quot;cstar_&quot;), ~ mean(.x, na.rm = TRUE))) %&gt;%
   ungroup() %&gt;%
-  mutate(
-    talk = -0.5 * talk,
-    phosphate = -params_local$rCP * phosphate + params_local$rNP *
-      0.5 * phosphate
-  ) %&gt;% 
-mutate(gamma_slab = fct_relevel(gamma_slab, sort))
+  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
 
 cstar_grid &lt;- cstar_grid %&gt;% 
-  pivot_longer(cstar_tref:phosphate,
+  pivot_longer(starts_with(&quot;cstar_&quot;),
                names_to = &quot;parameter&quot;,
                values_to = &quot;value&quot;)
 
@@ -16501,6 +16540,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-2.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-2.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16539,6 +16589,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-3.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-3.png" target="_blank">3a11eb3</a>
@@ -16581,6 +16642,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-4.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-4.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16619,6 +16691,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-5.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-5.png" target="_blank">3a11eb3</a>
@@ -16661,6 +16744,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-6.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-6.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16699,6 +16793,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-7.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-7.png" target="_blank">3a11eb3</a>
@@ -16741,6 +16846,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-8.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-8.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16779,6 +16895,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-9.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-9.png" target="_blank">3a11eb3</a>
@@ -16821,6 +16948,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-10.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-10.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16859,6 +16997,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-11.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-11.png" target="_blank">3a11eb3</a>
@@ -16901,6 +17050,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-12.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3a11eb360c836b8cc7be7cc72ae21901d904b5b3/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-12.png" target="_blank">3a11eb3</a>
 </td>
 <td>
@@ -16917,111 +17077,1443 @@ jens-daniel-mueller
 <pre><code>
 [[13]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-13">
+Past versions of cstar_slab_distribution_absolute-13.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-13.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[14]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-14">
+Past versions of cstar_slab_distribution_absolute-14.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-14.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[15]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-15">
+Past versions of cstar_slab_distribution_absolute-15.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-15.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[16]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-16">
+Past versions of cstar_slab_distribution_absolute-16.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-16.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[17]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-17">
+Past versions of cstar_slab_distribution_absolute-17.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-17.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[18]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-18">
+Past versions of cstar_slab_distribution_absolute-18.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-18.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[19]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-19">
+Past versions of cstar_slab_distribution_absolute-19.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-19.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[20]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-20.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-20">
+Past versions of cstar_slab_distribution_absolute-20.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-20.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[21]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-21.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-21">
+Past versions of cstar_slab_distribution_absolute-21.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-21.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[22]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-22.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-22">
+Past versions of cstar_slab_distribution_absolute-22.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-22.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[23]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-23.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-23">
+Past versions of cstar_slab_distribution_absolute-23.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-23.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[24]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-24.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-24">
+Past versions of cstar_slab_distribution_absolute-24.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-24" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-24.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[25]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-25.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-25">
+Past versions of cstar_slab_distribution_absolute-25.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-25" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-25.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[26]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-26.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-26">
+Past versions of cstar_slab_distribution_absolute-26.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-26" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-26.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[27]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-27.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-27">
+Past versions of cstar_slab_distribution_absolute-27.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-27" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-27.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[28]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-28.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-28">
+Past versions of cstar_slab_distribution_absolute-28.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-28" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-28.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[29]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-29.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-29">
+Past versions of cstar_slab_distribution_absolute-29.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-29" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-29.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[30]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-30.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-30">
+Past versions of cstar_slab_distribution_absolute-30.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-30" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-30.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[31]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-31.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-31">
+Past versions of cstar_slab_distribution_absolute-31.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-31" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-31.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[32]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-32.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-32">
+Past versions of cstar_slab_distribution_absolute-32.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-32" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-32.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[33]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-33.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-33">
+Past versions of cstar_slab_distribution_absolute-33.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-33" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-33.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[34]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-34.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-34">
+Past versions of cstar_slab_distribution_absolute-34.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-34" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-34.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[35]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-35.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-35">
+Past versions of cstar_slab_distribution_absolute-35.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-35" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-35.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[36]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-36.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-36">
+Past versions of cstar_slab_distribution_absolute-36.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-36" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-36.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[37]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-37.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-37">
+Past versions of cstar_slab_distribution_absolute-37.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-37" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-37.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[38]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-38.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-38">
+Past versions of cstar_slab_distribution_absolute-38.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-38" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-38.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[39]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-39.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-39">
+Past versions of cstar_slab_distribution_absolute-39.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-39" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-39.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[40]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-40.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-40">
+Past versions of cstar_slab_distribution_absolute-40.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-40" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-40.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[41]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-41.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-41">
+Past versions of cstar_slab_distribution_absolute-41.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-41" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-41.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[42]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-42.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-42">
+Past versions of cstar_slab_distribution_absolute-42.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-42" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-42.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[43]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-43.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-43">
+Past versions of cstar_slab_distribution_absolute-43.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-43" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-43.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[44]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-44.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-44">
+Past versions of cstar_slab_distribution_absolute-44.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-44" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-44.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[45]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-45.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-45">
+Past versions of cstar_slab_distribution_absolute-45.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-45" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-45.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[46]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-46.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-46">
+Past versions of cstar_slab_distribution_absolute-46.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-46" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-46.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[47]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-47.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-47">
+Past versions of cstar_slab_distribution_absolute-47.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-47" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-47.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[48]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-48.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_absolute-48">
+Past versions of cstar_slab_distribution_absolute-48.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_absolute-48" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_absolute-48.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="offset" class="section level3" number="7.2.2">
 <h3 number="7.2.2"><span class="header-section-number">7.2.2</span> Offset</h3>
@@ -17035,8 +18527,8 @@ cstar_grid_offset &lt;- cstar_grid_offset %&gt;%
   select(-tref$era) %&gt;%
   pivot_wider(names_from = parameter,
               values_from = delta_value) %&gt;%
-  mutate(cstar_tref_sum = tco2 + talk + phosphate) %&gt;%
-  pivot_longer(cstar_tref:cstar_tref_sum,
+  mutate(cstar_sum = cstar_tco2 + cstar_talk + cstar_phosphate) %&gt;%
+  pivot_longer(cstar_tref:cstar_sum,
                names_to = &quot;parameter&quot;,
                values_to = &quot;delta_value&quot;)
 
@@ -17085,6 +18577,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-1.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8a3e867be2ab2bad53db6dd1e8e12f6cc159c8f1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-1.png" target="_blank">8a3e867</a>
@@ -17147,6 +18650,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-2.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-2.png" target="_blank">27a9603</a>
@@ -17222,6 +18736,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-3.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-3.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17293,6 +18818,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-4.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-4.png" target="_blank">27a9603</a>
@@ -17368,6 +18904,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-5.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-5.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17439,6 +18986,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-6.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-6.png" target="_blank">27a9603</a>
@@ -17514,6 +19072,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-7.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-7.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17585,6 +19154,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-8.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-8.png" target="_blank">27a9603</a>
@@ -17660,6 +19240,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-9.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-9.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17731,6 +19322,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-10.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-10.png" target="_blank">27a9603</a>
@@ -17806,6 +19408,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-11.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-11.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17877,6 +19490,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-12.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-12.png" target="_blank">27a9603</a>
@@ -17952,6 +19576,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-13.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-13.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -17990,6 +19625,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-14.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-14.png" target="_blank">27a9603</a>
@@ -18032,6 +19678,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-15.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/27a96033ce3960469dad985d1ede61c10ad442a1/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-15.png" target="_blank">27a9603</a>
 </td>
 <td>
@@ -18048,190 +19705,2433 @@ jens-daniel-mueller
 <pre><code>
 [[16]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-16">
+Past versions of cstar_slab_distribution_offset-16.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-16.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[17]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-17.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-17">
+Past versions of cstar_slab_distribution_offset-17.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-17" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-17.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[18]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-18.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-18">
+Past versions of cstar_slab_distribution_offset-18.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-18" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-18.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[19]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-19.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-19">
+Past versions of cstar_slab_distribution_offset-19.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-19" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-19.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[20]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-20.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-20">
+Past versions of cstar_slab_distribution_offset-20.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-20" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-20.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[21]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-21.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-21">
+Past versions of cstar_slab_distribution_offset-21.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-21" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-21.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[22]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-22.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-22">
+Past versions of cstar_slab_distribution_offset-22.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-22" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-22.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[23]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-23.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-23">
+Past versions of cstar_slab_distribution_offset-23.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-23" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-23.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[24]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-24.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-24">
+Past versions of cstar_slab_distribution_offset-24.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-24" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-24.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[25]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-25.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-25">
+Past versions of cstar_slab_distribution_offset-25.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-25" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-25.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[26]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-26.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-26">
+Past versions of cstar_slab_distribution_offset-26.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-26" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-26.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[27]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-27.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-27">
+Past versions of cstar_slab_distribution_offset-27.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-27" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-27.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[28]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-28.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-28">
+Past versions of cstar_slab_distribution_offset-28.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-28" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-28.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[29]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-29.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-29">
+Past versions of cstar_slab_distribution_offset-29.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-29" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-29.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[30]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-30.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-30">
+Past versions of cstar_slab_distribution_offset-30.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-30" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-30.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[31]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-31.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-31">
+Past versions of cstar_slab_distribution_offset-31.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-31" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-31.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[32]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-32.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-32">
+Past versions of cstar_slab_distribution_offset-32.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-32" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-32.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[33]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-33.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-33">
+Past versions of cstar_slab_distribution_offset-33.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-33" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-33.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[34]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-34.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-34">
+Past versions of cstar_slab_distribution_offset-34.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-34" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-34.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[35]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-35.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-35">
+Past versions of cstar_slab_distribution_offset-35.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-35" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-35.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[36]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-36.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-36">
+Past versions of cstar_slab_distribution_offset-36.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-36" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-36.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[37]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-37.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-37">
+Past versions of cstar_slab_distribution_offset-37.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-37" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-37.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[38]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-38.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-38">
+Past versions of cstar_slab_distribution_offset-38.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-38" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-38.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[39]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-39.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-39">
+Past versions of cstar_slab_distribution_offset-39.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-39" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-39.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[40]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-40.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-40">
+Past versions of cstar_slab_distribution_offset-40.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-40" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-40.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[41]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-41.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-41">
+Past versions of cstar_slab_distribution_offset-41.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-41" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-41.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[42]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-42.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-42">
+Past versions of cstar_slab_distribution_offset-42.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-42" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-42.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[43]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-43.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-43">
+Past versions of cstar_slab_distribution_offset-43.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-43" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-43.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[44]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-44.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-44">
+Past versions of cstar_slab_distribution_offset-44.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-44" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-44.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[45]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-45.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-45">
+Past versions of cstar_slab_distribution_offset-45.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-45" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-45.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[46]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-46.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-46">
+Past versions of cstar_slab_distribution_offset-46.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-46" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-46.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[47]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-47.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-47">
+Past versions of cstar_slab_distribution_offset-47.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-47" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-47.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[48]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-48.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-48">
+Past versions of cstar_slab_distribution_offset-48.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-48" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-48.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[49]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-49.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-49">
+Past versions of cstar_slab_distribution_offset-49.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-49" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-49.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[50]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-50.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-50">
+Past versions of cstar_slab_distribution_offset-50.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-50" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-50.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[51]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-51.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-51">
+Past versions of cstar_slab_distribution_offset-51.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-51" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-51.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[52]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-52.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-52">
+Past versions of cstar_slab_distribution_offset-52.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-52" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-52.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[53]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-53.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-53">
+Past versions of cstar_slab_distribution_offset-53.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-53" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-53.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[54]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-54.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-54">
+Past versions of cstar_slab_distribution_offset-54.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-54" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-54.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[55]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-55.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-55">
+Past versions of cstar_slab_distribution_offset-55.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-55" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-55.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[56]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-56.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-56">
+Past versions of cstar_slab_distribution_offset-56.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-56" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-56.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[57]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-57.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-57">
+Past versions of cstar_slab_distribution_offset-57.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-57" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-57.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[58]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-58.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-58">
+Past versions of cstar_slab_distribution_offset-58.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-58" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-58.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[59]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-59.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-59">
+Past versions of cstar_slab_distribution_offset-59.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-59" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-59.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[60]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-60.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-60">
+Past versions of cstar_slab_distribution_offset-60.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-60" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-60.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[61]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-61.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-61">
+Past versions of cstar_slab_distribution_offset-61.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-61" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-61.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[62]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-62.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-62">
+Past versions of cstar_slab_distribution_offset-62.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-62" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-62.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[63]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-63.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-63">
+Past versions of cstar_slab_distribution_offset-63.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-63" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-63.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[64]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-64.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-64">
+Past versions of cstar_slab_distribution_offset-64.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-64" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-64.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[65]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-65.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-65">
+Past versions of cstar_slab_distribution_offset-65.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-65" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-65.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[66]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-66.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-66">
+Past versions of cstar_slab_distribution_offset-66.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-66" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-66.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[67]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-67.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-67">
+Past versions of cstar_slab_distribution_offset-67.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-67" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-67.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[68]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-68.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-68">
+Past versions of cstar_slab_distribution_offset-68.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-68" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-68.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[69]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-69.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-69">
+Past versions of cstar_slab_distribution_offset-69.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-69" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-69.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[70]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-70.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-70">
+Past versions of cstar_slab_distribution_offset-70.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-70" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-70.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[71]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-71.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-71">
+Past versions of cstar_slab_distribution_offset-71.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-71" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-71.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[72]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-72.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-72">
+Past versions of cstar_slab_distribution_offset-72.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-72" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-72.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[73]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-73.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-73">
+Past versions of cstar_slab_distribution_offset-73.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-73" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-73.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[74]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-74.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-74">
+Past versions of cstar_slab_distribution_offset-74.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-74" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-74.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[75]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-75.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_slab_distribution_offset-75">
+Past versions of cstar_slab_distribution_offset-75.png
+</button>
+</p>
+<div id="fig-cstar_slab_distribution_offset-75" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b5c6db0acad5da4261b1fb35a8ceae3e381ba1c2/docs/figure/eMLR_data_preparation.Rmd/cstar_slab_distribution_offset-75.png" target="_blank">b5c6db0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>rm(cstar_grid, cstar_grid_offset)</code></pre>
 </div>
 </div>
-<div id="zonal-section" class="section level2" number="7.3">
-<h2 number="7.3"><span class="header-section-number">7.3</span> Zonal section</h2>
-<div id="absolute-1" class="section level3" number="7.3.1">
-<h3 number="7.3.1"><span class="header-section-number">7.3.1</span> Absolute</h3>
+<div id="latitudinal-pattern" class="section level2" number="7.3">
+<h2 number="7.3"><span class="header-section-number">7.3</span> Latitudinal pattern</h2>
+<pre class="r"><code>GLODAP_cstar %&gt;%
+  select(lat, era, basin_AIP, gamma_slab, starts_with(&quot;cstar_&quot;)) %&gt;% 
+  pivot_longer(starts_with(&quot;cstar_&quot;),
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;value&quot;) %&gt;% 
+  group_split(basin_AIP, gamma_slab, parameter) %&gt;%
+  head(1) %&gt;%
+  map( ~ ggplot(data = .x,
+                aes(lat, value,
+                    col = era, fill = era)) +
+         geom_point(shape = 21, alpha = 0.3) +
+         geom_smooth(alpha = 0.3) + 
+         scale_color_brewer(palette = &quot;Set1&quot;) + 
+         scale_fill_brewer(palette = &quot;Set1&quot;) +
+         labs(title = paste(&quot;basin_AIP:&quot;, unique(.x$basin_AIP),
+                            &quot;| gamma_slab: &quot;, unique(.x$gamma_slab)),
+              y = unique(.x$parameter))
+       )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/latitudinal_cstar_pattern-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="zonal-section" class="section level2" number="7.4">
+<h2 number="7.4"><span class="header-section-number">7.4</span> Zonal section</h2>
+<div id="absolute-1" class="section level3" number="7.4.1">
+<h3 number="7.4.1"><span class="header-section-number">7.4.1</span> Absolute</h3>
 <pre class="r"><code>zonal_sections &lt;- GLODAP %&gt;% 
   mutate(depth_grid = cut(depth,
                           seq(0,1e4,500),
@@ -18295,8 +22195,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="change" class="section level3" number="7.3.2">
-<h3 number="7.3.2"><span class="header-section-number">7.3.2</span> Change</h3>
+<div id="change" class="section level3" number="7.4.2">
+<h3 number="7.4.2"><span class="header-section-number">7.4.2</span> Change</h3>
 <pre class="r"><code>zonal_sections_offset &lt;- zonal_sections %&gt;%
   pivot_wider(names_from = era,
               values_from = cstar_tref) %&gt;%
@@ -18360,10 +22260,10 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="density-distributions" class="section level2" number="7.4">
-<h2 number="7.4"><span class="header-section-number">7.4</span> Density distributions</h2>
-<div id="basin-gamma-slab" class="section level3" number="7.4.1">
-<h3 number="7.4.1"><span class="header-section-number">7.4.1</span> basin, gamma slab</h3>
+<div id="density-distributions" class="section level2" number="7.5">
+<h2 number="7.5"><span class="header-section-number">7.5</span> Density distributions</h2>
+<div id="basin-gamma-slab" class="section level3" number="7.5.1">
+<h3 number="7.5.1"><span class="header-section-number">7.5.1</span> basin, gamma slab</h3>
 <pre class="r"><code>GLODAP_data_distribution &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
@@ -27163,8 +31063,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_data_distribution)</code></pre>
 </div>
-<div id="basin-cruise" class="section level3" number="7.4.2">
-<h3 number="7.4.2"><span class="header-section-number">7.4.2</span> basin, cruise</h3>
+<div id="basin-cruise" class="section level3" number="7.5.2">
+<h3 number="7.5.2"><span class="header-section-number">7.5.2</span> basin, cruise</h3>
 <pre class="r"><code>GLODAP_data_distribution_cruise &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
@@ -51799,31 +55699,32 @@ other attached packages:
 [21] tibble_3.1.3     ggplot2_3.3.5    tidyverse_1.3.0  workflowr_1.6.2 
 
 loaded via a namespace (and not attached):
- [1] fs_1.5.0                 RColorBrewer_1.1-2       webshot_0.5.2           
- [4] httr_1.4.2               rprojroot_2.0.2          tools_4.0.3             
- [7] backports_1.1.10         bslib_0.2.5.1            utf8_1.1.4              
-[10] R6_2.5.0                 DBI_1.1.0                colorspace_2.0-2        
-[13] withr_2.3.0              tidyselect_1.1.0         compiler_4.0.3          
-[16] git2r_0.27.1             cli_3.0.1                rvest_0.3.6             
-[19] xml2_1.3.2               labeling_0.4.2           sass_0.4.0              
-[22] scales_1.1.1             checkmate_2.0.0          digest_0.6.27           
-[25] rmarkdown_2.10           pkgconfig_2.0.3          htmltools_0.5.1.1       
-[28] highr_0.8                dbplyr_1.4.4             rlang_0.4.11            
-[31] readxl_1.3.1             rstudioapi_0.13          jquerylib_0.1.4         
-[34] generics_0.1.0           farver_2.0.3             jsonlite_1.7.1          
-[37] magrittr_1.5             Matrix_1.2-18            Rcpp_1.0.5              
-[40] munsell_0.5.0            fansi_0.4.1              lifecycle_1.0.0         
-[43] stringi_1.5.3            whisker_0.4              yaml_2.2.1              
-[46] MASS_7.3-53              grid_4.0.3               blob_1.2.1              
-[49] parallel_4.0.3           promises_1.1.1           crayon_1.3.4            
-[52] lattice_0.20-41          haven_2.3.1              hms_0.5.3               
-[55] knitr_1.33               pillar_1.6.2             reprex_0.3.0            
-[58] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
-[61] data.table_1.14.0        modelr_0.1.8             vctrs_0.3.8             
-[64] tweenr_1.0.2             httpuv_1.5.4             cellranger_1.1.0        
-[67] gtable_0.3.0             polyclip_1.10-0          assertthat_0.2.1        
-[70] xfun_0.25                RcppEigen_0.3.3.7.0      later_1.2.0             
-[73] viridisLite_0.3.0        ellipsis_0.3.2           here_0.1                </code></pre>
+ [1] nlme_3.1-149             fs_1.5.0                 RColorBrewer_1.1-2      
+ [4] webshot_0.5.2            httr_1.4.2               rprojroot_2.0.2         
+ [7] tools_4.0.3              backports_1.1.10         bslib_0.2.5.1           
+[10] utf8_1.1.4               R6_2.5.0                 mgcv_1.8-33             
+[13] DBI_1.1.0                colorspace_2.0-2         withr_2.3.0             
+[16] tidyselect_1.1.0         compiler_4.0.3           git2r_0.27.1            
+[19] cli_3.0.1                rvest_0.3.6              xml2_1.3.2              
+[22] labeling_0.4.2           sass_0.4.0               scales_1.1.1            
+[25] checkmate_2.0.0          digest_0.6.27            rmarkdown_2.10          
+[28] pkgconfig_2.0.3          htmltools_0.5.1.1        highr_0.8               
+[31] dbplyr_1.4.4             rlang_0.4.11             readxl_1.3.1            
+[34] rstudioapi_0.13          jquerylib_0.1.4          generics_0.1.0          
+[37] farver_2.0.3             jsonlite_1.7.1           magrittr_1.5            
+[40] Matrix_1.2-18            Rcpp_1.0.5               munsell_0.5.0           
+[43] fansi_0.4.1              lifecycle_1.0.0          stringi_1.5.3           
+[46] whisker_0.4              yaml_2.2.1               MASS_7.3-53             
+[49] grid_4.0.3               blob_1.2.1               parallel_4.0.3          
+[52] promises_1.1.1           crayon_1.3.4             lattice_0.20-41         
+[55] splines_4.0.3            haven_2.3.1              hms_0.5.3               
+[58] knitr_1.33               pillar_1.6.2             reprex_0.3.0            
+[61] glue_1.4.2               evaluate_0.14            RcppArmadillo_0.10.1.2.0
+[64] data.table_1.14.0        modelr_0.1.8             vctrs_0.3.8             
+[67] tweenr_1.0.2             httpuv_1.5.4             cellranger_1.1.0        
+[70] gtable_0.3.0             polyclip_1.10-0          assertthat_0.2.1        
+[73] xfun_0.25                RcppEigen_0.3.3.7.0      later_1.2.0             
+[76] viridisLite_0.3.0        ellipsis_0.3.2           here_0.1                </code></pre>
 </div>
 </div>
 
