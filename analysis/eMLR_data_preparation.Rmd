@@ -1254,22 +1254,27 @@ rm(cstar_station_stats, grid_post, grid_pre)
 
 ```{r cstar_slab_distribution_absolute}
 
-cstar_grid <- m_grid_horizontal_coarse(GLODAP) %>% 
-    filter(data_source == "obs")
+# calculate cstar contributions from components
+GLODAP_cstar <- GLODAP %>%
+  mutate(
+    cstar_tco2 = tco2,
+    cstar_talk = -0.5 * talk,
+    cstar_phosphate = -params_local$rCP * phosphate + params_local$rNP *
+      0.5 * phosphate
+  ) %>%
+  select(-c(cstar, cstar_tref_delta)) %>%
+  filter(data_source == "obs")
+
+cstar_grid <- m_grid_horizontal_coarse(GLODAP_cstar)
 
 cstar_grid <- cstar_grid %>%
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source, basin_AIP) %>%
-  summarise(across(c(cstar_tref, tco2, talk, phosphate), ~ mean(.x, na.rm = TRUE))) %>%
+  summarise(across(starts_with("cstar_"), ~ mean(.x, na.rm = TRUE))) %>%
   ungroup() %>%
-  mutate(
-    talk = -0.5 * talk,
-    phosphate = -params_local$rCP * phosphate + params_local$rNP *
-      0.5 * phosphate
-  ) %>% 
-mutate(gamma_slab = fct_relevel(gamma_slab, sort))
+  mutate(gamma_slab = fct_relevel(gamma_slab, sort))
 
 cstar_grid <- cstar_grid %>% 
-  pivot_longer(cstar_tref:phosphate,
+  pivot_longer(starts_with("cstar_"),
                names_to = "parameter",
                values_to = "value")
 
@@ -1312,8 +1317,8 @@ cstar_grid_offset <- cstar_grid_offset %>%
   select(-tref$era) %>%
   pivot_wider(names_from = parameter,
               values_from = delta_value) %>%
-  mutate(cstar_tref_sum = tco2 + talk + phosphate) %>%
-  pivot_longer(cstar_tref:cstar_tref_sum,
+  mutate(cstar_sum = cstar_tco2 + cstar_talk + cstar_phosphate) %>%
+  pivot_longer(cstar_tref:cstar_sum,
                names_to = "parameter",
                values_to = "delta_value")
 
@@ -1343,6 +1348,34 @@ cstar_grid_offset %>%
 rm(cstar_grid, cstar_grid_offset)
 
 ```
+
+## Latitudinal pattern
+
+```{r latitudinal_cstar_pattern, fig.asp=0.5}
+
+GLODAP_cstar %>%
+  select(lat, era, basin_AIP, gamma_slab, starts_with("cstar_")) %>% 
+  pivot_longer(starts_with("cstar_"),
+               names_to = "parameter",
+               values_to = "value") %>% 
+  group_split(basin_AIP, gamma_slab, parameter) %>%
+  head(1) %>%
+  map( ~ ggplot(data = .x,
+                aes(lat, value,
+                    col = era, fill = era)) +
+         geom_point(shape = 21, alpha = 0.3) +
+         geom_smooth(alpha = 0.3) + 
+         scale_color_brewer(palette = "Set1") + 
+         scale_fill_brewer(palette = "Set1") +
+         labs(title = paste("basin_AIP:", unique(.x$basin_AIP),
+                            "| gamma_slab: ", unique(.x$gamma_slab)),
+              y = unique(.x$parameter))
+       )
+
+
+```
+
+
 
 ## Zonal section
 
