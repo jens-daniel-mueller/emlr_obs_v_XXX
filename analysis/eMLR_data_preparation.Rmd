@@ -1345,9 +1345,34 @@ cstar_grid_offset %>%
   )
 
 
+```
+
+### Correlation
+
+```{r correlations_contributions_cstar, fig.asp=3}
+
+cstar_grid_offset %>% 
+  filter(parameter != "cstar_sum",
+         basin_AIP == "Indian") %>% 
+  pivot_wider(names_from = parameter,
+              values_from = delta_value) %>% 
+  pivot_longer(cstar_tco2:cstar_phosphate,
+               names_to = "parameter",
+               values_to = "delta_cstar_component") %>% 
+  ggplot(aes(cstar_tref, delta_cstar_component)) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  geom_bin_2d(binwidth = 2) +
+  scale_fill_viridis_c() +
+  geom_smooth(method = "lm", se = FALSE, col="red") +
+  facet_grid(gamma_slab ~ parameter) +
+  coord_equal()
+
+
 rm(cstar_grid, cstar_grid_offset)
 
 ```
+
 
 ## Latitudinal pattern
 
@@ -1359,7 +1384,7 @@ GLODAP_cstar %>%
                names_to = "parameter",
                values_to = "value") %>% 
   group_split(basin_AIP, gamma_slab, parameter) %>%
-  head(1) %>%
+  # head(1) %>%
   map( ~ ggplot(data = .x,
                 aes(lat, value,
                     col = era, fill = era)) +
