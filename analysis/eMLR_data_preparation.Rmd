@@ -1111,7 +1111,7 @@ map +
   )
 
 GLODAP <- GLODAP %>% 
-  mutate(cstar_tref_corr = if_else(
+  mutate(cstar_tref = if_else(
     str_detect(cruise_expocode, "316N199") &
       basin_AIP == "Indian" &
       data_source == "obs",
@@ -1119,11 +1119,6 @@ GLODAP <- GLODAP %>%
     cstar_tref)) %>% 
   select(-cruise_expocode)
 
-
-# GLODAP %>%
-#   mutate(cstar_delta = cstar_tref - cstar_tref_corr) %>%
-#   filter(cstar_delta != 0) %>%
-#   distinct(basin_AIP, era, data_source)
 
 ```
 
