@@ -239,6 +239,11 @@ tref <-
                  "tref.csv",
                  sep = ""))
 
+GLODAP_adjustments  <-
+  read_csv(paste(path_preprocessing,
+                  "GLODAPv2.2021_adustments.csv",
+                  sep = ""))
+
 ```
 
 
@@ -1087,6 +1092,33 @@ rm(GLODAP_grid)
 
 ```
 
+# C* adjustment IO
+
+```{r cstar_adjustment_IO}
+
+GLODAP <-
+  left_join(GLODAP,
+            GLODAP_adjustments %>%
+              select(cruise, cruise_expocode))
+
+map +
+  geom_tile(
+    data = GLODAP %>% 
+      filter(str_detect(cruise_expocode, "316N199"),
+             basin_AIP == "Indian") %>% 
+      distinct(lat, lon, year),
+    aes(lon, lat, fill = as.factor(year))
+  )
+
+GLODAP <- GLODAP %>% 
+  mutate(cstar_tref = if_else(
+    str_detect(cruise_expocode, "316N199") & basin_AIP == "Indian",
+    cstar_tref + 4,
+    cstar_tref)) %>% 
+  select(-cruise_expocode)
+
+
+```
 
 
 # C* distributions
