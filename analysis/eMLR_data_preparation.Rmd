@@ -1094,12 +1094,12 @@ rm(GLODAP_grid)
 
 # C* adjustment IO
 
-```{r cstar_adjustment_IO, eval=FALSE}
+```{r cstar_adjustment_IO}
 
 GLODAP <-
   left_join(GLODAP,
             GLODAP_adjustments %>%
-              select(cruise, cruise_expocode))
+              distinct(cruise, cruise_expocode))
 
 map +
   geom_tile(
@@ -1115,10 +1115,9 @@ GLODAP <- GLODAP %>%
     str_detect(cruise_expocode, "316N199") &
       basin_AIP == "Indian" &
       data_source == "obs",
-    cstar_tref + 5,
+    cstar_tref + 4,
     cstar_tref)) %>% 
   select(-cruise_expocode)
-
 
 ```
 
