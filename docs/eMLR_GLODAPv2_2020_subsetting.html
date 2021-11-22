@@ -461,7 +461,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020 subsetting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">21 November, 2021</h4>
+<h4 class="date">22 November, 2021</h4>
 
 </div>
 
@@ -486,7 +486,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-11-21
+<strong>Last updated:</strong> 2021-11-22
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea44a5c23ed5ecca81093102ebc93d6e1c927e2eatargetblanka44a5c2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a44a5c23ed5ecca81093102ebc93d6e1c927e2ea" target="_blank">a44a5c2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree264c0cc69162ea1e4d9880fd654efd4a8d54d81dtargetblank264c0cca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/264c0cc69162ea1e4d9880fd654efd4a8d54d81d" target="_blank">264c0cc</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea44a5c23ed5ecca81093102ebc93d6e1c927e2eatargetblanka44a5c2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree264c0cc69162ea1e4d9880fd654efd4a8d54d81dtargetblank264c0cca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a44a5c23ed5ecca81093102ebc93d6e1c927e2ea" target="_blank">a44a5c2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/264c0cc69162ea1e4d9880fd654efd4a8d54d81d" target="_blank">264c0cc</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -598,6 +598,7 @@ Ignored files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -636,6 +637,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/264c0cc69162ea1e4d9880fd654efd4a8d54d81d/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">264c0cc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-22
+</td>
+<td>
+test with parameterized C* correction IO
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/3ae2dd1ab2883254e8e0e395d3bdf1e84724bad7/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">3ae2dd1</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -18012,13 +18047,14 @@ relative_adjustment_parameters &lt;- c(&quot;tco2&quot;, &quot;talk&quot;, &quot
 adjustment_grid %&gt;% 
   filter(parameter %in% paste0(relative_adjustment_parameters, &quot;_adj&quot;)) %&gt;% 
   group_split(parameter) %&gt;% 
-  # head(1) %&gt;%
+  # head(2) %&gt;%
   map(
     ~map +
       geom_tile(data = .x,
                 aes(lon, lat, fill = adjustment)) +
       labs(title = paste(&quot;parameter:&quot;, unique(.x$parameter))) +
-      scale_fill_divergent(mid = &quot;grey&quot;) +
+      scale_fill_divergent(mid = &quot;grey&quot;,
+                           trans = &quot;pseudo_log&quot;) +
       facet_grid(era ~ .)
   )</code></pre>
 <pre><code>[[1]]</code></pre>
@@ -20099,8 +20135,192 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(adjustment_histo)</code></pre>
 </div>
-<div id="apply-filter-1" class="section level3" number="3.6.3">
-<h3 number="3.6.3"><span class="header-section-number">3.6.3</span> Apply filter</h3>
+<div id="histograms-io" class="section level3" number="3.6.3">
+<h3 number="3.6.3"><span class="header-section-number">3.6.3</span> Histograms IO</h3>
+<pre class="r"><code>left_join(GLODAP %&gt;% distinct(era, cruise, basin_AIP),
+            GLODAP_adjustments) %&gt;% 
+  filter(
+    str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
+      basin_AIP == &quot;Indian&quot;) %&gt;% 
+  select(cruise_expocode, tco2_adj, talk_adj, phosphate_adj) %&gt;% 
+  kbl()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+cruise_expocode
+</th>
+<th style="text-align:right;">
+tco2_adj
+</th>
+<th style="text-align:right;">
+talk_adj
+</th>
+<th style="text-align:right;">
+phosphate_adj
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+316N19941201
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950124
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950310
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950423
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950611
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950715
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950829
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19950829
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19951111
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.00
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19951202
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+316N19951202
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="apply-filter-1" class="section level3" number="3.6.4">
+<h3 number="3.6.4"><span class="header-section-number">3.6.4</span> Apply filter</h3>
 <pre class="r"><code># identify stations exceeding adjustment threshold
 stations_out_adjustment_absolute &lt;- GLODAP_adjustments %&gt;%
   filter(
