@@ -1079,13 +1079,14 @@ relative_adjustment_parameters <- c("tco2", "talk", "salinity")
 adjustment_grid %>% 
   filter(parameter %in% paste0(relative_adjustment_parameters, "_adj")) %>% 
   group_split(parameter) %>% 
-  # head(1) %>%
+  # head(2) %>%
   map(
     ~map +
       geom_tile(data = .x,
                 aes(lon, lat, fill = adjustment)) +
       labs(title = paste("parameter:", unique(.x$parameter))) +
-      scale_fill_divergent(mid = "grey") +
+      scale_fill_divergent(mid = "grey",
+                           trans = "pseudo_log") +
       facet_grid(era ~ .)
   )
 
@@ -1131,6 +1132,23 @@ adjustment_histo %>%
 rm(adjustment_histo)
 
 ```
+
+
+### Histograms IO
+
+```{r cruise_adjustments_histogram_IO, fig.asp=0.5}
+
+left_join(GLODAP %>% distinct(era, cruise, basin_AIP),
+            GLODAP_adjustments) %>% 
+  filter(
+    str_detect(cruise_expocode, "316N199") &
+      basin_AIP == "Indian") %>% 
+  select(cruise_expocode, tco2_adj, talk_adj, phosphate_adj) %>% 
+  kbl()
+
+```
+
+
 
 ### Apply filter
 
