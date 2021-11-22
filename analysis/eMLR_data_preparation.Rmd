@@ -1111,6 +1111,7 @@ map +
   )
 
 GLODAP <- GLODAP %>% 
+  mutate(cstar_tref_unadj = cstar_tref) %>% 
   mutate(cstar_tref = if_else(
     str_detect(cruise_expocode, "316N199") &
       basin_AIP == "Indian" &
@@ -1598,6 +1599,14 @@ GLODAP_data_distribution_cruise %>%
 rm(GLODAP_data_distribution_cruise)
 
 ```
+
+```{r remove_helper_column}
+
+GLODAP <- GLODAP %>% 
+  select(-cstar_tref_unadj)
+
+```
+
 
 
 # Rarefication
