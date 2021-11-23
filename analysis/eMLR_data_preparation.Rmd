@@ -1092,201 +1092,14 @@ rm(GLODAP_grid)
 
 ```
 
-# C* adjustment IO
 
-```{r cstar_adjustment_IO}
-
-GLODAP <-
-  left_join(GLODAP,
-            GLODAP_adjustments %>%
-              distinct(cruise, cruise_expocode))
-
-map +
-  geom_tile(
-    data = GLODAP %>% 
-      filter(str_detect(cruise_expocode, "316N199"),
-             basin_AIP == "Indian") %>% 
-      distinct(lat, lon, year),
-    aes(lon, lat, fill = as.factor(year))
-  )
-
-GLODAP <- GLODAP %>% 
-  mutate(cstar_tref_unadj = cstar_tref) %>% 
-  mutate(cstar_tref = if_else(
-    str_detect(cruise_expocode, "316N199") &
-      basin_AIP == "Indian" &
-      data_source == "obs",
-    cstar_tref + params_local$cstar_corr_316N199,
-    cstar_tref)) %>% 
-  select(-cruise_expocode)
-
-```
-
-
-# C* distributions
-
-## Profiles
-
-```{r cstar_profiles, fig.asp=3, eval=FALSE}
-
-GLODAP_profiles_IO_sub <- GLODAP %>% 
-  filter(depth > 1000,
-         data_source == "obs") %>% 
-  count(cruise, basin_AIP, era) %>% 
-  arrange(-n) %>%
-  group_by(basin_AIP, era) %>% 
-  slice_max(n, n = 10) %>% 
-  ungroup() %>% 
-  pull(cruise)
-
-GLODAP_profiles <- GLODAP %>%
-  filter(data_source == "obs",
-         depth > 1000) %>%
-  filter(cruise %in% GLODAP_profiles_IO_sub)
-
-rm(GLODAP_profiles_IO_sub)
-
-GLODAP_profiles %>%
-  arrange(depth, station) %>%
-  ggplot(aes(cstar_tref, depth,
-             group = interaction(station),
-             col = basin_AIP)) +
-  scale_color_brewer(palette = "Dark2") +
-  geom_path() +
-  scale_y_reverse() +
-  facet_wrap(~ interaction(era, cruise), ncol = 3)
-
-map +
-  geom_tile(data = GLODAP_profiles %>%
-              distinct(lat, lon, era, cruise),
-            aes(lon, lat)) +
-  facet_wrap( ~ interaction(era, cruise),
-              ncol = 3)
-
-rm(GLODAP_profiles)
-
-```
-
-```{r cstar_station_stats, eval=FALSE}
-
-cstar_station_stats <- GLODAP %>% 
-  filter(depth >= 2000,
-         depth <= 5000) %>% 
-  group_by(cruise, station, data_source) %>%
-  mutate(cstar_offset = cstar_tref - mean(cstar_tref, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  group_by(cruise, station, data_source, era, basin_AIP) %>% 
-  summarise(cstar_sd = sd(cstar_offset, na.rm = TRUE),
-            cstar_mean = mean(cstar_tref, na.rm = TRUE),
-            n = n()) %>% 
-  ungroup()
-
-cstar_station_stats %>%
-  ggplot() +
-  geom_histogram(aes(n, fill = era),
-                 position = "dodge") +
-  facet_grid(basin_AIP ~ data_source)
-
-cstar_station_stats <- cstar_station_stats %>% 
-  filter(n >= 3) %>% 
-  group_by(basin_AIP, era) %>% 
-  mutate(cstar_sd_rank = rank(cstar_sd)) %>% 
-  ungroup()
-
-  
-cstar_station_stats %>% 
-  ggplot() +
-  geom_histogram(aes(cstar_sd, fill=era),
-                 position = "dodge") +
-  facet_grid(basin_AIP ~ data_source)
-
-  
-cstar_station_stats %>% 
-  ggplot() +
-  geom_histogram(aes(cstar_mean, fill=era),
-                 position = "dodge") +
-  facet_grid(basin_AIP ~ data_source)
-
-cstar_station_stats %>% 
-  ggplot() +
-  geom_density(aes(cstar_mean,
-                   fill=era,
-                   col=era),
-               alpha = 0.2) +
-  facet_grid(basin_AIP ~ data_source,
-             scales = "free_y")
-
-
-cstar_station_stats %>%  
-  ggplot() +
-  geom_point(aes(cstar_sd_rank, cstar_sd, col=era)) +
-  facet_grid(basin_AIP ~ data_source)
-
-cstar_station_stats %>%  
-  filter(data_source == "obs") %>% 
-  ggplot(aes(cstar_sd, cstar_mean)) +
-  geom_bin_2d() +
-  facet_grid(basin_AIP ~ era,
-             scales = "free_y") +
-  scale_fill_viridis_c() +
-  geom_smooth(col = "red")
-
-map +
-  geom_raster(data = left_join(cstar_station_stats,
-                               GLODAP %>%
-                                 distinct(cruise, station, lon, lat)),
-              aes(lon, lat, fill = cut(cstar_sd, c(0, 3, 6, Inf)))) +
-  facet_grid(data_source ~ era) +
-  scale_fill_viridis_d(direction = -1,
-                       name = "cstar SD",
-                       option = "magma") +
-  theme(legend.position = "bottom")
-
-
-```
-
-### Apply scatter filter
-
-```{r deep_profile_cstar_scatter_filter, eval=FALSE}
-
-cruise_SD_out <- cstar_station_stats %>% 
-  filter(data_source == "obs",
-         cstar_sd >= params_local$cstar_deep_sd) %>% 
-  distinct(cruise, station, era, basin_AIP) %>% 
-  mutate(flag_SD = "removed")
-
-grid_pre <- GLODAP %>% 
-  distinct(lon, lat, era)
-
-GLODAP <-
-  full_join(GLODAP,
-            cruise_SD_out) %>%
-  filter(is.na(flag_SD)) %>%
-  select(-flag_SD)
-
-grid_post <- GLODAP %>% 
-  distinct(lon, lat, era)
-
-map +
-  geom_tile(data = grid_pre,
-            aes(lon, lat, fill = "pre")) +
-  geom_tile(data = grid_post,
-            aes(lon, lat, fill = "post")) +
-  scale_fill_brewer(palette = "Set1") +
-  facet_grid(era ~ .)
-
-
-rm(cstar_station_stats, grid_post, grid_pre)
-
-```
-
-
+# C* distributions - pre
 
 ## Slab distribution
 
 ### Absolute
 
-```{r cstar_slab_distribution_absolute}
+```{r cstar_slab_distribution_absolute_pre}
 
 # calculate cstar contributions from components
 GLODAP_cstar <- GLODAP %>%
@@ -1339,7 +1152,7 @@ cstar_grid %>%
 
 ### Offset
 
-```{r cstar_slab_distribution_offset, fig.asp=0.5}
+```{r cstar_slab_distribution_offset_pre, fig.asp=0.5}
 
 cstar_grid_offset <- cstar_grid %>%
   pivot_wider(names_from = era,
@@ -1383,7 +1196,7 @@ cstar_grid_offset %>%
 
 ### Correlation
 
-```{r correlations_contributions_cstar, fig.asp=0.5}
+```{r correlations_contributions_cstar_pre, fig.asp=0.5}
 
 cstar_grid_offset %>%
   filter(parameter != "cstar_sum",
@@ -1422,7 +1235,7 @@ rm(cstar_grid, cstar_grid_offset)
 
 ## Latitudinal pattern
 
-```{r latitudinal_cstar_pattern, fig.asp=0.5}
+```{r latitudinal_cstar_pattern_pre, fig.asp=0.5}
 
 GLODAP_cstar %>%
   filter(basin_AIP == "Indian") %>%
@@ -1462,7 +1275,7 @@ GLODAP_cstar %>%
 
 ### Absolute
 
-```{r zonal_sections, fig.asp=1}
+```{r zonal_sections_pre, fig.asp=1}
 
 zonal_sections <- GLODAP %>% 
   mutate(depth_grid = cut(depth,
@@ -1493,7 +1306,7 @@ p_cstar_tref_absolut
 
 ### Change
 
-```{r zonal_sections_offset, fig.asp=0.6}
+```{r zonal_sections_offset_pre, fig.asp=0.6}
 
 zonal_sections_offset <- zonal_sections %>%
   pivot_wider(names_from = era,
@@ -1523,87 +1336,33 @@ p_cstar_tref_offset
 
 
 
+# C* adjustment IO
 
-## Density distributions
+```{r cstar_adjustment_IO}
 
-### basin, gamma slab
+GLODAP <-
+  left_join(GLODAP,
+            GLODAP_adjustments %>%
+              distinct(cruise, cruise_expocode))
 
-```{r cstar_distributions}
-
-GLODAP_data_distribution <- GLODAP %>%
-  filter(data_source == "obs") %>%
-  select(era,
-         basin_AIP,
-         gamma_slab,
-         tco2,
-         talk,
-         phosphate,
-         cstar,
-         cstar_tref) %>%
-  pivot_longer(tco2:cstar_tref,
-               values_to = "value",
-               names_to = "parameter")
-
-
-GLODAP_data_distribution %>%
-  group_split(basin_AIP, gamma_slab) %>%
-  # head(1) %>% 
-  map(
-    ~ ggplot(data = .x) +
-      geom_density(aes(value, fill = era, col = era),
-                   alpha = 0.2) +
-      facet_wrap(~ parameter,
-                 scales = "free") +
-      labs(title = paste(
-        "basin_AIP:", unique(.x$basin_AIP),
-        "| gamma_slab:", unique(.x$gamma_slab)
-      ))
+map +
+  geom_tile(
+    data = GLODAP %>% 
+      filter(str_detect(cruise_expocode, "316N199"),
+             basin_AIP == "Indian") %>% 
+      distinct(lat, lon, year),
+    aes(lon, lat, fill = as.factor(year))
   )
-
-rm(GLODAP_data_distribution)
-
-```
-
-### basin, cruise
-
-```{r cstar_distributions_cruise, fig.asp=1}
-
-GLODAP_data_distribution_cruise <- GLODAP %>%
-  filter(data_source == "obs") %>%
-  select(era,
-         basin_AIP,
-         gamma_slab,
-         cruise,
-         cstar_tref) %>% 
-  mutate(cruise = as.factor(cruise))
-
-
-GLODAP_data_distribution_cruise %>%
-  group_split(basin_AIP, era) %>%
-  # head(1) %>% 
-  map(
-    ~ ggplot(data = .x) +
-      geom_density(aes(cstar_tref, fill = cruise, col = cruise),
-                   alpha = 0.2) +
-      facet_wrap(~ gamma_slab,
-                 scales = "free",
-                 ncol = 3) +
-      scale_fill_discrete(guide = FALSE) +
-      scale_color_discrete(guide = FALSE) +
-      labs(title = paste(
-        "basin_AIP:", unique(.x$basin_AIP),
-        "| cruise:", unique(.x$era)
-      ))
-  )
-
-rm(GLODAP_data_distribution_cruise)
-
-```
-
-```{r remove_helper_column}
 
 GLODAP <- GLODAP %>% 
-  select(-cstar_tref_unadj)
+  mutate(cstar_tref_unadj = cstar_tref) %>% 
+  mutate(cstar_tref = if_else(
+    str_detect(cruise_expocode, "316N199") &
+      basin_AIP == "Indian" &
+      data_source == "obs",
+    cstar_tref + params_local$cstar_corr_316N199,
+    cstar_tref)) %>% 
+  select(-cruise_expocode)
 
 ```
 
