@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "adjustment of C* imput data implemented")
+wflow_publish(all = TRUE, message = "added map with IO expocodes")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test with parameterized C* correction IO",
+message = "test with strong adjustment of C* input data",
 republish = TRUE)
 
 

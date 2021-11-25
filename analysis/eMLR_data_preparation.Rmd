@@ -293,6 +293,12 @@ map +
               distinct(lat, lon, year),
             aes(lon, lat, fill = as.factor(year)))
 
+map +
+  geom_tile(data = GLODAP_adj %>%
+              distinct(lat, lon, cruise_expocode),
+            aes(lon, lat, fill = cruise_expocode)) +
+  scale_fill_brewer(palette = "Set1")
+
 
 GLODAP_adj <- GLODAP_adj %>%
   mutate(
