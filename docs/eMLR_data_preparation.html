@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebbf03f8337082f54ecff31e20db3c901ef3259cbtargetblankbbf03f8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bbf03f8337082f54ecff31e20db3c901ef3259cb" target="_blank">bbf03f8</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef18adbd1c5dd7a9c31223319c6a62de37027fc59targetblankf18adbda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f18adbd1c5dd7a9c31223319c6a62de37027fc59" target="_blank">f18adbd</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebbf03f8337082f54ecff31e20db3c901ef3259cbtargetblankbbf03f8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef18adbd1c5dd7a9c31223319c6a62de37027fc59targetblankf18adbda" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bbf03f8337082f54ecff31e20db3c901ef3259cb" target="_blank">bbf03f8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f18adbd1c5dd7a9c31223319c6a62de37027fc59" target="_blank">f18adbd</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -595,6 +595,9 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv
 
 </code></pre>
 <p>
@@ -633,6 +636,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f18adbd1c5dd7a9c31223319c6a62de37027fc59/analysis/eMLR_data_preparation.Rmd" target="_blank">f18adbd</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+added crossover analysis plot
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/eMLR_data_preparation.html" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -6660,7 +6697,10 @@ rm(surface_mod, surface_obs)</code></pre>
 GLODAP_adjustments  &lt;-
   read_csv(paste(path_preprocessing,
                   &quot;GLODAPv2.2021_adustments.csv&quot;,
-                  sep = &quot;&quot;))</code></pre>
+                  sep = &quot;&quot;))
+
+GLODAP_crossover  &lt;-
+  read_csv(&quot;data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv&quot;)</code></pre>
 </div>
 <div id="convert-to-long-format" class="section level2" number="2.6">
 <h2 number="2.6"><span class="header-section-number">2.6</span> Convert to long format</h2>
@@ -6678,8 +6718,32 @@ GLODAP &lt;- GLODAP %&gt;%
   )</code></pre>
 </div>
 </div>
-<div id="c-input-adjustment-io" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> C* input adjustment IO</h1>
+<div id="crossover-analysis" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Crossover analysis</h1>
+<pre class="r"><code>GLODAP_crossover %&gt;%
+  rename(talk = ALK,
+         tco2 = DIC,
+         phosphate = PO4) %&gt;%
+  mutate(phosphate = (phosphate / 100) * 2) %&gt;%
+  mutate(
+    tco2 = tco2,
+    talk = -0.5 * talk,
+    phosphate = -params_local$rCP * phosphate +
+      params_local$rNP * 0.5 * phosphate,
+    cstar = tco2 + talk + phosphate
+  ) %&gt;%
+  pivot_longer(talk:cstar,
+               names_to = &quot;parameter&quot;,
+               values_to = &quot;value&quot;) %&gt;%
+  ggplot(aes(parameter, value)) +
+  geom_hline(yintercept = 0) +
+  labs(y = &quot;Cruise offsets in C* equivalents [µmol/kg]&quot;) +
+  geom_point() +
+  facet_wrap( ~ cruise_expocode_RV)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c-input-adjustment-io" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> C* input adjustment IO</h1>
 <pre class="r"><code>GLODAP &lt;-
   left_join(GLODAP,
             GLODAP_adjustments %&gt;%
@@ -6927,6 +6991,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/23b4013859527f043014cb9a4e41e8dc430db460/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" target="_blank">23b4013</a>
 </td>
 <td>
@@ -6978,6 +7053,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/23b4013859527f043014cb9a4e41e8dc430db460/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" target="_blank">23b4013</a>
 </td>
 <td>
@@ -6994,9 +7080,83 @@ jens-daniel-mueller
 <pre><code>
 [[4]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-4">
+Past versions of cstar_input_adjustment_IO-4.png
+</button>
+</p>
+<div id="fig-cstar_input_adjustment_IO-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-4.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[5]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-5">
+Past versions of cstar_input_adjustment_IO-5.png
+</button>
+</p>
+<div id="fig-cstar_input_adjustment_IO-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-5.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
 
 GLODAP_adj &lt;- GLODAP %&gt;%
@@ -7016,12 +7176,86 @@ nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)</code></pre>
               distinct(lat, lon, year),
             aes(lon, lat, fill = as.factor(year)))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-6">
+Past versions of cstar_input_adjustment_IO-6.png
+</button>
+</p>
+<div id="fig-cstar_input_adjustment_IO-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-6.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>map +
   geom_tile(data = GLODAP_adj %&gt;%
               distinct(lat, lon, cruise_expocode),
             aes(lon, lat, fill = cruise_expocode)) +
   scale_fill_brewer(palette = &quot;Set1&quot;)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-7">
+Past versions of cstar_input_adjustment_IO-7.png
+</button>
+</p>
+<div id="fig-cstar_input_adjustment_IO-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f3e9ced9130facc372350b25dfafadb7b82e8b1d/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-7.png" target="_blank">f3e9ced</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>GLODAP_adj &lt;- GLODAP_adj %&gt;%
   mutate(
     tco2 = tco2 + params_local$tco2_corr_316N199,
@@ -7038,8 +7272,8 @@ GLODAP &lt;- bind_rows(
 rm(GLODAP_adj,
    GLODAP_unadj)</code></pre>
 </div>
-<div id="po4-calculation" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> PO<sub>4</sub>* calculation</h1>
+<div id="po4-calculation" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> PO<sub>4</sub>* calculation</h1>
 <p>The predictor PO<sub>4</sub>* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.</p>
 <p>Here we use following equation, if PO<sub>4</sub>* is used as predictor:</p>
 <pre class="r"><code>print(b_phosphate_star)</code></pre>
@@ -7055,24 +7289,24 @@ GLODAP &lt;- GLODAP %&gt;%
 }</code></pre>
 <p>Note, currently we decided to avoid using PO<sub>4</sub>* as predictor, because it is equivalent to using PO<sub>4</sub> and O<sub>2</sub>.</p>
 </div>
-<div id="c" class="section level1" number="5">
-<h1 number="5"><span class="header-section-number">5</span> C*</h1>
+<div id="c" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> C*</h1>
 <p>C* serves as a conservative tracer of anthropogenic CO<sub>2</sub> uptake. It is derived from measured DIC by removing the impact of</p>
 <ul>
 <li>organic matter formation and respiration</li>
 <li>calcification and calcium carbonate dissolution</li>
 </ul>
 <p>Contributions of those processes are estimated from phosphate and alkalinity concentrations.</p>
-<div id="stoichiometric-ratios" class="section level2" number="5.1">
-<h2 number="5.1"><span class="header-section-number">5.1</span> Stoichiometric ratios</h2>
+<div id="stoichiometric-ratios" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Stoichiometric ratios</h2>
 <p>The stoichiometric nutrient ratios for the production and mineralization of organic matter were set to:</p>
 <ul>
 <li>C/P: 117</li>
 <li>N/P: 16</li>
 </ul>
 </div>
-<div id="calculation" class="section level2" number="5.2">
-<h2 number="5.2"><span class="header-section-number">5.2</span> Calculation</h2>
+<div id="calculation" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> Calculation</h2>
 <p>C* can optionally be calculated based on phosphate or nitrate.</p>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;%
   mutate(
@@ -8300,15 +8534,15 @@ jens-daniel-mueller
     select(-cstar_phosphate)
 }</code></pre>
 </div>
-<div id="reference-year-adjustment" class="section level2" number="5.3">
-<h2 number="5.3"><span class="header-section-number">5.3</span> Reference year adjustment</h2>
+<div id="reference-year-adjustment" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> Reference year adjustment</h2>
 <p>To adjust observation-based C* values to the reference year of each observation period, we assume a transient steady state change of cant between the time of sampling the reference year. The adjustment requires an approximation of the total cant concentration at the reference year. We approximate this concentration for tref(1) by adding the delta cant signal estimated by Gruber et al (2019) to the “base line” total cant concentration determined for 1994 by Sabine et al (2004):</p>
 <p>Cant(tref) = S04 + (tref-1994)/13 * G19</p>
 <p>This way, we use exactly S04+G19 for tref(1)=2007. For all other tref(1) we scale Cant with the observed anomalous change over the 1994-2007 period, rather than assuming a transient steady state. However, one assumes a linear behaviour of the anomalous change over time, which might be wrong in particular for the years past 2007.</p>
 <p>Therefore, we estimate the total Cant at tref(2) by scaling total cant at tref(1) with alpha, according to Gruber et al. (2019).</p>
 <p>For the model data, we perform an analogous adjustment based on the total Cant estimate for 1994 (corresponding to Sabine 2004), and the delta Cant estimate for 1994 - 2007 (corresponding to Gruber 2019).</p>
-<div id="join-cant-fields" class="section level3" number="5.3.1">
-<h3 number="5.3.1"><span class="header-section-number">5.3.1</span> Join Cant fields</h3>
+<div id="join-cant-fields" class="section level3" number="6.3.1">
+<h3 number="6.3.1"><span class="header-section-number">6.3.1</span> Join Cant fields</h3>
 <p>Join observation-based Cant fields of G19 and S04</p>
 <pre class="r"><code>G19_cant_3d &lt;- G19_cant_3d %&gt;% 
   select(lon, lat, depth, cant_pos_G19 = dcant_pos)
@@ -8842,8 +9076,8 @@ rm(m07_cant_3d,
 
 cant_3d &lt;- inner_join(cant_3d, basinmask)</code></pre>
 </div>
-<div id="tcant-at-tref1" class="section level3" number="5.3.2">
-<h3 number="5.3.2"><span class="header-section-number">5.3.2</span> tcant at tref1</h3>
+<div id="tcant-at-tref1" class="section level3" number="6.3.2">
+<h3 number="6.3.2"><span class="header-section-number">6.3.2</span> tcant at tref1</h3>
 <p>Calculate total Cant at tref1 by adding G19 to S04, linearly scaled for the time since 1994. Note: For tref1 close to 1994, this should be a marginal change compared to taking SO4 directly.</p>
 <pre class="r"><code>tcant_3d &lt;- cant_3d %&gt;%
   mutate(tcant_pos = cant_pos_S04 +
@@ -8860,8 +9094,8 @@ tcant_3d &lt;- expand_grid(tcant_3d, tref)
 tcant_3d_t1 &lt;- tcant_3d %&gt;%
   filter(median_year == min(tref$median_year))</code></pre>
 </div>
-<div id="revelle-factor-ratio" class="section level3" number="5.3.3">
-<h3 number="5.3.3"><span class="header-section-number">5.3.3</span> Revelle factor ratio</h3>
+<div id="revelle-factor-ratio" class="section level3" number="6.3.3">
+<h3 number="6.3.3"><span class="header-section-number">6.3.3</span> Revelle factor ratio</h3>
 <pre class="r"><code># determine mean year for both eras
 tref_mean &lt;- c(sort(tref$median_year)[1]-50 , round(mean(tref$median_year)))
 
@@ -9478,8 +9712,8 @@ rev_fac_ratio &lt;- surface %&gt;%
 
 rm(surface, surface_hist, delta_pCO2_hist, tref_mean)</code></pre>
 </div>
-<div id="alpha" class="section level3" number="5.3.4">
-<h3 number="5.3.4"><span class="header-section-number">5.3.4</span> Alpha</h3>
+<div id="alpha" class="section level3" number="6.3.4">
+<h3 number="6.3.4"><span class="header-section-number">6.3.4</span> Alpha</h3>
 <pre class="r"><code># extract atm pCO2 at reference years
 co2_atm_tref &lt;- right_join(co2_atm, tref %&gt;% rename(year = median_year)) %&gt;% 
   select(-year) %&gt;% 
@@ -9976,8 +10210,8 @@ obs
   select(data_source, alpha) %&gt;% 
   drop_na()</code></pre>
 </div>
-<div id="tcant-at-tref2" class="section level3" number="5.3.5">
-<h3 number="5.3.5"><span class="header-section-number">5.3.5</span> tcant at tref2</h3>
+<div id="tcant-at-tref2" class="section level3" number="6.3.5">
+<h3 number="6.3.5"><span class="header-section-number">6.3.5</span> tcant at tref2</h3>
 <p>Calculate total Cant at tref2 by scaling the tref1 estimate with alpha according to Gruber et al 2019.</p>
 <pre class="r"><code>tcant_3d_t2 &lt;- full_join(tcant_3d %&gt;% filter(median_year == max(tref$median_year)),
                         alpha_df) %&gt;% 
@@ -10265,8 +10499,8 @@ jens-daniel-mueller
 tcant_3d &lt;- tcant_3d %&gt;% 
   select(-basin_AIP)</code></pre>
 </div>
-<div id="combine-glodap-tcant" class="section level3" number="5.3.6">
-<h3 number="5.3.6"><span class="header-section-number">5.3.6</span> Combine GLODAP + tcant</h3>
+<div id="combine-glodap-tcant" class="section level3" number="6.3.6">
+<h3 number="6.3.6"><span class="header-section-number">6.3.6</span> Combine GLODAP + tcant</h3>
 <pre class="r"><code># observations grid per era
 GLODAP_obs_grid_era &lt;- GLODAP %&gt;% 
   distinct(lat, lon, era, data_source)
@@ -11293,13 +11527,13 @@ GLODAP &lt;- GLODAP_tcant_obs %&gt;%
 
 rm(GLODAP_tcant_obs)</code></pre>
 </div>
-<div id="merge-glodap-atm.-pco2" class="section level3" number="5.3.7">
-<h3 number="5.3.7"><span class="header-section-number">5.3.7</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
+<div id="merge-glodap-atm.-pco2" class="section level3" number="6.3.7">
+<h3 number="6.3.7"><span class="header-section-number">6.3.7</span> Merge GLODAP + atm. pCO<sub>2</sub></h3>
 <p>GLODAP observations were merged with mean annual atmospheric pCO<sub>2</sub> levels by year.</p>
 <pre class="r"><code>GLODAP &lt;- left_join(GLODAP, co2_atm)</code></pre>
 </div>
-<div id="calculation-1" class="section level3" number="5.3.8">
-<h3 number="5.3.8"><span class="header-section-number">5.3.8</span> Calculation</h3>
+<div id="calculation-1" class="section level3" number="6.3.8">
+<h3 number="6.3.8"><span class="header-section-number">6.3.8</span> Calculation</h3>
 <pre class="r"><code># assign reference year
 GLODAP &lt;- full_join(GLODAP, tref)
 
@@ -11321,8 +11555,8 @@ GLODAP &lt;- GLODAP %&gt;%
     cstar_tref = cstar - cstar_tref_delta)</code></pre>
 </div>
 </div>
-<div id="control-plots" class="section level2" number="5.4">
-<h2 number="5.4"><span class="header-section-number">5.4</span> Control plots</h2>
+<div id="control-plots" class="section level2" number="6.4">
+<h2 number="6.4"><span class="header-section-number">6.4</span> Control plots</h2>
 <pre class="r"><code>GLODAP %&gt;% 
   ggplot(aes(cstar_tref_delta)) +
   geom_histogram(binwidth = 1) +
@@ -15153,8 +15387,8 @@ Jens Müller
 </div>
 </div>
 </div>
-<div id="isoneutral-slabs" class="section level1" number="6">
-<h1 number="6"><span class="header-section-number">6</span> Isoneutral slabs</h1>
+<div id="isoneutral-slabs" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Isoneutral slabs</h1>
 <pre class="r"><code>GLODAP %&gt;% 
   ggplot(aes(gamma)) +
   geom_histogram() +
@@ -17118,8 +17352,8 @@ GLODAP_cruise %&gt;%
 
 rm(lat_section, GLODAP_cruise, cruises_meridional)</code></pre>
 </div>
-<div id="reoccupation-filter" class="section level1" number="7">
-<h1 number="7"><span class="header-section-number">7</span> Reoccupation filter</h1>
+<div id="reoccupation-filter" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Reoccupation filter</h1>
 <p>Reoccupation filter was applied: FALSE</p>
 <pre class="r"><code>GLODAP_grid &lt;- GLODAP %&gt;% 
   distinct(lon, lat, gamma_slab, era)
@@ -17284,8 +17518,8 @@ if (params_local$rarefication == &quot;reoccupation&quot;) {
 
 rm(GLODAP_grid)</code></pre>
 </div>
-<div id="c-adjustment-io" class="section level1" number="8">
-<h1 number="8"><span class="header-section-number">8</span> C* adjustment IO</h1>
+<div id="c-adjustment-io" class="section level1" number="9">
+<h1 number="9"><span class="header-section-number">9</span> C* adjustment IO</h1>
 <pre class="r"><code>GLODAP_adj &lt;- GLODAP %&gt;%
   filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
            basin_AIP == &quot;Indian&quot; &amp;
@@ -17315,10 +17549,10 @@ rm(GLODAP_adj,
 GLODAP &lt;- GLODAP %&gt;%
   select(-cruise_expocode)</code></pre>
 </div>
-<div id="c-distributions" class="section level1" number="9">
-<h1 number="9"><span class="header-section-number">9</span> C* distributions</h1>
-<div id="profiles" class="section level2" number="9.1">
-<h2 number="9.1"><span class="header-section-number">9.1</span> Profiles</h2>
+<div id="c-distributions" class="section level1" number="10">
+<h1 number="10"><span class="header-section-number">10</span> C* distributions</h1>
+<div id="profiles" class="section level2" number="10.1">
+<h2 number="10.1"><span class="header-section-number">10.1</span> Profiles</h2>
 <pre class="r"><code>GLODAP_profiles_IO_sub &lt;- GLODAP %&gt;% 
   filter(depth &gt; 1000,
          data_source == &quot;obs&quot;) %&gt;% 
@@ -17426,8 +17660,8 @@ map +
                        name = &quot;cstar SD&quot;,
                        option = &quot;magma&quot;) +
   theme(legend.position = &quot;bottom&quot;)</code></pre>
-<div id="apply-scatter-filter" class="section level3" number="9.1.1">
-<h3 number="9.1.1"><span class="header-section-number">9.1.1</span> Apply scatter filter</h3>
+<div id="apply-scatter-filter" class="section level3" number="10.1.1">
+<h3 number="10.1.1"><span class="header-section-number">10.1.1</span> Apply scatter filter</h3>
 <pre class="r"><code>cruise_SD_out &lt;- cstar_station_stats %&gt;% 
   filter(data_source == &quot;obs&quot;,
          cstar_sd &gt;= params_local$cstar_deep_sd) %&gt;% 
@@ -17458,10 +17692,10 @@ map +
 rm(cstar_station_stats, grid_post, grid_pre)</code></pre>
 </div>
 </div>
-<div id="slab-distribution" class="section level2" number="9.2">
-<h2 number="9.2"><span class="header-section-number">9.2</span> Slab distribution</h2>
-<div id="absolute" class="section level3" number="9.2.1">
-<h3 number="9.2.1"><span class="header-section-number">9.2.1</span> Absolute</h3>
+<div id="slab-distribution" class="section level2" number="10.2">
+<h2 number="10.2"><span class="header-section-number">10.2</span> Slab distribution</h2>
+<div id="absolute" class="section level3" number="10.2.1">
+<h3 number="10.2.1"><span class="header-section-number">10.2.1</span> Absolute</h3>
 <pre class="r"><code># calculate cstar contributions from components
 GLODAP_cstar &lt;- GLODAP %&gt;%
   mutate(
@@ -24454,8 +24688,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="offset" class="section level3" number="9.2.2">
-<h3 number="9.2.2"><span class="header-section-number">9.2.2</span> Offset</h3>
+<div id="offset" class="section level3" number="10.2.2">
+<h3 number="10.2.2"><span class="header-section-number">10.2.2</span> Offset</h3>
 <pre class="r"><code>cstar_grid_offset &lt;- cstar_grid %&gt;%
   pivot_wider(names_from = era,
               values_from = value) %&gt;%
@@ -35236,8 +35470,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="correlation" class="section level3" number="9.2.3">
-<h3 number="9.2.3"><span class="header-section-number">9.2.3</span> Correlation</h3>
+<div id="correlation" class="section level3" number="10.2.3">
+<h3 number="10.2.3"><span class="header-section-number">10.2.3</span> Correlation</h3>
 <pre class="r"><code>cstar_grid_offset %&gt;%
   filter(parameter != &quot;cstar_sum&quot;,
          basin_AIP == &quot;Indian&quot;) %&gt;%
@@ -36947,8 +37181,8 @@ jens-daniel-mueller
 <pre class="r"><code>rm(cstar_grid, cstar_grid_offset)</code></pre>
 </div>
 </div>
-<div id="latitudinal-pattern" class="section level2" number="9.3">
-<h2 number="9.3"><span class="header-section-number">9.3</span> Latitudinal pattern</h2>
+<div id="latitudinal-pattern" class="section level2" number="10.3">
+<h2 number="10.3"><span class="header-section-number">10.3</span> Latitudinal pattern</h2>
 <pre class="r"><code>GLODAP_cstar %&gt;%
   filter(basin_AIP == &quot;Indian&quot;) %&gt;%
   select(lat, era, basin_AIP, gamma_slab, starts_with(&quot;cstar_&quot;)) %&gt;%
@@ -43803,10 +44037,10 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="zonal-section" class="section level2" number="9.4">
-<h2 number="9.4"><span class="header-section-number">9.4</span> Zonal section</h2>
-<div id="absolute-1" class="section level3" number="9.4.1">
-<h3 number="9.4.1"><span class="header-section-number">9.4.1</span> Absolute</h3>
+<div id="zonal-section" class="section level2" number="10.4">
+<h2 number="10.4"><span class="header-section-number">10.4</span> Zonal section</h2>
+<div id="absolute-1" class="section level3" number="10.4.1">
+<h3 number="10.4.1"><span class="header-section-number">10.4.1</span> Absolute</h3>
 <pre class="r"><code>zonal_sections &lt;- GLODAP %&gt;% 
   mutate(depth_grid = cut(depth,
                           seq(0,1e4,500),
@@ -43969,8 +44203,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="change" class="section level3" number="9.4.2">
-<h3 number="9.4.2"><span class="header-section-number">9.4.2</span> Change</h3>
+<div id="change" class="section level3" number="10.4.2">
+<h3 number="10.4.2"><span class="header-section-number">10.4.2</span> Change</h3>
 <pre class="r"><code>zonal_sections_offset &lt;- zonal_sections %&gt;%
   pivot_wider(names_from = era,
               values_from = cstar_tref) %&gt;%
@@ -44133,10 +44367,10 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="density-distributions" class="section level2" number="9.5">
-<h2 number="9.5"><span class="header-section-number">9.5</span> Density distributions</h2>
-<div id="basin-gamma-slab" class="section level3" number="9.5.1">
-<h3 number="9.5.1"><span class="header-section-number">9.5.1</span> basin, gamma slab</h3>
+<div id="density-distributions" class="section level2" number="10.5">
+<h2 number="10.5"><span class="header-section-number">10.5</span> Density distributions</h2>
+<div id="basin-gamma-slab" class="section level3" number="10.5.1">
+<h3 number="10.5.1"><span class="header-section-number">10.5.1</span> basin, gamma slab</h3>
 <pre class="r"><code>GLODAP_data_distribution &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
@@ -54696,8 +54930,8 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>rm(GLODAP_data_distribution)</code></pre>
 </div>
-<div id="basin-cruise" class="section level3" number="9.5.2">
-<h3 number="9.5.2"><span class="header-section-number">9.5.2</span> basin, cruise</h3>
+<div id="basin-cruise" class="section level3" number="10.5.2">
+<h3 number="10.5.2"><span class="header-section-number">10.5.2</span> basin, cruise</h3>
 <pre class="r"><code>GLODAP_data_distribution_cruise &lt;- GLODAP %&gt;%
   filter(data_source == &quot;obs&quot;) %&gt;%
   select(era,
@@ -56299,8 +56533,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="rarefication" class="section level1" number="10">
-<h1 number="10"><span class="header-section-number">10</span> Rarefication</h1>
+<div id="rarefication" class="section level1" number="11">
+<h1 number="11"><span class="header-section-number">11</span> Rarefication</h1>
 <pre class="r"><code># apply coarse grid
 GLODAP &lt;- m_grid_horizontal_coarse(GLODAP)
 
@@ -70775,8 +71009,8 @@ jens-daniel-mueller
 
 rm(GLODAP_grid)</code></pre>
 </div>
-<div id="observations-coverage" class="section level1" number="11">
-<h1 number="11"><span class="header-section-number">11</span> Observations coverage</h1>
+<div id="observations-coverage" class="section level1" number="12">
+<h1 number="12"><span class="header-section-number">12</span> Observations coverage</h1>
 <pre class="r"><code>GLODAP &lt;- GLODAP %&gt;% 
   mutate(gamma_slab = factor(gamma_slab), 
          gamma_slab = factor(gamma_slab, levels = rev(levels(gamma_slab))))
@@ -73930,8 +74164,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<div id="histograms" class="section level2" number="11.1">
-<h2 number="11.1"><span class="header-section-number">11.1</span> Histograms</h2>
+<div id="histograms" class="section level2" number="12.1">
+<h2 number="12.1"><span class="header-section-number">12.1</span> Histograms</h2>
 <pre class="r"><code>GLODAP_vars &lt;- GLODAP %&gt;% 
   select(data_source,
          params_local$MLR_target,
@@ -75355,10 +75589,10 @@ jens-daniel-mueller
 <pre class="r"><code>rm(GLODAP_vars, GLODAP_vars_long)</code></pre>
 </div>
 </div>
-<div id="cruise-quality-check" class="section level1" number="12">
-<h1 number="12"><span class="header-section-number">12</span> Cruise quality check</h1>
-<div id="mlr-models" class="section level2" number="12.1">
-<h2 number="12.1"><span class="header-section-number">12.1</span> MLR models</h2>
+<div id="cruise-quality-check" class="section level1" number="13">
+<h1 number="13"><span class="header-section-number">13</span> Cruise quality check</h1>
+<div id="mlr-models" class="section level2" number="13.1">
+<h2 number="13.1"><span class="header-section-number">13.1</span> MLR models</h2>
 <p>The the following full MLR model was fitted to all GLODAP, irrespective of the sampling era:</p>
 <pre class="r"><code>#define full model
 model &lt;- paste(&quot;cstar&quot;,
@@ -75401,8 +75635,8 @@ GLODAP_augmented &lt;- bind_cols(GLODAP_data,
                               GLODAP_augmented %&gt;% select(.fitted, .resid))
 
 rm(GLODAP_data)</code></pre>
-<div id="residuals" class="section level3" number="12.1.1">
-<h3 number="12.1.1"><span class="header-section-number">12.1.1</span> Residuals</h3>
+<div id="residuals" class="section level3" number="13.1.1">
+<h3 number="13.1.1"><span class="header-section-number">13.1.1</span> Residuals</h3>
 <p>Below, the residuals of C* from the mean C* and from C* predicted with the global model are shown.</p>
 <pre class="r"><code>GLODAP_augmented &lt;- GLODAP_augmented %&gt;%
   group_by(data_source) %&gt;% 
@@ -78808,8 +79042,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="ranked-rmse" class="section level3" number="12.1.2">
-<h3 number="12.1.2"><span class="header-section-number">12.1.2</span> Ranked RMSE</h3>
+<div id="ranked-rmse" class="section level3" number="13.1.2">
+<h3 number="13.1.2"><span class="header-section-number">13.1.2</span> Ranked RMSE</h3>
 <pre class="r"><code># calculate RMSE from augmented output per cruise
 cruise_all &lt;- GLODAP_augmented %&gt;%
   group_by(cruise, data_source) %&gt;%
@@ -79966,8 +80200,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="removed-cruises" class="section level2" number="12.2">
-<h2 number="12.2"><span class="header-section-number">12.2</span> Removed cruises</h2>
+<div id="removed-cruises" class="section level2" number="13.2">
+<h2 number="13.2"><span class="header-section-number">13.2</span> Removed cruises</h2>
 <pre class="r"><code>cruise_removal_ratio &lt;- nrow(GLODAP_out)/nrow(GLODAP_augmented)*100
 
 stats_MLR_cleaning_cruises &lt;- tibble(
@@ -80675,8 +80909,8 @@ GLODAP &lt;- GLODAP %&gt;%
   )</code></pre>
 </div>
 </div>
-<div id="create-observation-grids" class="section level1" number="13">
-<h1 number="13"><span class="header-section-number">13</span> Create observation grids</h1>
+<div id="create-observation-grids" class="section level1" number="14">
+<h1 number="14"><span class="header-section-number">14</span> Create observation grids</h1>
 <p>Grid containing all grid cells where at least one observation remains available after cleaning.</p>
 <pre class="r"><code>GLODAP_grid &lt;- GLODAP %&gt;% 
   distinct(lat, lon)
@@ -80687,8 +80921,8 @@ GLODAP_grid_era &lt;- GLODAP %&gt;%
 GLODAP_grid_era_gamma &lt;- GLODAP %&gt;% 
   distinct(lat, lon, era, gamma_slab)</code></pre>
 </div>
-<div id="write-files" class="section level1" number="14">
-<h1 number="14"><span class="header-section-number">14</span> Write files</h1>
+<div id="write-files" class="section level1" number="15">
+<h1 number="15"><span class="header-section-number">15</span> Write files</h1>
 <pre class="r"><code>GLODAP %&gt;% write_csv(paste(
   path_version_data,
   &quot;GLODAPv2.2020_MLR_fitting_ready.csv&quot;,
