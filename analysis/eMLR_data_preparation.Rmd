@@ -276,6 +276,47 @@ GLODAP <-
             GLODAP_adjustments %>%
               distinct(cruise, cruise_expocode))
 
+GLODAP_IO_1990s <- GLODAP %>%
+  filter(between(year, 1989,1999) &
+           basin_AIP == "Indian" &
+           data_source == "obs") %>% 
+  mutate(cruise_expocode_RV = str_sub(cruise_expocode, 1, 7),
+         cruise_expocode_date = str_sub(cruise_expocode, 5, 12))
+
+
+
+GLODAP_IO_1990s_stats <- GLODAP_IO_1990s %>% 
+  count(cruise_expocode_RV) %>% 
+  mutate(n_rel = 100 * n / sum(n)) %>% 
+  arrange(-n)
+
+GLODAP_IO_1990s_stats
+
+GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>% 
+  slice_max(order_by = n, n = 5) %>% 
+  pull(cruise_expocode_RV)
+
+GLODAP_IO_1990s %>%
+  filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>% 
+  group_split(cruise_expocode_RV) %>%
+  head(1) %>%
+  map( ~ map +
+         geom_tile(
+           data = .x %>%
+             distinct(lat, lon, cruise_expocode_date),
+           aes(lon, lat, fill = cruise_expocode_date)
+         ) +
+         scale_fill_brewer(palette = "Set1",
+                           name = "cruise start date") +
+         labs(title = paste0("expocodes: ",
+                             unique(.x$cruise_expocode_RV),
+                             "XXXXX")) +
+         xlim(20, 150) +
+         ylim(-80, 30))
+
+
+rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
+
 GLODAP_adj <- GLODAP %>%
   filter(str_detect(cruise_expocode, "316N199") &
            basin_AIP == "Indian" &
