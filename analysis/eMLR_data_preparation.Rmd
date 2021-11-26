@@ -244,6 +244,9 @@ GLODAP_adjustments  <-
                   "GLODAPv2.2021_adustments.csv",
                   sep = ""))
 
+GLODAP_crossover  <-
+  read_csv("data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv")
+
 ```
 
 
@@ -266,6 +269,35 @@ GLODAP <- GLODAP %>%
 
 
 ```
+
+# Crossover analysis
+
+```{r crossover_analysis}
+
+GLODAP_crossover %>%
+  rename(talk = ALK,
+         tco2 = DIC,
+         phosphate = PO4) %>%
+  mutate(phosphate = (phosphate / 100) * 2) %>%
+  mutate(
+    tco2 = tco2,
+    talk = -0.5 * talk,
+    phosphate = -params_local$rCP * phosphate +
+      params_local$rNP * 0.5 * phosphate,
+    cstar = tco2 + talk + phosphate
+  ) %>%
+  pivot_longer(talk:cstar,
+               names_to = "parameter",
+               values_to = "value") %>%
+  ggplot(aes(parameter, value)) +
+  geom_hline(yintercept = 0) +
+  labs(y = "Cruise offsets in C* equivalents [µmol/kg]") +
+  geom_point() +
+  facet_wrap( ~ cruise_expocode_RV)
+
+```
+
+
 
 # C* input adjustment IO
 
