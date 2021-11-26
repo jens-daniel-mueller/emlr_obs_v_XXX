@@ -290,7 +290,9 @@ GLODAP_IO_1990s_stats <- GLODAP_IO_1990s %>%
   mutate(n_rel = 100 * n / sum(n)) %>% 
   arrange(-n)
 
-GLODAP_IO_1990s_stats
+GLODAP_IO_1990s_stats %>% 
+  kbl() %>% 
+  kable_styling()
 
 GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>% 
   slice_max(order_by = n, n = 5) %>% 
@@ -299,7 +301,7 @@ GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>%
 GLODAP_IO_1990s %>%
   filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>% 
   group_split(cruise_expocode_RV) %>%
-  head(1) %>%
+  # head(1) %>%
   map( ~ map +
          geom_tile(
            data = .x %>%
