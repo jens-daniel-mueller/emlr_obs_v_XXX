@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree316e0e92f5aaf436ed56e722ca59b39a7dc1dd7dtargetblank316e0e9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/316e0e92f5aaf436ed56e722ca59b39a7dc1dd7d" target="_blank">316e0e9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebbf03f8337082f54ecff31e20db3c901ef3259cbtargetblankbbf03f8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bbf03f8337082f54ecff31e20db3c901ef3259cb" target="_blank">bbf03f8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree316e0e92f5aaf436ed56e722ca59b39a7dc1dd7dtargetblank316e0e9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebbf03f8337082f54ecff31e20db3c901ef3259cbtargetblankbbf03f8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/316e0e92f5aaf436ed56e722ca59b39a7dc1dd7d" target="_blank">316e0e9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/bbf03f8337082f54ecff31e20db3c901ef3259cb" target="_blank">bbf03f8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -633,6 +633,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bbf03f8337082f54ecff31e20db3c901ef3259cb/analysis/eMLR_data_preparation.Rmd" target="_blank">bbf03f8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+added map with IO expocodes
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/23b4013859527f043014cb9a4e41e8dc430db460/docs/eMLR_data_preparation.html" target="_blank">23b4013</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -6665,20 +6699,136 @@ GLODAP_IO_1990s_stats &lt;- GLODAP_IO_1990s %&gt;%
   mutate(n_rel = 100 * n / sum(n)) %&gt;% 
   arrange(-n)
 
-GLODAP_IO_1990s_stats</code></pre>
-<pre><code>[38;5;246m# A tibble: 10 × 3[39m
-   cruise_expocode_RV     n  n_rel
-   [3m[38;5;246m&lt;chr&gt;[39m[23m              [3m[38;5;246m&lt;int&gt;[39m[23m  [3m[38;5;246m&lt;dbl&gt;[39m[23m
-[38;5;250m 1[39m 316N199            [4m1[24m[4m4[24m532 59.7  
-[38;5;250m 2[39m 35MF199             [4m3[24m260 13.4  
-[38;5;250m 3[39m 09AR199             [4m2[24m483 10.2  
-[38;5;250m 4[39m 33MW199             [4m1[24m588  6.52 
-[38;5;250m 5[39m 3206199             [4m1[24m517  6.23 
-[38;5;250m 6[39m 35MF198              540  2.22 
-[38;5;250m 7[39m 06AQ199              223  0.916
-[38;5;250m 8[39m 49HH199               75  0.308
-[38;5;250m 9[39m 49ZS199               70  0.287
-[38;5;250m10[39m 35UCKER               63  0.259</code></pre>
+GLODAP_IO_1990s_stats %&gt;% 
+  kbl() %&gt;% 
+  kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+cruise_expocode_RV
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+n_rel
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+316N199
+</td>
+<td style="text-align:right;">
+14532
+</td>
+<td style="text-align:right;">
+59.6772206
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+35MF199
+</td>
+<td style="text-align:right;">
+3260
+</td>
+<td style="text-align:right;">
+13.3875406
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+09AR199
+</td>
+<td style="text-align:right;">
+2483
+</td>
+<td style="text-align:right;">
+10.1967065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+33MW199
+</td>
+<td style="text-align:right;">
+1588
+</td>
+<td style="text-align:right;">
+6.5212928
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3206199
+</td>
+<td style="text-align:right;">
+1517
+</td>
+<td style="text-align:right;">
+6.2297236
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+35MF198
+</td>
+<td style="text-align:right;">
+540
+</td>
+<td style="text-align:right;">
+2.2175681
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+06AQ199
+</td>
+<td style="text-align:right;">
+223
+</td>
+<td style="text-align:right;">
+0.9157735
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+49HH199
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+0.3079956
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+49ZS199
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:right;">
+0.2874625
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+35UCKER
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:right;">
+0.2587163
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>GLODAP_IO_1990s_top5 &lt;- GLODAP_IO_1990s_stats %&gt;% 
   slice_max(order_by = n, n = 5) %&gt;% 
   pull(cruise_expocode_RV)
@@ -6686,7 +6836,7 @@ GLODAP_IO_1990s_stats</code></pre>
 GLODAP_IO_1990s %&gt;%
   filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %&gt;% 
   group_split(cruise_expocode_RV) %&gt;%
-  head(1) %&gt;%
+  # head(1) %&gt;%
   map( ~ map +
          geom_tile(
            data = .x %&gt;%
@@ -6726,6 +6876,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/23b4013859527f043014cb9a4e41e8dc430db460/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-1.png" target="_blank">23b4013</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4aa27022c61d481a77a3ea64a2067fb8a77a605f/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-1.png" target="_blank">4aa2702</a>
 </td>
 <td>
@@ -6739,24 +6900,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
-
-GLODAP_adj &lt;- GLODAP %&gt;%
-  filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
-           basin_AIP == &quot;Indian&quot; &amp;
-           data_source == &quot;obs&quot;)
-
-GLODAP_unadj &lt;- GLODAP %&gt;%
-  filter(!(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
-           basin_AIP == &quot;Indian&quot; &amp;
-           data_source == &quot;obs&quot;))
-
-nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>map +
-  geom_tile(data = GLODAP_adj %&gt;%
-              distinct(lat, lon, year),
-            aes(lon, lat, fill = as.factor(year)))</code></pre>
+<pre><code>
+[[2]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-2">
@@ -6782,6 +6927,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/23b4013859527f043014cb9a4e41e8dc430db460/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" target="_blank">23b4013</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/fb580ec14dd8c512b83932edf80483db40140ed4/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" target="_blank">fb580ec</a>
 </td>
 <td>
@@ -6795,12 +6951,77 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-3">
+Past versions of cstar_input_adjustment_IO-3.png
+</button>
+</p>
+<div id="fig-cstar_input_adjustment_IO-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/23b4013859527f043014cb9a4e41e8dc430db460/docs/figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" target="_blank">23b4013</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>
+[[4]]</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[5]]</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
+
+GLODAP_adj &lt;- GLODAP %&gt;%
+  filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
+           basin_AIP == &quot;Indian&quot; &amp;
+           data_source == &quot;obs&quot;)
+
+GLODAP_unadj &lt;- GLODAP %&gt;%
+  filter(!(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
+           basin_AIP == &quot;Indian&quot; &amp;
+           data_source == &quot;obs&quot;))
+
+nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>map +
+  geom_tile(data = GLODAP_adj %&gt;%
+              distinct(lat, lon, year),
+            aes(lon, lat, fill = as.factor(year)))</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-6.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>map +
   geom_tile(data = GLODAP_adj %&gt;%
               distinct(lat, lon, cruise_expocode),
             aes(lon, lat, fill = cruise_expocode)) +
   scale_fill_brewer(palette = &quot;Set1&quot;)</code></pre>
-<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-7.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>GLODAP_adj &lt;- GLODAP_adj %&gt;%
   mutate(
     tco2 = tco2 + params_local$tco2_corr_316N199,
