@@ -330,6 +330,17 @@ GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>%
   slice_max(order_by = n, n = 5) %>% 
   pull(cruise_expocode_RV)
 
+map +
+  geom_tile(
+    data = GLODAP_IO_1990s %>%
+      filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5)  %>%
+      distinct(lat, lon, cruise_expocode_RV),
+    aes(lon, lat)
+  ) +
+  xlim(20, 150) +
+  ylim(-80, 30) +
+  facet_wrap(~ cruise_expocode_RV)
+
 GLODAP_IO_1990s %>%
   filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>% 
   group_split(cruise_expocode_RV) %>%
