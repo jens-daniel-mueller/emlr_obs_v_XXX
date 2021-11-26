@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef18adbd1c5dd7a9c31223319c6a62de37027fc59targetblankf18adbda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f18adbd1c5dd7a9c31223319c6a62de37027fc59" target="_blank">f18adbd</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeafa56c81b5171b4426e13c64f8ee5c73f9e9a638targetblankafa56c8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/afa56c81b5171b4426e13c64f8ee5c73f9e9a638" target="_blank">afa56c8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreef18adbd1c5dd7a9c31223319c6a62de37027fc59targetblankf18adbda" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreeafa56c81b5171b4426e13c64f8ee5c73f9e9a638targetblankafa56c8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/f18adbd1c5dd7a9c31223319c6a62de37027fc59" target="_blank">f18adbd</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/afa56c81b5171b4426e13c64f8ee5c73f9e9a638" target="_blank">afa56c8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -636,6 +636,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/afa56c81b5171b4426e13c64f8ee5c73f9e9a638/analysis/eMLR_data_preparation.Rmd" target="_blank">afa56c8</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+added crossover analysis plot map
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/bb3319cb1bb53697be38dba79d15999662244bc7/docs/eMLR_data_preparation.html" target="_blank">bb3319c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -6741,6 +6775,43 @@ GLODAP &lt;- GLODAP %&gt;%
   geom_point() +
   facet_wrap( ~ cruise_expocode_RV)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-crossover_analysis-1">
+Past versions of crossover_analysis-1.png
+</button>
+</p>
+<div id="fig-crossover_analysis-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb3319cb1bb53697be38dba79d15999662244bc7/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis-1.png" target="_blank">bb3319c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="c-input-adjustment-io" class="section level1" number="4">
 <h1 number="4"><span class="header-section-number">4</span> C* input adjustment IO</h1>
@@ -6897,24 +6968,16 @@ n_rel
   slice_max(order_by = n, n = 5) %&gt;% 
   pull(cruise_expocode_RV)
 
-GLODAP_IO_1990s %&gt;%
-  filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %&gt;% 
-  group_split(cruise_expocode_RV) %&gt;%
-  # head(1) %&gt;%
-  map( ~ map +
-         geom_tile(
-           data = .x %&gt;%
-             distinct(lat, lon, cruise_expocode_date),
-           aes(lon, lat, fill = cruise_expocode_date)
-         ) +
-         scale_fill_brewer(palette = &quot;Set1&quot;,
-                           name = &quot;cruise start date&quot;) +
-         labs(title = paste0(&quot;expocodes: &quot;,
-                             unique(.x$cruise_expocode_RV),
-                             &quot;XXXXX&quot;)) +
-         xlim(20, 150) +
-         ylim(-80, 30))</code></pre>
-<pre><code>[[1]]</code></pre>
+map +
+  geom_tile(
+    data = GLODAP_IO_1990s %&gt;%
+      filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5)  %&gt;%
+      distinct(lat, lon, cruise_expocode_RV),
+    aes(lon, lat)
+  ) +
+  xlim(20, 150) +
+  ylim(-80, 30) +
+  facet_wrap(~ cruise_expocode_RV)</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-1">
@@ -6964,8 +7027,24 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre><code>
-[[2]]</code></pre>
+<pre class="r"><code>GLODAP_IO_1990s %&gt;%
+  filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %&gt;% 
+  group_split(cruise_expocode_RV) %&gt;%
+  # head(1) %&gt;%
+  map( ~ map +
+         geom_tile(
+           data = .x %&gt;%
+             distinct(lat, lon, cruise_expocode_date),
+           aes(lon, lat, fill = cruise_expocode_date)
+         ) +
+         scale_fill_brewer(palette = &quot;Set1&quot;,
+                           name = &quot;cruise start date&quot;) +
+         labs(title = paste0(&quot;expocodes: &quot;,
+                             unique(.x$cruise_expocode_RV),
+                             &quot;XXXXX&quot;)) +
+         xlim(20, 150) +
+         ylim(-80, 30))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-2">
@@ -7027,7 +7106,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre><code>
-[[3]]</code></pre>
+[[2]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-3">
@@ -7078,7 +7157,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre><code>
-[[4]]</code></pre>
+[[3]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-4">
@@ -7118,7 +7197,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre><code>
-[[5]]</code></pre>
+[[4]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-5">
@@ -7157,24 +7236,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
-
-GLODAP_adj &lt;- GLODAP %&gt;%
-  filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
-           basin_AIP == &quot;Indian&quot; &amp;
-           data_source == &quot;obs&quot;)
-
-GLODAP_unadj &lt;- GLODAP %&gt;%
-  filter(!(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
-           basin_AIP == &quot;Indian&quot; &amp;
-           data_source == &quot;obs&quot;))
-
-nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>map +
-  geom_tile(data = GLODAP_adj %&gt;%
-              distinct(lat, lon, year),
-            aes(lon, lat, fill = as.factor(year)))</code></pre>
+<pre><code>
+[[5]]</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-6.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-6">
@@ -7213,11 +7276,24 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
+
+GLODAP_adj &lt;- GLODAP %&gt;%
+  filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
+           basin_AIP == &quot;Indian&quot; &amp;
+           data_source == &quot;obs&quot;)
+
+GLODAP_unadj &lt;- GLODAP %&gt;%
+  filter(!(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
+           basin_AIP == &quot;Indian&quot; &amp;
+           data_source == &quot;obs&quot;))
+
+nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)</code></pre>
+<pre><code>[1] TRUE</code></pre>
 <pre class="r"><code>map +
   geom_tile(data = GLODAP_adj %&gt;%
-              distinct(lat, lon, cruise_expocode),
-            aes(lon, lat, fill = cruise_expocode)) +
-  scale_fill_brewer(palette = &quot;Set1&quot;)</code></pre>
+              distinct(lat, lon, year),
+            aes(lon, lat, fill = as.factor(year)))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-7.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-cstar_input_adjustment_IO-7">
@@ -7256,6 +7332,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>map +
+  geom_tile(data = GLODAP_adj %&gt;%
+              distinct(lat, lon, cruise_expocode),
+            aes(lon, lat, fill = cruise_expocode)) +
+  scale_fill_brewer(palette = &quot;Set1&quot;)</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/cstar_input_adjustment_IO-8.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>GLODAP_adj &lt;- GLODAP_adj %&gt;%
   mutate(
     tco2 = tco2 + params_local$tco2_corr_316N199,
