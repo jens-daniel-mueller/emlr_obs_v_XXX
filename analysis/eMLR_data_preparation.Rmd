@@ -274,7 +274,7 @@ GLODAP <- GLODAP %>%
 
 ```{r crossover_analysis}
 
-GLODAP_crossover %>%
+GLODAP_crossover <- GLODAP_crossover %>%
   rename(talk = ALK,
          tco2 = DIC,
          phosphate = PO4) %>%
@@ -288,7 +288,14 @@ GLODAP_crossover %>%
   ) %>%
   pivot_longer(talk:cstar,
                names_to = "parameter",
-               values_to = "value") %>%
+               values_to = "value")
+
+GLODAP_crossover %>% 
+  group_by(cruise_expocode_RV, parameter) %>% 
+  summarise(value = mean(value)) %>% 
+  ungroup()
+
+GLODAP_crossover %>%
   ggplot(aes(parameter, value)) +
   geom_hline(yintercept = 0) +
   labs(y = "Cruise offsets in C* equivalents [µmol/kg]") +
