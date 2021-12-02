@@ -158,9 +158,10 @@ Please note that:
 ```{r dcant_pos_gamma_slab_maps}
 
 dcant_slab %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  head(3) %>%
+  # head(3) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -203,8 +204,9 @@ dcant_slab_bias <- dcant_slab %>%
   select(c(lat, lon, gamma_slab, ends_with("bias")))
 
 dcant_slab_bias %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_split(gamma_slab) %>%
-  head(3) %>%
+  # head(3) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -249,6 +251,7 @@ Please note that:
 ```{r dcant_all_gamma_slab_maps}
 
 dcant_slab %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
   # head(3) %>%
@@ -291,6 +294,7 @@ dcant_slab %>%
 ```{r dcant_gamma_slab_maps_bias}
 
 dcant_slab_bias %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_split(gamma_slab) %>%
   # head(3) %>%
   map(
@@ -327,6 +331,7 @@ dcant_slab_bias %>%
 
 dcant_slab %>%
   filter(data_source %in% c("mod", "obs")) %>% 
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
   # head(3) %>%
@@ -368,7 +373,7 @@ dcant_slab %>%
 
 # Depth levels
 
-```{r n_layers_gamma_slab_maps}
+```{r n_layers_gamma_slab_maps, eval=FALSE}
 
 dcant_slab %>%
   group_by(gamma_slab, data_source) %>%
@@ -514,7 +519,7 @@ dcant_slab %>%
 
 # Slab boundary depth
 
-```{r slab_thickness}
+```{r slab_thickness, eval=FALSE}
 
 dcant_slab %>%
   group_by(gamma_slab, data_source) %>%

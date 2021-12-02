@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added crossover analysis plot map")
+wflow_publish(all = TRUE, message = "plot only defined density slabs")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,17 +33,17 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test with strong adjustment of C* input data",
+message = "test with input adjustment as inferred from crossover plots",
 republish = TRUE)
 
 
 wflow_publish(here::here(
   "analysis",
   c(
-    "eMLR_GLODAPv2_2020_subsetting.Rmd"
+    "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "corrected tco2 and talk qc flags in preprocessing")
+message = "test with 2010s after implementing specifc IO 1990s tasks")
 
 
 

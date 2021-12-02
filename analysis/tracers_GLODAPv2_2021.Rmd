@@ -772,8 +772,8 @@ CFC_dcant %>%
 ```{r dcant_CFC12_correlation_gamma_individual, fig.asp=0.5}
 
 CFC_dcant %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_split(gamma_slab) %>%
-  .[params_local$plot_slabs] %>% 
   map(
     ~ ggplot(data = .x,
              aes(pCFC_12, dcant)) +
@@ -789,7 +789,7 @@ CFC_dcant %>%
 
 
 
-```{r dcant_CFC12_correlation_at_low_CFC_gamma, fig.asp=0.5}
+```{r dcant_CFC12_correlation_at_low_CFC_gamma, fig.asp=0.5, eval=FALSE}
 
 CFC_dcant %>%
   filter(pCFC_12 < 5) %>%
