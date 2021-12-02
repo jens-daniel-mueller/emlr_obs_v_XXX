@@ -428,11 +428,21 @@ GLODAP <- GLODAP %>%
 
 # Indian Ocean
 
+```{r check_existence_IO_1990_data}
+
+exist_IO_1990 <- GLODAP %>%
+  filter(between(year, 1989, 1999) &
+           basin_AIP == "Indian") %>% 
+  nrow() > 0
+
+```
+
+
 ## NS cruise
 
 ### Absolute
 
-```{r cfc12_Indian_NS}
+```{r cfc12_Indian_NS, eval = exist_IO_1990}
 
 GLODAP_grid_Indian <- GLODAP %>% 
   filter(basin_AIP == "Indian",
@@ -492,13 +502,13 @@ IO_NS_grid %>%
 
 ### Change
 
-```{r pcfc12_Indian_NS_offset, fig.asp=0.4}
+```{r pcfc12_Indian_NS_offset, eval = exist_IO_1990, fig.asp=0.4}
 
 IO_NS_grid_offset <- IO_NS_grid %>% 
   select(-pcfc12_sd) %>% 
   pivot_wider(names_from = era,
               values_from = pcfc12_mean) %>% 
-  mutate(delta_pcfc12_mean = `2000-2009` - `1989-1999`)
+  mutate(delta_pcfc12_mean := !!sym(tref$era[2]) - !!sym(tref$era[1]))
 
 IO_NS_grid_offset %>%
   ggplot(aes(lat , depth, fill = delta_pcfc12_mean)) +
@@ -529,7 +539,7 @@ rm(IO_NS, IO_NS_grid, IO_NS_grid_offset)
 
 ### Absolute
 
-```{r pcfc12_Indian_EW}
+```{r pcfc12_Indian_EW, eval = exist_IO_1990}
 
 GLODAP_grid_Indian <- GLODAP %>% 
   filter(basin_AIP == "Indian",
@@ -597,12 +607,12 @@ IO_EW_grid %>%
 
 ### Change
 
-```{r pcfc12_Indian_EW_offset, fig.asp=0.4}
+```{r pcfc12_Indian_EW_offset, eval = exist_IO_1990, fig.asp=0.4}
 
 IO_EW_grid_offset <- IO_EW_grid %>% 
   pivot_wider(names_from = era,
               values_from = pcfc12) %>% 
-  mutate(delta_pcfc12_mean = `2000-2009` - `1989-1999`)
+  mutate(delta_pcfc12_mean := !!sym(tref$era[2]) - !!sym(tref$era[1]))
 
 
 IO_EW_grid_offset %>% 
@@ -759,30 +769,11 @@ CFC_dcant %>%
 
 ```
 
-```{r dcant_CFC12_correlation_depth_gamma, fig.asp=0.5}
-
-CFC_dcant %>%
-  group_split(gamma_slab, depth_grid) %>%
-  # head(1) %>%
-  map(
-    ~ ggplot(data = .x,
-             aes(pCFC_12, dcant)) +
-      geom_hline(yintercept = 0) +
-      geom_bin2d() +
-      geom_smooth(col = "red", se=FALSE) +
-      scale_fill_viridis_c(trans = "log10") +
-      labs(title = paste("gamma_slab", unique(.x$gamma_slab),
-                         "| depth", unique(.x$depth_grid))) +
-      facet_grid(. ~ basin_AIP)
-  )
-
-```
-
 ```{r dcant_CFC12_correlation_gamma_individual, fig.asp=0.5}
 
 CFC_dcant %>%
   group_split(gamma_slab) %>%
-  # head(1) %>%
+  .[params_local$plot_slabs] %>% 
   map(
     ~ ggplot(data = .x,
              aes(pCFC_12, dcant)) +
@@ -803,7 +794,7 @@ CFC_dcant %>%
 CFC_dcant %>%
   filter(pCFC_12 < 5) %>%
   group_split(gamma_slab) %>%
-  # head(1) %>%
+  # head(1) %>% 
   map(~ ggplot(data = .x,
                aes(dcant, col = basin_AIP, fill = basin_AIP)) +
   geom_vline(xintercept = 0) +
@@ -920,104 +911,12 @@ CFC_dcant_zonal %>%
 ```{r counts}
 
 GLODAP %>% 
+  filter(!is.na(pcfc12)) %>% 
   group_by(era, basin_AIP) %>% 
   count() %>% 
   ggplot(aes(basin_AIP, n, fill = era)) +
   geom_col() +
   scale_fill_brewer(palette = "Dark2")
-
-```
-
-
-
-## Assign coarse spatial grid
-
-For the following plots, the cleaned data set was re-opened and observations were gridded spatially to intervals of:  
-
-- 5° x 5°
-
-```{r grid_spatially_5x5}
-
-GLODAP <- m_grid_horizontal_coarse(GLODAP)
-
-```
-
-
-## Histogram Zonal coverage
-
-```{r coverage_histogram_zonal}
-
-GLODAP_histogram_lat <- GLODAP %>%
-  group_by(era, lat, basin_AIP) %>%
-  tally() %>%
-  ungroup()
-
-GLODAP_histogram_lat %>%
-  ggplot(aes(lat, n, fill = era)) +
-  geom_col() +
-  scale_fill_brewer(palette = "Dark2") +
-  facet_wrap( ~ basin_AIP) +
-  coord_flip(expand = 0) +
-  theme(legend.position = "top",
-        legend.title = element_blank())
-
-rm(GLODAP_histogram_lat)
-
-```
-
-
-## Histogram temporal coverage
-
-```{r coverage_histogram_temporal}
-
-GLODAP_histogram_year <- GLODAP %>%
-  group_by(year, basin_AIP) %>%
-  tally() %>%
-  ungroup()
-
-GLODAP_histogram_year %>%
-  ggplot() +
-  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
-  geom_col(aes(year, n,
-               fill = basin_AIP)) +
-  scale_fill_brewer(palette = "Dark2") +
-  scale_shape_manual(values = 24, name = "") +
-  scale_y_continuous() +
-  coord_cartesian(expand = 0) +
-  theme(
-    legend.position = "top",
-    legend.direction = "vertical",
-    legend.title = element_blank(),
-    axis.title.x = element_blank()
-  )
-
-rm(GLODAP_histogram_year,
-   era_median_year)
-
-```
-
-## Zonal temporal coverage (Hovmoeller)
-
-```{r coverage_hovmoeller, fig.asp=1.3}
-
-GLODAP_hovmoeller_year <- GLODAP %>%
-  group_by(year, lat, basin_AIP) %>%
-  tally() %>%
-  ungroup()
-
-GLODAP_hovmoeller_year %>%
-  ggplot(aes(year, lat, fill = n)) +
-  geom_tile() +
-  geom_vline(xintercept = sort(params_local$era_end)[1] + 0.5) +
-  scale_fill_viridis_c(option = "magma",
-                       direction = -1,
-                       trans = "log10") +
-  coord_cartesian(expand = 0) +
-  facet_wrap( ~ basin_AIP, ncol = 1) +
-  theme(legend.position = "top",
-        axis.title.x = element_blank())
-
-rm(GLODAP_hovmoeller_year)
 
 ```
 
@@ -1029,16 +928,13 @@ The following plots show the remaining data density in each grid cell **after al
 
 ```{r coverage_maps_era_clean, fig.asp=1}
 
-GLODAP_tco2_grid <- GLODAP %>%
-  count(lat, lon)
-
 map +
-  geom_bin2d(data = GLODAP,
+  geom_bin2d(data = GLODAP %>% filter(!is.na(pcfc12)),
              aes(lon, lat),
              binwidth = c(1,1)) +
   scale_fill_viridis_c(option = "magma", direction = -1, trans = "log10") +
   facet_wrap(~era, ncol = 1) +
-  labs(title = "Cleaned GLODAP observations",
+  labs(title = "GLODAP observations",
        subtitle = paste("Version:", params_local$Version_ID)) +
   theme(axis.title = element_blank())
 
