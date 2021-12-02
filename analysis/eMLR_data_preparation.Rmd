@@ -270,9 +270,22 @@ GLODAP <- GLODAP %>%
 
 ```
 
-# Crossover analysis
+# Indian Ocean 1990s
 
-```{r crossover_analysis}
+```{r check_existence_IO_1990_data}
+
+exist_IO_1990 <- GLODAP %>%
+  filter(between(year, 1989,1999) &
+           basin_AIP == "Indian" &
+           data_source == "obs") %>% 
+  nrow() > 0
+
+```
+
+
+## Crossover analysis
+
+```{r crossover_analysis, eval=exist_IO_1990}
 
 GLODAP_crossover <- GLODAP_crossover %>%
   rename(talk = ALK,
@@ -304,11 +317,9 @@ GLODAP_crossover %>%
 
 ```
 
+## C* input adjustment
 
-
-# C* input adjustment IO
-
-```{r cstar_input_adjustment_IO}
+```{r cstar_input_adjustment_IO, eval=exist_IO_1990}
 
 GLODAP <-
   left_join(GLODAP,
@@ -1235,10 +1246,11 @@ rm(GLODAP_grid)
 
 ```
 
+# Indian Ocean 1990s
 
-# C* adjustment IO
+## C* adjustment
 
-```{r cstar_adjustment_IO}
+```{r cstar_adjustment_IO, eval=exist_IO_1990}
 
 GLODAP_adj <- GLODAP %>%
   filter(str_detect(cruise_expocode, "316N199") &
@@ -1249,8 +1261,6 @@ GLODAP_unadj <- GLODAP %>%
   filter(!(str_detect(cruise_expocode, "316N199") &
            basin_AIP == "Indian" &
            data_source == "obs"))
-
-nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)
 
 GLODAP_adj <- GLODAP_adj %>%
   mutate(
@@ -1429,8 +1439,6 @@ rm(cstar_station_stats, grid_post, grid_pre)
 
 ```
 
-
-
 ## Slab distribution
 
 ### Absolute
@@ -1574,7 +1582,7 @@ rm(cstar_grid, cstar_grid_offset)
 ```{r latitudinal_cstar_pattern, fig.asp=0.5}
 
 GLODAP_cstar %>%
-  filter(basin_AIP == "Indian") %>%
+  # filter(basin_AIP == "Indian") %>%
   select(lat, era, basin_AIP, gamma_slab, starts_with("cstar_")) %>%
   pivot_longer(starts_with("cstar_"),
                names_to = "parameter",
@@ -1626,7 +1634,7 @@ zonal_sections <- GLODAP %>%
   summarise(cstar_tref = mean(cstar_tref, na.rm = TRUE)) %>% 
   ungroup()
 
-p_cstar_tref_absolut <- zonal_sections %>% 
+zonal_sections %>% 
   ggplot(aes(lat_grid , depth_grid, fill = cstar_tref)) +
   geom_tile() +
   scale_fill_viridis_c(trans = "log10") +
@@ -1635,8 +1643,6 @@ p_cstar_tref_absolut <- zonal_sections %>%
   coord_fixed(ratio = 1e-2, expand = 0) +
   facet_grid(basin_AIP ~ era) +
   theme(legend.position = "left")
-
-p_cstar_tref_absolut 
 
 ```
 
@@ -1652,8 +1658,7 @@ zonal_sections_offset <- zonal_sections %>%
                            c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>% 
   filter(!is.na(delta_cstar_tref))
 
-
-p_cstar_tref_offset <- zonal_sections_offset %>%
+zonal_sections_offset %>%
   ggplot(aes(lat_grid , depth_grid, fill = delta_cstar_tref)) +
   geom_raster() +
   scale_fill_brewer(palette = "RdBu",
@@ -1666,11 +1671,7 @@ p_cstar_tref_offset <- zonal_sections_offset %>%
   theme(axis.text.y = element_blank(),
         axis.title.y = element_blank())
 
-p_cstar_tref_offset
-
 ```
-
-
 
 
 ## Density distributions
@@ -1715,7 +1716,7 @@ rm(GLODAP_data_distribution)
 
 ### basin, cruise
 
-```{r cstar_distributions_cruise, fig.asp=1}
+```{r cstar_distributions_cruise, fig.asp=1, eval=FALSE}
 
 GLODAP_data_distribution_cruise <- GLODAP %>%
   filter(data_source == "obs") %>%
@@ -1729,7 +1730,7 @@ GLODAP_data_distribution_cruise <- GLODAP %>%
 
 GLODAP_data_distribution_cruise %>%
   group_split(basin_AIP, era) %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ ggplot(data = .x) +
       geom_density(aes(cstar_tref, fill = cruise, col = cruise),
