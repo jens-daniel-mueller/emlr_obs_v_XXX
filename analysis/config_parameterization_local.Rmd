@@ -109,13 +109,13 @@ params_local <-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 50,
     # start years for eras
-    era_start = c(2000, 2010),
+    era_start = c(1989, 2000),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(1999, 2009),
     # manually define tref1, set to NULL to use median year
-    tref1 = 2004,
+    tref1 = 1994,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2014,
+    tref2 = 2004,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -249,13 +249,13 @@ MLR_predictors <- lst(c(
 GLODAPv2_version = "2021"
 
 # f flags accepted for GLODAP data
-flag_f = lst(flag_f = c(0, 2, 9)
-             # flag_f = c(2)
+flag_f = lst(flag_f = c(0, 2, 9),
+             flag_f = c(2, 9)
              )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(flag_qc = c(1, 0)
-              # flag_qc = c(1)
+flag_qc = lst(flag_qc = c(1, 0),
+              flag_qc = c(1)
               )
 
 # Shallowest depth for data to be included in MLR fitting
@@ -298,12 +298,20 @@ CANYON_B_sample_SD = lst(
 CANYON_B_depth = 0
 
 # offset correction for cruises expodcode 316N199XXXXX
+phosphate_corr_316N199 = 0.997
+# offset correction for cruises expodcode 316N199XXXXX
+talk_corr_316N199 = -5
+# offset correction for cruises expodcode 316N199XXXXX
+tco2_corr_316N199 = 2.25
+
+
+# offset correction for cruises expodcode 316N199XXXXX
 cstar_corr_316N199 = lst(
-  cstar_corr_316N199 = 0,
-  cstar_corr_316N199 = 2,
-  cstar_corr_316N199 = 4,
-  cstar_corr_316N199 = 6,
-  cstar_corr_316N199 = 8
+  cstar_corr_316N199 = 0
+  # cstar_corr_316N199 = 2,
+  # cstar_corr_316N199 = 4,
+  # cstar_corr_316N199 = 6,
+  # cstar_corr_316N199 = 8
 )
     
 
@@ -348,7 +356,10 @@ MLR_basins = lst(
 )
 
 # gap filling of NA values in GLODAP
-gap_filling = "CANYON-B"
+gap_filling = lst(
+  gap_filling = "CANYON-B",
+  gap_filling = "none"
+)
 
 # cruise adjustment thresholds, not applied when Inf
 cruise_adjustment_relative = Inf # levels as absolute factor -1
@@ -421,6 +432,11 @@ rPO_offset = 1.95
 # Preindustrial atmospheric pCO2
 preind_atm_pCO2 = 280
 
+# index of slabs to be plotted
+plot_slabs = lst(
+  plot_slabs = as.factor(c("(26,26.5]", "(27.5,27.75]"))
+)
+
 plot_all_figures = "n"
 
 params_local_all <-
@@ -438,6 +454,9 @@ params_local_all <-
     CANYON_B_cruise_mean,
     CANYON_B_sample_SD,
     CANYON_B_depth,
+    phosphate_corr_316N199,
+    talk_corr_316N199,
+    tco2_corr_316N199,
     cstar_corr_316N199,
     target_global_rmse_max,
     era_start,
@@ -464,6 +483,7 @@ params_local_all <-
     rPO,
     rPO_offset,
     preind_atm_pCO2,
+    plot_slabs,
     plot_all_figures
   ) %>%
   cross()
@@ -475,7 +495,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 5
   
-  Version_ID <- sprintf("v_2s%02d", i)
+  Version_ID <- sprintf("v_27%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID

@@ -982,8 +982,7 @@ GLODAP_qc_flags <- GLODAP %>%
   select(lon, lat, era, ends_with("qc")) %>% 
   pivot_longer(nitrateqc:tco2qc,
                names_to = "parameter",
-               values_to = "value") %>% 
-  count(lat, lon, era, parameter, value)
+               values_to = "value")
 
 GLODAP_qc_flags_stats <- GLODAP_qc_flags %>% 
   count(era, parameter, value)
@@ -1042,15 +1041,15 @@ rm(GLODAP_qc_flags_stats)
 
 ```{r apply_filter}
 
-GLODAP <- GLODAP %>%  
-  filter(
-    if_all(
-      c(tco2, talk, params_local$MLR_predictors, depth, gamma),
-      ~ !is.na(.)
-    ),
-    if_all(ends_with("f"), ~ . %in% params_local$flag_f),
-    if_all(ends_with("qc"), ~ . %in% params_local$flag_qc)
-  )
+GLODAP <-
+  GLODAP %>%
+  filter(if_all(
+    c(tco2, talk, params_local$MLR_predictors, depth, gamma),
+    ~ !is.na(.)
+  )) %>%
+  filter(if_all(ends_with("f"), ~ . %in% params_local$flag_f)) %>%
+  filter(if_all(ends_with("qc"), ~ . %in% params_local$flag_qc))
+
 
 ```
 

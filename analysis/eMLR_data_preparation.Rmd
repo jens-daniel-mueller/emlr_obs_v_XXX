@@ -60,6 +60,9 @@ path_version_figures  <-
         params_local$Version_ID,
         "/figures/",
         sep = "")
+
+path_crossover <- "/nfs/kryo/work/updata/glodapv2_crossover"
+
 ```
 
 ```{r load_libraries_specific, include = FALSE}
@@ -244,8 +247,39 @@ GLODAP_adjustments  <-
                   "GLODAPv2.2021_adustments.csv",
                   sep = ""))
 
-GLODAP_crossover  <-
-  read_csv("data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv")
+if (params$Version_ID == "v_XXX") {
+
+  # GLODAP_crossover  <-
+  # read_csv("data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv")
+
+  GLODAP_crossover_ALK  <-
+    read_csv(paste(path_crossover,
+                    "Offset_table_global_ALK.csv",
+                   sep = "/"))
+
+  GLODAP_crossover_DIC  <-
+    read_csv(paste(path_crossover,
+                    "Offset_table_global_DIC.csv",
+                   sep = "/"))
+
+  GLODAP_crossover_PO4  <-
+    read_csv(paste(path_crossover,
+                    "Offset_table_global_PO4.csv",
+                   sep = "/"))
+  
+  GLODAP_crossover <- bind_rows(
+    GLODAP_crossover_ALK %>% mutate(parameter = "ALK"),
+    GLODAP_crossover_DIC %>% mutate(parameter = "DIC"),
+    GLODAP_crossover_PO4 %>% mutate(parameter = "PO4")
+  )
+  
+  rm(
+    GLODAP_crossover_ALK,
+    GLODAP_crossover_DIC,
+    GLODAP_crossover_PO4
+  )
+  
+}
 
 ```
 
@@ -282,10 +316,86 @@ exist_IO_1990 <- GLODAP %>%
 
 ```
 
+```{r merge_GLODAP_expocodes, eval=exist_IO_1990}
+
+GLODAP <-
+  left_join(GLODAP,
+            GLODAP_adjustments %>%
+              distinct(cruise, cruise_expocode))
+
+```
+
+
 
 ## Crossover analysis
 
-```{r crossover_analysis, eval=exist_IO_1990}
+```{r crossover_analysis_data, eval=exist_IO_1990}
+
+if (params$Version_ID == "v_XXX") {
+  
+IO_1990_expocodes <- GLODAP %>%
+  filter(str_detect(cruise_expocode, "316N199") &
+           basin_AIP == "Indian" &
+           data_source == "obs") %>% 
+  distinct(cruise_expocode) %>% 
+  pull()
+
+GLODAP_crossover <- GLODAP_crossover %>% 
+  select(ends_with("CODE"), ends_with("offset"), parameter)
+
+GLODAP_crossover <- GLODAP_crossover %>% 
+    mutate(
+    dateA = ymd(str_sub(CruiseA_EXPOCODE,5,12)),
+    dateB = ymd(str_sub(CruiseB_EXPOCODE,5,12))
+    )
+
+GLODAP_crossover <- GLODAP_crossover %>% 
+  pivot_longer(ends_with("offset"),
+               names_to = "space",
+               values_to = "offset")
+
+
+GLODAP_crossover_IO_1990_A <- GLODAP_crossover %>%
+  filter(CruiseA_EXPOCODE %in% IO_1990_expocodes)
+
+GLODAP_crossover_IO_1990_B <- GLODAP_crossover %>%
+  filter(CruiseB_EXPOCODE %in% IO_1990_expocodes)
+
+GLODAP_crossover_IO_1990_B_rev <- GLODAP_crossover_IO_1990_B %>%
+  rename(CruiseA_EXPOCODE_back = CruiseA_EXPOCODE,
+         CruiseA_EXPOCODE = CruiseB_EXPOCODE) %>% 
+  rename(CruiseB_EXPOCODE = CruiseA_EXPOCODE_back) %>% 
+  rename(dateA_back = dateA,
+         dateA = dateB) %>% 
+  rename(dateB = dateA_back) %>% 
+  mutate(offset = -offset)
+
+GLODAP_crossover_IO_1990 <- bind_rows(
+  GLODAP_crossover_IO_1990_A,
+  GLODAP_crossover_IO_1990_B_rev
+)
+
+GLODAP_crossover_IO_1990 %>%
+  ggplot(aes(dateB, offset, col = space)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  facet_grid(parameter~., scales = "free_y")
+
+GLODAP_crossover_IO_1990 %>%
+  filter(year(dateB) >=2000, year(dateB)<2010) %>% 
+  ggplot(aes(0, offset, col = space)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  geom_point() +
+  facet_grid(parameter~., scales = "free_y")
+
+}
+
+```
+
+```{r crossover_analysis_eyeball, eval=FALSE}
+
+if (params$Version_ID == "v_XXX") {
 
 GLODAP_crossover <- GLODAP_crossover %>%
   rename(talk = ALK,
@@ -314,6 +424,8 @@ GLODAP_crossover %>%
   labs(y = "Cruise offsets in C* equivalents [µmol/kg]") +
   geom_point() +
   facet_wrap( ~ cruise_expocode_RV)
+
+}
 
 ```
 
