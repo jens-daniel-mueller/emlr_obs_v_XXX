@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7352ba1100417eece1fb2bae803bd062c3c95221targetblank7352ba1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7352ba1100417eece1fb2bae803bd062c3c95221" target="_blank">7352ba1</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0904131ced07d56ecdaf03913d2158e73e680fe7targetblank0904131a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0904131ced07d56ecdaf03913d2158e73e680fe7" target="_blank">0904131</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree7352ba1100417eece1fb2bae803bd062c3c95221targetblank7352ba1a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0904131ced07d56ecdaf03913d2158e73e680fe7targetblank0904131a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/7352ba1100417eece1fb2bae803bd062c3c95221" target="_blank">7352ba1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0904131ced07d56ecdaf03913d2158e73e680fe7" target="_blank">0904131</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -604,6 +604,7 @@ Untracked files:
 
 Unstaged changes:
     Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -642,6 +643,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0904131ced07d56ecdaf03913d2158e73e680fe7/analysis/eMLR_data_preparation.Rmd" target="_blank">0904131</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-05
+</td>
+<td>
+rerun with IO corrections from crossover analysis for 1990s
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/2ca13139f45fee0efa32d3152dcde4751876fcc9/docs/eMLR_data_preparation.html" target="_blank">2ca1313</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -6955,9 +6990,7 @@ GLODAP &lt;- GLODAP %&gt;%
               distinct(cruise, cruise_expocode))</code></pre>
 <div id="crossover-analysis" class="section level2" number="3.1">
 <h2 number="3.1"><span class="header-section-number">3.1</span> Crossover analysis</h2>
-<pre class="r"><code>if (params$Version_ID == &quot;v_XXX&quot;) {
-  
-IO_1990_expocodes &lt;- GLODAP %&gt;%
+<pre class="r"><code>IO_1990_expocodes &lt;- GLODAP %&gt;%
   filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
            basin_AIP == &quot;Indian&quot; &amp;
            data_source == &quot;obs&quot;) %&gt;% 
@@ -6999,21 +7032,31 @@ GLODAP_crossover_IO_1990 &lt;- bind_rows(
   GLODAP_crossover_IO_1990_B_rev
 )
 
-GLODAP_crossover_IO_1990 %&gt;%
-  ggplot(aes(dateB, offset, col = space)) +
+GLODAP_crossover_IO_1990 &lt;- GLODAP_crossover_IO_1990 %&gt;% 
+  mutate(RV = if_else(str_detect(CruiseB_EXPOCODE, &quot;316N&quot;),
+                      &quot;316N&quot;,
+                      &quot;other&quot;))
+
+p_crossover_ts &lt;- GLODAP_crossover_IO_1990 %&gt;%
+  ggplot(aes(dateB, offset, shape = space, col=RV)) +
   geom_hline(yintercept = 0) +
   geom_point() +
-  facet_grid(parameter~., scales = &quot;free_y&quot;)
+  scale_color_brewer(palette = &quot;Set1&quot;) +
+  facet_grid(parameter~., scales = &quot;free_y&quot;) +
+  labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
+  theme(legend.position = &quot;left&quot;,
+        axis.title.x = element_blank())
 
-GLODAP_crossover_IO_1990 %&gt;%
+p_crossover_space &lt;- GLODAP_crossover_IO_1990 %&gt;%
   filter(year(dateB) &gt;=2000, year(dateB)&lt;2010) %&gt;% 
-  ggplot(aes(0, offset, col = space)) +
+  ggplot(aes(space, offset)) +
   geom_hline(yintercept = 0) +
   geom_boxplot() +
-  geom_point() +
+  labs(title = &quot;Mean offset 2000s&quot;) +
   facet_grid(parameter~., scales = &quot;free_y&quot;)
 
-}</code></pre>
+p_crossover_ts + p_crossover_space +
+  plot_layout(widths = c(2,1))</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-crossover_analysis_data-1">
