@@ -71,6 +71,7 @@ library(lubridate)
 library(broom)
 library(seacarb)
 library(kableExtra)
+library(patchwork)
 ```
 
 
@@ -331,8 +332,6 @@ GLODAP <-
 
 ```{r crossover_analysis_data, eval=exist_IO_1990}
 
-if (params$Version_ID == "v_XXX") {
-  
 IO_1990_expocodes <- GLODAP %>%
   filter(str_detect(cruise_expocode, "316N199") &
            basin_AIP == "Indian" &
@@ -375,21 +374,31 @@ GLODAP_crossover_IO_1990 <- bind_rows(
   GLODAP_crossover_IO_1990_B_rev
 )
 
-GLODAP_crossover_IO_1990 %>%
-  ggplot(aes(dateB, offset, col = space)) +
+GLODAP_crossover_IO_1990 <- GLODAP_crossover_IO_1990 %>% 
+  mutate(RV = if_else(str_detect(CruiseB_EXPOCODE, "316N"),
+                      "316N",
+                      "other"))
+
+p_crossover_ts <- GLODAP_crossover_IO_1990 %>%
+  ggplot(aes(dateB, offset, shape = space, col=RV)) +
   geom_hline(yintercept = 0) +
   geom_point() +
-  facet_grid(parameter~., scales = "free_y")
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
 
-GLODAP_crossover_IO_1990 %>%
+p_crossover_space <- GLODAP_crossover_IO_1990 %>%
   filter(year(dateB) >=2000, year(dateB)<2010) %>% 
-  ggplot(aes(0, offset, col = space)) +
+  ggplot(aes(space, offset)) +
   geom_hline(yintercept = 0) +
   geom_boxplot() +
-  geom_point() +
+  labs(title = "Mean offset 2000s") +
   facet_grid(parameter~., scales = "free_y")
 
-}
+p_crossover_ts + p_crossover_space +
+  plot_layout(widths = c(2,1))
 
 ```
 
