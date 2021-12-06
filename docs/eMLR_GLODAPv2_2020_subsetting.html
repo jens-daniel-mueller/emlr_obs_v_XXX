@@ -461,7 +461,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">GLODAPv2_2020 subsetting</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">05 December, 2021</h4>
+<h4 class="date">06 December, 2021</h4>
 
 </div>
 
@@ -486,7 +486,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-12-05
+<strong>Last updated:</strong> 2021-12-06
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0904131ced07d56ecdaf03913d2158e73e680fe7targetblank0904131a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0904131ced07d56ecdaf03913d2158e73e680fe7" target="_blank">0904131</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9869c5ac8a5b54c5d09c36c1a11604359240ee1etargetblank9869c5aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9869c5ac8a5b54c5d09c36c1a11604359240ee1e" target="_blank">9869c5a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree0904131ced07d56ecdaf03913d2158e73e680fe7targetblank0904131a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree9869c5ac8a5b54c5d09c36c1a11604359240ee1etargetblank9869c5aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/0904131ced07d56ecdaf03913d2158e73e680fe7" target="_blank">0904131</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/9869c5ac8a5b54c5d09c36c1a11604359240ee1e" target="_blank">9869c5a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -643,6 +643,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9869c5ac8a5b54c5d09c36c1a11604359240ee1e/analysis/eMLR_GLODAPv2_2020_subsetting.Rmd" target="_blank">9869c5a</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-06
+</td>
+<td>
+test with CANYON-B prediction only from qc=1 O2 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/3f76ee3a178abcea4da1cad42d4cfabc68f51327/docs/eMLR_GLODAPv2_2020_subsetting.html" target="_blank">3f76ee3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -17074,18 +17108,26 @@ GLODAP &lt;- left_join(GLODAP,
 # label rows with missing values that should be filled
 GLODAP &lt;- GLODAP %&gt;%
   mutate(
-    fill_nitrate = if_else(is.na(nitrate), &quot;filled&quot;, &quot;measured&quot;),
-    fill_phosphate = if_else(is.na(phosphate), &quot;filled&quot;, &quot;measured&quot;),
-    fill_silicate = if_else(is.na(silicate), &quot;filled&quot;, &quot;measured&quot;),
-    fill_talk = if_else(is.na(talk), &quot;filled&quot;, &quot;measured&quot;)
+    fill_nitrate = if_else(is.na(nitrate) &amp; oxygenqc == 1,
+                           &quot;filled&quot;, &quot;measured&quot;),
+    fill_phosphate = if_else(is.na(phosphate) &amp; oxygenqc == 1,
+                             &quot;filled&quot;, &quot;measured&quot;),
+    fill_silicate = if_else(is.na(silicate) &amp; oxygenqc == 1,
+                            &quot;filled&quot;, &quot;measured&quot;),
+    fill_talk = if_else(is.na(talk) &amp; oxygenqc == 1,
+                        &quot;filled&quot;, &quot;measured&quot;)
   )
 
 # fill missing values with CANYON-B estimate, if available
 GLODAP &lt;- GLODAP %&gt;% 
-  mutate(nitrate = if_else(is.na(nitrate), nitrate_CANYONB, nitrate),
-         phosphate = if_else(is.na(phosphate), phosphate_CANYONB, phosphate),
-         silicate = if_else(is.na(silicate), silicate_CANYONB, silicate),
-         talk = if_else(is.na(talk), talk_CANYONB, talk))
+  mutate(nitrate = if_else(is.na(nitrate) &amp; oxygenqc == 1, 
+                           nitrate_CANYONB, nitrate),
+         phosphate = if_else(is.na(phosphate) &amp; oxygenqc == 1, 
+                             phosphate_CANYONB, phosphate),
+         silicate = if_else(is.na(silicate) &amp; oxygenqc == 1, 
+                            silicate_CANYONB, silicate),
+         talk = if_else(is.na(talk) &amp; oxygenqc == 1, 
+                        talk_CANYONB, talk))
 
 # label rows with remaining missing values that could not be filled
 GLODAP &lt;- GLODAP %&gt;%
