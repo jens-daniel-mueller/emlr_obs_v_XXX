@@ -342,17 +342,35 @@ IO_1990_expocodes <- GLODAP %>%
 GLODAP_crossover <- GLODAP_crossover %>% 
   select(ends_with("CODE"), ends_with("offset"), parameter)
 
-GLODAP_crossover <- GLODAP_crossover %>% 
-    mutate(
-    dateA = ymd(str_sub(CruiseA_EXPOCODE,5,12)),
-    dateB = ymd(str_sub(CruiseB_EXPOCODE,5,12))
-    )
+GLODAP_adjustments_long <- GLODAP_adjustments %>% 
+  select(cruise_expocode, first_station, last_station,
+         DIC = tco2_adj, ALK = talk_adj, PO4 = phosphate_adj) %>% 
+  pivot_longer(DIC:PO4,
+               names_to = "parameter",
+               values_to = "adjustment")
+
+
+GLODAP_crossover <- left_join(GLODAP_crossover,
+          GLODAP_adjustments_long %>% 
+            select(CruiseA_EXPOCODE = cruise_expocode,
+                   parameter,
+                   first_station_A = first_station,
+                   last_station_A = first_station,
+                   adjustment_A = adjustment))
+
+GLODAP_crossover <- left_join(GLODAP_crossover,
+          GLODAP_adjustments_long %>% 
+            select(CruiseB_EXPOCODE = cruise_expocode,
+                   parameter,
+                   first_station_B = first_station,
+                   last_station_B = last_station,
+                   adjustment_B = adjustment))
 
 GLODAP_crossover <- GLODAP_crossover %>% 
   pivot_longer(ends_with("offset"),
                names_to = "space",
-               values_to = "offset")
-
+               values_to = "offset") %>% 
+  mutate(offset_adj = offset + adjustment_A - adjustment_B)
 
 GLODAP_crossover_IO_1990_A <- GLODAP_crossover %>%
   filter(CruiseA_EXPOCODE %in% IO_1990_expocodes)
@@ -364,15 +382,18 @@ GLODAP_crossover_IO_1990_B_rev <- GLODAP_crossover_IO_1990_B %>%
   rename(CruiseA_EXPOCODE_back = CruiseA_EXPOCODE,
          CruiseA_EXPOCODE = CruiseB_EXPOCODE) %>% 
   rename(CruiseB_EXPOCODE = CruiseA_EXPOCODE_back) %>% 
-  rename(dateA_back = dateA,
-         dateA = dateB) %>% 
-  rename(dateB = dateA_back) %>% 
-  mutate(offset = -offset)
+  mutate(offset = -offset,
+         offset_adj = -offset_adj)
 
 GLODAP_crossover_IO_1990 <- bind_rows(
   GLODAP_crossover_IO_1990_A,
   GLODAP_crossover_IO_1990_B_rev
 )
+
+GLODAP_crossover_IO_1990 <- GLODAP_crossover_IO_1990 %>%
+  mutate(dateA = ymd(str_sub(CruiseA_EXPOCODE, 5, 12)),
+         dateB = ymd(str_sub(CruiseB_EXPOCODE, 5, 12)))
+
 
 GLODAP_crossover_IO_1990 <- GLODAP_crossover_IO_1990 %>% 
   mutate(RV = if_else(str_detect(CruiseB_EXPOCODE, "316N"),
@@ -399,6 +420,40 @@ p_crossover_space <- GLODAP_crossover_IO_1990 %>%
 
 p_crossover_ts + p_crossover_space +
   plot_layout(widths = c(2,1))
+
+p_crossover_ts_adj <- GLODAP_crossover_IO_1990 %>%
+  ggplot(aes(dateB, offset_adj, shape = space, col=RV)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
+
+p_crossover_space_adj <- GLODAP_crossover_IO_1990 %>%
+  filter(year(dateB) >=2000, year(dateB)<2010) %>% 
+  ggplot(aes(space, offset_adj)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = "Mean offset 2000s") +
+  facet_grid(parameter~., scales = "free_y")
+
+p_crossover_ts_adj + p_crossover_space_adj +
+  plot_layout(widths = c(2,1))
+
+p_adjustment_ts <- GLODAP_crossover_IO_1990 %>%
+  distinct(CruiseA_EXPOCODE, CruiseB_EXPOCODE, first_station_A, first_station_B,
+           dateB, adjustment_B, parameter, RV) %>% 
+  ggplot(aes(dateB, adjustment_B, col=RV)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
+
+p_adjustment_ts
 
 ```
 
