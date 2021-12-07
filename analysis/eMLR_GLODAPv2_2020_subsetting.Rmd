@@ -729,6 +729,19 @@ GLODAP <- GLODAP %>%
 
 ```{r GLODAP_gap_filling_CANYON_B, fig.asp=1}
 
+GLODAP %>%
+  filter(era == "2000-2009",
+         phosphatef == "9",
+         basin_AIP == "Atlantic") %>%
+  count(cruise) %>%
+  arrange(-n)
+
+map +
+  geom_tile(data = GLODAP %>%
+              filter(cruise %in% c(342, 343)) %>%
+              distinct(lon, lat),
+            aes(lon, lat))
+
 if (params_local$gap_filling == "CANYON-B") {
   
 GLODAP <- left_join(GLODAP,
@@ -737,26 +750,52 @@ GLODAP <- left_join(GLODAP,
 # label rows with missing values that should be filled
 GLODAP <- GLODAP %>%
   mutate(
-    fill_nitrate = if_else(is.na(nitrate) & oxygenqc == 1,
-                           "filled", "measured"),
-    fill_phosphate = if_else(is.na(phosphate) & oxygenqc == 1,
-                             "filled", "measured"),
-    fill_silicate = if_else(is.na(silicate) & oxygenqc == 1,
-                            "filled", "measured"),
-    fill_talk = if_else(is.na(talk) & oxygenqc == 1,
-                        "filled", "measured")
+    fill_nitrate = if_else(
+      is.na(nitrate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      "filled",
+      "measured"
+    ),
+    fill_phosphate = if_else(
+      is.na(phosphate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      "filled",
+      "measured"
+    ),
+    fill_silicate = if_else(
+      is.na(silicate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      "filled",
+      "measured"
+    ),
+    fill_talk = if_else(
+      is.na(talk) & oxygenqc == 1 & cruise %in% c(342, 343),
+      "filled",
+      "measured"
+    )
   )
 
 # fill missing values with CANYON-B estimate, if available
-GLODAP <- GLODAP %>% 
-  mutate(nitrate = if_else(is.na(nitrate) & oxygenqc == 1, 
-                           nitrate_CANYONB, nitrate),
-         phosphate = if_else(is.na(phosphate) & oxygenqc == 1, 
-                             phosphate_CANYONB, phosphate),
-         silicate = if_else(is.na(silicate) & oxygenqc == 1, 
-                            silicate_CANYONB, silicate),
-         talk = if_else(is.na(talk) & oxygenqc == 1, 
-                        talk_CANYONB, talk))
+GLODAP <- GLODAP %>%
+  mutate(
+    nitrate = if_else(
+      is.na(nitrate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      nitrate_CANYONB,
+      nitrate
+    ),
+    phosphate = if_else(
+      is.na(phosphate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      phosphate_CANYONB,
+      phosphate
+    ),
+    silicate = if_else(
+      is.na(silicate) & oxygenqc == 1 & cruise %in% c(342, 343),
+      silicate_CANYONB,
+      silicate
+    ),
+    talk = if_else(
+      is.na(talk) & oxygenqc == 1 & cruise %in% c(342, 343),
+      talk_CANYONB,
+      talk
+    )
+  )
 
 # label rows with remaining missing values that could not be filled
 GLODAP <- GLODAP %>%
