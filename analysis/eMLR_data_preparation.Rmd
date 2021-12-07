@@ -383,7 +383,8 @@ GLODAP_crossover_IO_1990_B_rev <- GLODAP_crossover_IO_1990_B %>%
          CruiseA_EXPOCODE = CruiseB_EXPOCODE,
          adjustment_A_back = adjustment_A,
          adjustment_A = adjustment_B) %>% 
-  rename(adjustment_B = adjustment_A_back) %>% 
+  rename(CruiseB_EXPOCODE = CruiseA_EXPOCODE_back,
+         adjustment_B = adjustment_A_back) %>% 
   mutate(offset = -offset,
          offset_adj = -offset_adj)
 
@@ -409,7 +410,7 @@ p_crossover_ts <- GLODAP_crossover_IO_1990 %>%
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter~., scales = "free_y") +
   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-  theme(legend.position = "left",
+  theme(legend.position = "bottom",
         axis.title.x = element_blank())
 
 p_crossover_space <- GLODAP_crossover_IO_1990 %>%
@@ -430,7 +431,8 @@ p_crossover_ts_adj <- GLODAP_crossover_IO_1990 %>%
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter~., scales = "free_y") +
   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-  theme(legend.position = "left",
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
         axis.title.x = element_blank())
 
 p_crossover_space_adj <- GLODAP_crossover_IO_1990 %>%
