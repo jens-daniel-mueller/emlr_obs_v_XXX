@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree68458f91bf760e12bc49e1156b4470baa0d41094targetblank68458f9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/68458f91bf760e12bc49e1156b4470baa0d41094" target="_blank">68458f9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9725205ea7c2794876ee58cda81b6cee71b8643targetblankc972520a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9725205ea7c2794876ee58cda81b6cee71b8643" target="_blank">c972520</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree68458f91bf760e12bc49e1156b4470baa0d41094targetblank68458f9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec9725205ea7c2794876ee58cda81b6cee71b8643targetblankc972520a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/68458f91bf760e12bc49e1156b4470baa0d41094" target="_blank">68458f9</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c9725205ea7c2794876ee58cda81b6cee71b8643" target="_blank">c972520</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -639,6 +639,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c9725205ea7c2794876ee58cda81b6cee71b8643/analysis/eMLR_data_preparation.Rmd" target="_blank">c972520</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+<td>
+applied adjustments to crossover offsets
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/eMLR_data_preparation.html" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -7139,7 +7173,8 @@ GLODAP_crossover_IO_1990_B_rev &lt;- GLODAP_crossover_IO_1990_B %&gt;%
          CruiseA_EXPOCODE = CruiseB_EXPOCODE,
          adjustment_A_back = adjustment_A,
          adjustment_A = adjustment_B) %&gt;% 
-  rename(adjustment_B = adjustment_A_back) %&gt;% 
+  rename(CruiseB_EXPOCODE = CruiseA_EXPOCODE_back,
+         adjustment_B = adjustment_A_back) %&gt;% 
   mutate(offset = -offset,
          offset_adj = -offset_adj)
 
@@ -7165,7 +7200,7 @@ p_crossover_ts &lt;- GLODAP_crossover_IO_1990 %&gt;%
   scale_color_brewer(palette = &quot;Set1&quot;) +
   facet_grid(parameter~., scales = &quot;free_y&quot;) +
   labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
-  theme(legend.position = &quot;left&quot;,
+  theme(legend.position = &quot;bottom&quot;,
         axis.title.x = element_blank())
 
 p_crossover_space &lt;- GLODAP_crossover_IO_1990 %&gt;%
@@ -7201,6 +7236,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8e82dee11095c6f913e64060b9a0b2a4a44e6204/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" target="_blank">8e82dee</a>
@@ -7256,7 +7302,8 @@ jens-daniel-mueller
   scale_color_brewer(palette = &quot;Set1&quot;) +
   facet_grid(parameter~., scales = &quot;free_y&quot;) +
   labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
-  theme(legend.position = &quot;left&quot;,
+  theme(legend.position = &quot;bottom&quot;,
+        legend.direction = &quot;vertical&quot;,
         axis.title.x = element_blank())
 
 p_crossover_space_adj &lt;- GLODAP_crossover_IO_1990 %&gt;%
@@ -7292,6 +7339,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8e82dee11095c6f913e64060b9a0b2a4a44e6204/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">8e82dee</a>
@@ -7342,6 +7400,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8e82dee11095c6f913e64060b9a0b2a4a44e6204/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">8e82dee</a>
