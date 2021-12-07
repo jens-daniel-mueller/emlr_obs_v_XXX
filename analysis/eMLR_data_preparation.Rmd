@@ -349,13 +349,12 @@ GLODAP_adjustments_long <- GLODAP_adjustments %>%
                names_to = "parameter",
                values_to = "adjustment")
 
-
 GLODAP_crossover <- left_join(GLODAP_crossover,
           GLODAP_adjustments_long %>% 
             select(CruiseA_EXPOCODE = cruise_expocode,
                    parameter,
                    first_station_A = first_station,
-                   last_station_A = first_station,
+                   last_station_A = last_station,
                    adjustment_A = adjustment))
 
 GLODAP_crossover <- left_join(GLODAP_crossover,
@@ -370,7 +369,8 @@ GLODAP_crossover <- GLODAP_crossover %>%
   pivot_longer(ends_with("offset"),
                names_to = "space",
                values_to = "offset") %>% 
-  mutate(offset_adj = offset + adjustment_A - adjustment_B)
+  mutate(offset_adj = offset + adjustment_A - adjustment_B,
+         space = str_remove(space, "_offset"))
 
 GLODAP_crossover_IO_1990_A <- GLODAP_crossover %>%
   filter(CruiseA_EXPOCODE %in% IO_1990_expocodes)
@@ -403,6 +403,10 @@ GLODAP_crossover_IO_1990 <- GLODAP_crossover_IO_1990 %>%
                       "316N",
                       "other"))
 
+GLODAP_crossover_IO_1990 %>% 
+  count(CruiseA_EXPOCODE, CruiseB_EXPOCODE, parameter, space) %>% 
+  filter(n > 1)
+
 p_crossover_ts <- GLODAP_crossover_IO_1990 %>%
   ggplot(aes(dateB, offset, shape = space, col=RV)) +
   geom_hline(yintercept = 0) +
@@ -411,6 +415,7 @@ p_crossover_ts <- GLODAP_crossover_IO_1990 %>%
   facet_grid(parameter~., scales = "free_y") +
   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
   theme(legend.position = "bottom",
+        legend.direction = "vertical",
         axis.title.x = element_blank())
 
 p_crossover_space <- GLODAP_crossover_IO_1990 %>%
@@ -446,8 +451,21 @@ p_crossover_space_adj <- GLODAP_crossover_IO_1990 %>%
 p_crossover_ts_adj + p_crossover_space_adj +
   plot_layout(widths = c(2,1))
 
-p_adjustment_ts <- GLODAP_crossover_IO_1990 %>%
+p_adjustment_A_ts <- GLODAP_crossover_IO_1990 %>%
   distinct(CruiseA_EXPOCODE, CruiseB_EXPOCODE, first_station_A, first_station_B,
+           dateB, adjustment_A, parameter, RV) %>% 
+  ggplot(aes(dateB, adjustment_A, col=RV)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
+
+p_adjustment_A_ts
+
+p_adjustment_B_ts <- GLODAP_crossover_IO_1990 %>%
+  distinct(CruiseA_EXPOCODE, CruiseB_EXPOCODE, first_station_B, first_station_B,
            dateB, adjustment_B, parameter, RV) %>% 
   ggplot(aes(dateB, adjustment_B, col=RV)) +
   geom_point() +
@@ -457,7 +475,7 @@ p_adjustment_ts <- GLODAP_crossover_IO_1990 %>%
   theme(legend.position = "left",
         axis.title.x = element_blank())
 
-p_adjustment_ts
+p_adjustment_B_ts
 
 ```
 
