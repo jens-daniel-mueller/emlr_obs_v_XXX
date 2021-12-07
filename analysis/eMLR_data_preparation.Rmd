@@ -380,8 +380,10 @@ GLODAP_crossover_IO_1990_B <- GLODAP_crossover %>%
 
 GLODAP_crossover_IO_1990_B_rev <- GLODAP_crossover_IO_1990_B %>%
   rename(CruiseA_EXPOCODE_back = CruiseA_EXPOCODE,
-         CruiseA_EXPOCODE = CruiseB_EXPOCODE) %>% 
-  rename(CruiseB_EXPOCODE = CruiseA_EXPOCODE_back) %>% 
+         CruiseA_EXPOCODE = CruiseB_EXPOCODE,
+         adjustment_A_back = adjustment_A,
+         adjustment_A = adjustment_B) %>% 
+  rename(adjustment_B = adjustment_A_back) %>% 
   mutate(offset = -offset,
          offset_adj = -offset_adj)
 
