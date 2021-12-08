@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "applied adjustments to crossover offsets")
+wflow_publish(all = TRUE, message = "included glodapv2_2021 crossover")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test with CANYON-B prediction only from qc=1 O2 data, second decade",
+message = "rerun with CANYON-B gap filling only on A16 in 2000s",
 republish = TRUE)
 
 
@@ -79,7 +79,7 @@ Version_IDs_1 <- list.files(
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_27")#[5]
+  pattern = "v_27")#[1]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
