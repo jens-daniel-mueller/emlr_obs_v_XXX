@@ -532,7 +532,7 @@ p_crossover_ts <- xover_IO_1990 %>%
   geom_point() +
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter ~ ., scales = "free_y") +
-  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  labs(title = "Crossover w. 316N199XXXXX IO") +
   theme(
     legend.position = "bottom",
     legend.direction = "vertical",
@@ -544,7 +544,7 @@ p_crossover_2000 <- xover_IO_1990 %>%
   ggplot(aes(y = offset)) +
   geom_hline(yintercept = 0) +
   geom_boxplot() +
-  labs(title = "Mean offset 2000s") +
+  labs(title = "Mean 2000s") +
   facet_grid(parameter ~ ., scales = "free_y")
 
 p_crossover_2010 <- xover_IO_1990 %>%
@@ -552,25 +552,48 @@ p_crossover_2010 <- xover_IO_1990 %>%
   ggplot(aes(y = offset)) +
   geom_hline(yintercept = 0) +
   geom_boxplot() +
-  labs(title = "Mean offset 2010s") +
+  labs(title = "Mean 2010s") +
   facet_grid(parameter ~ ., scales = "free_y")
 
 p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
-  plot_layout(widths = c(2, 1, 1))
+  plot_layout(widths = c(3, 1, 1))
 
 rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
 
-
-xover_IO_1990 %>%
-  ggplot(aes(dateB, offset_adj, col=RV)) +
+p_crossover_ts <- xover_IO_1990 %>%
+  ggplot(aes(dateB, offset_adj, col = RV)) +
   geom_hline(yintercept = 0) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
-  facet_grid(parameter~., scales = "free_y") +
-  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-  theme(legend.position = "bottom",
-        legend.direction = "vertical",
-        axis.title.x = element_blank())
+  facet_grid(parameter ~ ., scales = "free_y") +
+  labs(title = "Crossover w. 316N199XXXXX IO") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "vertical",
+    axis.title.x = element_blank()
+  )
+
+p_crossover_2000 <- xover_IO_1990 %>%
+  filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
+  ggplot(aes(y = offset_adj)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = "Mean 2000s") +
+  facet_grid(parameter ~ ., scales = "free_y")
+
+p_crossover_2010 <- xover_IO_1990 %>%
+  filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
+  ggplot(aes(y = offset_adj)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = "Mean 2010s") +
+  facet_grid(parameter ~ ., scales = "free_y")
+
+p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
+  plot_layout(widths = c(3, 1, 1))
+
+rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
+
 
 
 # p_adjustment_A_ts <- xover_IO_1990 %>%
