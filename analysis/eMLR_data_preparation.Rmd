@@ -382,60 +382,116 @@ GLODAP <-
 IO_1990_expocodes <- GLODAP %>%
   filter(str_detect(cruise_expocode, "316N199") &
            basin_AIP == "Indian" &
-           data_source == "obs") %>% 
-  distinct(cruise_expocode) %>% 
+           data_source == "obs") %>%
+  distinct(cruise_expocode) %>%
   pull()
 
 GLODAP_adjustments_long <- GLODAP_adjustments %>%
-  select(cruise_expocode, first_station, last_station,
-         tco2_adj, talk_adj, phosphate_adj, nitrate_adj, oxygen_adj, silicate_adj, salinity_adj) %>%
+  select(
+    cruise_expocode,
+    first_station,
+    last_station,
+    tco2_adj,
+    talk_adj,
+    phosphate_adj,
+    nitrate_adj,
+    oxygen_adj,
+    silicate_adj,
+    salinity_adj
+  ) %>%
   pivot_longer(tco2_adj:salinity_adj,
                names_to = "parameter",
-               values_to = "adjustment")
+               values_to = "adjustment") %>% 
+  mutate(parameter = str_remove(parameter, "_adj"))
 
-glodapv2_xover <- left_join(glodapv2_xover,
-          GLODAP_adjustments_long %>%
-            select(cruise_A = cruise_expocode,
-                   parameter,
-                   first_station_A = first_station,
-                   last_station_A = last_station,
-                   adjustment_A = adjustment))
+p_adjustment_histo <- GLODAP_adjustments_long %>% 
+  ggplot(aes(adjustment)) +
+  geom_histogram() +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = "free_x", ncol = 1)
 
-glodapv2_xover <- left_join(glodapv2_xover,
-          GLODAP_adjustments_long %>%
-            select(cruise_B = cruise_expocode,
-                   parameter,
-                   first_station_B = first_station,
-                   last_station_B = last_station,
-                   adjustment_B = adjustment))
+p_xover_histo <- 
+  ggplot() +
+  geom_histogram(data = glodapv2_xover,
+                 aes(offset)) +
+  labs(title = "v2") +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = "free_x", ncol = 1)
 
-glodapv2_xover <- glodapv2_xover  %>% 
-  mutate(offset_adj = offset + adjustment_A - adjustment_B)
+p_xover_histo_2021 <- 
+  ggplot() +
+  geom_histogram(data = glodapv2_2021_xover,
+                 aes(offset)) +
+  labs(title = "v2_2021") +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = "free_x", ncol = 1)
 
-glodapv2_2021_xover <- left_join(glodapv2_2021_xover,
-          GLODAP_adjustments_long %>%
-            select(cruise_A = cruise_expocode,
-                   parameter,
-                   first_station_A = first_station,
-                   last_station_A = last_station,
-                   adjustment_A = adjustment))
+p_xover_histo + p_xover_histo_2021 + p_adjustment_histo
+rm(p_xover_histo, p_xover_histo_2021, p_adjustment_histo)
 
-glodapv2_2021_xover <- left_join(glodapv2_2021_xover,
-          GLODAP_adjustments_long %>%
-            select(cruise_B = cruise_expocode,
-                   parameter,
-                   first_station_B = first_station,
-                   last_station_B = last_station,
-                   adjustment_B = adjustment))
-
-glodapv2_2021_xover <- glodapv2_2021_xover  %>% 
-  mutate(offset_adj = offset + adjustment_A)
-
-
-xover <- bind_rows(
+glodapv2_xover <- left_join(
   glodapv2_xover,
-  glodapv2_2021_xover
+  GLODAP_adjustments_long %>%
+    select(
+      cruise_A = cruise_expocode,
+      parameter,
+      first_station_A = first_station,
+      last_station_A = last_station,
+      adjustment_A = adjustment
+    )
 )
+
+glodapv2_xover <- left_join(
+  glodapv2_xover,
+  GLODAP_adjustments_long %>%
+    select(
+      cruise_B = cruise_expocode,
+      parameter,
+      first_station_B = first_station,
+      last_station_B = last_station,
+      adjustment_B = adjustment
+    )
+)
+
+glodapv2_xover <- glodapv2_xover  %>%
+  mutate(offset_adj = 
+           if_else(parameter %in% c("salinity", "talk", "tco2"),
+                   offset + adjustment_A - adjustment_B,
+                   offset))
+
+glodapv2_2021_xover <- left_join(
+  glodapv2_2021_xover,
+  GLODAP_adjustments_long %>%
+    select(
+      cruise_A = cruise_expocode,
+      parameter,
+      first_station_A = first_station,
+      last_station_A = last_station,
+      adjustment_A = adjustment
+    )
+)
+
+glodapv2_2021_xover <- left_join(
+  glodapv2_2021_xover,
+  GLODAP_adjustments_long %>%
+    select(
+      cruise_B = cruise_expocode,
+      parameter,
+      first_station_B = first_station,
+      last_station_B = last_station,
+      adjustment_B = adjustment
+    )
+)
+
+glodapv2_2021_xover <- glodapv2_2021_xover  %>%
+  mutate(offset_adj = 
+           if_else(parameter %in% c("salinity", "talk", "tco2"),
+                   offset + adjustment_A,
+                   offset))
+
+
+xover <- bind_rows(glodapv2_xover,
+                   glodapv2_2021_xover)
 
 
 xover_IO_1990_A <- xover %>%
@@ -445,33 +501,68 @@ xover_IO_1990_B <- xover %>%
   filter(cruise_B %in% IO_1990_expocodes)
 
 xover_IO_1990_B_rev <- xover_IO_1990_B %>%
-  rename(cruise_A_back = cruise_A,
-         cruise_A = cruise_B,
-         adjustment_A_back = adjustment_A,
-         adjustment_A = adjustment_B) %>% 
+  rename(
+    cruise_A_back = cruise_A,
+    cruise_A = cruise_B,
+    adjustment_A_back = adjustment_A,
+    adjustment_A = adjustment_B
+  ) %>%
   rename(cruise_B = cruise_A_back,
-         adjustment_B = adjustment_A_back) %>% 
+         adjustment_B = adjustment_A_back) %>%
   mutate(offset = -offset,
          offset_adj = -offset_adj)
 
-xover_IO_1990 <- bind_rows(
-  xover_IO_1990_A,
-  xover_IO_1990_B_rev
-)
+xover_IO_1990 <- bind_rows(xover_IO_1990_A,
+                           xover_IO_1990_B_rev)
 
 xover_IO_1990 <- xover_IO_1990 %>%
   mutate(dateA = ymd(str_sub(cruise_A, 5, 12)),
          dateB = ymd(str_sub(cruise_B, 5, 12)))
 
 
-xover_IO_1990 <- xover_IO_1990 %>% 
+xover_IO_1990 <- xover_IO_1990 %>%
   mutate(RV = if_else(str_detect(cruise_B, "316N"),
                       "316N",
                       "other"))
 
 
 p_crossover_ts <- xover_IO_1990 %>%
-  ggplot(aes(dateB, offset, col=RV)) +
+  ggplot(aes(dateB, offset, col = RV)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter ~ ., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "vertical",
+    axis.title.x = element_blank()
+  )
+
+p_crossover_2000 <- xover_IO_1990 %>%
+  filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
+  ggplot(aes(y = offset)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = "Mean offset 2000s") +
+  facet_grid(parameter ~ ., scales = "free_y")
+
+p_crossover_2010 <- xover_IO_1990 %>%
+  filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
+  ggplot(aes(y = offset)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = "Mean offset 2010s") +
+  facet_grid(parameter ~ ., scales = "free_y")
+
+p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
+  plot_layout(widths = c(2, 1, 1))
+
+rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
+
+
+xover_IO_1990 %>%
+  ggplot(aes(dateB, offset_adj, col=RV)) +
   geom_hline(yintercept = 0) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
@@ -481,42 +572,10 @@ p_crossover_ts <- xover_IO_1990 %>%
         legend.direction = "vertical",
         axis.title.x = element_blank())
 
-p_crossover_space <- xover_IO_1990 %>%
-  filter(year(dateB) >=2000, year(dateB)<2010) %>% 
-  ggplot(aes(y=offset)) +
-  geom_hline(yintercept = 0) +
-  geom_boxplot() +
-  labs(title = "Mean offset 2000s") +
-  facet_grid(parameter~., scales = "free_y")
 
-p_crossover_ts + p_crossover_space +
-  plot_layout(widths = c(2,1))
-
-# p_crossover_ts_adj <- xover_IO_1990 %>%
-#   ggplot(aes(dateB, offset_adj, col=RV)) +
-#   geom_hline(yintercept = 0) +
-#   geom_point() +
-#   scale_color_brewer(palette = "Set1") +
-#   facet_grid(parameter~., scales = "free_y") +
-#   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-#   theme(legend.position = "bottom",
-#         legend.direction = "vertical",
-#         axis.title.x = element_blank())
-# 
-# p_crossover_space_adj <- xover_IO_1990 %>%
-#   filter(year(dateB) >=2000, year(dateB)<2010) %>% 
-#   ggplot(aes(y = offset_adj)) +
-#   geom_hline(yintercept = 0) +
-#   geom_boxplot() +
-#   labs(title = "Mean offset 2000s") +
-#   facet_grid(parameter~., scales = "free_y")
-# 
-# p_crossover_ts_adj + p_crossover_space_adj +
-#   plot_layout(widths = c(2,1))
-# 
 # p_adjustment_A_ts <- xover_IO_1990 %>%
 #   distinct(cruise_A, cruise_B, first_station_A, first_station_B,
-#            dateB, adjustment_A, parameter, RV) %>% 
+#            dateB, adjustment_A, parameter, RV) %>%
 #   ggplot(aes(dateB, adjustment_A, col=RV)) +
 #   geom_point() +
 #   scale_color_brewer(palette = "Set1") +
@@ -524,12 +583,12 @@ p_crossover_ts + p_crossover_space +
 #   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
 #   theme(legend.position = "left",
 #         axis.title.x = element_blank())
-# 
+#
 # p_adjustment_A_ts
-# 
+#
 # p_adjustment_B_ts <- xover_IO_1990 %>%
 #   distinct(cruise_A, cruise_B, first_station_B, first_station_B,
-#            dateB, adjustment_B, parameter, RV) %>% 
+#            dateB, adjustment_B, parameter, RV) %>%
 #   ggplot(aes(dateB, adjustment_B, col=RV)) +
 #   geom_point() +
 #   scale_color_brewer(palette = "Set1") +
@@ -537,7 +596,7 @@ p_crossover_ts + p_crossover_space +
 #   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
 #   theme(legend.position = "left",
 #         axis.title.x = element_blank())
-# 
+#
 # p_adjustment_B_ts
 
 ```
