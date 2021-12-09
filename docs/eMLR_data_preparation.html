@@ -461,7 +461,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">08 December, 2021</h4>
+<h4 class="date">09 December, 2021</h4>
 
 </div>
 
@@ -486,7 +486,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-12-08
+<strong>Last updated:</strong> 2021-12-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -577,16 +577,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecdfef6f8793bf1796ee370099dec6ec7d7788497targetblankcdfef6fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cdfef6f8793bf1796ee370099dec6ec7d7788497" target="_blank">cdfef6f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3abb34cd9c4d3d17be0152bae732c2a292506a9btargetblank3abb34ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3abb34cd9c4d3d17be0152bae732c2a292506a9b" target="_blank">3abb34c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreecdfef6f8793bf1796ee370099dec6ec7d7788497targetblankcdfef6fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree3abb34cd9c4d3d17be0152bae732c2a292506a9btargetblank3abb34ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/cdfef6f8793bf1796ee370099dec6ec7d7788497" target="_blank">cdfef6f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/3abb34cd9c4d3d17be0152bae732c2a292506a9b" target="_blank">3abb34c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -639,6 +639,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/3abb34cd9c4d3d17be0152bae732c2a292506a9b/analysis/eMLR_data_preparation.Rmd" target="_blank">3abb34c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-09
+</td>
+<td>
+revised glodapv2_2021 crossover
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a988b6e3b5420ebb538e2b9e2fc61a1db29e26d5/docs/eMLR_data_preparation.html" target="_blank">a988b6e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -7301,115 +7335,51 @@ GLODAP &lt;- GLODAP %&gt;%
 <pre class="r"><code>IO_1990_expocodes &lt;- GLODAP %&gt;%
   filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
            basin_AIP == &quot;Indian&quot; &amp;
-           data_source == &quot;obs&quot;) %&gt;% 
-  distinct(cruise_expocode) %&gt;% 
+           data_source == &quot;obs&quot;) %&gt;%
+  distinct(cruise_expocode) %&gt;%
   pull()
 
 GLODAP_adjustments_long &lt;- GLODAP_adjustments %&gt;%
-  select(cruise_expocode, first_station, last_station,
-         tco2_adj, talk_adj, phosphate_adj, nitrate_adj, oxygen_adj, silicate_adj, salinity_adj) %&gt;%
+  select(
+    cruise_expocode,
+    first_station,
+    last_station,
+    tco2_adj,
+    talk_adj,
+    phosphate_adj,
+    nitrate_adj,
+    oxygen_adj,
+    silicate_adj,
+    salinity_adj
+  ) %&gt;%
   pivot_longer(tco2_adj:salinity_adj,
                names_to = &quot;parameter&quot;,
-               values_to = &quot;adjustment&quot;)
+               values_to = &quot;adjustment&quot;) %&gt;% 
+  mutate(parameter = str_remove(parameter, &quot;_adj&quot;))
 
-glodapv2_xover &lt;- left_join(glodapv2_xover,
-          GLODAP_adjustments_long %&gt;%
-            select(cruise_A = cruise_expocode,
-                   parameter,
-                   first_station_A = first_station,
-                   last_station_A = last_station,
-                   adjustment_A = adjustment))
+p_adjustment_histo &lt;- GLODAP_adjustments_long %&gt;% 
+  ggplot(aes(adjustment)) +
+  geom_histogram() +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = &quot;free_x&quot;, ncol = 1)
 
-glodapv2_xover &lt;- left_join(glodapv2_xover,
-          GLODAP_adjustments_long %&gt;%
-            select(cruise_B = cruise_expocode,
-                   parameter,
-                   first_station_B = first_station,
-                   last_station_B = last_station,
-                   adjustment_B = adjustment))
+p_xover_histo &lt;- 
+  ggplot() +
+  geom_histogram(data = glodapv2_xover,
+                 aes(offset)) +
+  labs(title = &quot;v2&quot;) +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = &quot;free_x&quot;, ncol = 1)
 
-glodapv2_xover &lt;- glodapv2_xover  %&gt;% 
-  mutate(offset_adj = offset + adjustment_A - adjustment_B)
+p_xover_histo_2021 &lt;- 
+  ggplot() +
+  geom_histogram(data = glodapv2_2021_xover,
+                 aes(offset)) +
+  labs(title = &quot;v2_2021&quot;) +
+  scale_y_log10() +
+  facet_wrap(~ parameter, scales = &quot;free_x&quot;, ncol = 1)
 
-glodapv2_2021_xover &lt;- left_join(glodapv2_2021_xover,
-          GLODAP_adjustments_long %&gt;%
-            select(cruise_A = cruise_expocode,
-                   parameter,
-                   first_station_A = first_station,
-                   last_station_A = last_station,
-                   adjustment_A = adjustment))
-
-glodapv2_2021_xover &lt;- left_join(glodapv2_2021_xover,
-          GLODAP_adjustments_long %&gt;%
-            select(cruise_B = cruise_expocode,
-                   parameter,
-                   first_station_B = first_station,
-                   last_station_B = last_station,
-                   adjustment_B = adjustment))
-
-glodapv2_2021_xover &lt;- glodapv2_2021_xover  %&gt;% 
-  mutate(offset_adj = offset + adjustment_A)
-
-
-xover &lt;- bind_rows(
-  glodapv2_xover,
-  glodapv2_2021_xover
-)
-
-
-xover_IO_1990_A &lt;- xover %&gt;%
-  filter(cruise_A %in% IO_1990_expocodes)
-
-xover_IO_1990_B &lt;- xover %&gt;%
-  filter(cruise_B %in% IO_1990_expocodes)
-
-xover_IO_1990_B_rev &lt;- xover_IO_1990_B %&gt;%
-  rename(cruise_A_back = cruise_A,
-         cruise_A = cruise_B,
-         adjustment_A_back = adjustment_A,
-         adjustment_A = adjustment_B) %&gt;% 
-  rename(cruise_B = cruise_A_back,
-         adjustment_B = adjustment_A_back) %&gt;% 
-  mutate(offset = -offset,
-         offset_adj = -offset_adj)
-
-xover_IO_1990 &lt;- bind_rows(
-  xover_IO_1990_A,
-  xover_IO_1990_B_rev
-)
-
-xover_IO_1990 &lt;- xover_IO_1990 %&gt;%
-  mutate(dateA = ymd(str_sub(cruise_A, 5, 12)),
-         dateB = ymd(str_sub(cruise_B, 5, 12)))
-
-
-xover_IO_1990 &lt;- xover_IO_1990 %&gt;% 
-  mutate(RV = if_else(str_detect(cruise_B, &quot;316N&quot;),
-                      &quot;316N&quot;,
-                      &quot;other&quot;))
-
-
-p_crossover_ts &lt;- xover_IO_1990 %&gt;%
-  ggplot(aes(dateB, offset, col=RV)) +
-  geom_hline(yintercept = 0) +
-  geom_point() +
-  scale_color_brewer(palette = &quot;Set1&quot;) +
-  facet_grid(parameter~., scales = &quot;free_y&quot;) +
-  labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
-  theme(legend.position = &quot;bottom&quot;,
-        legend.direction = &quot;vertical&quot;,
-        axis.title.x = element_blank())
-
-p_crossover_space &lt;- xover_IO_1990 %&gt;%
-  filter(year(dateB) &gt;=2000, year(dateB)&lt;2010) %&gt;% 
-  ggplot(aes(y=offset)) +
-  geom_hline(yintercept = 0) +
-  geom_boxplot() +
-  labs(title = &quot;Mean offset 2000s&quot;) +
-  facet_grid(parameter~., scales = &quot;free_y&quot;)
-
-p_crossover_ts + p_crossover_space +
-  plot_layout(widths = c(2,1))</code></pre>
+p_xover_histo + p_xover_histo_2021 + p_adjustment_histo</code></pre>
 <p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-crossover_analysis_data-1">
@@ -7433,6 +7403,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a988b6e3b5420ebb538e2b9e2fc61a1db29e26d5/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" target="_blank">a988b6e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2fe7f8efa86df0649e694cd5b22a28f2ba47cf83/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-1.png" target="_blank">2fe7f8e</a>
@@ -7536,31 +7517,360 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code># p_crossover_ts_adj &lt;- xover_IO_1990 %&gt;%
-#   ggplot(aes(dateB, offset_adj, col=RV)) +
-#   geom_hline(yintercept = 0) +
-#   geom_point() +
-#   scale_color_brewer(palette = &quot;Set1&quot;) +
-#   facet_grid(parameter~., scales = &quot;free_y&quot;) +
-#   labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
-#   theme(legend.position = &quot;bottom&quot;,
-#         legend.direction = &quot;vertical&quot;,
-#         axis.title.x = element_blank())
-# 
-# p_crossover_space_adj &lt;- xover_IO_1990 %&gt;%
-#   filter(year(dateB) &gt;=2000, year(dateB)&lt;2010) %&gt;% 
-#   ggplot(aes(y = offset_adj)) +
-#   geom_hline(yintercept = 0) +
-#   geom_boxplot() +
-#   labs(title = &quot;Mean offset 2000s&quot;) +
-#   facet_grid(parameter~., scales = &quot;free_y&quot;)
-# 
-# p_crossover_ts_adj + p_crossover_space_adj +
-#   plot_layout(widths = c(2,1))
-# 
-# p_adjustment_A_ts &lt;- xover_IO_1990 %&gt;%
+<pre class="r"><code>rm(p_xover_histo, p_xover_histo_2021, p_adjustment_histo)
+
+glodapv2_xover &lt;- left_join(
+  glodapv2_xover,
+  GLODAP_adjustments_long %&gt;%
+    select(
+      cruise_A = cruise_expocode,
+      parameter,
+      first_station_A = first_station,
+      last_station_A = last_station,
+      adjustment_A = adjustment
+    )
+)
+
+glodapv2_xover &lt;- left_join(
+  glodapv2_xover,
+  GLODAP_adjustments_long %&gt;%
+    select(
+      cruise_B = cruise_expocode,
+      parameter,
+      first_station_B = first_station,
+      last_station_B = last_station,
+      adjustment_B = adjustment
+    )
+)
+
+glodapv2_xover &lt;- glodapv2_xover  %&gt;%
+  mutate(offset_adj = 
+           if_else(parameter %in% c(&quot;salinity&quot;, &quot;talk&quot;, &quot;tco2&quot;),
+                   offset + adjustment_A - adjustment_B,
+                   offset))
+
+glodapv2_2021_xover &lt;- left_join(
+  glodapv2_2021_xover,
+  GLODAP_adjustments_long %&gt;%
+    select(
+      cruise_A = cruise_expocode,
+      parameter,
+      first_station_A = first_station,
+      last_station_A = last_station,
+      adjustment_A = adjustment
+    )
+)
+
+glodapv2_2021_xover &lt;- left_join(
+  glodapv2_2021_xover,
+  GLODAP_adjustments_long %&gt;%
+    select(
+      cruise_B = cruise_expocode,
+      parameter,
+      first_station_B = first_station,
+      last_station_B = last_station,
+      adjustment_B = adjustment
+    )
+)
+
+glodapv2_2021_xover &lt;- glodapv2_2021_xover  %&gt;%
+  mutate(offset_adj = 
+           if_else(parameter %in% c(&quot;salinity&quot;, &quot;talk&quot;, &quot;tco2&quot;),
+                   offset + adjustment_A,
+                   offset))
+
+
+xover &lt;- bind_rows(glodapv2_xover,
+                   glodapv2_2021_xover)
+
+
+xover_IO_1990_A &lt;- xover %&gt;%
+  filter(cruise_A %in% IO_1990_expocodes)
+
+xover_IO_1990_B &lt;- xover %&gt;%
+  filter(cruise_B %in% IO_1990_expocodes)
+
+xover_IO_1990_B_rev &lt;- xover_IO_1990_B %&gt;%
+  rename(
+    cruise_A_back = cruise_A,
+    cruise_A = cruise_B,
+    adjustment_A_back = adjustment_A,
+    adjustment_A = adjustment_B
+  ) %&gt;%
+  rename(cruise_B = cruise_A_back,
+         adjustment_B = adjustment_A_back) %&gt;%
+  mutate(offset = -offset,
+         offset_adj = -offset_adj)
+
+xover_IO_1990 &lt;- bind_rows(xover_IO_1990_A,
+                           xover_IO_1990_B_rev)
+
+xover_IO_1990 &lt;- xover_IO_1990 %&gt;%
+  mutate(dateA = ymd(str_sub(cruise_A, 5, 12)),
+         dateB = ymd(str_sub(cruise_B, 5, 12)))
+
+
+xover_IO_1990 &lt;- xover_IO_1990 %&gt;%
+  mutate(RV = if_else(str_detect(cruise_B, &quot;316N&quot;),
+                      &quot;316N&quot;,
+                      &quot;other&quot;))
+
+
+p_crossover_ts &lt;- xover_IO_1990 %&gt;%
+  ggplot(aes(dateB, offset, col = RV)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
+  facet_grid(parameter ~ ., scales = &quot;free_y&quot;) +
+  labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
+  theme(
+    legend.position = &quot;bottom&quot;,
+    legend.direction = &quot;vertical&quot;,
+    axis.title.x = element_blank()
+  )
+
+p_crossover_2000 &lt;- xover_IO_1990 %&gt;%
+  filter(year(dateB) &gt;= 2000, year(dateB) &lt; 2010) %&gt;%
+  ggplot(aes(y = offset)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = &quot;Mean offset 2000s&quot;) +
+  facet_grid(parameter ~ ., scales = &quot;free_y&quot;)
+
+p_crossover_2010 &lt;- xover_IO_1990 %&gt;%
+  filter(year(dateB) &gt;= 2010, year(dateB) &lt; 2020) %&gt;%
+  ggplot(aes(y = offset)) +
+  geom_hline(yintercept = 0) +
+  geom_boxplot() +
+  labs(title = &quot;Mean offset 2010s&quot;) +
+  facet_grid(parameter ~ ., scales = &quot;free_y&quot;)
+
+p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
+  plot_layout(widths = c(2, 1, 1))</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-crossover_analysis_data-2">
+Past versions of crossover_analysis_data-2.png
+</button>
+</p>
+<div id="fig-crossover_analysis_data-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a988b6e3b5420ebb538e2b9e2fc61a1db29e26d5/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">a988b6e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2fe7f8efa86df0649e694cd5b22a28f2ba47cf83/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">2fe7f8e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a768c5d95bf1db62582b34a3bd752e3b58c14db9/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">a768c5d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ab3079bb276333be9732691607dad94417702678/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">ab3079b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc1f0d20ac444cea18078efc14e2c45ccf73229a/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">bc1f0d2</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8e82dee11095c6f913e64060b9a0b2a4a44e6204/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-2.png" target="_blank">8e82dee</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
+
+
+xover_IO_1990 %&gt;%
+  ggplot(aes(dateB, offset_adj, col=RV)) +
+  geom_hline(yintercept = 0) +
+  geom_point() +
+  scale_color_brewer(palette = &quot;Set1&quot;) +
+  facet_grid(parameter~., scales = &quot;free_y&quot;) +
+  labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
+  theme(legend.position = &quot;bottom&quot;,
+        legend.direction = &quot;vertical&quot;,
+        axis.title.x = element_blank())</code></pre>
+<p><img src="figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-crossover_analysis_data-3">
+Past versions of crossover_analysis_data-3.png
+</button>
+</p>
+<div id="fig-crossover_analysis_data-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a988b6e3b5420ebb538e2b9e2fc61a1db29e26d5/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">a988b6e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2fe7f8efa86df0649e694cd5b22a28f2ba47cf83/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">2fe7f8e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-08
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a768c5d95bf1db62582b34a3bd752e3b58c14db9/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">a768c5d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/ab3079bb276333be9732691607dad94417702678/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">ab3079b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc1f0d20ac444cea18078efc14e2c45ccf73229a/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">bc1f0d2</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e7f4844105d192b17829bd03dfc983a52bbbdac2/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">e7f4844</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8e82dee11095c6f913e64060b9a0b2a4a44e6204/docs/figure/eMLR_data_preparation.Rmd/crossover_analysis_data-3.png" target="_blank">8e82dee</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2021-12-07
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># p_adjustment_A_ts &lt;- xover_IO_1990 %&gt;%
 #   distinct(cruise_A, cruise_B, first_station_A, first_station_B,
-#            dateB, adjustment_A, parameter, RV) %&gt;% 
+#            dateB, adjustment_A, parameter, RV) %&gt;%
 #   ggplot(aes(dateB, adjustment_A, col=RV)) +
 #   geom_point() +
 #   scale_color_brewer(palette = &quot;Set1&quot;) +
@@ -7568,12 +7878,12 @@ jens-daniel-mueller
 #   labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
 #   theme(legend.position = &quot;left&quot;,
 #         axis.title.x = element_blank())
-# 
+#
 # p_adjustment_A_ts
-# 
+#
 # p_adjustment_B_ts &lt;- xover_IO_1990 %&gt;%
 #   distinct(cruise_A, cruise_B, first_station_B, first_station_B,
-#            dateB, adjustment_B, parameter, RV) %&gt;% 
+#            dateB, adjustment_B, parameter, RV) %&gt;%
 #   ggplot(aes(dateB, adjustment_B, col=RV)) +
 #   geom_point() +
 #   scale_color_brewer(palette = &quot;Set1&quot;) +
@@ -7581,7 +7891,7 @@ jens-daniel-mueller
 #   labs(title = &quot;Crossover with cruises 316N199XXXXX from IO&quot;) +
 #   theme(legend.position = &quot;left&quot;,
 #         axis.title.x = element_blank())
-# 
+#
 # p_adjustment_B_ts</code></pre>
 <pre class="r"><code>IO_1990_expocodes &lt;- GLODAP %&gt;%
   filter(str_detect(cruise_expocode, &quot;316N199&quot;) &amp;
