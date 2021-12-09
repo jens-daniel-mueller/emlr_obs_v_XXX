@@ -291,23 +291,39 @@ glodapv2_2021_xover <- glodapv2_2021_xover %>%
   )
 
 
-# merge crossover resutls
-
 glodapv2_2021_xover <- glodapv2_2021_xover %>% 
   rename(offset = Offset,
          offset_sd = Std,
          cruise_A = Cruise_A,
          cruise_B = Cruise_B)
 
-glodapv2_xover <- glodapv2_xover %>% 
+# Note: In the files provided by Steven von Heuven
+# the column names sigma_ratio and sigma_offset_sd were swapped
+
+glodapv2_xover_absolute <- glodapv2_xover %>% 
+  filter(parameter %in% c("salinity", "talk", "tco2")) %>% 
   select(parameter,
          offset = sigma_offset,
-         offset_sd = sigma_offset_sd,
+         offset_sd = sigma_ratio,
          cruise_A = CruiseA_EXPOCODE,
          cruise_B = CruiseB_EXPOCODE)
 
+glodapv2_xover_ratio <- glodapv2_xover %>% 
+  filter(!(parameter %in% c("salinity", "talk", "tco2"))) %>% 
+  select(parameter,
+         offset = sigma_offset_sd,
+         offset_sd = sigma_ratio_sd,
+         cruise_A = CruiseA_EXPOCODE,
+         cruise_B = CruiseB_EXPOCODE)
 
-rm(glodapv2_xover_files, glodapv2_2021_xover_files)
+glodapv2_xover <- bind_rows(
+  glodapv2_xover_absolute,
+  glodapv2_xover_ratio
+)
+
+
+rm(glodapv2_xover_files, glodapv2_2021_xover_files,
+   glodapv2_xover_absolute, glodapv2_xover_ratio)
 
 ```
 
@@ -457,7 +473,7 @@ glodapv2_xover <- glodapv2_xover  %>%
   mutate(offset_adj = 
            if_else(parameter %in% c("salinity", "talk", "tco2"),
                    offset + adjustment_A - adjustment_B,
-                   offset))
+                   offset * adjustment_A / adjustment_B))
 
 glodapv2_2021_xover <- left_join(
   glodapv2_2021_xover,
@@ -487,7 +503,7 @@ glodapv2_2021_xover <- glodapv2_2021_xover  %>%
   mutate(offset_adj = 
            if_else(parameter %in% c("salinity", "talk", "tco2"),
                    offset + adjustment_A,
-                   offset))
+                   offset * adjustment_A))
 
 
 xover <- bind_rows(glodapv2_xover,
@@ -509,8 +525,16 @@ xover_IO_1990_B_rev <- xover_IO_1990_B %>%
   ) %>%
   rename(cruise_B = cruise_A_back,
          adjustment_B = adjustment_A_back) %>%
-  mutate(offset = -offset,
-         offset_adj = -offset_adj)
+  mutate(
+    offset = if_else(parameter %in% c("salinity", "talk", "tco2"),
+                     -offset,
+                     1/offset),
+    offset_adj = if_else(
+      parameter %in% c("salinity", "talk", "tco2"),
+      -offset_adj,
+      1/offset_adj
+    )
+  )
 
 xover_IO_1990 <- bind_rows(xover_IO_1990_A,
                            xover_IO_1990_B_rev)
@@ -528,7 +552,6 @@ xover_IO_1990 <- xover_IO_1990 %>%
 
 p_crossover_ts <- xover_IO_1990 %>%
   ggplot(aes(dateB, offset, col = RV)) +
-  geom_hline(yintercept = 0) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter ~ ., scales = "free_y") +
@@ -542,7 +565,6 @@ p_crossover_ts <- xover_IO_1990 %>%
 p_crossover_2000 <- xover_IO_1990 %>%
   filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
   ggplot(aes(y = offset)) +
-  geom_hline(yintercept = 0) +
   geom_boxplot() +
   labs(title = "Mean 2000s") +
   facet_grid(parameter ~ ., scales = "free_y")
@@ -550,7 +572,6 @@ p_crossover_2000 <- xover_IO_1990 %>%
 p_crossover_2010 <- xover_IO_1990 %>%
   filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
   ggplot(aes(y = offset)) +
-  geom_hline(yintercept = 0) +
   geom_boxplot() +
   labs(title = "Mean 2010s") +
   facet_grid(parameter ~ ., scales = "free_y")
@@ -562,7 +583,6 @@ rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
 
 p_crossover_ts <- xover_IO_1990 %>%
   ggplot(aes(dateB, offset_adj, col = RV)) +
-  geom_hline(yintercept = 0) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter ~ ., scales = "free_y") +
@@ -576,7 +596,6 @@ p_crossover_ts <- xover_IO_1990 %>%
 p_crossover_2000 <- xover_IO_1990 %>%
   filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
   ggplot(aes(y = offset_adj)) +
-  geom_hline(yintercept = 0) +
   geom_boxplot() +
   labs(title = "Mean 2000s") +
   facet_grid(parameter ~ ., scales = "free_y")
@@ -584,7 +603,6 @@ p_crossover_2000 <- xover_IO_1990 %>%
 p_crossover_2010 <- xover_IO_1990 %>%
   filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
   ggplot(aes(y = offset_adj)) +
-  geom_hline(yintercept = 0) +
   geom_boxplot() +
   labs(title = "Mean 2010s") +
   facet_grid(parameter ~ ., scales = "free_y")
@@ -596,31 +614,31 @@ rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
 
 
 
-# p_adjustment_A_ts <- xover_IO_1990 %>%
-#   distinct(cruise_A, cruise_B, first_station_A, first_station_B,
-#            dateB, adjustment_A, parameter, RV) %>%
-#   ggplot(aes(dateB, adjustment_A, col=RV)) +
-#   geom_point() +
-#   scale_color_brewer(palette = "Set1") +
-#   facet_grid(parameter~., scales = "free_y") +
-#   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-#   theme(legend.position = "left",
-#         axis.title.x = element_blank())
-#
-# p_adjustment_A_ts
-#
-# p_adjustment_B_ts <- xover_IO_1990 %>%
-#   distinct(cruise_A, cruise_B, first_station_B, first_station_B,
-#            dateB, adjustment_B, parameter, RV) %>%
-#   ggplot(aes(dateB, adjustment_B, col=RV)) +
-#   geom_point() +
-#   scale_color_brewer(palette = "Set1") +
-#   facet_grid(parameter~., scales = "free_y") +
-#   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
-#   theme(legend.position = "left",
-#         axis.title.x = element_blank())
-#
-# p_adjustment_B_ts
+p_adjustment_A_ts <- xover_IO_1990 %>%
+  distinct(cruise_A, cruise_B, first_station_A, first_station_B,
+           dateB, adjustment_A, parameter, RV) %>%
+  ggplot(aes(dateB, adjustment_A, col=RV)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
+
+p_adjustment_A_ts
+
+p_adjustment_B_ts <- xover_IO_1990 %>%
+  distinct(cruise_A, cruise_B, first_station_B, first_station_B,
+           dateB, adjustment_B, parameter, RV) %>%
+  ggplot(aes(dateB, adjustment_B, col=RV)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set1") +
+  facet_grid(parameter~., scales = "free_y") +
+  labs(title = "Crossover with cruises 316N199XXXXX from IO") +
+  theme(legend.position = "left",
+        axis.title.x = element_blank())
+
+p_adjustment_B_ts
 
 ```
 
