@@ -549,78 +549,110 @@ xover_IO_1990 <- xover_IO_1990 %>%
                       "316N",
                       "other"))
 
+hline_intercept <- tibble(parameter = unique(xover_IO_1990$parameter)) %>%
+  mutate(intercept = if_else(parameter %in% c("salinity", "talk", "tco2"),
+                             0,
+                             1))
+
 
 p_crossover_ts <- xover_IO_1990 %>%
   ggplot(aes(dateB, offset, col = RV)) +
-  geom_point() +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
+  geom_point(shape = 21) +
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter ~ ., scales = "free_y") +
-  labs(title = "Crossover w. 316N199XXXXX IO") +
+  labs(title = "Crossover 316N199XXXXX") +
   theme(
     legend.position = "bottom",
     legend.direction = "vertical",
     axis.title.x = element_blank()
   )
 
-p_crossover_2000 <- xover_IO_1990 %>%
-  filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
-  ggplot(aes(y = offset)) +
-  geom_boxplot() +
-  labs(title = "Mean 2000s") +
-  facet_grid(parameter ~ ., scales = "free_y")
+p_crossover_decadal <-
+  ggplot() +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
+  geom_violin(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2000, year(dateB) < 2010),
+               aes(x = "2000s", y = offset), fill="gold") +
+  geom_boxplot(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2000, year(dateB) < 2010),
+               aes(x = "2000s", y = offset),
+               width = 0.2) +
+  geom_violin(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2010, year(dateB) < 2020),
+               aes(x = "2010s", y = offset), fill="gold") +
+  geom_boxplot(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2010, year(dateB) < 2020),
+               aes(x = "2010s", y = offset),
+               width = 0.2) +
+  facet_grid(parameter ~ ., scales = "free_y") +
+  labs(title = "Decadal offsets") +
+  theme(axis.title.x = element_blank())
 
-p_crossover_2010 <- xover_IO_1990 %>%
-  filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
-  ggplot(aes(y = offset)) +
-  geom_boxplot() +
-  labs(title = "Mean 2010s") +
-  facet_grid(parameter ~ ., scales = "free_y")
 
-p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
-  plot_layout(widths = c(3, 1, 1))
+p_crossover_ts + p_crossover_decadal +
+  plot_layout(widths = c(2, 1))
 
-rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
+rm(p_crossover_ts, p_crossover_decadal)
 
 p_crossover_ts <- xover_IO_1990 %>%
   ggplot(aes(dateB, offset_adj, col = RV)) +
-  geom_point() +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
+  geom_point(shape = 21) +
   scale_color_brewer(palette = "Set1") +
   facet_grid(parameter ~ ., scales = "free_y") +
-  labs(title = "Crossover w. 316N199XXXXX IO") +
+  labs(title = "Crossover 316N199XXXXX") +
   theme(
     legend.position = "bottom",
     legend.direction = "vertical",
     axis.title.x = element_blank()
   )
 
-p_crossover_2000 <- xover_IO_1990 %>%
-  filter(year(dateB) >= 2000, year(dateB) < 2010) %>%
-  ggplot(aes(y = offset_adj)) +
-  geom_boxplot() +
-  labs(title = "Mean 2000s") +
-  facet_grid(parameter ~ ., scales = "free_y")
+p_crossover_decadal <-
+  ggplot() +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
+  geom_violin(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2000, year(dateB) < 2010),
+               aes(x = "2000s", y = offset_adj), fill="gold") +
+  geom_boxplot(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2000, year(dateB) < 2010),
+               aes(x = "2000s", y = offset_adj),
+               width = 0.2) +
+  geom_violin(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2010, year(dateB) < 2020),
+               aes(x = "2010s", y = offset_adj), fill="gold") +
+  geom_boxplot(data = xover_IO_1990 %>%
+                 filter(year(dateB) >= 2010, year(dateB) < 2020),
+               aes(x = "2010s", y = offset_adj),
+               width = 0.2) +
+  facet_grid(parameter ~ ., scales = "free_y") +
+  labs(title = "Decadal offset_adjs") +
+  theme(axis.title.x = element_blank())
 
-p_crossover_2010 <- xover_IO_1990 %>%
-  filter(year(dateB) >= 2010, year(dateB) < 2020) %>%
-  ggplot(aes(y = offset_adj)) +
-  geom_boxplot() +
-  labs(title = "Mean 2010s") +
-  facet_grid(parameter ~ ., scales = "free_y")
 
-p_crossover_ts + p_crossover_2000 + p_crossover_2010 +
-  plot_layout(widths = c(3, 1, 1))
+p_crossover_ts + p_crossover_decadal +
+  plot_layout(widths = c(2, 1))
 
-rm(p_crossover_ts, p_crossover_2000, p_crossover_2010)
+rm(p_crossover_ts, p_crossover_decadal)
 
 
 
 p_adjustment_A_ts <- xover_IO_1990 %>%
-  distinct(cruise_A, cruise_B, first_station_A, first_station_B,
-           dateB, adjustment_A, parameter, RV) %>%
-  ggplot(aes(dateB, adjustment_A, col=RV)) +
+  distinct(
+    cruise_A,
+    cruise_B,
+    first_station_A,
+    first_station_B,
+    dateB,
+    adjustment_A,
+    parameter,
+    RV
+  ) %>%
+  ggplot(aes(dateB, adjustment_A, col = RV)) +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
-  facet_grid(parameter~., scales = "free_y") +
+  facet_grid(parameter ~ ., scales = "free_y") +
   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
   theme(legend.position = "left",
         axis.title.x = element_blank())
@@ -628,17 +660,28 @@ p_adjustment_A_ts <- xover_IO_1990 %>%
 p_adjustment_A_ts
 
 p_adjustment_B_ts <- xover_IO_1990 %>%
-  distinct(cruise_A, cruise_B, first_station_B, first_station_B,
-           dateB, adjustment_B, parameter, RV) %>%
-  ggplot(aes(dateB, adjustment_B, col=RV)) +
+  distinct(
+    cruise_A,
+    cruise_B,
+    first_station_B,
+    first_station_B,
+    dateB,
+    adjustment_B,
+    parameter,
+    RV
+  ) %>%
+  ggplot(aes(dateB, adjustment_B, col = RV)) +
+  geom_hline(data = hline_intercept, aes(yintercept = intercept)) +
   geom_point() +
   scale_color_brewer(palette = "Set1") +
-  facet_grid(parameter~., scales = "free_y") +
+  facet_grid(parameter ~ ., scales = "free_y") +
   labs(title = "Crossover with cruises 316N199XXXXX from IO") +
   theme(legend.position = "left",
         axis.title.x = element_blank())
 
 p_adjustment_B_ts
+
+rm(p_adjustment_A_ts, p_adjustment_B_ts)
 
 ```
 
