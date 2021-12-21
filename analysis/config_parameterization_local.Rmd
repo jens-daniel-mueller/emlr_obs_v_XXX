@@ -101,7 +101,7 @@ params_local <-
     # offset correction for cruises expodcode 316N199XXXXX
     cstar_corr_316N199 = 0,
     # offset correction for cruises expodcode 316N199XXXXX
-    phosphate_corr_316N199 = 0.99,
+    phosphate_corr_316N199 = 1,
     # offset correction for cruises expodcode 316N199XXXXX
     talk_corr_316N199 = -4,
     # offset correction for cruises expodcode 316N199XXXXX
@@ -249,13 +249,13 @@ MLR_predictors <- lst(c(
 GLODAPv2_version = "2021"
 
 # f flags accepted for GLODAP data
-flag_f = lst(flag_f = c(0, 2, 9),
-             flag_f = c(2, 9)
+flag_f = lst(flag_f = c(0, 2, 9)
+             # flag_f = c(2, 9)
              )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(flag_qc = c(1, 0),
-              flag_qc = c(1)
+flag_qc = lst(flag_qc = c(1, 0)
+              # flag_qc = c(1)
               )
 
 # Shallowest depth for data to be included in MLR fitting
@@ -288,7 +288,7 @@ CANYON_B_cruise_mean = lst(
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 3
+  CANYON_B_sample_SD = 4
   # CANYON_B_sample_SD = 3,
   # CANYON_B_sample_SD = 2,
   # CANYON_B_sample_SD = 1
@@ -298,11 +298,11 @@ CANYON_B_sample_SD = lst(
 CANYON_B_depth = 0
 
 # offset correction for cruises expodcode 316N199XXXXX
-phosphate_corr_316N199 = 0.997
+phosphate_corr_316N199 = 1
 # offset correction for cruises expodcode 316N199XXXXX
-talk_corr_316N199 = -5
+talk_corr_316N199 = -4
 # offset correction for cruises expodcode 316N199XXXXX
-tco2_corr_316N199 = 2.25
+tco2_corr_316N199 = 2.5
 
 
 # offset correction for cruises expodcode 316N199XXXXX
@@ -344,21 +344,21 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  # MLR_basins = "1",
-  # MLR_basins = "2",
+  MLR_basins = "1",
+  MLR_basins = "2",
   MLR_basins = "AIP",
   # MLR_basins = "IO_test_lon",
-  # MLR_basins = "5",
+  MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  # MLR_basins = "SO_AIP",
-  # MLR_basins = "SO_2"
+  MLR_basins = "SO_AIP",
+  MLR_basins = "SO_2"
 )
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  gap_filling = "CANYON-B",
-  gap_filling = "none"
+  gap_filling = "CANYON-B"
+  # gap_filling = "none"
 )
 
 # cruise adjustment thresholds, not applied when Inf
@@ -495,7 +495,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 5
   
-  Version_ID <- sprintf("v_27%02d", i)
+  Version_ID <- sprintf("v_30%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
