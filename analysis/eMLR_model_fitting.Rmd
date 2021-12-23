@@ -822,7 +822,7 @@ GLODAP_glanced_clean %>%
 
 ### Fitted vs true
 
-Plotted are fitted vs actual target variable values, here: `r `params_local$MLR_target`
+Plotted are fitted vs actual target variable values, here: `r params_local$MLR_target`
 
 ```{r fitted_vs_actual_all_property_property, fig.asp=1}
 
@@ -1099,8 +1099,8 @@ spatial_residual_offset %>%
 
 GLODAP_augmented_long <- GLODAP_augmented %>%
   select(era, basin_AIP, gamma_slab, data_source,
-         sal:cstar_tref, .resid) %>% 
-  pivot_longer(sal:cstar_tref,
+         sal:params_local$MLR_target, .resid) %>% 
+  pivot_longer(sal:params_local$MLR_target,
                names_to = "predictor",
                values_to = "value")
 
@@ -1114,7 +1114,7 @@ GLODAP_augmented_long %>%
       geom_hline(yintercept = 0) +
       geom_bin_2d(aes(value, .resid)) +
       facet_grid(data_source ~ era) +
-      scale_fill_viridis_c() +
+      scale_fill_viridis_c(trans = "log10") +
       labs(title = paste("basin_AIP:", .x$basin_AIP,
                          "| gamma_slab:", .x$gamma_slab),
            x = .x$predictor) +
