@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised ratio crossover")
+wflow_publish(all = TRUE, message = "added residual vs predictor plots")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun with CANYON-B gap filling only on A16 in 2000s",
+message = "test run with cruises based flagging and filling conditions",
 republish = TRUE)
 
 
@@ -75,23 +75,24 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_17")#[8]
+  pattern = "v_10")#[8]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_27")#[1]
+  pattern = "v_20")#[1]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_30")#[8]
+  pattern = "v_30")#[6]
 
 Version_IDs <- c(
   Version_IDs_1,
-  Version_IDs_2
+  Version_IDs_2,
+  Version_IDs_3
   )
 
 Version_IDs <- c(
-  Version_IDs_2
+  Version_IDs_3
   )
 
 for (i_Version_IDs in Version_IDs) {
