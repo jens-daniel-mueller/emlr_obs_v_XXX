@@ -174,7 +174,8 @@ delta_pco2_annual_obs <-
 
 delta_pco2_annual <- bind_rows(
   delta_pco2_annual_mod %>% mutate(data_source = "mod"),
-  delta_pco2_annual_obs %>% mutate(data_source = "obs")
+  delta_pco2_annual_obs %>% mutate(data_source = "obs") %>% 
+    select(-fgco2_glob_roll)
 )
 
 rm(delta_pco2_annual_mod, delta_pco2_annual_obs)
