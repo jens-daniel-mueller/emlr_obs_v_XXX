@@ -280,6 +280,7 @@ GLODAP <- GLODAP %>%
 
 ## C* input adjustment
 
+### IO 1990 Knorr
 
 ```{r check_existence_IO_1990_data}
 
@@ -304,7 +305,6 @@ GLODAP_IO_1990s <- GLODAP %>%
            data_source == "obs") %>% 
   mutate(cruise_expocode_RV = str_sub(cruise_expocode, 1, 7),
          cruise_expocode_date = str_sub(cruise_expocode, 5, 12))
-
 
 
 GLODAP_IO_1990s_stats <- GLODAP_IO_1990s %>% 
@@ -391,6 +391,20 @@ GLODAP <- bind_rows(
 
 rm(GLODAP_adj,
    GLODAP_unadj)
+
+```
+
+
+### Calculate talk
+
+```{r correct_calculated_talk}
+
+GLODAP <- GLODAP %>% 
+  mutate(talk = if_else(cruise_expocode %in% params_local$cruises_talk_calc &
+                        data_source == "obs",
+                        talk + params_local$talk_calc_corr,
+                        talk))
+
 
 ```
 

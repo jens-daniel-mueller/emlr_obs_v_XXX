@@ -735,11 +735,6 @@ GLODAP <- left_join(
 )
 
 
-cruises_phosphate_gap_fill <- c("33MW19930704",
-                                "33RO20030604",
-                                "33RO20050111",
-                                "33RO19980123")
-
 if (params_local$gap_filling == "CANYON-B") {
   
 GLODAP <- left_join(GLODAP,
@@ -754,16 +749,20 @@ GLODAP <- GLODAP %>%
     fill_phosphate = if_else(
       is.na(phosphate) &
         oxygenqc == 1 &
-        cruise_expocode %in% cruises_phosphate_gap_fill,
+        cruise_expocode %in% params_local$cruises_phosphate_gap_fill,
       "filled",
       "measured"
     ),
     fill_silicate = if_else(FALSE,
                             "filled",
                             "measured"),
-    fill_talk = if_else(FALSE,
-                        "filled",
-                        "measured")
+    fill_talk = if_else(
+      is.na(talk) &
+        oxygenqc == 1 &
+        cruise_expocode %in% params_local$cruises_talk_gap_fill,
+      "filled",
+      "measured"
+    )
   )
 
 # fill missing values with CANYON-B estimate, if available
@@ -850,7 +849,7 @@ GLODAP <- GLODAP %>%
   select(!ends_with("_CANYONB")) %>% 
   select(!starts_with("fill_"))
 
-rm(GLODAP_filling_long, GLODAP_filling_wide, cruises_phosphate_gap_fill)
+rm(GLODAP_filling_long, GLODAP_filling_wide)
 
 }
 
@@ -1080,44 +1079,42 @@ rm(GLODAP_qc_flags_stats)
 
 ### Apply filter
 
-```{r apply_filter}
+```{r apply_flag_filter}
 
-GLODAP <-
-  GLODAP %>%
+# Remove all NA data that are still missing despite gap filling
+
+GLODAP <- GLODAP %>%
   filter(if_all(
     c(tco2, talk, params_local$MLR_predictors, depth, gamma),
     ~ !is.na(.)
   ))
 
 cruises_co2_calc <- c(
-  "35TH20040604",
-  "29AH20160617",
-  "06MT19900123",
-  "316N19920502",
-  "316N19921006",
-  "31DS19940126")
-  
-if (0 %in% params_local$flag_f) {
-  GLODAP <-
-    GLODAP %>%
-    filter(if_all(ends_with("f"), ~ . %in% c(2, 9)) |
-             cruise_expocode %in% cruises_co2_calc)
-} else {
-  GLODAP <-
-    GLODAP %>%
-    filter(if_all(ends_with("f"), ~ . %in% params_local$flag_f))
-}
+  params_local$cruises_tco2_calc,
+  params_local$cruises_talk_calc
+)
 
-if (0 %in% params_local$flag_qc) {
-  GLODAP <-
-    GLODAP %>%
-    filter(if_all(ends_with("qc"), ~ . %in% c(1)) |
-             cruise_expocode %in% cruises_co2_calc)
-} else {
-  GLODAP <-
-    GLODAP %>%
-    filter(if_all(ends_with("qc"), ~ . %in% params_local$flag_qc))
-}
+# Remove all data that do not meet f-flag criterion,
+# except defined exceptions
+
+GLODAP <- GLODAP %>%
+  filter(
+    if_all(ends_with("f"), ~ . %in% params_local$flag_f) |
+      cruise_expocode %in% cruises_co2_calc
+  )
+
+
+# Remove all data that do not meet qc-flag criterion,
+# except defined exceptions
+
+GLODAP <- GLODAP %>%
+  filter(
+    if_all(ends_with("qc"), ~ . %in% params_local$flag_qc) |
+      cruise_expocode %in% cruises_co2_calc |
+      cruise_expocode %in% params_local$cruises_qc_flag
+  )
+
+rm(cruises_co2_calc)
 
 ```
 
