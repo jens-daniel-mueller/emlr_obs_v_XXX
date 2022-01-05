@@ -473,6 +473,13 @@ dcant_surface <- dcant_surface %>%
 
 surface_rev_fac <- dcant_surface
 
+if (params_local$MLR_target %in% c("cstar_phosphate",
+                                   "cstar_nitrate",
+                                   "cstar_talk")) {
+  dcant_surface <- dcant_surface %>%
+    mutate(dcant = 0)
+}
+
 # calculate positive cant
 dcant_surface <- dcant_surface %>%
   mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>% 
