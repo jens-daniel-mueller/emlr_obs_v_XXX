@@ -282,6 +282,16 @@ GLODAP <- GLODAP %>%
 
 ### IO 1990 Knorr
 
+```{r add_expocodes}
+
+GLODAP <-
+  left_join(GLODAP,
+            GLODAP_adjustments %>%
+              distinct(cruise, cruise_expocode))
+
+```
+
+
 ```{r check_existence_IO_1990_data}
 
 exist_IO_1990 <- GLODAP %>%
@@ -293,11 +303,6 @@ exist_IO_1990 <- GLODAP %>%
 ```
 
 ```{r cstar_input_adjustment_IO, eval=exist_IO_1990}
-
-GLODAP <-
-  left_join(GLODAP,
-            GLODAP_adjustments %>%
-              distinct(cruise, cruise_expocode))
 
 GLODAP_IO_1990s <- GLODAP %>%
   filter(between(year, 1989,1999) &
@@ -1262,10 +1267,18 @@ GLODAP <- bind_rows(
 rm(GLODAP_adj,
    GLODAP_unadj)
 
+
+
+```
+
+```{r remove_expocodes}
+
 GLODAP <- GLODAP %>%
   select(-cruise_expocode)
 
+
 ```
+
 
 
 # C* distributions
@@ -1432,14 +1445,17 @@ rm(cstar_station_stats, grid_post, grid_pre)
 ```{r cstar_slab_distribution_absolute}
 
 # calculate cstar contributions from components
-GLODAP_cstar <- GLODAP %>%
+GLODAP <- GLODAP %>%
   mutate(
     cstar_tco2 = tco2,
     cstar_talk = -0.5 * talk,
     cstar_phosphate = -params_local$rCP * phosphate + params_local$rNP *
-      0.5 * phosphate
-  ) %>%
-  select(-c(cstar, cstar_tref_delta)) %>%
+      0.5 * phosphate,
+    cstar_nitrate = -params_local$rCP/params_local$rNP * nitrate + 0.5 * nitrate
+  )
+
+GLODAP_cstar <- GLODAP %>%
+  # select(-c(cstar, cstar_tref_delta)) %>%
   filter(data_source == "obs")
 
 cstar_grid <- m_grid_horizontal_coarse(GLODAP_cstar)

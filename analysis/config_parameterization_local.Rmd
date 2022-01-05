@@ -130,13 +130,13 @@ params_local <-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 50,
     # start years for eras
-    era_start = c(1989, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2019),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -161,7 +161,7 @@ params_local <-
     # rarefication approach threshold
     rarefication_threshold = 50,
     # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
-    MLR_target = "cstar_tref",
+    MLR_target = "cstar_talk",
     # see above
     MLR_predictors = MLR_predictors,
     # Maxmimum number of MLR predictors
@@ -278,21 +278,38 @@ MLR_predictors <- lst(c(
 GLODAPv2_version = "2021"
 
 # f flags accepted for GLODAP data
-flag_f = lst(flag_f = c(0, 2, 9)
-             # flag_f = c(2, 9)
+flag_f = lst(flag_f = c(0, 2, 9),
+             flag_f = c(2, 9)
              )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(flag_qc = c(1, 0)
-              # flag_qc = c(1)
+flag_qc = lst(flag_qc = c(0, 1),
+              flag_qc = c(1)
               )
 
-# Shallowest depth for data to be included in MLR fitting
-depth_min = lst(
-  depth_min = 100
-  # depth_min = 150
-  )
+# cruises for which calculated tco2 data are accepted
+# even if generally f-flag = 0 data are excluded
+cruises_tco2_calc = lst(cruises_tco2_calc =
+                          c("35TH20040604",
+                            "29AH20160617"))
 
+# cruises for which calculated talk data are accepted
+# even if generally f-flag = 0 data are excluded
+cruises_talk_calc = lst(cruises_talk_calc = c("06MT19900123",
+                                              "316N19920502",
+                                              "316N19921006"))
+# additive talk correction for calculate talk data
+talk_calc_corr = lst(talk_calc_corr = 3)
+
+# cruises for which data with qc = 0 flag are accepted
+# even if generally qc-flag = 0 data are excluded
+cruises_qc_flag = lst(cruises_qc_flag = c("31DS19940126"))
+
+# Shallowest depth for data to be included in MLR fitting
+depth_min = lst(depth_min = 100
+                # depth_min = 150
+                )
+                
 # Depth to extend the surface dcant estimate in mapping
 depth_mapping = lst(
   depth_mapping = 200
@@ -373,22 +390,36 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  MLR_basins = "1",
-  MLR_basins = "2",
+  # MLR_basins = "1",
+  # MLR_basins = "2",
   MLR_basins = "AIP",
   # MLR_basins = "IO_test_lon",
-  MLR_basins = "5",
+  # MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  MLR_basins = "SO_AIP",
-  MLR_basins = "SO_2"
+  # MLR_basins = "SO_AIP",
+  # MLR_basins = "SO_2"
 )
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  gap_filling = "CANYON-B"
-  # gap_filling = "none"
+  gap_filling = "CANYON-B",
+  gap_filling = "none"
 )
+
+
+# cruises for which phosphate gaps should be filled with CANYON-B
+cruises_phosphate_gap_fill = lst(
+  cruises_phosphate_gap_fill = c(
+    "33MW19930704",
+    "33RO20030604",
+    "33RO20050111",
+    "33RO19980123"
+  )
+)
+
+# cruises for which talk gaps should be filled with CANYON-B
+cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c("06AQ19980328"))
 
 # cruise adjustment thresholds, not applied when Inf
 cruise_adjustment_relative = Inf # levels as absolute factor -1
@@ -476,6 +507,10 @@ params_local_all <-
     GLODAPv2_version,
     flag_f,
     flag_qc,
+    cruises_tco2_calc,
+    cruises_talk_calc,
+    talk_calc_corr,
+    cruises_qc_flag,
     depth_min,
     depth_mapping,
     bottomdepth_min,
@@ -494,6 +529,8 @@ params_local_all <-
     tref2,
     MLR_basins,
     gap_filling,
+    cruises_phosphate_gap_fill,
+    cruises_talk_gap_fill,
     cruise_adjustment_relative,
     cruise_adjustment_absolute,
     cstar_deep_sd,
@@ -524,7 +561,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 5
   
-  Version_ID <- sprintf("v_30%02d", i)
+  Version_ID <- sprintf("v_27%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
