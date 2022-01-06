@@ -184,13 +184,13 @@ GLODAP %>%
   filter_all(any_vars(is.na(.)))
 
 GLODAP_nested <- GLODAP %>% 
-  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  # filter(gamma_slab %in% params_local$plot_slabs) %>%
   nest(data = !c(gamma_slab, era, basin, data_source))
 
 # expand with model definitions
 GLODAP_nested_lm <- expand_grid(
   GLODAP_nested,
-  lm_all[1:3,]
+  lm_all#[1:3,]
 )
 
 # fit models and extract tidy model output
