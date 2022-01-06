@@ -278,20 +278,22 @@ MLR_predictors <- lst(c(
 GLODAPv2_version = "2021"
 
 # f flags accepted for GLODAP data
-flag_f = lst(flag_f = c(0, 2, 9),
+flag_f = lst(# flag_f = c(0, 2, 9),
              flag_f = c(2, 9)
              )
 
 # qc flags accepted for GLODAP data
-flag_qc = lst(flag_qc = c(0, 1),
+flag_qc = lst(# flag_qc = c(0, 1),
               flag_qc = c(1)
               )
 
 # cruises for which calculated tco2 data are accepted
 # even if generally f-flag = 0 data are excluded
 cruises_tco2_calc = lst(cruises_tco2_calc =
-                          c("35TH20040604",
-                            "29AH20160617"))
+                          c(
+                            # "35TH20040604",
+                            # "29AH20160617"
+                            ))
 
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
@@ -390,21 +392,21 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  # MLR_basins = "1",
-  # MLR_basins = "2",
+  MLR_basins = "1",
+  MLR_basins = "2",
   MLR_basins = "AIP",
   # MLR_basins = "IO_test_lon",
-  # MLR_basins = "5",
+  MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  # MLR_basins = "SO_AIP",
-  # MLR_basins = "SO_2"
+  MLR_basins = "SO_AIP",
+  MLR_basins = "SO_2"
 )
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  gap_filling = "CANYON-B",
-  gap_filling = "none"
+  gap_filling = "CANYON-B"
+  # gap_filling = "none"
 )
 
 
@@ -561,7 +563,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 5
   
-  Version_ID <- sprintf("v_27%02d", i)
+  Version_ID <- sprintf("v_30%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID

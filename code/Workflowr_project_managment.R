@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added residual vs predictor plots")
+wflow_publish(all = TRUE, message = "cstar distributions plotted for all basins")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test run with cruises based flagging and filling conditions",
+message = "test without Ovide data",
 republish = TRUE)
 
 
@@ -43,7 +43,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test with 2010s after implementing specifc IO 1990s tasks")
+message = "test without Ovide data")
 
 
 
@@ -83,11 +83,11 @@ Version_IDs_2 <- list.files(
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_30")#[6]
+  pattern = "v_3006")#[6]
 
 Version_IDs <- c(
-  Version_IDs_1,
-  Version_IDs_2,
+  # Version_IDs_1,
+  # Version_IDs_2,
   Version_IDs_3
   )
 

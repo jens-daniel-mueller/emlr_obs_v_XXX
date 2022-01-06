@@ -1442,7 +1442,7 @@ rm(cstar_station_stats, grid_post, grid_pre)
 
 ### Absolute
 
-```{r cstar_slab_distribution_absolute}
+```{r cstar_slab_distribution_absolute, fig.asp=0.8}
 
 # calculate cstar contributions from components
 GLODAP <- GLODAP %>%
@@ -1472,9 +1472,9 @@ cstar_grid <- cstar_grid %>%
                values_to = "value")
 
 cstar_grid %>%
-  filter(basin_AIP == "Indian") %>%
-  filter(gamma_slab %in% params_local$plot_slabs) %>% 
-  group_split(basin_AIP, gamma_slab, parameter) %>%
+  # filter(basin_AIP == "Indian") %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_split(gamma_slab, parameter) %>%
   # head(1) %>%
   map(
     ~ map +
@@ -1484,14 +1484,9 @@ cstar_grid %>%
         col = "grey20"
       ) +
       scale_fill_viridis_c(name = unique(.x$parameter)) +
-      labs(title = paste(
-        "basin_AIP",
-        unique(.x$basin_AIP),
-        "| gamma_slab",
-        unique(.x$gamma_slab)
-      )) +
-      xlim(c(20, 150)) +
-      facet_grid(. ~ era)
+      labs(title = paste("gamma_slab:",
+                         unique(.x$gamma_slab))) +
+      facet_grid(era ~ .)
   )
 
 
