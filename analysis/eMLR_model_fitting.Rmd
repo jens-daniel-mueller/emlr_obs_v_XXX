@@ -118,6 +118,12 @@ print(i_gamma_slab)
 GLODAP_basin_era_slab <- GLODAP_basin_era %>%
   filter(gamma_slab == i_gamma_slab)
 
+# MLR_predictors <-
+#   c(
+#     params_local$MLR_predictors,
+#     params_local$MLR_predictors_trans
+#   )
+
 # fit the full linear model, i.e. all predictor combinations
 lm_full <- lm(paste(
   params_local$MLR_target,
@@ -190,7 +196,7 @@ GLODAP_nested <- GLODAP %>%
 # expand with model definitions
 GLODAP_nested_lm <- expand_grid(
   GLODAP_nested,
-  lm_all#[1:3,]
+  lm_all#[1:4,]
 )
 
 # fit models and extract tidy model output

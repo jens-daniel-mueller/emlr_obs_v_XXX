@@ -73,9 +73,9 @@ MLR_predictors <- c(
                 "nitrate",
                 "silicate")
 
-# Transformed predictors for MLR model
-MLR_predictors_trans <- c(
-                "log(phosphate)")
+# # Transformed predictors for MLR model
+# MLR_predictors_trans <- c(
+#                 "log(phosphate)")
 
 params_local <-
   lst(
@@ -164,9 +164,11 @@ params_local <-
     # rarefication approach threshold
     rarefication_threshold = 50,
     # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
-    MLR_target = "cstar_tref",
+    MLR_target = "cstar_tco2",
     # see above
     MLR_predictors = MLR_predictors,
+    # # see above
+    # MLR_predictors_trans = MLR_predictors_trans,
     # Maxmimum number of MLR predictors
     MLR_predictors_max = 7,
     # Minimum number of MLR predictors
