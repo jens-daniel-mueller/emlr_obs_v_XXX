@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2267d0dfaafe2c76a5c426774e9f42ebb7e9ad07targetblank2267d0da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2267d0dfaafe2c76a5c426774e9f42ebb7e9ad07" target="_blank">2267d0d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefcb5724db619719d8c54337e350ba5c252f86ac1targetblankfcb5724a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fcb5724db619719d8c54337e350ba5c252f86ac1" target="_blank">fcb5724</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree2267d0dfaafe2c76a5c426774e9f42ebb7e9ad07targetblank2267d0da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefcb5724db619719d8c54337e350ba5c252f86ac1targetblankfcb5724a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/2267d0dfaafe2c76a5c426774e9f42ebb7e9ad07" target="_blank">2267d0d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fcb5724db619719d8c54337e350ba5c252f86ac1" target="_blank">fcb5724</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,13 +593,16 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
 
 Untracked files:
     Untracked:  code/extract_offset_values.R
     Untracked:  data/IO_1990s-2000s_AT_DIC_PO4_mean_cruise_offsets.csv
     Untracked:  data/unadjusted_09AR20041223_316N19941201_ALK.pdf
     Untracked:  data/xover_sum_316N19941201_ALK.pdf
+
+Unstaged changes:
+    Modified:   code/Workflowr_project_managment.R
+    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -638,6 +641,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/fcb5724db619719d8c54337e350ba5c252f86ac1/analysis/config_parameterization_local.Rmd" target="_blank">fcb5724</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-06
+</td>
+<td>
+test cstar_tco2 target
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/edc52d70e2aaa6ad1b5af72d052fa19e4cc7ec8e/docs/config_parameterization_local.html" target="_blank">edc52d7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -7953,9 +7990,9 @@ MLR_predictors &lt;- c(
                 &quot;nitrate&quot;,
                 &quot;silicate&quot;)
 
-# Transformed predictors for MLR model
-MLR_predictors_trans &lt;- c(
-                &quot;log(phosphate)&quot;)
+# # Transformed predictors for MLR model
+# MLR_predictors_trans &lt;- c(
+#                 &quot;log(phosphate)&quot;)
 
 params_local &lt;-
   lst(
@@ -8044,9 +8081,11 @@ params_local &lt;-
     # rarefication approach threshold
     rarefication_threshold = 50,
     # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
-    MLR_target = &quot;cstar_tref&quot;,
+    MLR_target = &quot;cstar_tco2&quot;,
     # see above
     MLR_predictors = MLR_predictors,
+    # # see above
+    # MLR_predictors_trans = MLR_predictors_trans,
     # Maxmimum number of MLR predictors
     MLR_predictors_max = 7,
     # Minimum number of MLR predictors
