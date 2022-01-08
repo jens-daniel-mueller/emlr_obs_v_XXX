@@ -1107,8 +1107,8 @@ spatial_residual_offset %>%
 
 GLODAP_augmented_long <- GLODAP_augmented_best %>%
   select(era, basin_AIP, gamma_slab, data_source,
-         sal:params_local$MLR_target, .resid) %>% 
-  pivot_longer(sal:params_local$MLR_target,
+         params_local$MLR_predictors, params_local$MLR_target, .resid) %>% 
+  pivot_longer(c(params_local$MLR_predictors,params_local$MLR_target),
                names_to = "predictor",
                values_to = "value")
 

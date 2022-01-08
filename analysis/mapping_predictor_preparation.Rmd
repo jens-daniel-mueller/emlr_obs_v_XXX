@@ -207,14 +207,13 @@ climatology <- climatology %>%
 
 model_predictors <- climatology %>%
   select(lon, lat, depth, basin_AIP, gamma, 
-         phosphate, oxygen, temp, nitrate,
+         sal, phosphate, oxygen, temp, nitrate,
          any_of(params_local$MLR_predictors))
 
 ```
 
 
 ```{r load_model_climatologies_surface_mapping}
-
 
 model_predictors_surface <- climatology %>%
   select(lon,
@@ -483,52 +482,6 @@ rm(N_Atl)
 # Prepare predictor fields
 
 Additional predictor fields need to calculated from available climatologies
-
-## PO~4~* calculation 
-
-The predictor PO~4~* was be calculated according to Clement and Gruber (2018), ie based on oxygen. Please note that an erroneous equations for PO4* calculation is given in the supplement of Gruber et al (2019), based on nitrate.
-
-```{r calculate_phosphate_star_clement}
-
-predictors <- predictors %>%
-  mutate(phosphate_star = b_phosphate_star(phosphate, oxygen))
-
-```
-
-### Maps
-
-```{r PO4_star_climatology_maps, fig.asp=0.6}
-
-predictors %>%
-  group_split(data_source) %>%
-  map(
-    ~ p_map_climatology(
-      df = .x,
-      var = "phosphate_star",
-      col = "divergent",
-      subtitle_text = paste("Data source: ", unique(.x$data_source))
-    )
-  )
-
-```
-
-### Global section
-
-```{r PO4_star_climatology_section}
-
-predictors %>%
-  group_split(data_source) %>%
-  map(
-    ~ p_section_global(
-      df = .x,
-      var = "phosphate_star",
-      col = "divergent",
-      subtitle_text = paste("Data source: ", unique(.x$data_source))
-    )
-  )
-
-```
-
 
 ## AOU
 
