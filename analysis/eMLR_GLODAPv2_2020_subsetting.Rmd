@@ -892,7 +892,7 @@ Summary statistics were calculated during cleaning process.
 
 GLODAP_NA <- GLODAP %>% 
   select(lon, lat, era, tco2, talk, params_local$MLR_predictors) %>% 
-  pivot_longer(tco2:silicate,
+  pivot_longer(c(tco2, talk, params_local$MLR_predictors),
                names_to = "parameter",
                values_to = "value") %>%
   mutate(NA_flag = if_else(is.na(value), "NA", "available"))
