@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">09 January, 2022</h4>
+<h4 class="date">12 January, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-09
+<strong>Last updated:</strong> 2022-01-12
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8f64ff6c3672439f95324ccd517383e70cc39cd3targetblank8f64ff6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8f64ff6c3672439f95324ccd517383e70cc39cd3" target="_blank">8f64ff6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree233b11b8c7925ddf63963ac81988fc0821a8d79ctargetblank233b11ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/233b11b8c7925ddf63963ac81988fc0821a8d79c" target="_blank">233b11b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8f64ff6c3672439f95324ccd517383e70cc39cd3targetblank8f64ff6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree233b11b8c7925ddf63963ac81988fc0821a8d79ctargetblank233b11ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8f64ff6c3672439f95324ccd517383e70cc39cd3" target="_blank">8f64ff6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/233b11b8c7925ddf63963ac81988fc0821a8d79c" target="_blank">233b11b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -641,6 +641,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/233b11b8c7925ddf63963ac81988fc0821a8d79c/analysis/config_parameterization_local.Rmd" target="_blank">233b11b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-12
+</td>
+<td>
+incl 2020 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/ebd7fbc746cc6ff65d6ef66b313e5a4922efc0a1/docs/config_parameterization_local.html" target="_blank">ebd7fbc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8084,7 +8118,7 @@ slabs_Ind_Pac &lt;-
 
 # Predictors for MLR model
 MLR_predictors &lt;- c(
-                # &quot;sal&quot;,
+                &quot;sal&quot;,
                 &quot;temp&quot;,
                 &quot;aou&quot;,
                 &quot;oxygen&quot;,
@@ -8124,7 +8158,7 @@ params_local &lt;-
     # cruises for which data with qc = 0 flag are accepted
     # even if generally qc-flag = 0 data are excluded
     cruises_qc_flag = c(
-      &quot;31DS19940126&quot;
+      # &quot;31DS19940126&quot;
     ),
     # Shallowest depth for data to be included in MLR fitting
     depth_min = 100, 
@@ -8154,7 +8188,7 @@ params_local &lt;-
     # start years for eras
     era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(2009, 2020),
     # manually define tref1, set to NULL to use median year
     tref1 = 2004,
     # manually define tref2, set to NULL to use median year
@@ -8164,13 +8198,17 @@ params_local &lt;-
     # gap filling of NA values in GLODAP
     gap_filling = &quot;CANYON-B&quot;,
     # cruises for which phosphate gaps should be filled with CANYON-B
-    cruises_phosphate_gap_fill = c(&quot;33MW19930704&quot;,
-                                   &quot;33RO20030604&quot;,
-                                   &quot;33RO20050111&quot;,
-                                   &quot;33RO19980123&quot;),
+    cruises_phosphate_gap_fill = c(
+      &quot;33MW19930704&quot;,
+      &quot;33RO20030604&quot;,
+      &quot;33RO20050111&quot;,
+      &quot;33RO19980123&quot;
+      ),
     
     # cruises for which talk gaps should be filled with CANYON-B
-    cruises_talk_gap_fill = c(&quot;06AQ19980328&quot;), 
+    cruises_talk_gap_fill = c(
+      &quot;06AQ19980328&quot;
+      ), 
     # cruise adjustment thresholds, not applied when Inf
     cruise_adjustment_relative = Inf, # levels as absolute factor -1
     cruise_adjustment_absolute = Inf, # levels in absolute µM
@@ -8183,7 +8221,7 @@ params_local &lt;-
     # rarefication approach threshold
     rarefication_threshold = 50,
     # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
-    MLR_target = &quot;cstar_tref_delta&quot;,
+    MLR_target = &quot;cstar_tref&quot;,
     # see above
     MLR_predictors = MLR_predictors,
     # # see above
@@ -8284,14 +8322,14 @@ slabs_Ind_Pac &lt;- lst(
 
 # Predictors for MLR model
 MLR_predictors &lt;- lst(
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;silicate&quot;),
-  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;)
+  MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;)
+  # MLR_predictors = c(&quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;nitrate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;silicate&quot;),
+  # MLR_predictors = c(&quot;sal&quot;, &quot;temp&quot;, &quot;aou&quot;, &quot;oxygen&quot;, &quot;phosphate&quot;, &quot;nitrate&quot;)
   )
 
 # GLODAP version used
@@ -8317,15 +8355,20 @@ cruises_tco2_calc = lst(cruises_tco2_calc =
 
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
-cruises_talk_calc = lst(cruises_talk_calc = c(&quot;06MT19900123&quot;,
-                                              &quot;316N19920502&quot;,
-                                              &quot;316N19921006&quot;))
+cruises_talk_calc = lst(cruises_talk_calc = c(
+  # &quot;06MT19900123&quot;,
+  # &quot;316N19920502&quot;,
+  # &quot;316N19921006&quot;
+  ))
+
 # additive talk correction for calculate talk data
 talk_calc_corr = lst(talk_calc_corr = 3)
 
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
-cruises_qc_flag = lst(cruises_qc_flag = c(&quot;31DS19940126&quot;))
+cruises_qc_flag = lst(cruises_qc_flag = c(
+  # &quot;31DS19940126&quot;
+  ))
 
 # Shallowest depth for data to be included in MLR fitting
 depth_min = lst(depth_min = 100
@@ -8412,36 +8455,38 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
-  # MLR_basins = &quot;1&quot;,
-  # MLR_basins = &quot;2&quot;,
-  MLR_basins = &quot;AIP&quot;
+  MLR_basins = &quot;1&quot;,
+  MLR_basins = &quot;2&quot;,
+  MLR_basins = &quot;AIP&quot;,
   # MLR_basins = &quot;IO_test_lon&quot;,
-  # MLR_basins = &quot;5&quot;,
+  MLR_basins = &quot;5&quot;,
   # MLR_basins = &quot;SO&quot;,
   # MLR_basins = &quot;SO_5&quot;,
-  # MLR_basins = &quot;SO_AIP&quot;,
-  # MLR_basins = &quot;SO_2&quot;
+  MLR_basins = &quot;SO_AIP&quot;,
+  MLR_basins = &quot;SO_2&quot;
 )
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  gap_filling = &quot;CANYON-B&quot;
-  # gap_filling = &quot;none&quot;
+  # gap_filling = &quot;CANYON-B&quot;
+  gap_filling = &quot;none&quot;
 )
 
 
 # cruises for which phosphate gaps should be filled with CANYON-B
 cruises_phosphate_gap_fill = lst(
   cruises_phosphate_gap_fill = c(
-    &quot;33MW19930704&quot;,
-    &quot;33RO20030604&quot;,
-    &quot;33RO20050111&quot;,
-    &quot;33RO19980123&quot;
+    # &quot;33MW19930704&quot;,
+    # &quot;33RO20030604&quot;,
+    # &quot;33RO20050111&quot;,
+    # &quot;33RO19980123&quot;
   )
 )
 
 # cruises for which talk gaps should be filled with CANYON-B
-cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(&quot;06AQ19980328&quot;))
+cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
+  # &quot;06AQ19980328&quot;
+  ))
 
 # cruise adjustment thresholds, not applied when Inf
 cruise_adjustment_relative = Inf # levels as absolute factor -1
@@ -8471,6 +8516,7 @@ rarefication_threshold = lst(
 
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
 MLR_target = lst(
+  # MLR_target = &quot;cstar_tref&quot;,
   MLR_target = &quot;cstar_tref&quot;
   # MLR_target = &quot;cstar&quot;,
   # MLR_target = &quot;cstar_tco2&quot;,
@@ -8587,9 +8633,9 @@ params_local_all &lt;-
 path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 
 for (i in 1:length(params_local_all)) {
-  # i &lt;- 5
+  # i &lt;- 6
   
-  Version_ID &lt;- sprintf(&quot;v_3p%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_3g%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
