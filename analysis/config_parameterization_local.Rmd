@@ -65,7 +65,7 @@ slabs_Ind_Pac <-
 
 # Predictors for MLR model
 MLR_predictors <- c(
-                # "sal",
+                "sal",
                 "temp",
                 "aou",
                 "oxygen",
@@ -105,7 +105,7 @@ params_local <-
     # cruises for which data with qc = 0 flag are accepted
     # even if generally qc-flag = 0 data are excluded
     cruises_qc_flag = c(
-      "31DS19940126"
+      # "31DS19940126"
     ),
     # Shallowest depth for data to be included in MLR fitting
     depth_min = 100, 
@@ -135,7 +135,7 @@ params_local <-
     # start years for eras
     era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(2009, 2020),
     # manually define tref1, set to NULL to use median year
     tref1 = 2004,
     # manually define tref2, set to NULL to use median year
@@ -145,13 +145,17 @@ params_local <-
     # gap filling of NA values in GLODAP
     gap_filling = "CANYON-B",
     # cruises for which phosphate gaps should be filled with CANYON-B
-    cruises_phosphate_gap_fill = c("33MW19930704",
-                                   "33RO20030604",
-                                   "33RO20050111",
-                                   "33RO19980123"),
+    cruises_phosphate_gap_fill = c(
+      "33MW19930704",
+      "33RO20030604",
+      "33RO20050111",
+      "33RO19980123"
+      ),
     
     # cruises for which talk gaps should be filled with CANYON-B
-    cruises_talk_gap_fill = c("06AQ19980328"), 
+    cruises_talk_gap_fill = c(
+      "06AQ19980328"
+      ), 
     # cruise adjustment thresholds, not applied when Inf
     cruise_adjustment_relative = Inf, # levels as absolute factor -1
     cruise_adjustment_absolute = Inf, # levels in absolute µM
@@ -164,7 +168,7 @@ params_local <-
     # rarefication approach threshold
     rarefication_threshold = 50,
     # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
-    MLR_target = "cstar_tref_delta",
+    MLR_target = "cstar_tref",
     # see above
     MLR_predictors = MLR_predictors,
     # # see above
@@ -271,14 +275,14 @@ slabs_Ind_Pac <- lst(
 
 # Predictors for MLR model
 MLR_predictors <- lst(
-  MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "nitrate", "silicate"),
-  MLR_predictors = c("temp", "aou", "oxygen", "phosphate", "nitrate", "silicate"),
-  MLR_predictors = c("sal", "aou", "oxygen", "phosphate", "nitrate", "silicate"),
-  MLR_predictors = c("sal", "temp", "oxygen", "phosphate", "nitrate", "silicate"),
-  MLR_predictors = c("sal", "temp", "aou", "phosphate", "nitrate", "silicate"),
-  MLR_predictors = c("sal", "temp", "aou", "oxygen", "nitrate", "silicate"),
-  MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "silicate"),
-  MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "nitrate")
+  MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "nitrate", "silicate")
+  # MLR_predictors = c("temp", "aou", "oxygen", "phosphate", "nitrate", "silicate"),
+  # MLR_predictors = c("sal", "aou", "oxygen", "phosphate", "nitrate", "silicate"),
+  # MLR_predictors = c("sal", "temp", "oxygen", "phosphate", "nitrate", "silicate"),
+  # MLR_predictors = c("sal", "temp", "aou", "phosphate", "nitrate", "silicate"),
+  # MLR_predictors = c("sal", "temp", "aou", "oxygen", "nitrate", "silicate"),
+  # MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "silicate"),
+  # MLR_predictors = c("sal", "temp", "aou", "oxygen", "phosphate", "nitrate")
   )
 
 # GLODAP version used
@@ -304,15 +308,20 @@ cruises_tco2_calc = lst(cruises_tco2_calc =
 
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
-cruises_talk_calc = lst(cruises_talk_calc = c("06MT19900123",
-                                              "316N19920502",
-                                              "316N19921006"))
+cruises_talk_calc = lst(cruises_talk_calc = c(
+  # "06MT19900123",
+  # "316N19920502",
+  # "316N19921006"
+  ))
+
 # additive talk correction for calculate talk data
 talk_calc_corr = lst(talk_calc_corr = 3)
 
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
-cruises_qc_flag = lst(cruises_qc_flag = c("31DS19940126"))
+cruises_qc_flag = lst(cruises_qc_flag = c(
+  # "31DS19940126"
+  ))
 
 # Shallowest depth for data to be included in MLR fitting
 depth_min = lst(depth_min = 100
@@ -399,36 +408,38 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  # MLR_basins = "1",
-  # MLR_basins = "2",
-  MLR_basins = "AIP"
+  MLR_basins = "1",
+  MLR_basins = "2",
+  MLR_basins = "AIP",
   # MLR_basins = "IO_test_lon",
-  # MLR_basins = "5",
+  MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  # MLR_basins = "SO_AIP",
-  # MLR_basins = "SO_2"
+  MLR_basins = "SO_AIP",
+  MLR_basins = "SO_2"
 )
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  gap_filling = "CANYON-B"
-  # gap_filling = "none"
+  # gap_filling = "CANYON-B"
+  gap_filling = "none"
 )
 
 
 # cruises for which phosphate gaps should be filled with CANYON-B
 cruises_phosphate_gap_fill = lst(
   cruises_phosphate_gap_fill = c(
-    "33MW19930704",
-    "33RO20030604",
-    "33RO20050111",
-    "33RO19980123"
+    # "33MW19930704",
+    # "33RO20030604",
+    # "33RO20050111",
+    # "33RO19980123"
   )
 )
 
 # cruises for which talk gaps should be filled with CANYON-B
-cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c("06AQ19980328"))
+cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
+  # "06AQ19980328"
+  ))
 
 # cruise adjustment thresholds, not applied when Inf
 cruise_adjustment_relative = Inf # levels as absolute factor -1
@@ -458,6 +469,7 @@ rarefication_threshold = lst(
 
 # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
 MLR_target = lst(
+  # MLR_target = "cstar_tref",
   MLR_target = "cstar_tref"
   # MLR_target = "cstar",
   # MLR_target = "cstar_tco2",
@@ -574,9 +586,9 @@ params_local_all <-
 path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 
 for (i in 1:length(params_local_all)) {
-  # i <- 5
+  # i <- 6
   
-  Version_ID <- sprintf("v_3p%02d", i)
+  Version_ID <- sprintf("v_3g%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
