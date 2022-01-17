@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">12 January, 2022</h4>
+<h4 class="date">17 January, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-12
+<strong>Last updated:</strong> 2022-01-17
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6607fd8182bae8b488fb6c53dfa1e2c4c2c3aa89targetblank6607fd8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6607fd8182bae8b488fb6c53dfa1e2c4c2c3aa89" target="_blank">6607fd8</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree63cdda36b0b5acd11d482ba1469a26f503357017targetblank63cdda3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/63cdda36b0b5acd11d482ba1469a26f503357017" target="_blank">63cdda3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6607fd8182bae8b488fb6c53dfa1e2c4c2c3aa89targetblank6607fd8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree63cdda36b0b5acd11d482ba1469a26f503357017targetblank63cdda3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6607fd8182bae8b488fb6c53dfa1e2c4c2c3aa89" target="_blank">6607fd8</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/63cdda36b0b5acd11d482ba1469a26f503357017" target="_blank">63cdda3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -641,6 +641,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/63cdda36b0b5acd11d482ba1469a26f503357017/analysis/config_parameterization_local.Rmd" target="_blank">63cdda3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-17
+</td>
+<td>
+incl 2020 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7a1a2fe97459104f0547e0aa7d571f592ebad6ec/docs/config_parameterization_local.html" target="_blank">7a1a2fe</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8206,7 +8240,7 @@ params_local &lt;-
     # (factor applied to standard deviation of all cruise offsets)
     CANYON_B_cruise_mean = 2,
     # (factor applied to median of standard deviations of all cruise offsets)
-    CANYON_B_sample_SD = 3,
+    CANYON_B_sample_SD = 10,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 0,
     # offset correction for cruises expodcode 316N199XXXXX
@@ -8218,11 +8252,11 @@ params_local &lt;-
     # offset correction for cruises expodcode 316N199XXXXX
     tco2_corr_316N199 = 2.5,
     # threshold for the cruise rmse from a global MLR model of the target variable
-    target_global_rmse_max = 50,
+    target_global_rmse_max = 1000,
     # start years for eras
     era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(2009, 2020),
     # manually define tref1, set to NULL to use median year
     tref1 = 2004,
     # manually define tref2, set to NULL to use median year
@@ -8390,9 +8424,9 @@ cruises_tco2_calc = lst(cruises_tco2_calc =
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
 cruises_talk_calc = lst(cruises_talk_calc = c(
-  # &quot;06MT19900123&quot;,
-  # &quot;316N19920502&quot;,
-  # &quot;316N19921006&quot;
+  &quot;06MT19900123&quot;,
+  &quot;316N19920502&quot;,
+  &quot;316N19921006&quot;
   ))
 
 # additive talk correction for calculate talk data
@@ -8401,7 +8435,7 @@ talk_calc_corr = lst(talk_calc_corr = 3)
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
 cruises_qc_flag = lst(cruises_qc_flag = c(
-  # &quot;31DS19940126&quot;
+  &quot;31DS19940126&quot;
   ))
 
 # Shallowest depth for data to be included in MLR fitting
@@ -8426,14 +8460,12 @@ gamma_min = lst(
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
 CANYON_B_cruise_mean = lst(
-  CANYON_B_cruise_mean = 2
-  # CANYON_B_cruise_mean = 3,
-  # CANYON_B_cruise_mean = 1
+  CANYON_B_cruise_mean = 3
 )
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 4
+  CANYON_B_sample_SD = 10
   # CANYON_B_sample_SD = 3,
   # CANYON_B_sample_SD = 2,
   # CANYON_B_sample_SD = 1
@@ -8462,7 +8494,7 @@ cstar_corr_316N199 = lst(
 
 # threshold for the cruise rmse from a global MLR model of the target variable
 target_global_rmse_max = lst(
-  target_global_rmse_max = 30
+  target_global_rmse_max = 1000
   # target_global_rmse_max = 30,
   # target_global_rmse_max = 20,
   # target_global_rmse_max = 10
@@ -8502,24 +8534,24 @@ MLR_basins = lst(
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  # gap_filling = &quot;CANYON-B&quot;
-  gap_filling = &quot;none&quot;
+  gap_filling = &quot;CANYON-B&quot;
+  # gap_filling = &quot;none&quot;
 )
 
 
 # cruises for which phosphate gaps should be filled with CANYON-B
 cruises_phosphate_gap_fill = lst(
   cruises_phosphate_gap_fill = c(
-    # &quot;33MW19930704&quot;,
-    # &quot;33RO20030604&quot;,
-    # &quot;33RO20050111&quot;,
-    # &quot;33RO19980123&quot;
+    &quot;33MW19930704&quot;,
+    &quot;33RO20030604&quot;,
+    &quot;33RO20050111&quot;,
+    &quot;33RO19980123&quot;
   )
 )
 
 # cruises for which talk gaps should be filled with CANYON-B
 cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
-  # &quot;06AQ19980328&quot;
+  &quot;06AQ19980328&quot;
   ))
 
 # cruise adjustment thresholds, not applied when Inf
@@ -8669,7 +8701,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 6
   
-  Version_ID &lt;- sprintf(&quot;v_3g%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_31%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
@@ -8749,22 +8781,21 @@ other attached packages:
  [9] tidyverse_1.3.0 workflowr_1.6.2
 
 loaded via a namespace (and not attached):
- [1] tidyselect_1.1.0  xfun_0.25         bslib_0.2.5.1     haven_2.3.1      
- [5] colorspace_2.0-2  vctrs_0.3.8       generics_0.1.0    htmltools_0.5.1.1
- [9] yaml_2.2.1        utf8_1.1.4        blob_1.2.1        rlang_0.4.11     
-[13] jquerylib_0.1.4   later_1.2.0       pillar_1.6.2      withr_2.3.0      
-[17] glue_1.4.2        DBI_1.1.0         dbplyr_1.4.4      readxl_1.3.1     
-[21] modelr_0.1.8      lifecycle_1.0.0   cellranger_1.1.0  munsell_0.5.0    
-[25] gtable_0.3.0      rvest_0.3.6       evaluate_0.14     knitr_1.33       
-[29] httpuv_1.5.4      fansi_0.4.1       broom_0.7.9       Rcpp_1.0.5       
-[33] promises_1.1.1    backports_1.1.10  scales_1.1.1      jsonlite_1.7.1   
-[37] fs_1.5.0          hms_0.5.3         digest_0.6.27     stringi_1.5.3    
-[41] rprojroot_2.0.2   grid_4.0.3        here_0.1          cli_3.0.1        
-[45] tools_4.0.3       magrittr_1.5      sass_0.4.0        crayon_1.3.4     
-[49] whisker_0.4       pkgconfig_2.0.3   ellipsis_0.3.2    xml2_1.3.2       
-[53] reprex_0.3.0      lubridate_1.7.9   httr_1.4.2        assertthat_0.2.1 
-[57] rmarkdown_2.10    rstudioapi_0.13   R6_2.5.0          git2r_0.27.1     
-[61] compiler_4.0.3   </code></pre>
+ [1] tidyselect_1.1.0 xfun_0.25        haven_2.3.1      colorspace_2.0-2
+ [5] vctrs_0.3.8      generics_0.1.0   htmltools_0.5.0  yaml_2.2.1      
+ [9] utf8_1.1.4       blob_1.2.1       rlang_0.4.10     later_1.2.0     
+[13] pillar_1.6.2     withr_2.3.0      glue_1.4.2       DBI_1.1.0       
+[17] dbplyr_1.4.4     readxl_1.3.1     modelr_0.1.8     lifecycle_1.0.0 
+[21] cellranger_1.1.0 munsell_0.5.0    gtable_0.3.0     rvest_0.3.6     
+[25] evaluate_0.14    knitr_1.33       httpuv_1.5.4     fansi_0.4.1     
+[29] broom_0.7.9      Rcpp_1.0.5       promises_1.1.1   backports_1.1.10
+[33] scales_1.1.1     jsonlite_1.7.1   fs_1.5.0         hms_0.5.3       
+[37] digest_0.6.27    stringi_1.5.3    rprojroot_2.0.2  grid_4.0.3      
+[41] here_1.0.1       cli_3.0.1        tools_4.0.3      magrittr_1.5    
+[45] crayon_1.3.4     whisker_0.4      pkgconfig_2.0.3  ellipsis_0.3.2  
+[49] xml2_1.3.2       reprex_0.3.0     lubridate_1.7.9  assertthat_0.2.1
+[53] rmarkdown_2.10   httr_1.4.2       rstudioapi_0.13  R6_2.5.0        
+[57] git2r_0.27.1     compiler_4.0.3  </code></pre>
 </div>
 </div>
 
