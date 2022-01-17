@@ -119,7 +119,7 @@ params_local <-
     # (factor applied to standard deviation of all cruise offsets)
     CANYON_B_cruise_mean = 2,
     # (factor applied to median of standard deviations of all cruise offsets)
-    CANYON_B_sample_SD = 3,
+    CANYON_B_sample_SD = 10,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 0,
     # offset correction for cruises expodcode 316N199XXXXX
@@ -131,11 +131,11 @@ params_local <-
     # offset correction for cruises expodcode 316N199XXXXX
     tco2_corr_316N199 = 2.5,
     # threshold for the cruise rmse from a global MLR model of the target variable
-    target_global_rmse_max = 50,
+    target_global_rmse_max = 1000,
     # start years for eras
     era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(2009, 2019),
+    era_end = c(2009, 2020),
     # manually define tref1, set to NULL to use median year
     tref1 = 2004,
     # manually define tref2, set to NULL to use median year
@@ -309,9 +309,9 @@ cruises_tco2_calc = lst(cruises_tco2_calc =
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
 cruises_talk_calc = lst(cruises_talk_calc = c(
-  # "06MT19900123",
-  # "316N19920502",
-  # "316N19921006"
+  "06MT19900123",
+  "316N19920502",
+  "316N19921006"
   ))
 
 # additive talk correction for calculate talk data
@@ -320,7 +320,7 @@ talk_calc_corr = lst(talk_calc_corr = 3)
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
 cruises_qc_flag = lst(cruises_qc_flag = c(
-  # "31DS19940126"
+  "31DS19940126"
   ))
 
 # Shallowest depth for data to be included in MLR fitting
@@ -345,14 +345,12 @@ gamma_min = lst(
 # CANYON-B offset threshold
 # (factor applied to standard deviation of all cruise offsets)
 CANYON_B_cruise_mean = lst(
-  CANYON_B_cruise_mean = 2
-  # CANYON_B_cruise_mean = 3,
-  # CANYON_B_cruise_mean = 1
+  CANYON_B_cruise_mean = 3
 )
 
 # (factor applied to median of standard deviations of all cruise offsets)
 CANYON_B_sample_SD = lst(
-  CANYON_B_sample_SD = 4
+  CANYON_B_sample_SD = 10
   # CANYON_B_sample_SD = 3,
   # CANYON_B_sample_SD = 2,
   # CANYON_B_sample_SD = 1
@@ -381,7 +379,7 @@ cstar_corr_316N199 = lst(
 
 # threshold for the cruise rmse from a global MLR model of the target variable
 target_global_rmse_max = lst(
-  target_global_rmse_max = 30
+  target_global_rmse_max = 1000
   # target_global_rmse_max = 30,
   # target_global_rmse_max = 20,
   # target_global_rmse_max = 10
@@ -421,24 +419,24 @@ MLR_basins = lst(
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  # gap_filling = "CANYON-B"
-  gap_filling = "none"
+  gap_filling = "CANYON-B"
+  # gap_filling = "none"
 )
 
 
 # cruises for which phosphate gaps should be filled with CANYON-B
 cruises_phosphate_gap_fill = lst(
   cruises_phosphate_gap_fill = c(
-    # "33MW19930704",
-    # "33RO20030604",
-    # "33RO20050111",
-    # "33RO19980123"
+    "33MW19930704",
+    "33RO20030604",
+    "33RO20050111",
+    "33RO19980123"
   )
 )
 
 # cruises for which talk gaps should be filled with CANYON-B
 cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
-  # "06AQ19980328"
+  "06AQ19980328"
   ))
 
 # cruise adjustment thresholds, not applied when Inf
@@ -588,7 +586,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 6
   
-  Version_ID <- sprintf("v_3g%02d", i)
+  Version_ID <- sprintf("v_31%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
