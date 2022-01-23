@@ -1026,7 +1026,7 @@ dcant_zonal_method <- dcant_zonal_method %>%
 
 For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
 
-```{r calc_cant_profiles}
+```{r calc_dcant_profiles_basin_AIP}
 
 dcant_profile <- dcant_3d %>%
   mutate(area = earth_surf(lat, lon),
@@ -1037,7 +1037,28 @@ dcant_profile <- dcant_3d %>%
             dcant = sum(dcant_scaled) / sum(area)) %>% 
   ungroup()
 
+
 ```
+
+
+```{r calc_dcant_profiles_MLR_regions}
+
+dcant_profile_basin_MLR <-
+  full_join(dcant_3d %>% select(data_source, lon, lat, depth, dcant),
+            basinmask %>% select(MLR_basins, basin, lon, lat)) %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>%
+  drop_na() %>% 
+  group_by(data_source, basin, MLR_basins, depth) %>%
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+
+```
+
+
 
 ## Mean dcant sections by coefficient
 
@@ -1390,6 +1411,10 @@ dcant_zonal %>%
 dcant_profile %>%
   write_csv(paste(path_version_data,
                   "dcant_profile.csv", sep = ""))
+
+dcant_profile_basin_MLR %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_basin_MLR.csv", sep = ""))
 
 dcant_zonal_method %>%
   write_csv(paste(path_version_data,

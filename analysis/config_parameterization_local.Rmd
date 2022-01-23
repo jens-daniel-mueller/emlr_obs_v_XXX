@@ -101,7 +101,7 @@ params_local <-
       "316N19921006"
     ),
     # additive talk correction for calculate talk data
-    talk_calc_corr = 3,
+    talk_calc_corr = 0,
     # cruises for which data with qc = 0 flag are accepted
     # even if generally qc-flag = 0 data are excluded
     cruises_qc_flag = c(
@@ -133,13 +133,13 @@ params_local <-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 1000,
     # start years for eras
-    era_start = c(2000, 2010),
+    era_start = c(1989, 2000),
     # end years for eras
-    era_end = c(2009, 2020),
+    era_end = c(1999, 2009),
     # manually define tref1, set to NULL to use median year
-    tref1 = 2004,
+    tref1 = 1994,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2014,
+    tref2 = 2004,
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
     # gap filling of NA values in GLODAP
@@ -176,13 +176,14 @@ params_local <-
     # Maxmimum number of MLR predictors
     MLR_predictors_max = 7,
     # Minimum number of MLR predictors
-    MLR_predictors_min = 3,
+    # (must be at least two, otherwise vif calculation not possible)
+    MLR_predictors_min = 2,
     # Total number of MLR fits taken into account
     MLR_number = 10,
     # function used to fit linear regression models: "lm", "rlm"
     MLR_function = "lm",
     # Maximum VIF of fitted MLR models to be included
-    vif_max = 10,
+    vif_max = 500,
     # Criterion to select best MLR fits, either "rmse" or "aic"
     MLR_criterion = "rmse",
     # see above
@@ -393,8 +394,8 @@ era_start = lst(era_start = c(2000, 2010))
 
 # end years for eras
 era_end = lst(era_end = c(1999, 2009))
-era_end = lst(era_end = c(1999, 2019))
-era_end = lst(era_end = c(2009, 2019))
+era_end = lst(era_end = c(1999, 2020))
+era_end = lst(era_end = c(2009, 2020))
 
 # manually define tref1, set to NULL to use median year
 tref1 = 1994
@@ -406,15 +407,15 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  MLR_basins = "1",
-  MLR_basins = "2",
-  MLR_basins = "AIP",
+  # MLR_basins = "1",
+  # MLR_basins = "2",
+  MLR_basins = "AIP"
   # MLR_basins = "IO_test_lon",
-  MLR_basins = "5",
+  # MLR_basins = "5",
   # MLR_basins = "SO",
   # MLR_basins = "SO_5",
-  MLR_basins = "SO_AIP",
-  MLR_basins = "SO_2"
+  # MLR_basins = "SO_AIP",
+  # MLR_basins = "SO_2"
 )
 
 # gap filling of NA values in GLODAP
@@ -479,7 +480,7 @@ MLR_target = lst(
 MLR_predictors_max = 7
 
 # Minimum number of MLR predictors
-MLR_predictors_min = 3
+MLR_predictors_min = 2
 
 # Total number of MLR fits taken into account
 MLR_number = 10
@@ -489,11 +490,12 @@ MLR_function = "lm"
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  # vif_max = Inf,
-  # vif_max = 1000,
-  vif_max = 500#,
-  # vif_max = 100,
-  # vif_max = 10
+  vif_max = Inf,
+  vif_max = 1000,
+  vif_max = 500,
+  vif_max = 100,
+  vif_max = 50,
+  vif_max = 10
 )
 
 # Criterion to select best MLR fits, either "rmse" or "aic"
@@ -586,7 +588,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 6
   
-  Version_ID <- sprintf("v_31%02d", i)
+  Version_ID <- sprintf("v_3v%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
