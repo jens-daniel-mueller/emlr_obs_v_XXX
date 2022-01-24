@@ -1762,22 +1762,94 @@ GLODAP <- m_grid_horizontal_coarse(GLODAP)
 
 # count data in each coarse grid element
 GLODAP_grid <- GLODAP %>% 
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
-  count() %>% 
+  count(lat_grid, lon_grid, gamma_slab, era, data_source)
+
+GLODAP_grid %>%
+  ggplot(aes(n)) +
+  geom_histogram(binwidth = 1) +
+  facet_grid(data_source ~ .) +
+  scale_y_sqrt() +
+  labs(title = "Observations per era, grid cell and slab, all data")
+
+GLODAP_grid <- GLODAP_grid %>%
+  arrange(n) %>% 
+  group_by(data_source) %>% 
+  mutate(n_cum = cumsum(n),
+         n_cum_prop = n_cum / sum(n),
+         n_rank = rank(n),
+         cells = n(),
+         n_rank_prop = n_rank / cells) %>% 
   ungroup()
 
 GLODAP_grid %>%
-  ggplot(aes(n)) +
-  geom_histogram(binwidth = 1) +
-  facet_grid(data_source ~ .) +
-  labs(title = "Observations per era, grid cell and slab, all data")
+  ggplot(aes(n, n_cum, col=data_source)) +
+  geom_line() +
+  labs(title = "Observations per era, grid cell and slab, all data") +
+  scale_color_brewer(palette = "Set1")
 
 GLODAP_grid %>%
-  filter(n <= quantile(n, 0.9)) %>%
-  ggplot(aes(n)) +
-  geom_histogram(binwidth = 1) +
-  facet_grid(data_source ~ .) +
-  labs(title = "Observations per era, grid cell and slab, 90th quantile")
+  ggplot(aes(n, n_cum_prop, col = data_source)) +
+  geom_line() +
+  labs(title = "Observations per era, grid cell and slab, all data") +
+  scale_y_continuous(breaks = seq(0, 1, 0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+GLODAP_grid %>%
+  ggplot(aes(n_rank_prop, n_cum, col = data_source)) +
+  geom_line() +
+  labs(title = "Observations per era, grid cell and slab, all data") +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+GLODAP_grid %>%
+  ggplot(aes(n_rank_prop, n_cum_prop, col = data_source)) +
+  geom_line() +
+  labs(title = "Observations per era, grid cell and slab, all data") +
+  scale_y_continuous(breaks = seq(0,1,0.1)) +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+
+quibble <- function(x, q = seq(0.1, 0.9, 0.1)) {
+  tibble(n_threshold = quantile(x, q), quantile_threshold = q)
+}
+
+GLODAP_grid_stats <- GLODAP_grid %>% 
+  group_by(data_source) %>% 
+  summarize(quibble(n, 
+                      c(seq(0.1, 0.9, 0.1),seq(0.91,0.99,0.01)))) %>% 
+  ungroup()
+
+GLODAP_grid_stats %>% 
+  ggplot(aes(quantile_threshold, n_threshold, col = data_source)) +
+  geom_point() +
+  geom_path() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+GLODAP_grid_stats <- GLODAP_grid %>% 
+  summarize(quibble(n, 
+                      c(seq(0.1, 0.9, 0.1),seq(0.91,0.99,0.01))))
+
+GLODAP_rarefication_threshold <- GLODAP_grid %>% 
+  summarize(quibble(n, params_local$rarefication_threshold))
+
+n_rarefication_threshold <- GLODAP_rarefication_threshold %>% 
+  pull(n_threshold)
+
+GLODAP_grid_stats %>% 
+  ggplot(aes(quantile_threshold, n_threshold)) +
+  geom_hline(data = GLODAP_rarefication_threshold,
+             aes(yintercept = n_threshold), col = "red") +
+  geom_vline(data = GLODAP_rarefication_threshold,
+             aes(xintercept = quantile_threshold), col = "red") +
+  geom_point() +
+  geom_path() +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  scale_color_brewer(palette = "Set1")
+
+
+rm(quibble)
 
 ```
 
@@ -1788,7 +1860,7 @@ GLODAP_grid %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab) %>%
   group_split() %>%
-  # head(1) %>% 
+  # head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
@@ -1799,14 +1871,10 @@ GLODAP_grid %>%
                          unique(.x$gamma_slab)))
   )
 
-if (params_local$rarefication == "coarse_grid") {
-
 GLODAP <- GLODAP %>% 
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
-  slice_sample(n = params_local$rarefication_threshold) %>% 
+  slice_sample(n = n_rarefication_threshold) %>% 
   ungroup()
-
-} else {print("No rarefication applied")}
 
 
 GLODAP_grid <- GLODAP %>% 
@@ -1818,7 +1886,7 @@ GLODAP_grid %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab) %>%
   group_split() %>%
-  # head(1) %>%
+  head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,

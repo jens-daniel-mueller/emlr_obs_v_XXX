@@ -161,12 +161,13 @@ params_local <-
     cruise_adjustment_absolute = Inf, # levels in absolute µM
     # SD of deep water C* values
     cstar_deep_sd = Inf,
-    # rarefication approach
-    # options: "coarse_grid" (horizontal 5x5 grid);
+    # rarefication approach, options:
+    # "coarse_grid" (horizontal 5x5 grid);
     # "reoccupation" (only 1x1 grids sampled in both eras)
     rarefication = "coarse_grid",
-    # rarefication approach threshold
-    rarefication_threshold = 50,
+    # rarefication approach threshold, quantile of observations with values inside [0,1]
+    # 1 is equivalent to no rarefication applied
+    rarefication_threshold = 0.8,
     # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
     MLR_target = "cstar_tref",
     # see above
