@@ -1871,6 +1871,8 @@ GLODAP_grid %>%
                          unique(.x$gamma_slab)))
   )
 
+GLODAP_grid_pre_rarefication <- GLODAP_grid
+
 GLODAP <- GLODAP %>% 
   group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
   slice_sample(n = n_rarefication_threshold) %>% 
@@ -1878,15 +1880,15 @@ GLODAP <- GLODAP %>%
 
 
 GLODAP_grid <- GLODAP %>% 
-  group_by(lat_grid, lon_grid, gamma_slab, era, data_source) %>% 
-  count() %>% 
-  ungroup()
+  count(lat_grid, lon_grid, gamma_slab, era, data_source)
+
+GLODAP_grid_post_rarefication <- GLODAP_grid
 
 GLODAP_grid %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab) %>%
   group_split() %>%
-  head(1) %>%
+  # head(1) %>%
   map(
     ~ map +
       geom_raster(data = .x,
@@ -2180,6 +2182,16 @@ GLODAP %>% write_csv(paste(
 GLODAP_grid  %>%
   write_csv(paste(path_version_data,
                   "GLODAPv2.2020_clean_obs_grid.csv",
+                  sep = ""))
+
+GLODAP_grid_pre_rarefication  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAP_grid_pre_rarefication.csv",
+                  sep = ""))
+
+GLODAP_grid_post_rarefication  %>%
+  write_csv(paste(path_version_data,
+                  "GLODAP_grid_post_rarefication.csv",
                   sep = ""))
 
 GLODAP_grid_era  %>%

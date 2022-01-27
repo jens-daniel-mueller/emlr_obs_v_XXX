@@ -1199,15 +1199,17 @@ dcant_inv_layer <- dcant_3d %>%
   select(-data) %>%
   unnest(inv)
 
-dcant_inv_layer <- dcant_inv_layer %>% 
-  mutate(inv_depth = fct_inorder(as.factor(inv_depth)))
+# dcant_inv_layer <- dcant_inv_layer %>% 
+#   mutate(inv_depth = fct_inorder(as.factor(inv_depth)))
 
 p_map_cant_inv(df = dcant_inv_layer,
                var = "dcant",
                subtitle_text = "for predefined integration depths",
-               # breaks = c(-Inf, seq(0,7,1), Inf)
+               breaks = c(-Inf, seq(0,7,1), Inf)
                ) +
-  facet_grid(inv_depth ~ data_source)
+  facet_grid(inv_depth ~ data_source) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank())
 
 if (surface_data == FALSE){
   dcant_inv <- dcant_inv %>% 
@@ -1273,7 +1275,7 @@ dcant_budget_basin_AIP %>%
 ```
 
 
-```{r budget_depth_layer}
+```{r budget_depth_layer_basin_AIP}
 
 dcant_budget_basin_AIP_layer <-
   dcant_inv_layer %>%
@@ -1286,7 +1288,7 @@ dcant_budget_basin_AIP_layer <-
 
 dcant_budget_basin_AIP_layer %>%
   filter(estimate == "dcant") %>% 
-  ggplot(aes(value, inv_depth, fill = basin_AIP)) +
+  ggplot(aes(value, as.factor(inv_depth), fill = basin_AIP)) +
   scale_fill_brewer(palette = "Dark2") +
   geom_col() +
   scale_y_discrete(limits = rev) +
@@ -1305,6 +1307,29 @@ dcant_budget_basin_MLR <-
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
   select(-data) %>%
   unnest(budget)
+
+```
+
+```{r budget_depth_layer_basin_MLR}
+
+dcant_budget_basin_MLR_layer <-
+  full_join(dcant_inv_layer, basinmask) %>%
+  mutate(method = "layer") %>% 
+  group_by(MLR_basins, basin) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_MLR_layer %>%
+  filter(estimate == "dcant",
+         MLR_basins == "5") %>% 
+  drop_na() %>% 
+  ggplot(aes(value, as.factor(inv_depth), fill = basin)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  scale_y_discrete(limits = rev) +
+  facet_grid(~data_source)
 
 ```
 
@@ -1450,6 +1475,10 @@ dcant_budget_basin_AIP %>%
 dcant_budget_basin_AIP_layer %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_basin_AIP_layer.csv", sep = ""))
+
+dcant_budget_basin_MLR_layer %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_layer.csv", sep = ""))
 
 dcant_budget_basin_MLR %>%
   write_csv(paste(path_version_data,
