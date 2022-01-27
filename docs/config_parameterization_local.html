@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">24 January, 2022</h4>
+<h4 class="date">27 January, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-24
+<strong>Last updated:</strong> 2022-01-27
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed0e05f37ea44cfdab6aba2edfd8b0842b82b9836targetblankd0e05f3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d0e05f37ea44cfdab6aba2edfd8b0842b82b9836" target="_blank">d0e05f3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4a15d68e47c99f5265d8ffd7f70e8f68cab553dtargetblankd4a15d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4a15d68e47c99f5265d8ffd7f70e8f68cab553d" target="_blank">d4a15d6</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed0e05f37ea44cfdab6aba2edfd8b0842b82b9836targetblankd0e05f3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4a15d68e47c99f5265d8ffd7f70e8f68cab553dtargetblankd4a15d6a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d0e05f37ea44cfdab6aba2edfd8b0842b82b9836" target="_blank">d0e05f3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4a15d68e47c99f5265d8ffd7f70e8f68cab553d" target="_blank">d4a15d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -641,6 +641,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d4a15d68e47c99f5265d8ffd7f70e8f68cab553d/analysis/config_parameterization_local.Rmd" target="_blank">d4a15d6</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-27
+</td>
+<td>
+rebuild with reoccupation filter
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/1039ef360796a76a863ccb9b2c11df350222977b/docs/config_parameterization_local.html" target="_blank">1039ef3</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8358,11 +8392,11 @@ params_local &lt;-
       &quot;316N19921006&quot;
     ),
     # additive talk correction for calculate talk data
-    talk_calc_corr = 0,
+    talk_calc_corr = 3,
     # cruises for which data with qc = 0 flag are accepted
     # even if generally qc-flag = 0 data are excluded
     cruises_qc_flag = c(
-      # &quot;31DS19940126&quot;
+      &quot;31DS19940126&quot;
     ),
     # Shallowest depth for data to be included in MLR fitting
     depth_min = 100, 
@@ -8421,7 +8455,7 @@ params_local &lt;-
     # rarefication approach, options:
     # &quot;coarse_grid&quot; (horizontal 5x5 grid);
     # &quot;reoccupation&quot; (only 1x1 grids sampled in both eras)
-    rarefication = &quot;coarse_grid&quot;,
+    rarefication = &quot;reoccupation&quot;,
     # rarefication approach threshold, quantile of observations with values inside [0,1]
     # 1 is equivalent to no rarefication applied
     rarefication_threshold = 0.8,
@@ -8623,10 +8657,6 @@ tco2_corr_316N199 = 2.5
 # offset correction for cruises expodcode 316N199XXXXX
 cstar_corr_316N199 = lst(
   cstar_corr_316N199 = 0
-  # cstar_corr_316N199 = 2,
-  # cstar_corr_316N199 = 4,
-  # cstar_corr_316N199 = 6,
-  # cstar_corr_316N199 = 8
 )
     
 
@@ -8659,15 +8689,15 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
-  # MLR_basins = &quot;1&quot;,
-  # MLR_basins = &quot;2&quot;,
-  MLR_basins = &quot;AIP&quot;
+  MLR_basins = &quot;1&quot;,
+  MLR_basins = &quot;2&quot;,
+  MLR_basins = &quot;AIP&quot;,
   # MLR_basins = &quot;IO_test_lon&quot;,
-  # MLR_basins = &quot;5&quot;,
+  MLR_basins = &quot;5&quot;,
   # MLR_basins = &quot;SO&quot;,
   # MLR_basins = &quot;SO_5&quot;,
-  # MLR_basins = &quot;SO_AIP&quot;,
-  # MLR_basins = &quot;SO_2&quot;
+  MLR_basins = &quot;SO_AIP&quot;,
+  MLR_basins = &quot;SO_2&quot;
 )
 
 # gap filling of NA values in GLODAP
@@ -8712,10 +8742,12 @@ rarefication = &quot;coarse_grid&quot;
 
 # rarefication approach threshold
 rarefication_threshold = lst(
-  # rarefication_threshold = 10,
-  # rarefication_threshold = 20,
-  # rarefication_threshold = 35,
-  rarefication_threshold = 50
+  # rarefication_threshold = 1,
+  # rarefication_threshold = 0.99,
+  rarefication_threshold = 0.95
+  # rarefication_threshold = 0.9,
+  # rarefication_threshold = 0.75,
+  # rarefication_threshold = 0.5
 )
 
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
@@ -8742,12 +8774,12 @@ MLR_function = &quot;lm&quot;
 
 # Maximum VIF of fitted MLR models to be included
 vif_max = lst(
-  vif_max = Inf,
-  vif_max = 1000,
-  vif_max = 500,
-  vif_max = 100,
-  vif_max = 50,
-  vif_max = 10
+  # vif_max = Inf,
+  # vif_max = 1000,
+  vif_max = 500
+  # vif_max = 100,
+  # vif_max = 50,
+  # vif_max = 10
 )
 
 # Criterion to select best MLR fits, either &quot;rmse&quot; or &quot;aic&quot;
@@ -8840,7 +8872,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 6
   
-  Version_ID &lt;- sprintf(&quot;v_3v%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_31%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
