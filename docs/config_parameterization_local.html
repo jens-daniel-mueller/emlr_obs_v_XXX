@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">27 January, 2022</h4>
+<h4 class="date">14 March, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-01-27
+<strong>Last updated:</strong> 2022-03-14
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4a15d68e47c99f5265d8ffd7f70e8f68cab553dtargetblankd4a15d6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4a15d68e47c99f5265d8ffd7f70e8f68cab553d" target="_blank">d4a15d6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebe246d532a12d4801f26bea5070adafebc8e912btargetblankbe246d5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/be246d532a12d4801f26bea5070adafebc8e912b" target="_blank">be246d5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed4a15d68e47c99f5265d8ffd7f70e8f68cab553dtargetblankd4a15d6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreebe246d532a12d4801f26bea5070adafebc8e912btargetblankbe246d5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d4a15d68e47c99f5265d8ffd7f70e8f68cab553d" target="_blank">d4a15d6</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/be246d532a12d4801f26bea5070adafebc8e912b" target="_blank">be246d5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -641,6 +641,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/be246d532a12d4801f26bea5070adafebc8e912b/analysis/config_parameterization_local.Rmd" target="_blank">be246d5</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-14
+</td>
+<td>
+rebuild with latest code
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/b18dcee8fafee777731f292cd53b061c42a145b7/docs/config_parameterization_local.html" target="_blank">b18dcee</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-01-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8424,13 +8458,13 @@ params_local &lt;-
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 1000,
     # start years for eras
-    era_start = c(1989, 2000),
+    era_start = c(2000, 2010),
     # end years for eras
-    era_end = c(1999, 2009),
+    era_end = c(2009, 2020),
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
+    tref1 = 2004,
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
+    tref2 = 2014,
     # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
     MLR_basins = &quot;AIP&quot;,
     # gap filling of NA values in GLODAP
@@ -8455,10 +8489,10 @@ params_local &lt;-
     # rarefication approach, options:
     # &quot;coarse_grid&quot; (horizontal 5x5 grid);
     # &quot;reoccupation&quot; (only 1x1 grids sampled in both eras)
-    rarefication = &quot;reoccupation&quot;,
+    rarefication = &quot;coarse_grid&quot;,
     # rarefication approach threshold, quantile of observations with values inside [0,1]
     # 1 is equivalent to no rarefication applied
-    rarefication_threshold = 0.8,
+    rarefication_threshold = 0.95,
     # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
     MLR_target = &quot;cstar_tref&quot;,
     # see above
@@ -8669,35 +8703,35 @@ target_global_rmse_max = lst(
 )
 
 # start years for eras
-era_start = lst(era_start = c(1989, 2000))
+era_start = lst(era_start = c(1989, 1999))
 era_start = lst(era_start = c(1989, 2010))
 era_start = lst(era_start = c(2000, 2010))
 
 
 # end years for eras
-era_end = lst(era_end = c(1999, 2009))
+era_end = lst(era_end = c(1998, 2008))
 era_end = lst(era_end = c(1999, 2020))
 era_end = lst(era_end = c(2009, 2020))
 
 # manually define tref1, set to NULL to use median year
-tref1 = 1994
+tref1 = 1993
 tref1 = 2004
 
 # manually define tref2, set to NULL to use median year
-tref2 = 2004
+tref2 = 2003
 tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
-  MLR_basins = &quot;1&quot;,
-  MLR_basins = &quot;2&quot;,
-  MLR_basins = &quot;AIP&quot;,
+  # MLR_basins = &quot;1&quot;,
+  # MLR_basins = &quot;2&quot;, 
+  MLR_basins = &quot;AIP&quot;
   # MLR_basins = &quot;IO_test_lon&quot;,
-  MLR_basins = &quot;5&quot;,
+  # MLR_basins = &quot;5&quot;,
   # MLR_basins = &quot;SO&quot;,
   # MLR_basins = &quot;SO_5&quot;,
-  MLR_basins = &quot;SO_AIP&quot;,
-  MLR_basins = &quot;SO_2&quot;
+  # MLR_basins = &quot;SO_AIP&quot;,
+  # MLR_basins = &quot;SO_2&quot;
 )
 
 # gap filling of NA values in GLODAP
@@ -8737,7 +8771,9 @@ cstar_deep_sd = lst(
   cstar_deep_sd = Inf
 )
 
-# rarefication approach
+    # rarefication approach, options:
+    # &quot;coarse_grid&quot; (horizontal 5x5 grid);
+    # &quot;reoccupation&quot; (only 1x1 grids sampled in both eras)
 rarefication = &quot;coarse_grid&quot;
 
 # rarefication approach threshold
@@ -8872,7 +8908,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 6
   
-  Version_ID &lt;- sprintf(&quot;v_31%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_1m%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
@@ -8906,6 +8942,126 @@ for (i in 1:length(params_local_all)) {
       &quot;params_local.txt&quot;,
       sep = &quot;/&quot;
     ))
+  
+}</code></pre>
+<pre class="r"><code>path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
+
+for (i in 0:10) {
+  # i &lt;- 0
+  
+  era_start$era_start &lt;- era_start$era_start + 1
+  era_end$era_end &lt;- era_end$era_end + 1
+  tref1 &lt;- tref1 + 1
+  tref2 &lt;- tref2 + 1
+  
+  print(i)
+  print(era_start)
+  print(tref2)
+  
+  params_local_all &lt;-
+    lst(
+      slabs_Atl,
+      slabs_Ind_Pac,
+      MLR_predictors,
+      GLODAPv2_version,
+      flag_f,
+      flag_qc,
+      cruises_tco2_calc,
+      cruises_talk_calc,
+      talk_calc_corr,
+      cruises_qc_flag,
+      depth_min,
+      depth_mapping,
+      bottomdepth_min,
+      gamma_min,
+      CANYON_B_cruise_mean,
+      CANYON_B_sample_SD,
+      CANYON_B_depth,
+      phosphate_corr_316N199,
+      talk_corr_316N199,
+      tco2_corr_316N199,
+      cstar_corr_316N199,
+      target_global_rmse_max,
+      era_start,
+      era_end,
+      tref1,
+      tref2,
+      MLR_basins,
+      gap_filling,
+      cruises_phosphate_gap_fill,
+      cruises_talk_gap_fill,
+      cruise_adjustment_relative,
+      cruise_adjustment_absolute,
+      cstar_deep_sd,
+      rarefication,
+      rarefication_threshold,
+      MLR_target,
+      MLR_predictors_max,
+      MLR_predictors_min,
+      MLR_number,
+      MLR_function,
+      vif_max,
+      MLR_criterion,
+      cstar_nutrient,
+      rCP,
+      rNP,
+      rPO,
+      rPO_offset,
+      preind_atm_pCO2,
+      plot_slabs,
+      plot_all_figures
+    ) %&gt;%
+    cross()
+  
+  
+  
+  
+  
+  Version_ID &lt;- sprintf(&quot;v_1m%02d&quot;, i)
+  
+  params_local &lt;- nth(params_local_all, 1)
+  params_local$Version_ID &lt;- Version_ID
+  
+  # create folder structure
+  dir.create(paste(path_root, Version_ID, sep = &quot;/&quot;))
+  dir.create(paste(path_root, Version_ID, &quot;data&quot;, sep = &quot;/&quot;))
+  dir.create(paste(path_root, Version_ID, &quot;website&quot;, sep = &quot;/&quot;))
+  dir.create(paste(path_root, Version_ID, &quot;figures&quot;, sep = &quot;/&quot;))
+  dir.create(paste(
+    path_root,
+    Version_ID,
+    &quot;figures/GLODAPv2_2020_subsetting&quot;,
+    sep = &quot;/&quot;
+  ))
+  dir.create(paste(path_root, Version_ID, &quot;figures/Cant_model_sections&quot;, sep = &quot;/&quot;))
+  dir.create(paste(
+    path_root,
+    Version_ID,
+    &quot;figures/Cruise_sections_histograms&quot;,
+    sep = &quot;/&quot;
+  ))
+  dir.create(paste(path_root, Version_ID, &quot;figures/eMLR_diagnostics&quot;, sep = &quot;/&quot;))
+  dir.create(paste(
+    path_root,
+    Version_ID,
+    &quot;figures/Observations_correlation&quot;,
+    sep = &quot;/&quot;
+  ))
+  
+  # write params_local files
+  params_local %&gt;%
+    write_rds(file = paste(path_root,
+                           Version_ID,
+                           &quot;data&quot;,
+                           &quot;params_local.rds&quot;,
+                           sep = &quot;/&quot;))
+  
+  params_local %&gt;%
+    capture.output(file = paste(path_root,
+                                Version_ID,
+                                &quot;data&quot;,
+                                &quot;params_local.txt&quot;,
+                                sep = &quot;/&quot;))
   
 }</code></pre>
 </div>
