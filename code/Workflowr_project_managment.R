@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test without Ovide data",
+message = "rebuild with latest code",
 republish = TRUE)
 
 
@@ -43,7 +43,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test without Ovide data")
+message = "test with cstar_tref_delta target")
 
 
 
@@ -75,25 +75,22 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_10")#[8]
+  pattern = "v_1m")#[3:6]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_20")#[1]
+  pattern = "v_2")#[6]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_3006")#[6]
+  pattern = "v_3")#[4:6]
 
 Version_IDs <- c(
-  # Version_IDs_1,
+  Version_IDs_1
   # Version_IDs_2,
-  Version_IDs_3
+  # Version_IDs_3
   )
 
-Version_IDs <- c(
-  Version_IDs_3
-  )
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
