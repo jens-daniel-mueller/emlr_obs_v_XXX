@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "plot residuals of best models only")
+wflow_publish(all = TRUE, message = "revised C* distribution plots")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rebuild with latest code",
+message = "rerun with corrected c* calculation",
 republish = TRUE)
 
 
@@ -75,20 +75,20 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1m")#[3:6]
+  pattern = "v_11")#[3:6]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_2")#[6]
+  pattern = "v_21")#[6]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_3")#[4:6]
+  pattern = "v_31")#[4:6]
 
 Version_IDs <- c(
-  Version_IDs_1
+  # Version_IDs_1,
   # Version_IDs_2,
-  # Version_IDs_3
+  Version_IDs_3
   )
 
 

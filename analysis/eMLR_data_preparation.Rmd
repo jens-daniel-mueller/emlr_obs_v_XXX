@@ -72,6 +72,7 @@ library(broom)
 library(seacarb)
 library(kableExtra)
 library(patchwork)
+library(colorspace)
 ```
 
 
@@ -1449,13 +1450,12 @@ GLODAP <- GLODAP %>%
   mutate(
     cstar_tco2 = tco2,
     cstar_talk = -0.5 * talk,
-    cstar_phosphate = -params_local$rCP * phosphate + params_local$rNP *
+    cstar_phosphate = -params_local$rCP * phosphate - params_local$rNP *
       0.5 * phosphate,
-    cstar_nitrate = -params_local$rCP/params_local$rNP * nitrate + 0.5 * nitrate
+    cstar_nitrate = -params_local$rCP / params_local$rNP * nitrate - 0.5 * nitrate
   )
 
 GLODAP_cstar <- GLODAP %>%
-  # select(-c(cstar, cstar_tref_delta)) %>%
   filter(data_source == "obs")
 
 cstar_grid <- m_grid_horizontal_coarse(GLODAP_cstar)
@@ -1512,9 +1512,9 @@ cstar_grid_offset <- cstar_grid_offset %>%
                values_to = "delta_value")
 
 cstar_grid_offset %>%
-  filter(gamma_slab %in% params_local$plot_slabs) %>% 
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
   mutate(delta_value = cut(delta_value,
-                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>%
+                           c(-Inf, -5, -2, -1, 1, 2, 5, Inf))) %>%
   group_split(gamma_slab, parameter) %>%
   # head(1) %>%
   map(
@@ -1524,16 +1524,14 @@ cstar_grid_offset %>%
         aes(lon_grid, lat_grid, fill = delta_value),
         col = "grey20"
       ) +
-      scale_fill_brewer(name = unique(.x$parameter),
-                        palette = "RdBu",
-                        drop = FALSE,
-                        direction = -1) +
-      labs(title = paste(
-        "gamma_slab",
-        unique(.x$gamma_slab)
-      ))
+      scale_fill_discrete_diverging(
+        palette = "Blue-Red",
+        name = unique(.x$parameter),
+        drop = FALSE
+      ) +
+      labs(title = paste("gamma_slab",
+                         unique(.x$gamma_slab)))
   )
-
 
 ```
 
@@ -1656,21 +1654,21 @@ zonal_sections_offset <- zonal_sections %>%
               values_from = cstar_tref) %>%
   mutate(delta_cstar_tref := !!sym(tref$era[2]) - !!sym(tref$era[1])) %>%
   mutate(delta_cstar_tref = cut(delta_cstar_tref,
-                           c(-Inf, -10, -5, -2, 2, 5, 10, Inf))) %>% 
+                           c(-Inf, -5, -2, -1, 1, 2, 5, Inf))) %>% 
   filter(!is.na(delta_cstar_tref))
 
 zonal_sections_offset %>%
   ggplot(aes(lat_grid , depth_grid, fill = delta_cstar_tref)) +
   geom_raster() +
-  scale_fill_brewer(palette = "RdBu",
-                    drop = FALSE,
-                    direction = -1) +
+  scale_fill_discrete_diverging(palette = "Blue-Red",
+                                drop = FALSE) +
   labs(x = "Latitude (°N)", y = "Depth (m)") +
   scale_y_reverse() +
   coord_fixed(ratio = 1e-2, expand = 0) +
   facet_grid(basin_AIP ~ .) +
   theme(axis.text.y = element_blank(),
         axis.title.y = element_blank())
+
 
 ```
 
