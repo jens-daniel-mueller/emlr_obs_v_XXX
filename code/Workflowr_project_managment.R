@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "revised C* distribution plots")
+wflow_publish(all = TRUE, message = "add y-axis labels to figure")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,17 +33,17 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun with corrected c* calculation",
+message = "rerun standard case",
 republish = TRUE)
 
 
 wflow_publish(here::here(
   "analysis",
   c(
-    "tracers_GLODAPv2_2021.Rmd"
+    "analysis_slab_inventory.Rmd"
   )
 ),
-message = "test with cstar_tref_delta target")
+message = "rerun with additional deep water slab")
 
 
 
@@ -75,19 +75,19 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_11")#[3:6]
+  pattern = "v_1t")#[3:6]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_21")#[6]
+  pattern = "v_2t")#[6]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_31")#[4:6]
+  pattern = "v_3t")#[4:6]
 
 Version_IDs <- c(
-  # Version_IDs_1,
-  # Version_IDs_2,
+  Version_IDs_1,
+  Version_IDs_2,
   Version_IDs_3
   )
 
