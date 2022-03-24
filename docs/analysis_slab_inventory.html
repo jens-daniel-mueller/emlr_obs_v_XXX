@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of dcant within density slabs</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">22 March, 2022</h4>
+<h4 class="date">24 March, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-03-22
+<strong>Last updated:</strong> 2022-03-24
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree312086588c6694e171c397a9c8897c3310d003a1targetblank3120865a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/312086588c6694e171c397a9c8897c3310d003a1" target="_blank">3120865</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree95fe45b1c025776c7ecfb7503b208399e873b2f7targetblank95fe45ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/95fe45b1c025776c7ecfb7503b208399e873b2f7" target="_blank">95fe45b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree312086588c6694e171c397a9c8897c3310d003a1targetblank3120865a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree95fe45b1c025776c7ecfb7503b208399e873b2f7targetblank95fe45ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/312086588c6694e171c397a9c8897c3310d003a1" target="_blank">3120865</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/95fe45b1c025776c7ecfb7503b208399e873b2f7" target="_blank">95fe45b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -593,10 +593,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -635,6 +631,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/95fe45b1c025776c7ecfb7503b208399e873b2f7/analysis/analysis_slab_inventory.Rmd" target="_blank">95fe45b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-24
+</td>
+<td>
+added cant penetration depth analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/72f20e409963d8a7227d184703b85362ae3ee181/docs/analysis_slab_inventory.html" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4318,8 +4348,53 @@ GLODAP_grid &lt;- GLODAP_grid %&gt;%
 dcant_slab &lt;- dcant_slab %&gt;% 
   arrange(gamma_slab, data_source)</code></pre>
 </div>
-<div id="dcant---positive" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> dcant - positive</h1>
+<div id="dcant-penetration-depth" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> dcant penetration depth</h1>
+<pre class="r"><code>for (i_dcant_lim in c(1,2,5,10)) {
+
+dcant_penetration_depth &lt;- dcant_3d %&gt;% 
+  filter(dcant &lt; i_dcant_lim) %&gt;% 
+  group_by(data_source, lon, lat) %&gt;% 
+  summarise(depth = min(depth)) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(dcant_lim = i_dcant_lim)
+
+  if (exists(&quot;dcant_penetration_depth_all&quot;)) {
+    dcant_penetration_depth_all &lt;-
+      bind_rows(dcant_penetration_depth_all, dcant_penetration_depth)
+  }
+  
+  if (!exists(&quot;dcant_penetration_depth_all&quot;)) {
+    dcant_penetration_depth_all &lt;- dcant_penetration_depth
+  }
+
+}
+
+map +
+  geom_tile(data = dcant_penetration_depth_all,
+            aes(lon, lat, fill = depth)) +
+  facet_grid(dcant_lim ~ data_source) +
+  scale_fill_viridis_c()</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_penetration_depth_offset &lt;- dcant_penetration_depth_all %&gt;% 
+  pivot_wider(names_from = data_source,
+              values_from = depth) %&gt;% 
+  mutate(mod = mod - mod_truth,
+         obs = obs - mod_truth) %&gt;% 
+  select(-mod_truth) %&gt;% 
+  pivot_longer(c(mod, obs),
+               names_to = &quot;data_source&quot;,
+               values_to = &quot;depth_offset&quot;)
+  
+map +
+  geom_tile(data = dcant_penetration_depth_offset,
+            aes(lon, lat, fill = depth_offset)) +
+  facet_grid(dcant_lim ~ data_source) +
+  scale_fill_divergent()</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dcant---positive" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> dcant - positive</h1>
 <p>In a first series of plots we explore the distribution of dcant, taking only positive estimates into account (positive here refers to the mean dcant estimate across MLR model predictions available for each grid cell). Negative values were set to zero before calculating mean sections and inventories.</p>
 <p>Mean of positive dcant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
 <p>Please note that:</p>
@@ -4327,8 +4402,8 @@ dcant_slab &lt;- dcant_slab %&gt;%
 <li>density slabs covering values &gt;28.1 occur by definition only either in the Atlantic or Indo-Pacific basin</li>
 <li>gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping</li>
 </ul>
-<div id="absolute" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Absolute</h2>
+<div id="absolute" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Absolute</h2>
 <pre class="r"><code>dcant_slab %&gt;%
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
   group_by(gamma_slab, data_source) %&gt;%
@@ -6409,6 +6484,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-3.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-3.png" target="_blank">164f90c</a>
@@ -8863,6 +8949,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-6.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-6.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -10237,6 +10334,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-9.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-9.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -10581,8 +10689,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="bias" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Bias</h2>
+<div id="bias" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Bias</h2>
 <pre class="r"><code>dcant_slab_bias &lt;- dcant_slab %&gt;% 
   select(-c(layer_thickness, layer_volume, n_layer,
             dcant_pos_sd, dcant_sd)) %&gt;% 
@@ -13722,8 +13830,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="dcant---all" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> dcant - all</h1>
+<div id="dcant---all" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> dcant - all</h1>
 <p>In a second series of plots we explore the distribution of all dcant, taking positive and negative estimates into account.</p>
 <p>Mean of all dcant within each horizontal grid cell (lon x lat) per isoneutral slab.</p>
 <p>Please note that:</p>
@@ -13731,8 +13839,8 @@ jens-daniel-mueller
 <li>density slabs covering values &gt;28.1 occur by definition only either in the Atlantic or Indo-Pacific basin</li>
 <li>gaps in the maps represent areas where (thin) density layers fit between discrete depth levels used for mapping</li>
 </ul>
-<div id="absolute-1" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Absolute</h2>
+<div id="absolute-1" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Absolute</h2>
 <pre class="r"><code>dcant_slab %&gt;%
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
   group_by(gamma_slab, data_source) %&gt;%
@@ -15774,6 +15882,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-3.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-3.png" target="_blank">164f90c</a>
@@ -18723,6 +18842,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-6.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-6.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -20999,6 +21129,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-9.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-9.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -21717,8 +21858,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="bias-1" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Bias</h2>
+<div id="bias-1" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Bias</h2>
 <pre class="r"><code>dcant_slab_bias %&gt;%
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
   group_split(gamma_slab) %&gt;%
@@ -24815,8 +24956,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="sd-across-models" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> SD across models</h2>
+<div id="sd-across-models" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> SD across models</h2>
 <pre class="r"><code>dcant_slab %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;obs&quot;)) %&gt;% 
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
@@ -25940,6 +26081,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-2.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-2.png" target="_blank">164f90c</a>
@@ -28200,6 +28352,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-4.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-4.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -29886,6 +30049,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-6.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-6.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -30594,8 +30768,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="depth-levels" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Depth levels</h1>
+<div id="depth-levels" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Depth levels</h1>
 <pre class="r"><code>dcant_slab %&gt;%
   group_by(gamma_slab, data_source) %&gt;%
   group_split() %&gt;% 
@@ -30626,8 +30800,8 @@ jens-daniel-mueller
         aes(lon, lat),fill = &quot;black&quot;)
   )</code></pre>
 </div>
-<div id="slab-budgets" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Slab Budgets</h1>
+<div id="slab-budgets" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Slab Budgets</h1>
 <pre class="r"><code>dcant_slab_budget &lt;- dcant_3d %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
@@ -30663,6 +30837,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-1.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-1.png" target="_blank">164f90c</a>
@@ -32325,6 +32510,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-2.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-2.png" target="_blank">164f90c</a>
@@ -35310,6 +35506,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-4.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-4.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -36487,6 +36694,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-5.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-5.png" target="_blank">164f90c</a>
 </td>
 <td>
@@ -37265,6 +37483,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/72f20e409963d8a7227d184703b85362ae3ee181/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-6.png" target="_blank">72f20e4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-03-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/164f90c516dfb5ec0a0201d3cda1007b2c3491b3/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-6.png" target="_blank">164f90c</a>
@@ -40305,8 +40534,8 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="write-files" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> Write files</h1>
+<div id="write-files" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Write files</h1>
 <pre class="r"><code>dcant_slab_budget_bias %&gt;%
   write_csv(paste0(path_version_data,
                    &quot;dcant_slab_budget_bias.csv&quot;))
@@ -40323,8 +40552,8 @@ dcant_slab %&gt;%
   write_csv(paste0(path_version_data,
                    &quot;dcant_slab.csv&quot;))</code></pre>
 </div>
-<div id="slab-boundary-depth" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Slab boundary depth</h1>
+<div id="slab-boundary-depth" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Slab boundary depth</h1>
 <pre class="r"><code>dcant_slab %&gt;%
   group_by(gamma_slab, data_source) %&gt;%
   group_split() %&gt;%
