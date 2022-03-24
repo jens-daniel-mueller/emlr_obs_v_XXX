@@ -65,6 +65,7 @@ library(scales)
 library(marelac)
 library(kableExtra)
 library(gt)
+library(colorspace)
 ```
 
 # Version ID
@@ -145,7 +146,7 @@ dcant_slab <- dcant_slab %>%
 
 ```{r dcant_penetration_depth}
 
-for (i_dcant_lim in c(1,2,5,10)) {
+for (i_dcant_lim in c(2,5,10)) {
 
 dcant_penetration_depth <- dcant_3d %>% 
   filter(dcant < i_dcant_lim) %>% 
@@ -185,7 +186,14 @@ map +
   geom_tile(data = dcant_penetration_depth_offset,
             aes(lon, lat, fill = depth_offset)) +
   facet_grid(dcant_lim ~ data_source) +
-  scale_fill_divergent()
+  scale_fill_continuous_divergingx(palette = "RdBu")
+
+map +
+  geom_tile(data = dcant_penetration_depth_offset %>% 
+              mutate(depth_offset = cut(depth_offset, c(-Inf, -500, -100, -50, 0, 50, 100, 500, Inf))),
+            aes(lon, lat, fill = depth_offset)) +
+  facet_grid(dcant_lim ~ data_source) +
+  scale_fill_discrete_divergingx(palette = "RdBu", drop = FALSE)
 
 
 ```
