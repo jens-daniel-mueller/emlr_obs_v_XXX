@@ -141,6 +141,57 @@ dcant_slab <- dcant_slab %>%
 ```
 
 
+# dcant penetration depth
+
+```{r dcant_penetration_depth}
+
+for (i_dcant_lim in c(1,2,5,10)) {
+
+dcant_penetration_depth <- dcant_3d %>% 
+  filter(dcant < i_dcant_lim) %>% 
+  group_by(data_source, lon, lat) %>% 
+  summarise(depth = min(depth)) %>% 
+  ungroup() %>% 
+  mutate(dcant_lim = i_dcant_lim)
+
+  if (exists("dcant_penetration_depth_all")) {
+    dcant_penetration_depth_all <-
+      bind_rows(dcant_penetration_depth_all, dcant_penetration_depth)
+  }
+  
+  if (!exists("dcant_penetration_depth_all")) {
+    dcant_penetration_depth_all <- dcant_penetration_depth
+  }
+
+}
+
+map +
+  geom_tile(data = dcant_penetration_depth_all,
+            aes(lon, lat, fill = depth)) +
+  facet_grid(dcant_lim ~ data_source) +
+  scale_fill_viridis_c()
+
+dcant_penetration_depth_offset <- dcant_penetration_depth_all %>% 
+  pivot_wider(names_from = data_source,
+              values_from = depth) %>% 
+  mutate(mod = mod - mod_truth,
+         obs = obs - mod_truth) %>% 
+  select(-mod_truth) %>% 
+  pivot_longer(c(mod, obs),
+               names_to = "data_source",
+               values_to = "depth_offset")
+  
+map +
+  geom_tile(data = dcant_penetration_depth_offset,
+            aes(lon, lat, fill = depth_offset)) +
+  facet_grid(dcant_lim ~ data_source) +
+  scale_fill_divergent()
+
+
+```
+
+
+
 
 # dcant - positive
 
