@@ -150,7 +150,7 @@ for (i_dcant_lim in c(2,5,10)) {
 
 dcant_penetration_depth <- dcant_3d %>% 
   filter(dcant < i_dcant_lim) %>% 
-  group_by(data_source, lon, lat) %>% 
+  group_by(data_source, lon, lat, basin_AIP) %>% 
   summarise(depth = min(depth)) %>% 
   ungroup() %>% 
   mutate(dcant_lim = i_dcant_lim)
@@ -199,6 +199,20 @@ map +
 ```
 
 
+```{r penetration_depth_zonal_mean, fig.asp=1}
+
+dcant_penetration_depth_all %>% 
+  group_by(data_source, dcant_lim, basin_AIP, lat) %>% 
+  summarise(depth_mean = mean(depth, na.rm=TRUE),
+            depth_sd = sd(depth, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  ggplot(aes(depth_mean, lat)) +
+  geom_ribbon(aes(xmax = depth_mean + depth_sd, xmin = depth_mean - depth_sd,
+                  fill = data_source), alpha = 0.3) +
+  geom_path(aes(col = data_source)) +
+  facet_grid(dcant_lim ~ basin_AIP)
+
+```
 
 
 # dcant - positive

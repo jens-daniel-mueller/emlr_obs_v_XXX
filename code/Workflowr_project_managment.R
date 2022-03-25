@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added cant penetration depth analysis")
+wflow_publish(all = TRUE, message = "added cant penetration depth analysis zonal mean")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,7 +33,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "testrun NP data correction",
+message = "run decade 1 with penetration depth",
 republish = TRUE)
 
 
