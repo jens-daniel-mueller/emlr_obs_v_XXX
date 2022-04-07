@@ -141,6 +141,31 @@ dcant_slab <- dcant_slab %>%
 
 ```
 
+# dcant volumes
+
+```{r dcant_volume_fractions}
+
+dcant_3d %>% 
+  ggplot(aes(dcant)) +
+  geom_histogram() +
+  facet_grid(basin_AIP ~ data_source)
+
+
+dcant_3d %>% 
+  mutate(dcant_grid = cut(dcant, seq(-4,20,2))) %>% 
+  filter(!is.na(dcant_grid)) %>%
+  count(basin_AIP, depth, data_source, dcant_grid) %>% 
+  group_by(basin_AIP, depth, data_source) %>% 
+  mutate(vol_frac = 100 * (n / sum(n))) %>% 
+  ggplot(aes(dcant_grid, depth, col=vol_frac)) +
+  geom_point() +
+  scale_y_reverse() +
+  scale_color_viridis_c() +
+  facet_grid(basin_AIP ~ data_source)
+
+```
+
+
 
 # dcant penetration depth
 

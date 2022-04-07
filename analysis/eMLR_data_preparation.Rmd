@@ -428,27 +428,32 @@ GLODAP <- GLODAP %>%
 
 ```{r correct_North_Pacific_talk_tco2_obs}
 
+expocodes_xover_NP  <-
+  read_csv(paste(path_preprocessing,
+                  "expocodes_xover_NP.csv",
+                  sep = ""))
+
+expocodes_xover_NP <- expocodes_xover_NP %>% 
+  pull(cruise_expocode)
+
 GLODAP <- GLODAP %>%
   mutate(
     phosphate = if_else(
-      basin_AIP == "Pacific" &
-        lat > 0 &
+      cruise_expocode %in% expocodes_xover_NP &
         data_source == "obs" &
         era == "2010-2020",
       phosphate * params_local$phosphate_corr_NP_2010,
       phosphate
     ),
     talk = if_else(
-      basin_AIP == "Pacific" &
-        lat > 0 &
+      cruise_expocode %in% expocodes_xover_NP &
         data_source == "obs" &
         era == "2010-2020",
       talk + params_local$talk_corr_NP_2010,
       talk
     ),
     tco2 = if_else(
-      basin_AIP == "Pacific" &
-        lat > 0 &
+      cruise_expocode %in% expocodes_xover_NP &
         data_source == "obs" &
         era == "2010-2020",
       tco2 + params_local$tco2_corr_NP_2010,
@@ -456,6 +461,7 @@ GLODAP <- GLODAP %>%
     )
   )
 
+rm(expocodes_xover_NP)
 
 ```
 
