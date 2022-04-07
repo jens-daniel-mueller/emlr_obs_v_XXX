@@ -430,6 +430,14 @@ GLODAP <- GLODAP %>%
 
 GLODAP <- GLODAP %>%
   mutate(
+    phosphate = if_else(
+      basin_AIP == "Pacific" &
+        lat > 0 &
+        data_source == "obs" &
+        era == "2010-2020",
+      phosphate * params_local$phosphate_corr_NP_2010,
+      phosphate
+    ),
     talk = if_else(
       basin_AIP == "Pacific" &
         lat > 0 &
