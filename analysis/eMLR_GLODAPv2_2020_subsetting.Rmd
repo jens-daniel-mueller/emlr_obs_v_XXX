@@ -173,6 +173,9 @@ Please note that some GLODAP observations were made outside the WOA18 basin mask
 
 ```{r join_GLODAP_basin_mask}
 
+GLODAP <- GLODAP %>% 
+  select(-basin)
+
 # use only data inside basinmask
 GLODAP <- inner_join(GLODAP, basinmask)
 
@@ -336,12 +339,12 @@ GLODAP_combined <- GLODAP_combined %>%
 
 ### Property-property plots
 
-```{r CANYON_B_property_property, fig.asp=0.5}
+```{r CANYON_B_property_property, fig.asp=0.5, eval=FALSE}
 
 variables <- unique(GLODAP_combined$parameter)
 
 for (i_variable in variables) {
-  # i_variable <- variables[1]
+  # i_variable <- variables[2]
   print(p_prop_prop(
     df = GLODAP_combined_raw %>%
       filter(depth >= params_local$CANYON_B_depth),
