@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "added cant penetration depth analysis zonal mean")
+wflow_publish(all = TRUE, message = "test cruise-based data adjustment for NP 2010 data")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -33,18 +33,29 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "run decade 1 with penetration depth",
+message = "test cruise-based data adjustment for NP 2010 data",
 republish = TRUE)
 
 
 wflow_publish(here::here(
   "analysis",
   c(
-    "analysis_slab_inventory.Rmd"
+    "eMLR_data_preparation.Rmd",
+    "eMLR_assumption_testing.Rmd",
+    "eMLR_model_fitting.Rmd",
+    "mapping_predictor_preparation.Rmd",
+    "mapping_dcant_eMLR.Rmd",
+    "mapping_dcant_mod_truth.Rmd",
+    "analysis_budgets.Rmd",
+    "analysis_column_inventory.Rmd",
+    "analysis_zonal_sections.Rmd",
+    "analysis_slab_inventory.Rmd",
+    "analysis_MLR_performance.Rmd",
+    "analysis_anomalous_changes.Rmd",
+    "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun with additional deep water slab")
-
+message = "test cruise-based data adjustment for IO 1990 data")
 
 
 # Push latest version to GitHub
@@ -75,7 +86,7 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1103")#[3:6]
+  pattern = "v_1t")#[3:6]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
@@ -86,9 +97,9 @@ Version_IDs_3 <- list.files(
   pattern = "v_3t")#[4:6]
 
 Version_IDs <- c(
-  Version_IDs_1
-  # Version_IDs_2,
-  # Version_IDs_3
+  Version_IDs_1,
+  Version_IDs_2,
+  Version_IDs_3
   )
 
 
