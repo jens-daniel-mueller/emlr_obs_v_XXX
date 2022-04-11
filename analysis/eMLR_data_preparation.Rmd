@@ -299,10 +299,15 @@ xover_cruise_decade_all <-
                  "xover_cruise_decade_all.csv",
                  sep = ""))
 
+IO_CRM_xover_1990 <-
+  read_csv(paste(path_preprocessing,
+                 "IO_CRM_xover_1990.csv",
+                 sep = ""))
+
 ```
 
 
-### IO 1990 Knorr
+### IO 1990s Knorr
 
 ```{r add_expocodes}
 
@@ -326,6 +331,8 @@ exist_IO_1990 <- GLODAP %>%
 
 ```{r cstar_input_adjustment_IO, eval=exist_IO_1990}
 
+if (params_local$data_adjustment == "bulk") {
+  
 GLODAP_IO_1990s <- GLODAP %>%
   filter(between(year, 1989, 1999) &
            basin_AIP == "Indian" &
@@ -424,6 +431,39 @@ GLODAP <- bind_rows(GLODAP_adj,
 
 rm(GLODAP_adj,
    GLODAP_unadj)
+
+}
+
+
+
+# apply cruise-wise correction to NP 2010 data
+if (params_local$data_adjustment == "cruise") {
+  IO_CRM_xover_1990 <- IO_CRM_xover_1990 %>%
+    filter(type == "crm") %>%
+    select(cruise_expocode, parameter,
+           corr_IO_1900 = offset_mean) %>%
+    pivot_wider(names_from = parameter,
+                values_from = corr_IO_1900,
+                names_glue = "{parameter}_{.value}")
+  
+  GLODAP <- left_join(GLODAP,
+                      IO_CRM_xover_1990)
+  
+  GLODAP <- GLODAP %>%
+    mutate(
+      talk = if_else(!is.na(talk_corr_IO_1900),
+                     talk + talk_corr_IO_1900,
+                     talk),
+      tco2 = if_else(!is.na(tco2_corr_IO_1900),
+                     tco2 - tco2_corr_IO_1900,
+                     tco2)
+    )
+  
+  GLODAP <- GLODAP %>%
+    select(-ends_with("corr_IO_1900"))
+  
+}
+
 
 ```
 
