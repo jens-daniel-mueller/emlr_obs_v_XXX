@@ -281,6 +281,27 @@ GLODAP <- GLODAP %>%
 
 ## C* input adjustment
 
+```{r read_offset_analysis_output}
+
+
+expocodes_xover_NP <-
+  read_csv(paste(path_preprocessing,
+                 "expocodes_xover_NP.csv",
+                 sep = ""))
+
+expocodes_xover_IO <-
+  read_csv(paste(path_preprocessing,
+                 "expocodes_xover_IO.csv",
+                 sep = ""))
+
+xover_cruise_decade_all <-
+  read_csv(paste(path_preprocessing,
+                 "xover_cruise_decade_all.csv",
+                 sep = ""))
+
+```
+
+
 ### IO 1990 Knorr
 
 ```{r add_expocodes}
@@ -428,38 +449,94 @@ GLODAP <- GLODAP %>%
 
 ```{r correct_North_Pacific_talk_tco2_obs}
 
-expocodes_xover_NP  <-
-  read_csv(paste(path_preprocessing,
-                  "expocodes_xover_NP.csv",
-                  sep = ""))
-
 expocodes_xover_NP <- expocodes_xover_NP %>% 
   pull(cruise_expocode)
 
-GLODAP <- GLODAP %>%
-  mutate(
-    phosphate = if_else(
-      cruise_expocode %in% expocodes_xover_NP &
-        data_source == "obs" &
-        era == "2010-2020",
-      phosphate * params_local$phosphate_corr_NP_2010,
-      phosphate
-    ),
-    talk = if_else(
-      cruise_expocode %in% expocodes_xover_NP &
-        data_source == "obs" &
-        era == "2010-2020",
-      talk + params_local$talk_corr_NP_2010,
-      talk
-    ),
-    tco2 = if_else(
-      cruise_expocode %in% expocodes_xover_NP &
-        data_source == "obs" &
-        era == "2010-2020",
-      tco2 + params_local$tco2_corr_NP_2010,
-      tco2
+
+# apply bulk correction to NP 2010 data
+if (params_local$data_adjustment == "bulk") {
+  GLODAP <- GLODAP %>%
+    mutate(
+      phosphate = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020",
+        phosphate * params_local$phosphate_corr_NP_2010,
+        phosphate
+      ),
+      talk = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020",
+        talk + params_local$talk_corr_NP_2010,
+        talk
+      ),
+      tco2 = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020",
+        tco2 + params_local$tco2_corr_NP_2010,
+        tco2
+      )
     )
-  )
+}
+
+
+# apply cruise-wise correction to NP 2010 data
+if (params_local$data_adjustment == "cruise") {
+  
+  xover_cruise_decade_NP_2010 <- xover_cruise_decade_all %>% 
+    filter(decade_A == "2010-2020",
+           decade == "2000-2009",
+           basin == "N. Pacific",
+           cruise_A %in% expocodes_xover_NP,
+           parameter_coverage == "full",
+           parameter %in% c("cstar_tco2", "cstar_talk", "phosphate")) %>% 
+    mutate(parameter = str_remove(parameter, "cstar_"))
+  
+  xover_cruise_decade_NP_2010 <- xover_cruise_decade_NP_2010 %>% 
+    select(cruise_expocode = cruise_A,
+           parameter,
+           corr_NP_2010 = offset_adj_mean_weighted) %>% 
+    pivot_wider(names_from = parameter,
+                values_from = corr_NP_2010,
+                names_glue = "{parameter}_{.value}")
+  
+  GLODAP <- left_join(GLODAP,
+                      xover_cruise_decade_NP_2010)
+  
+  GLODAP <- GLODAP %>%
+    mutate(
+      phosphate = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020" &
+          !is.na(phosphate_corr_NP_2010),
+        phosphate / phosphate_corr_NP_2010,
+        phosphate
+      ),
+      talk = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020" & 
+          !is.na(talk_corr_NP_2010),
+        talk + talk_corr_NP_2010*2,
+        talk
+      ),
+      tco2 = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          data_source == "obs" &
+          era == "2010-2020" & 
+          !is.na(tco2_corr_NP_2010),
+        tco2 - tco2_corr_NP_2010,
+        tco2
+      )
+    )
+  
+  GLODAP <- GLODAP %>% 
+    select(-ends_with("corr_NP_2010"))
+  
+}
 
 rm(expocodes_xover_NP)
 
