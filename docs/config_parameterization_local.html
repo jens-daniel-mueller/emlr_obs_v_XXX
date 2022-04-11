@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">07 April, 2022</h4>
+<h4 class="date">11 April, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-04-07
+<strong>Last updated:</strong> 2022-04-11
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8993456e0f2f3c69030add4044199e46ff7797dbtargetblank8993456a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8993456e0f2f3c69030add4044199e46ff7797db" target="_blank">8993456</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8294ca04cff7477836645c632f3d27c1ae16e0fbtargetblank8294ca0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8294ca04cff7477836645c632f3d27c1ae16e0fb" target="_blank">8294ca0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8993456e0f2f3c69030add4044199e46ff7797dbtargetblank8993456a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8294ca04cff7477836645c632f3d27c1ae16e0fbtargetblank8294ca0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8993456e0f2f3c69030add4044199e46ff7797db" target="_blank">8993456</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8294ca04cff7477836645c632f3d27c1ae16e0fb" target="_blank">8294ca0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -635,6 +635,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8294ca04cff7477836645c632f3d27c1ae16e0fb/analysis/config_parameterization_local.Rmd" target="_blank">8294ca0</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-04-11
+</td>
+<td>
+test cruise-based data adjustment for NP 2010 data
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/acc478b41510e0da2e0e3ef40ff6b03cefee9a33/docs/config_parameterization_local.html" target="_blank">acc478b</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-04-07
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -8902,9 +8936,6 @@ MLR_predictors &lt;- c(
                 &quot;nitrate&quot;,
                 &quot;silicate&quot;)
 
-# # Transformed predictors for MLR model
-# MLR_predictors_trans &lt;- c(
-#                 &quot;log(phosphate)&quot;)
 
 params_local &lt;-
   lst(
@@ -8951,20 +8982,22 @@ params_local &lt;-
     CANYON_B_sample_SD = 10,
     # minimum sampling depth to apply CANYON-B offset threshold
     CANYON_B_depth = 0,
-    # offset correction for cruises expodcode 316N199XXXXX
+    
+    # data adjustment procedure
+    # options: &quot;none&quot;, &quot;bulk&quot;, &quot;cruise&quot;
+    data_adjustment = &quot;cruise&quot;,
+    
+    # bulk corrections for cruises expocode 316N199XXXXX
     cstar_corr_316N199 = 0,
-    # offset correction for cruises expodcode 316N199XXXXX
     phosphate_corr_316N199 = 1,
-    # offset correction for cruises expodcode 316N199XXXXX
     talk_corr_316N199 = -4,
-    # offset correction for cruises expodcode 316N199XXXXX
     tco2_corr_316N199 = 2.5,
-    # offset correction for cruises from North Pacific 2010s
+    
+    # bulk corrections for cruises from North Pacific 2010s
     phosphate_corr_NP_2010 = 1.007,
-    # offset correction for cruises from North Pacific 2010s
     talk_corr_NP_2010 = 1.5,
-    # offset correction for cruises from North Pacific 2010s
     tco2_corr_NP_2010 = -0.4,
+    
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 1000,
     # start years for eras
@@ -9220,35 +9253,32 @@ target_global_rmse_max = lst(
 )
 
 # start years for eras
-era_start = lst(era_start = c(1989, 1999))
+era_start = lst(era_start = c(1989, 2000))
 era_start = lst(era_start = c(1989, 2010))
 era_start = lst(era_start = c(2000, 2010))
 
 
 # end years for eras
-era_end = lst(era_end = c(1998, 2008))
+era_end = lst(era_end = c(1999, 2009))
 era_end = lst(era_end = c(1999, 2020))
 era_end = lst(era_end = c(2009, 2020))
 
 # manually define tref1, set to NULL to use median year
-tref1 = 1993
+tref1 = 1994
 tref1 = 2004
 
 # manually define tref2, set to NULL to use median year
-tref2 = 2003
+tref2 = 2004
 tref2 = 2014
 
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
   # MLR_basins = &quot;1&quot;,
-  # MLR_basins = &quot;2&quot;, 
+  # MLR_basins = &quot;2&quot;,
   MLR_basins = &quot;AIP&quot;
-  # MLR_basins = &quot;IO_test_lon&quot;,
   # MLR_basins = &quot;5&quot;,
-  # MLR_basins = &quot;SO&quot;,
   # MLR_basins = &quot;SO_5&quot;,
-  # MLR_basins = &quot;SO_AIP&quot;,
-  # MLR_basins = &quot;SO_2&quot;
+  # MLR_basins = &quot;SO_AIP&quot;
 )
 
 # gap filling of NA values in GLODAP
@@ -9305,12 +9335,12 @@ rarefication_threshold = lst(
 
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
 MLR_target = lst(
-  # MLR_target = &quot;cstar_tref&quot;,
-  MLR_target = &quot;cstar_tref&quot;
-  # MLR_target = &quot;cstar&quot;,
-  # MLR_target = &quot;cstar_tco2&quot;,
-  # MLR_target = &quot;cstar_talk&quot;,
-  # MLR_target = &quot;cstar_phosphate&quot;
+  MLR_target = &quot;cstar_tref_delta&quot;,
+  MLR_target = &quot;cstar_tref&quot;,
+  MLR_target = &quot;cstar&quot;,
+  MLR_target = &quot;cstar_tco2&quot;,
+  MLR_target = &quot;cstar_talk&quot;,
+  MLR_target = &quot;cstar_phosphate&quot;
 )
 
 # Maxmimum number of MLR predictors
@@ -9358,7 +9388,7 @@ preind_atm_pCO2 = 280
 
 # index of slabs to be plotted
 plot_slabs = lst(
-  plot_slabs = as.factor(c(&quot;(26,26.5]&quot;, &quot;(27.5,27.75]&quot;))
+  plot_slabs = as.factor(c(&quot;(26,26.5]&quot;, &quot;(27.5,27.75]&quot;, &quot;(27.95,28.05]&quot;))
 )
 
 plot_all_figures = &quot;n&quot;
@@ -9385,6 +9415,7 @@ params_local_all &lt;-
     phosphate_corr_316N199,
     talk_corr_316N199,
     tco2_corr_316N199,
+    phosphate_corr_NP_2010,
     talk_corr_NP_2010,
     tco2_corr_NP_2010,
     cstar_corr_316N199,
@@ -9427,7 +9458,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 3
   
-  Version_ID &lt;- sprintf(&quot;v_11%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_3t%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
