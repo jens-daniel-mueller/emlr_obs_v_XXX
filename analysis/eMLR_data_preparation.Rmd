@@ -356,6 +356,7 @@ GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>%
   slice_max(order_by = n, n = 5) %>%
   pull(cruise_expocode_RV)
 
+print(
 map +
   geom_tile(
     data = GLODAP_IO_1990s %>%
@@ -366,7 +367,9 @@ map +
   xlim(20, 150) +
   ylim(-80, 30) +
   facet_wrap( ~ cruise_expocode_RV)
+)
 
+print(
 GLODAP_IO_1990s %>%
   filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>%
   group_split(cruise_expocode_RV) %>%
@@ -388,6 +391,7 @@ GLODAP_IO_1990s %>%
       xlim(20, 150) +
       ylim(-80, 30)
   )
+)
 
 
 rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
@@ -406,16 +410,20 @@ GLODAP_unadj <- GLODAP %>%
 
 nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)
 
+print(
 map +
   geom_tile(data = GLODAP_adj %>%
               distinct(lat, lon, year),
             aes(lon, lat, fill = as.factor(year)))
+)
 
+print(
 map +
   geom_tile(data = GLODAP_adj %>%
               distinct(lat, lon, cruise_expocode),
             aes(lon, lat, fill = cruise_expocode)) +
   scale_fill_brewer(palette = "Set1")
+)
 
 
 GLODAP_adj <- GLODAP_adj %>%
@@ -438,6 +446,14 @@ rm(GLODAP_adj,
 
 # apply cruise-wise correction to NP 2010 data
 if (params_local$data_adjustment == "cruise") {
+  
+  print(
+  IO_CRM_xover_1990 %>% 
+    ggplot(aes(offset_mean)) +
+    geom_histogram() +
+    facet_grid(type ~ parameter)
+  )
+  
   IO_CRM_xover_1990 <- IO_CRM_xover_1990 %>%
     filter(type == "crm") %>%
     select(cruise_expocode, parameter,
@@ -446,15 +462,33 @@ if (params_local$data_adjustment == "cruise") {
                 values_from = corr_IO_1900,
                 names_glue = "{parameter}_{.value}")
   
+  
   GLODAP <- left_join(GLODAP,
                       IO_CRM_xover_1990)
   
+  print(
+  GLODAP %>% 
+    filter(!is.na(talk_corr_IO_1900)) %>% 
+    ggplot(aes(date, talk_corr_IO_1900)) +
+    geom_point()
+  )
+  
+  print(
+  GLODAP %>% 
+    filter(!is.na(tco2_corr_IO_1900)) %>% 
+    ggplot(aes(date, tco2_corr_IO_1900)) +
+    geom_point()
+  )
+  
+  
   GLODAP <- GLODAP %>%
     mutate(
-      talk = if_else(!is.na(talk_corr_IO_1900),
-                     talk + talk_corr_IO_1900,
+      talk = if_else(!is.na(talk_corr_IO_1900) &
+                       data_source == "obs",
+                     talk - talk_corr_IO_1900,
                      talk),
-      tco2 = if_else(!is.na(tco2_corr_IO_1900),
+      tco2 = if_else(!is.na(tco2_corr_IO_1900) &
+                       data_source == "obs",
                      tco2 - tco2_corr_IO_1900,
                      tco2)
     )
