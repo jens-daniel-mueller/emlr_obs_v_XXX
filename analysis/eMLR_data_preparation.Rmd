@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -124,18 +124,18 @@ G19_cant_3d <-
                  sep = ""))
 
 m94_cant_3d <-
-  read_csv(paste(
-    path_preprocessing_model,
-    "cant_annual_field_AD/cant_1994.csv",
-    sep = ""
-  ))
+  read_csv(paste0(path_preprocessing_model,
+                  "Cant_AD_annual_all_models/",
+                  "1994_",
+                  params_local$gobm,
+                  ".csv"))
 
 m07_cant_3d <-
-  read_csv(paste(
-    path_preprocessing_model,
-    "cant_annual_field_AD/cant_2007.csv",
-    sep = ""
-  ))
+  read_csv(paste0(path_preprocessing_model,
+                  "Cant_AD_annual_all_models/",
+                  "2007_",
+                  params_local$gobm,
+                  ".csv"))
 
 ```
 
@@ -157,8 +157,10 @@ delta_pco2_annual_mod <-
     read_csv(
       file = paste(
         path_preprocessing_model,
+        "surface_ocean/",
         "surface_ocean_disequilibrium/",
-        "C",
+        params_local$gobm,
+        "_C",
         "_annual.csv",
         sep = ""
       )
@@ -193,9 +195,15 @@ variables <-
 
 for (i_variable in variables) {
   
+  # i_variable <- variables[1]
+  
   temp <- read_csv(paste0(
-    path_root,
-    "/model/preprocessing/surface_ocean_A/", i_variable, ".csv")
+    path_preprocessing_model,
+    "surface_ocean/surface_ocean_A/",
+    params_local$gobm,
+    "_",
+    i_variable,
+    ".csv")
   )
   
   if (exists("surface_mod")) {
@@ -331,115 +339,119 @@ exist_IO_1990 <- GLODAP %>%
 
 ```{r cstar_input_adjustment_IO, eval=exist_IO_1990}
 
+
 if (params_local$data_adjustment == "bulk") {
+  GLODAP_IO_1990s <- GLODAP %>%
+    filter(between(year, 1989, 1999) &
+             basin_AIP == "Indian" &
+             data_source == "obs") %>%
+    mutate(
+      cruise_expocode_RV = str_sub(cruise_expocode, 1, 7),
+      cruise_expocode_date = str_sub(cruise_expocode, 5, 12)
+    )
   
-GLODAP_IO_1990s <- GLODAP %>%
-  filter(between(year, 1989, 1999) &
-           basin_AIP == "Indian" &
-           data_source == "obs") %>%
-  mutate(
-    cruise_expocode_RV = str_sub(cruise_expocode, 1, 7),
-    cruise_expocode_date = str_sub(cruise_expocode, 5, 12)
-  )
-
-
-GLODAP_IO_1990s_stats <- GLODAP_IO_1990s %>%
-  count(cruise_expocode_RV) %>%
-  mutate(n_rel = 100 * n / sum(n)) %>%
-  arrange(-n)
-
-GLODAP_IO_1990s_stats %>%
-  kbl() %>%
-  kable_styling()
-
-GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>%
-  slice_max(order_by = n, n = 5) %>%
-  pull(cruise_expocode_RV)
-
-print(
-map +
-  geom_tile(
-    data = GLODAP_IO_1990s %>%
-      filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5)  %>%
-      distinct(lat, lon, cruise_expocode_RV),
-    aes(lon, lat)
-  ) +
-  xlim(20, 150) +
-  ylim(-80, 30) +
-  facet_wrap( ~ cruise_expocode_RV)
-)
-
-print(
-GLODAP_IO_1990s %>%
-  filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>%
-  group_split(cruise_expocode_RV) %>%
-  # head(1) %>%
-  map(
-    ~ map +
+  
+  GLODAP_IO_1990s_stats <- GLODAP_IO_1990s %>%
+    count(cruise_expocode_RV) %>%
+    mutate(n_rel = 100 * n / sum(n)) %>%
+    arrange(-n)
+  
+  GLODAP_IO_1990s_stats %>%
+    kbl() %>%
+    kable_styling()
+  
+  GLODAP_IO_1990s_top5 <- GLODAP_IO_1990s_stats %>%
+    slice_max(order_by = n, n = 5) %>%
+    pull(cruise_expocode_RV)
+  
+  print(
+    map +
       geom_tile(
-        data = .x %>%
-          distinct(lat, lon, cruise_expocode_date),
-        aes(lon, lat, fill = cruise_expocode_date)
+        data = GLODAP_IO_1990s %>%
+          filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5)  %>%
+          distinct(lat, lon, cruise_expocode_RV),
+        aes(lon, lat)
       ) +
-      scale_fill_brewer(palette = "Set1",
-                        name = "cruise start date") +
-      labs(title = paste0(
-        "expocodes: ",
-        unique(.x$cruise_expocode_RV),
-        "XXXXX"
-      )) +
       xlim(20, 150) +
-      ylim(-80, 30)
+      ylim(-80, 30) +
+      facet_wrap(~ cruise_expocode_RV)
   )
-)
-
-
-rm(GLODAP_IO_1990s, GLODAP_IO_1990s_stats, GLODAP_IO_1990s_top5)
-
-GLODAP_adj <- GLODAP %>%
-  filter(str_detect(cruise_expocode, "316N199") &
-           basin_AIP == "Indian" &
-           data_source == "obs")
-
-GLODAP_unadj <- GLODAP %>%
-  filter(!(
-    str_detect(cruise_expocode, "316N199") &
-      basin_AIP == "Indian" &
-      data_source == "obs"
-  ))
-
-nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)
-
-print(
-map +
-  geom_tile(data = GLODAP_adj %>%
+  
+  print(
+    GLODAP_IO_1990s %>%
+      filter(cruise_expocode_RV %in% GLODAP_IO_1990s_top5) %>%
+      group_split(cruise_expocode_RV) %>%
+      # head(1) %>%
+      map(
+        ~ map +
+          geom_tile(
+            data = .x %>%
+              distinct(lat, lon, cruise_expocode_date),
+            aes(lon, lat, fill = cruise_expocode_date)
+          ) +
+          scale_fill_brewer(palette = "Set1",
+                            name = "cruise start date") +
+          labs(title = paste0(
+            "expocodes: ",
+            unique(.x$cruise_expocode_RV),
+            "XXXXX"
+          )) +
+          xlim(20, 150) +
+          ylim(-80, 30)
+      )
+  )
+  
+  
+  rm(GLODAP_IO_1990s,
+     GLODAP_IO_1990s_stats,
+     GLODAP_IO_1990s_top5)
+  
+  GLODAP_adj <- GLODAP %>%
+    filter(str_detect(cruise_expocode, "316N199") &
+             basin_AIP == "Indian" &
+             data_source == "obs")
+  
+  GLODAP_unadj <- GLODAP %>%
+    filter(!(
+      str_detect(cruise_expocode, "316N199") &
+        basin_AIP == "Indian" &
+        data_source == "obs"
+    ))
+  
+  nrow(GLODAP_adj) + nrow(GLODAP_unadj) == nrow(GLODAP)
+  
+  print(map +
+          geom_tile(
+            data = GLODAP_adj %>%
               distinct(lat, lon, year),
-            aes(lon, lat, fill = as.factor(year)))
-)
-
-print(
-map +
-  geom_tile(data = GLODAP_adj %>%
-              distinct(lat, lon, cruise_expocode),
-            aes(lon, lat, fill = cruise_expocode)) +
-  scale_fill_brewer(palette = "Set1")
-)
-
-
-GLODAP_adj <- GLODAP_adj %>%
-  mutate(
-    tco2 = tco2 + params_local$tco2_corr_316N199,
-    talk = talk + params_local$talk_corr_316N199,
-    phosphate = phosphate * params_local$phosphate_corr_316N199,
+            aes(lon, lat, fill = as.factor(year))
+          ))
+  
+  print(
+    map +
+      geom_tile(
+        data = GLODAP_adj %>%
+          distinct(lat, lon, cruise_expocode),
+        aes(lon, lat, fill = cruise_expocode)
+      ) +
+      scale_fill_brewer(palette = "Set1")
   )
-
-GLODAP <- bind_rows(GLODAP_adj,
-                    GLODAP_unadj)
-
-
-rm(GLODAP_adj,
-   GLODAP_unadj)
-
+  
+  
+  GLODAP_adj <- GLODAP_adj %>%
+    mutate(
+      tco2 = tco2 + params_local$tco2_corr_316N199,
+      talk = talk + params_local$talk_corr_316N199,
+      phosphate = phosphate * params_local$phosphate_corr_316N199,
+    )
+  
+  GLODAP <- bind_rows(GLODAP_adj,
+                      GLODAP_unadj)
+  
+  
+  rm(GLODAP_adj,
+     GLODAP_unadj)
+  
 }
 
 
@@ -455,7 +467,7 @@ if (params_local$data_adjustment == "cruise") {
   )
   
   IO_CRM_xover_1990 <- IO_CRM_xover_1990 %>%
-    filter(type == "crm") %>%
+    filter(type == "CRM") %>%
     select(cruise_expocode, parameter,
            corr_IO_1900 = offset_mean) %>%
     pivot_wider(names_from = parameter,
@@ -784,11 +796,11 @@ Join model Cant fields of 1994 and 2007
 
 # define positive cant
 m94_cant_3d <- m94_cant_3d %>% 
-  mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
+  mutate(cant_pos = if_else(tcant <= 0, 0, tcant)) %>% 
   select(lon, lat, depth, cant_pos_S04 = cant_pos)
 
 m07_cant_3d <- m07_cant_3d %>% 
-  mutate(cant_pos = if_else(cant_total <= 0, 0, cant_total)) %>% 
+  mutate(cant_pos = if_else(tcant <= 0, 0, tcant)) %>% 
   select(lon, lat, depth, cant_pos_m07 = cant_pos)
 
 # join data sets
