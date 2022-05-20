@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -64,6 +64,16 @@ path_version_figures  <-
         sep = "")
 ```
 
+
+```{r select_basin_mask, include=FALSE}
+
+basinmask_AIP <- basinmask %>% 
+  filter(MLR_basins == params_local$MLR_basins) %>% 
+  select(-MLR_basins)
+
+```
+
+
 ```{r load_libraries_specific, include=FALSE}
 library(marelac)
 ```
@@ -87,34 +97,34 @@ tref  <-
 
 tcant_tref_1 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_AD",
-      "/cant_",
+      "Cant_AD_annual_all_models/",
       unique(tref$median_year[1]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_tref_1 <- tcant_tref_1 %>%
-  rename(tcant_tref_1 = cant_total) %>%
+  rename(tcant_tref_1 = tcant) %>%
   select(-year)
 
 tcant_tref_2 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_AD",
-      "/cant_",
+      "Cant_AD_annual_all_models/",
       unique(tref$median_year[2]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_tref_2 <- tcant_tref_2 %>%
-  rename(tcant_tref_2 = cant_total) %>%
+  rename(tcant_tref_2 = tcant) %>%
   select(-year)
 
 ```
@@ -123,34 +133,34 @@ tcant_tref_2 <- tcant_tref_2 %>%
 
 tcant_cc_tref_1 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_CB",
-      "/cant_",
+      "Cant_CB_annual_all_models/",
       unique(tref$median_year[1]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_cc_tref_1 <- tcant_cc_tref_1 %>%
-  rename(tcant_tref_1 = cant_total) %>%
+  rename(tcant_tref_1 = tcant) %>%
   select(-year)
 
 tcant_cc_tref_2 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_CB",
-      "/cant_",
+      "Cant_CB_annual_all_models/",
       unique(tref$median_year[2]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
-  rename(tcant_tref_2 = cant_total) %>%
+  rename(tcant_tref_2 = tcant) %>%
   select(-year)
 
 ```
@@ -160,13 +170,13 @@ tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
 
 cstar_tref_1 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cstar_annual_field_A",
-      "/cstar_A_",
+      "Cstar_A_annual_all_models/",
       unique(tref$median_year[1]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
@@ -179,13 +189,13 @@ cstar_tref_1 <- cstar_tref_1 %>%
 
 cstar_tref_2 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cstar_annual_field_A",
-      "/cstar_A_",
+      "Cstar_A_annual_all_models/",
       unique(tref$median_year[2]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
@@ -202,8 +212,14 @@ cstar_tref_2 <- cstar_tref_2 %>%
 ```{r load_model_gamma_climatology}
 
 climatology <-
-  read_csv(paste0(path_model_preprocessing,
-                  "climatology_runA_2007.csv"))
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Climatology_A_2007_all_models/",
+      params_local$gobm,
+      "_climatology_runA_2007.csv"
+    )
+  )
 
 ```
 
@@ -223,6 +239,8 @@ mean_gamma_offset_Indo_Pac  <-
 
 
 ```{r apply_gamma_offset_mod}
+
+climatology <- inner_join(climatology, basinmask_AIP)
 
 climatology <- climatology %>%
   mutate(
@@ -359,9 +377,7 @@ dcant_3d_cstar <- dcant_3d_cstar %>%
 
 dcant_3d_cstar <- inner_join(
   dcant_3d_cstar,
-  basinmask %>%
-    filter(MLR_basins == params_local$MLR_basins) %>%
-    select(-MLR_basins)
+  basinmask_AIP
 ) 
 
 dcant_3d_cstar <- m_cut_gamma(dcant_3d_cstar, "gamma")
