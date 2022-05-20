@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -48,6 +48,9 @@ path_observations <-
 path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
 
+path_model_preprocessing    <-
+  paste(path_root, "/model/preprocessing/", sep = "")
+
 path_version_data     <-
   paste(path_observations,
         params_local$Version_ID,
@@ -60,8 +63,6 @@ path_version_figures  <-
         "/figures/",
         sep = "")
 
-path_model_preprocessing    <-
-  paste(path_root, "/model/preprocessing/", sep = "")
 ```
 
 ```{r load_libraries_specific, include=FALSE}
@@ -110,9 +111,15 @@ variables <-
 
 for (i_variable in variables) {
   
+  # i_variable <- variables[1]
+  
   temp <- read_csv(paste0(
-    path_root,
-    "/model/preprocessing/surface_ocean_A/", i_variable, ".csv")
+    path_model_preprocessing,
+    "surface_ocean/surface_ocean_A/",
+    params_local$gobm,
+    "_",
+    i_variable,
+    ".csv")
   )
   
   if (exists("surface_mod")) {
@@ -172,34 +179,34 @@ lm_best_dcant <-
 
 tcant_tref_1 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_AD",
-      "/cant_",
+      "Cant_AD_annual_all_models/",
       unique(tref$median_year[1]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_tref_1 <- tcant_tref_1 %>%
-  rename(tcant_tref_1 = cant_total) %>%
+  rename(tcant_tref_1 = tcant) %>%
   select(-year)
 
 tcant_tref_2 <-
   read_csv(
-    paste(
+    paste0(
       path_model_preprocessing,
-      "cant_annual_field_AD",
-      "/cant_",
+      "Cant_AD_annual_all_models/",
       unique(tref$median_year[2]),
-      ".csv",
-      sep = ""
+      "_",
+      params_local$gobm,
+      ".csv"
     )
   )
 
 tcant_tref_2 <- tcant_tref_2 %>%
-  rename(tcant_tref_2 = cant_total) %>%
+  rename(tcant_tref_2 = tcant) %>%
   select(-year)
 
 dcant_3d <- left_join(tcant_tref_1, tcant_tref_2) %>%

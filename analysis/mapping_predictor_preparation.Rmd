@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -199,11 +199,17 @@ WOA18_predictors <-
 ```{r load_model_climatologies_interior_mapping}
 
 climatology <-
-  read_csv(paste(path_preprocessing_model, "climatology_runA_2007.csv", sep = ""))
+  read_csv(paste0(path_preprocessing_model,
+                  "Climatology_A_2007_all_models/",
+                  params_local$gobm,
+                  "_climatology_runA_2007.csv"
+                  ))
 
 climatology <- climatology %>%
   rename(aou = AOU, TCO2 = tco2, TAlk = talk) %>% 
   select(-aou)
+
+climatology <- inner_join(climatology, basinmask)
 
 model_predictors <- climatology %>%
   select(lon, lat, depth, basin_AIP, gamma, 
