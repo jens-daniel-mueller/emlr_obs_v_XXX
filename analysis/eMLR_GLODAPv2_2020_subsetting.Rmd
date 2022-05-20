@@ -14,7 +14,7 @@ params:
   Version_ID: "v_XXX"
 ---
 
-```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup_obs.Rmd"}
+```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
 # this chunk runs the code stored in setup.Rmd
 # if required, please refer to instructions given here:
 # https://jdblischak.github.io/workflowr/articles/wflow-07-common-code.html
@@ -47,7 +47,7 @@ path_preprocessing    <-
   paste(path_observations, "preprocessing/", sep = "")
 
 path_preprocessing_model    <-
-  paste(path_root, "/model/preprocessing/", sep = "")
+  paste(path_root, "/model/preprocessing/GLODAP_subset_A_annual_all_models/", sep = "")
 
 path_version_data     <-
   paste(path_observations,
@@ -104,9 +104,11 @@ GLODAP <-
   read_csv(
     paste0(
       path_preprocessing_model,
+      params_local$gobm,
+      "_",
       "GLODAPv2.",
       params_local$GLODAPv2_version,
-      "_preprocessed_model_runA_both_NA_filled.csv")
+      "_preprocessed_model_runA_both_NA_filled_ann.csv")
   )
 
 GLODAP_CB <-

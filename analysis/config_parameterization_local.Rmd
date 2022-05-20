@@ -20,6 +20,25 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(tidyverse)
 ```
 
+```{r select_gobms}
+
+path_preprocessing <-
+  "/nfs/kryo/work/jenmueller/emlr_cant/model/preprocessing/GLODAP_subset_A_annual_all_models/"
+
+
+gobms <- fs::dir_ls(path_preprocessing)
+
+gobms <- gobms[str_detect(gobms, pattern = "_preprocessed_model_runA_both_NA_filled_ann.csv")]
+
+gobms <- str_remove(gobms, path_preprocessing)
+gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv")
+
+gobm_select <- gobms[1]
+
+rm(path_preprocessing, gobms)
+
+```
+
 
 # Definition
 
@@ -80,6 +99,8 @@ params_local <-
     Version_ID = "v_XXX",
     # GLODAP version used
     GLODAPv2_version = "2021",
+    # GLODAP version used
+    gobm = gobm_select,
     # f flags accepted for GLODAP data
     flag_f = c(2,9),
     # qc flags accepted for GLODAP data
@@ -366,19 +387,19 @@ CANYON_B_sample_SD = lst(
 # minimum sampling depth to apply CANYON-B offset threshold
 CANYON_B_depth = 0
 
+# data adjustment procedure
+# options: "none", "bulk", "cruise"
+data_adjustment = "cruise"
+
 # offset correction for cruises expodcode 316N199XXXXX
 phosphate_corr_316N199 = 1
-# offset correction for cruises expodcode 316N199XXXXX
 talk_corr_316N199 = -4
-# offset correction for cruises expodcode 316N199XXXXX
 tco2_corr_316N199 = 2.5
 
 
 # offset correction for cruises from North Pacific 2010s
 phosphate_corr_NP_2010 = 1.007
-# offset correction for cruises from North Pacific 2010s
 talk_corr_NP_2010 = 1.5
-# offset correction for cruises from North Pacific 2010s
 tco2_corr_NP_2010 = -0.4
 
 # offset correction for cruises expodcode 316N199XXXXX
@@ -416,12 +437,12 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  # MLR_basins = "1",
-  # MLR_basins = "2",
-  MLR_basins = "AIP"
-  # MLR_basins = "5",
-  # MLR_basins = "SO_5",
-  # MLR_basins = "SO_AIP"
+  MLR_basins = "1",
+  MLR_basins = "2",
+  MLR_basins = "AIP",
+  MLR_basins = "5",
+  MLR_basins = "SO_5",
+  MLR_basins = "SO_AIP"
 )
 
 # gap filling of NA values in GLODAP
@@ -478,12 +499,12 @@ rarefication_threshold = lst(
 
 # Select the target variable for MLR, either "tco2", "cstar" or "cstar_tref"
 MLR_target = lst(
-  MLR_target = "cstar_tref_delta",
-  MLR_target = "cstar_tref",
-  MLR_target = "cstar",
-  MLR_target = "cstar_tco2",
-  MLR_target = "cstar_talk",
-  MLR_target = "cstar_phosphate"
+  # MLR_target = "cstar_tref_delta",
+  MLR_target = "cstar_tref"
+  # MLR_target = "cstar",
+  # MLR_target = "cstar_tco2",
+  # MLR_target = "cstar_talk",
+  # MLR_target = "cstar_phosphate"
 )
 
 # Maxmimum number of MLR predictors
@@ -555,6 +576,7 @@ params_local_all <-
     CANYON_B_cruise_mean,
     CANYON_B_sample_SD,
     CANYON_B_depth,
+    data_adjustment,
     phosphate_corr_316N199,
     talk_corr_316N199,
     tco2_corr_316N199,
@@ -601,7 +623,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_3t%02d", i)
+  Version_ID <- sprintf("v_3c%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
