@@ -23,7 +23,7 @@ library(tidyverse)
 ```{r select_gobms}
 
 path_preprocessing <-
-  "/nfs/kryo/work/jenmueller/emlr_cant/model/preprocessing/GLODAP_subset_A_annual_all_models/"
+  "/nfs/kryo/work/jenmueller/emlr_cant/model/preprocessing/GLODAP_subset_A_all_models/"
 
 
 gobms <- fs::dir_ls(path_preprocessing)
@@ -33,7 +33,7 @@ gobms <- gobms[str_detect(gobms, pattern = "_preprocessed_model_runA_both_NA_fil
 gobms <- str_remove(gobms, path_preprocessing)
 gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv")
 
-gobm_select <- gobms[1]
+gobm_select <- gobms[c(1)]
 
 rm(path_preprocessing, gobms)
 
@@ -99,7 +99,7 @@ params_local <-
     Version_ID = "v_XXX",
     # GLODAP version used
     GLODAPv2_version = "2021",
-    # GLODAP version used
+    # GLODAP selected gobms
     gobm = gobm_select,
     # f flags accepted for GLODAP data
     flag_f = c(2,9),
@@ -316,6 +316,10 @@ MLR_predictors <- lst(
 # GLODAP version used
 GLODAPv2_version = "2021"
 
+
+# GLODAP selected gobms
+gobm = gobm_select
+
 # f flags accepted for GLODAP data
 flag_f = lst(# flag_f = c(0, 2, 9),
              flag_f = c(2, 9)
@@ -437,12 +441,12 @@ tref2 = 2014
 
 # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
 MLR_basins = lst(
-  MLR_basins = "1",
-  MLR_basins = "2",
-  MLR_basins = "AIP",
-  MLR_basins = "5",
-  MLR_basins = "SO_5",
-  MLR_basins = "SO_AIP"
+  # MLR_basins = "1",
+  # MLR_basins = "2",
+  MLR_basins = "AIP"
+  # MLR_basins = "5",
+  # MLR_basins = "SO_5",
+  # MLR_basins = "SO_AIP"
 )
 
 # gap filling of NA values in GLODAP
@@ -563,6 +567,7 @@ params_local_all <-
     slabs_Ind_Pac,
     MLR_predictors,
     GLODAPv2_version,
+    gobm,
     flag_f,
     flag_qc,
     cruises_tco2_calc,
@@ -613,8 +618,8 @@ params_local_all <-
     preind_atm_pCO2,
     plot_slabs,
     plot_all_figures
-  ) %>%
-  cross()
+  ) %>% 
+  purrr::cross()
 
 
 
@@ -623,7 +628,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_3c%02d", i)
+  Version_ID <- sprintf("v_3s%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID

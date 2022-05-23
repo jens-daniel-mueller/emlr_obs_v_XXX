@@ -109,29 +109,27 @@ tref  <-
 variables <-
   c("dissicos", "talkos", "po4os", "spco2", "tos", "sos")
 
-for (i_variable in variables) {
-  
-  # i_variable <- variables[1]
-  
-  temp <- read_csv(paste0(
-    path_model_preprocessing,
-    "surface_ocean/surface_ocean_A/",
-    params_local$gobm,
-    "_",
-    i_variable,
-    ".csv")
-  )
-  
-  if (exists("surface_mod")) {
-    surface_mod <- full_join(surface_mod, temp)
-  }
-  
-  if (!exists("surface_mod")) {
-    surface_mod <- temp
-  }
-}
+surface_mod <- read_csv(paste0(
+  path_model_preprocessing,
+  "surface_ocean/",
+  params_local$gobm,
+  ".csv"
+))
 
-rm(temp, i_variable, variables)
+surface_mod <- surface_mod %>% 
+  filter(model_ID == "A")
+
+
+surface_mod <- surface_mod %>% 
+  select(year,
+         lon, lat,
+         dissic,
+         talk,
+         phosphate,
+         pCO2 = spco2,
+         temp,
+         sal)
+
 
 surface_obs <- read_csv(paste0(
     path_observations,

@@ -157,8 +157,7 @@ delta_pco2_annual_mod <-
     read_csv(
       file = paste(
         path_preprocessing_model,
-        "surface_ocean/",
-        "surface_ocean_disequilibrium/",
+        "surface_ocean/surface_ocean_disequilibrium/",
         params_local$gobm,
         "_C",
         "_annual.csv",
@@ -191,37 +190,29 @@ rm(delta_pco2_annual_mod, delta_pco2_annual_obs)
 ### model data
 
 variables <-
-  c("talkos", "spco2", "tos", "sos")
+  c()
 
-for (i_variable in variables) {
+# for (i_variable in variables) {
+#   
+#   # i_variable <- variables[1]
   
-  # i_variable <- variables[1]
-  
-  temp <- read_csv(paste0(
-    path_preprocessing_model,
-    "surface_ocean/surface_ocean_A/",
-    params_local$gobm,
-    "_",
-    i_variable,
-    ".csv")
-  )
-  
-  if (exists("surface_mod")) {
-    surface_mod <- full_join(surface_mod, temp)
-  }
-  
-  if (!exists("surface_mod")) {
-    surface_mod <- temp
-  }
-}
-
-rm(temp, i_variable, variables)
+surface_mod <- read_csv(paste0(
+  path_preprocessing_model,
+  "surface_ocean/",
+  params_local$gobm,
+  ".csv"
+))
 
 surface_mod <- surface_mod %>% 
-  rename(talk = talkos,
+  filter(model_ID == "A")
+
+surface_mod <- surface_mod %>% 
+  select(year,
+         lon, lat,
+         talk,
          pCO2 = spco2,
-         temp = tos,
-         sal = sos)
+         temp,
+         sal)
 
 ### Observational data (OceanSODA)
 
@@ -894,7 +885,7 @@ map +
   scale_fill_viridis_c() +
   facet_grid(data_source ~ year)
 
-# calculate surface revelle factor dibution
+# calculate surface revelle factor distribution
 surface <- surface %>%
   drop_na() %>% 
   mutate(
