@@ -224,7 +224,7 @@ map +
 ```
 
 
-```{r penetration_depth_zonal_mean, fig.asp=1}
+```{r penetration_depth_zonal_mean, fig.asp=1.5}
 
 dcant_penetration_depth_all %>% 
   group_by(data_source, dcant_lim, basin_AIP, lat) %>% 
@@ -235,7 +235,7 @@ dcant_penetration_depth_all %>%
   geom_ribbon(aes(xmax = depth_mean + depth_sd, xmin = depth_mean - depth_sd,
                   fill = data_source), alpha = 0.3) +
   geom_path(aes(col = data_source)) +
-  facet_grid(dcant_lim ~ basin_AIP)
+  facet_grid(basin_AIP ~ dcant_lim, scales = "free_x")
 
 ```
 

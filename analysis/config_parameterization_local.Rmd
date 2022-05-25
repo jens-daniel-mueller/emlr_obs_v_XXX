@@ -33,8 +33,8 @@ gobms <- gobms[str_detect(gobms, pattern = "_preprocessed_model_runA_both_NA_fil
 gobms <- str_remove(gobms, path_preprocessing)
 gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv")
 
-# gobm_select <- gobms[c(1,2,3,5,8)]
-gobm_select <- gobms[2]
+gobm_select <- gobms[c(1,2,3,5,8)]
+gobm_select <- gobm_select[4]
 
 rm(path_preprocessing, gobms)
 
@@ -635,7 +635,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_1s%02d", i)
+  Version_ID <- sprintf("v_3s%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
