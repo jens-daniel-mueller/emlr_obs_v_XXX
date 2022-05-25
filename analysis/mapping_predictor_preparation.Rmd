@@ -359,9 +359,13 @@ predictors_surface <- predictors_surface %>%
 #   filter(depth < params_local$depth_min,
 #          gamma < params_local$gamma_min)
 
-predictors_surface <- predictors_surface %>%
-  filter(depth <= 5)
 
+predictors_surface <- predictors_surface %>% 
+  group_by(data_source) %>% 
+  mutate(surface_depth = min(depth, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  filter(depth == surface_depth) %>% 
+  select(-surface_depth)
 
 ```
 

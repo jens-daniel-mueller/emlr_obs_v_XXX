@@ -153,7 +153,10 @@ co2_atm_reccap2 <-
                  "co2_atm_reccap2.csv",
                  sep = ""))
 
-delta_pco2_annual_mod <-
+if (params_local$gobm %in% c("CESM-ETHZ_v20211122",
+                             "FESOM_REcoM_LR_v20211119",
+                             "MRI-ESM2-0_v20210830")) {
+  delta_pco2_annual_mod <-
     read_csv(
       file = paste(
         path_preprocessing_model,
@@ -164,6 +167,19 @@ delta_pco2_annual_mod <-
         sep = ""
       )
     )
+} else {
+  delta_pco2_annual_mod <-
+    read_csv(
+      file = paste(
+        path_preprocessing_model,
+        "surface_ocean/surface_ocean_disequilibrium/",
+        "MRI-ESM2-0_v20210830",
+        "_C",
+        "_annual.csv",
+        sep = ""
+      )
+    )
+}
 
 delta_pco2_annual_obs <-
     read_csv(
@@ -189,13 +205,6 @@ rm(delta_pco2_annual_mod, delta_pco2_annual_obs)
 
 ### model data
 
-variables <-
-  c()
-
-# for (i_variable in variables) {
-#   
-#   # i_variable <- variables[1]
-  
 surface_mod <- read_csv(paste0(
   path_preprocessing_model,
   "surface_ocean/",
@@ -206,7 +215,7 @@ surface_mod <- read_csv(paste0(
 surface_mod <- surface_mod %>% 
   filter(model_ID == "A")
 
-surface_mod <- surface_mod %>% 
+surface_mod <- surface_mod %>%
   select(year,
          lon, lat,
          talk,
