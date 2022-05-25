@@ -459,7 +459,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">23 May, 2022</h4>
+<h4 class="date">25 May, 2022</h4>
 
 </div>
 
@@ -484,7 +484,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-05-23
+<strong>Last updated:</strong> 2022-05-25
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -575,16 +575,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7af78be9d08931919e87fc90bcd935efa20e528targetblankd7af78ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7af78be9d08931919e87fc90bcd935efa20e528" target="_blank">d7af78b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedcaa7569872c6d7cd047f43b1f8c147e54b87333targetblankdcaa756a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dcaa7569872c6d7cd047f43b1f8c147e54b87333" target="_blank">dcaa756</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed7af78be9d08931919e87fc90bcd935efa20e528targetblankd7af78ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedcaa7569872c6d7cd047f43b1f8c147e54b87333targetblankdcaa756a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d7af78be9d08931919e87fc90bcd935efa20e528" target="_blank">d7af78b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dcaa7569872c6d7cd047f43b1f8c147e54b87333" target="_blank">dcaa756</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -636,6 +636,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/dcaa7569872c6d7cd047f43b1f8c147e54b87333/analysis/config_parameterization_local.Rmd" target="_blank">dcaa756</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-05-25
+</td>
+<td>
+testrun with EC-Earth3_v20220323
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/42feabc7ef94108398e509623469b709abacd403/docs/config_parameterization_local.html" target="_blank">42feabc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-05-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -9086,7 +9120,8 @@ gobms &lt;- gobms[str_detect(gobms, pattern = &quot;_preprocessed_model_runA_bot
 gobms &lt;- str_remove(gobms, path_preprocessing)
 gobms &lt;- str_remove(gobms, &quot;_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv&quot;)
 
-gobm_select &lt;- gobms[c(1)]
+# gobm_select &lt;- gobms[c(1,2,3,5,8)]
+gobm_select &lt;- gobms[2]
 
 rm(path_preprocessing, gobms)</code></pre>
 <div id="definition" class="section level1" number="1">
@@ -9460,25 +9495,6 @@ target_global_rmse_max = lst(
   # target_global_rmse_max = 10
 )
 
-# start years for eras
-era_start = lst(era_start = c(1989, 2000))
-era_start = lst(era_start = c(1989, 2010))
-era_start = lst(era_start = c(2000, 2010))
-
-
-# end years for eras
-era_end = lst(era_end = c(1999, 2009))
-era_end = lst(era_end = c(1999, 2020))
-era_end = lst(era_end = c(2009, 2020))
-
-# manually define tref1, set to NULL to use median year
-tref1 = 1994
-tref1 = 2004
-
-# manually define tref2, set to NULL to use median year
-tref2 = 2004
-tref2 = 2014
-
 # ID for basins for MLR fits (options: &quot;2&quot;, &quot;AIP&quot;, &quot;5&quot;, &quot;SO&quot;)
 MLR_basins = lst(
   # MLR_basins = &quot;1&quot;,
@@ -9596,10 +9612,35 @@ preind_atm_pCO2 = 280
 
 # index of slabs to be plotted
 plot_slabs = lst(
-  plot_slabs = as.factor(c(&quot;(26,26.5]&quot;, &quot;(27.5,27.75]&quot;, &quot;(27.95,28.05]&quot;))
+  plot_slabs = as.factor(
+    c(&quot;(26,26.5]&quot;, &quot;(27.5,27.75]&quot;)
+    )
 )
 
+# , &quot;(27.95,28.05]&quot;
+
 plot_all_figures = &quot;n&quot;
+
+# start years for eras
+era_start = lst(era_start = c(1989, 2000))
+era_start = lst(era_start = c(1989, 2010))
+era_start = lst(era_start = c(2000, 2010))
+
+
+# end years for eras
+era_end = lst(era_end = c(1999, 2009))
+era_end = lst(era_end = c(1999, 2020))
+era_end = lst(era_end = c(2009, 2020))
+
+# manually define tref1, set to NULL to use median year
+tref1 = 1994
+tref1 = 2004
+
+# manually define tref2, set to NULL to use median year
+tref2 = 2004
+tref2 = 2014
+
+
 
 params_local_all &lt;-
   lst(
@@ -9668,7 +9709,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 3
   
-  Version_ID &lt;- sprintf(&quot;v_3s%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_1s%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
