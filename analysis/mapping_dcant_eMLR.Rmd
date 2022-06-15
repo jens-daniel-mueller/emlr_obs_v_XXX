@@ -165,10 +165,12 @@ disequi_pCO2_tref <-
 
 ```{r load_eMLR_models}
 
+# delta coefficients for calculation of dcant
 lm_best_dcant <-
   read_csv(paste(path_version_data,
                  "lm_best_dcant.csv",
                  sep = ""))
+
 ```
 
 ## Model truth
@@ -227,7 +229,7 @@ rm(dcant_3d)
 
 # Join MLRs + climatologies
 
-```{r merge_model_coeff_predictor_climatology}
+```{r merge_model_delta_coeff_predictor_climatology_for_dcant_mapping}
 
 # remove predictor variable from model
 lm_best_dcant <- lm_best_dcant %>% 
@@ -236,7 +238,7 @@ lm_best_dcant <- lm_best_dcant %>%
 # join predictors and MLR
 dcant <- left_join(lm_best_dcant, predictors)
 
-rm(predictors, lm_best_dcant)
+rm(lm_best_dcant)
 
 ```
 
@@ -251,7 +253,6 @@ rm(predictors, lm_best_dcant)
 dcant <- b_dcant(dcant)
 
 ```
-
 
 ### Sections by model
 
