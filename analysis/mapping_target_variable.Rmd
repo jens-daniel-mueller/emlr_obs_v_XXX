@@ -53,6 +53,18 @@ Map 3d fields of the predicted target variable (either tco2, cstar or cstar_tref
 
 # Required data
 
+## Cstar mod_truth
+
+```{r cstar_mod_truth}
+
+dcant_3d_cstar <-
+  read_csv(paste(path_version_data,
+                  "dcant_3d_cstar.csv", sep = ""))
+
+
+```
+
+
 ## Predictor fields
 
 Currently, we use following combined predictor fields:
@@ -80,6 +92,19 @@ lm_best_target <-
                  sep = ""))
 
 ```
+
+## Others
+
+```{r read_other_data}
+
+tref  <-
+  read_csv(paste(path_version_data,
+                 "tref.csv",
+                 sep = ""))
+
+```
+
+
 
 # Join MLR + climatologies
 
@@ -172,6 +197,126 @@ target_average_zonal %>%
 
 ```
 
+## Profiles
+
+For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r calc_target_profiles_basin_AIP}
+
+var <- sym(params_local$MLR_target)
+
+target_average_profile <- target_average %>%
+  mutate(area = earth_surf(lat, lon),
+         !!paste0(var, "_scaled") :=
+           !!var * area) %>%
+  group_by(data_source, basin_AIP, depth) %>%
+  summarise(!!paste0(var, "_sd") := sqrt(Hmisc::wtd.var(!!var, area, na.rm = TRUE)),
+            !!var := sum(!!sym(paste0(var, "_scaled"))) / sum(area)) %>%
+  ungroup()
+
+
+```
+
+
+```{r calc_target_profiles_MLR_regions}
+
+target_average_basin_MLR <-
+  full_join(
+    target_average %>% select(data_source, lon, lat, depth, !!var),
+    basinmask %>% select(MLR_basins, basin, lon, lat)
+  ) %>%
+  mutate(area = earth_surf(lat, lon),
+         !!paste0(var, "_scaled") :=
+           !!var * area) %>%
+  drop_na() %>%
+  group_by(data_source, basin, MLR_basins, depth) %>%
+  summarise(!!paste0(var, "_sd") := sqrt(Hmisc::wtd.var(!!var, area, na.rm = TRUE)),
+            !!var := sum(!!sym(paste0(var, "_scaled"))) / sum(area)) %>%
+  ungroup()
+
+
+```
+
+
+# Join true C*
+
+
+```{r join_cstar_true_and_predicted}
+
+unique(tref$era[1])
+
+dcant_3d_cstar <- dcant_3d_cstar %>% 
+  mutate(data_source = if_else(data_source == "po4",
+                               "phosphate",
+                               "nitrate")) %>% 
+  filter(data_source == params_local$cstar_nutrient)
+
+dcant_3d_cstar <- dcant_3d_cstar %>% 
+  select(lon:cstar_tref_2, -c(data_source, method)) %>% 
+  pivot_longer(starts_with("cstar_tref_"),
+               values_to = "cstar_tref_mod_truth",
+               names_to = "era",
+               names_prefix = "cstar_tref_") %>% 
+  mutate(era = if_else(era == "1",
+                       unique(tref$era[1]),
+                       unique(tref$era[2])))
+
+target_bias <- inner_join(
+  target_average %>% 
+    filter(data_source == "mod") %>% 
+    select(-data_source),
+  dcant_3d_cstar
+)
+
+target_bias <- target_bias %>% 
+  mutate(dcant = cstar_tref - cstar_tref_mod_truth) %>% 
+  select(lat, lon, depth, basin_AIP, era, gamma, dcant)
+
+```
+
+## Zonal mean sections
+
+For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+```{r Calculate_target_bias_mean_sections}
+
+target_bias_zonal <- target_bias %>%
+  group_by(era) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+target_bias_zonal <- m_cut_gamma(target_bias_zonal, "gamma_mean")
+
+target_bias_zonal %>%
+  ggplot(aes(dcant_mean, col = era)) +
+  geom_density()
+
+
+target_bias_zonal %>%
+  group_by(basin_AIP, era) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_section_zonal_continous_depth(
+      df = .x,
+      var = "dcant_mean",
+      col = "divergent",
+      plot_slabs = "n",
+      subtitle_text = paste(
+        "era: ",
+        unique(.x$era),
+        "| basin:",
+        unique(.x$basin_AIP)
+      )
+    )
+  )
+
+```
+
+
+
 # Write csv
 
 ```{r write_target_files}
@@ -185,5 +330,14 @@ target_average_zonal %>%
   write_csv(paste(path_version_data,
                   "target_zonal.csv",
                   sep = ""))
+
+target_average_profile %>%
+  write_csv(paste(path_version_data,
+                  "target_average_profile.csv", sep = ""))
+
+target_average_basin_MLR %>%
+  write_csv(paste(path_version_data,
+                  "target_average_profile_basin_MLR.csv", sep = ""))
+
 
 ```
