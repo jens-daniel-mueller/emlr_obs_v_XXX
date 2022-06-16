@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec6b299a2a60d88566fa402148b95a92f0a7e4db1targetblankc6b299aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c6b299a2a60d88566fa402148b95a92f0a7e4db1" target="_blank">c6b299a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed85163e45a65e502b76f2a4b3c5faa6c85166d64targetblankd85163ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d85163e45a65e502b76f2a4b3c5faa6c85166d64" target="_blank">d85163e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec6b299a2a60d88566fa402148b95a92f0a7e4db1targetblankc6b299aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreed85163e45a65e502b76f2a4b3c5faa6c85166d64targetblankd85163ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c6b299a2a60d88566fa402148b95a92f0a7e4db1" target="_blank">c6b299a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/d85163e45a65e502b76f2a4b3c5faa6c85166d64" target="_blank">d85163e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -596,6 +596,7 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
 
 </code></pre>
 <p>
@@ -634,6 +635,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/d85163e45a65e502b76f2a4b3c5faa6c85166d64/analysis/mapping_target_variable.Rmd" target="_blank">d85163e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+<td>
+calculated cstar offset predicted vs true
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/mapping_target_variable.html" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1548,8 +1583,14 @@ rebuild with eMLR target variable selection
 </div>
 <div id="required-data" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Required data</h1>
-<div id="predictor-fields" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Predictor fields</h2>
+<div id="cstar-mod_truth" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Cstar mod_truth</h2>
+<pre class="r"><code>dcant_3d_cstar &lt;-
+  read_csv(paste(path_version_data,
+                  &quot;dcant_3d_cstar.csv&quot;, sep = &quot;&quot;))</code></pre>
+</div>
+<div id="predictor-fields" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Predictor fields</h2>
 <p>Currently, we use following combined predictor fields:</p>
 <ul>
 <li>WOA18: S, T, and derived variables</li>
@@ -1560,11 +1601,18 @@ rebuild with eMLR target variable selection
                  &quot;W18_st_G16_opsn.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="mlr-models" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> MLR models</h2>
+<div id="mlr-models" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> MLR models</h2>
 <pre class="r"><code>lm_best_target &lt;-
   read_csv(paste(path_version_data,
                  &quot;lm_best_target.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
+</div>
+<div id="others" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Others</h2>
+<pre class="r"><code>tref  &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;tref.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
 </div>
@@ -1765,6 +1813,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-3.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2d729bf40a266e611173ed0c66e300db0845f87c/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-3.png" target="_blank">2d729bf</a>
 </td>
 <td>
@@ -1814,6 +1873,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-4.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2d729bf40a266e611173ed0c66e300db0845f87c/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-4.png" target="_blank">2d729bf</a>
@@ -1867,6 +1937,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-5.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2d729bf40a266e611173ed0c66e300db0845f87c/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-5.png" target="_blank">2d729bf</a>
 </td>
 <td>
@@ -1916,6 +1997,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-6.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2d729bf40a266e611173ed0c66e300db0845f87c/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-6.png" target="_blank">2d729bf</a>
@@ -1969,6 +2061,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-7.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/2d729bf40a266e611173ed0c66e300db0845f87c/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-7.png" target="_blank">2d729bf</a>
 </td>
 <td>
@@ -1996,25 +2099,357 @@ jens-daniel-mueller
 <pre><code>
 [[7]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-8">
+Past versions of Calculate_target_mean_sections-8.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-8.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[8]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-9">
+Past versions of Calculate_target_mean_sections-9.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-9.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[9]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-10">
+Past versions of Calculate_target_mean_sections-10.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-10.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[10]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-11">
+Past versions of Calculate_target_mean_sections-11.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-11.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[11]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-12">
+Past versions of Calculate_target_mean_sections-12.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-12.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>
 [[12]]</code></pre>
 <p><img src="figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_mean_sections-13">
+Past versions of Calculate_target_mean_sections-13.png
+</button>
+</p>
+<div id="fig-Calculate_target_mean_sections-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bb9a5315a9ce1d46476dc356f41a36e6535e565f/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-13.png" target="_blank">bb9a531</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-<div id="write-csv" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Write csv</h1>
+</div>
+<div id="profiles" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Profiles</h2>
+<p>For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
+<pre class="r"><code>var &lt;- sym(params_local$MLR_target)
+
+target_average_profile &lt;- target_average %&gt;%
+  mutate(area = earth_surf(lat, lon),
+         !!paste0(var, &quot;_scaled&quot;) :=
+           !!var * area) %&gt;%
+  group_by(data_source, basin_AIP, depth) %&gt;%
+  summarise(!!paste0(var, &quot;_sd&quot;) := sqrt(Hmisc::wtd.var(!!var, area, na.rm = TRUE)),
+            !!var := sum(!!sym(paste0(var, &quot;_scaled&quot;))) / sum(area)) %&gt;%
+  ungroup()</code></pre>
+<pre class="r"><code>target_average_basin_MLR &lt;-
+  full_join(
+    target_average %&gt;% select(data_source, lon, lat, depth, !!var),
+    basinmask %&gt;% select(MLR_basins, basin, lon, lat)
+  ) %&gt;%
+  mutate(area = earth_surf(lat, lon),
+         !!paste0(var, &quot;_scaled&quot;) :=
+           !!var * area) %&gt;%
+  drop_na() %&gt;%
+  group_by(data_source, basin, MLR_basins, depth) %&gt;%
+  summarise(!!paste0(var, &quot;_sd&quot;) := sqrt(Hmisc::wtd.var(!!var, area, na.rm = TRUE)),
+            !!var := sum(!!sym(paste0(var, &quot;_scaled&quot;))) / sum(area)) %&gt;%
+  ungroup()</code></pre>
+</div>
+</div>
+<div id="join-true-c" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Join true C*</h1>
+<pre class="r"><code>unique(tref$era[1])</code></pre>
+<pre><code>[1] &quot;1989-1999&quot;</code></pre>
+<pre class="r"><code>dcant_3d_cstar &lt;- dcant_3d_cstar %&gt;% 
+  mutate(data_source = if_else(data_source == &quot;po4&quot;,
+                               &quot;phosphate&quot;,
+                               &quot;nitrate&quot;)) %&gt;% 
+  filter(data_source == params_local$cstar_nutrient)
+
+dcant_3d_cstar &lt;- dcant_3d_cstar %&gt;% 
+  select(lon:cstar_tref_2, -c(data_source, method)) %&gt;% 
+  pivot_longer(starts_with(&quot;cstar_tref_&quot;),
+               values_to = &quot;cstar_tref_mod_truth&quot;,
+               names_to = &quot;era&quot;,
+               names_prefix = &quot;cstar_tref_&quot;) %&gt;% 
+  mutate(era = if_else(era == &quot;1&quot;,
+                       unique(tref$era[1]),
+                       unique(tref$era[2])))
+
+target_bias &lt;- inner_join(
+  target_average %&gt;% 
+    filter(data_source == &quot;mod&quot;) %&gt;% 
+    select(-data_source),
+  dcant_3d_cstar
+)
+
+target_bias &lt;- target_bias %&gt;% 
+  mutate(dcant = cstar_tref - cstar_tref_mod_truth) %&gt;% 
+  select(lat, lon, depth, basin_AIP, era, gamma, dcant)</code></pre>
+<div id="zonal-mean-sections-1" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Zonal mean sections</h2>
+<p>For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
+<pre class="r"><code>target_bias_zonal &lt;- target_bias %&gt;%
+  group_by(era) %&gt;%
+  nest() %&gt;%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
+  select(-data) %&gt;%
+  unnest(zonal)
+
+target_bias_zonal &lt;- m_cut_gamma(target_bias_zonal, &quot;gamma_mean&quot;)
+
+target_bias_zonal %&gt;%
+  ggplot(aes(dcant_mean, col = era)) +
+  geom_density()</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>target_bias_zonal %&gt;%
+  group_by(basin_AIP, era) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_section_zonal_continous_depth(
+      df = .x,
+      var = &quot;dcant_mean&quot;,
+      col = &quot;divergent&quot;,
+      plot_slabs = &quot;n&quot;,
+      subtitle_text = paste(
+        &quot;era: &quot;,
+        unique(.x$era),
+        &quot;| basin:&quot;,
+        unique(.x$basin_AIP)
+      )
+    )
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[4]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[5]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[6]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-7.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="write-csv" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Write csv</h1>
 <pre class="r"><code>target_average %&gt;%
   write_csv(paste(path_version_data,
                   &quot;target_3d.csv&quot;,
@@ -2023,7 +2458,15 @@ jens-daniel-mueller
 target_average_zonal %&gt;%
   write_csv(paste(path_version_data,
                   &quot;target_zonal.csv&quot;,
-                  sep = &quot;&quot;))</code></pre>
+                  sep = &quot;&quot;))
+
+target_average_profile %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;target_average_profile.csv&quot;, sep = &quot;&quot;))
+
+target_average_basin_MLR %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;target_average_profile_basin_MLR.csv&quot;, sep = &quot;&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2059,27 +2502,40 @@ other attached packages:
 [17] tidyverse_1.3.1  workflowr_1.7.0 
 
 loaded via a namespace (and not attached):
- [1] fs_1.5.2          bit64_4.0.5       lubridate_1.8.0   gsw_1.0-6        
- [5] httr_1.4.2        rprojroot_2.0.2   tools_4.1.2       backports_1.4.1  
- [9] bslib_0.3.1       utf8_1.2.2        R6_2.5.1          DBI_1.1.2        
-[13] withr_2.4.3       tidyselect_1.1.1  processx_3.5.2    bit_4.0.4        
-[17] compiler_4.1.2    git2r_0.29.0      cli_3.1.1         rvest_1.0.2      
-[21] xml2_1.3.3        isoband_0.2.5     labeling_0.4.2    sass_0.4.0       
-[25] scales_1.1.1      checkmate_2.0.0   SolveSAPHE_2.1.0  callr_3.7.0      
-[29] digest_0.6.29     rmarkdown_2.11    oce_1.5-0         pkgconfig_2.0.3  
-[33] htmltools_0.5.2   highr_0.9         dbplyr_2.1.1      fastmap_1.1.0    
-[37] rlang_1.0.2       readxl_1.3.1      rstudioapi_0.13   jquerylib_0.1.4  
-[41] generics_0.1.1    farver_2.1.0      jsonlite_1.7.3    vroom_1.5.7      
-[45] magrittr_2.0.1    Rcpp_1.0.8        munsell_0.5.0     fansi_1.0.2      
-[49] lifecycle_1.0.1   stringi_1.7.6     whisker_0.4       yaml_2.2.1       
-[53] MASS_7.3-55       grid_4.1.2        parallel_4.1.2    promises_1.2.0.1 
-[57] crayon_1.4.2      haven_2.4.3       hms_1.1.1         seacarb_3.3.0    
-[61] knitr_1.37        ps_1.6.0          pillar_1.6.4      reprex_2.0.1     
-[65] glue_1.6.0        evaluate_0.14     getPass_0.2-2     data.table_1.14.2
-[69] modelr_0.1.8      vctrs_0.3.8       tzdb_0.2.0        tweenr_1.0.2     
-[73] httpuv_1.6.5      cellranger_1.1.0  gtable_0.3.0      polyclip_1.10-0  
-[77] assertthat_0.2.1  xfun_0.29         broom_0.7.11      later_1.3.0      
-[81] viridisLite_0.4.0 ellipsis_0.3.2    here_1.0.1       </code></pre>
+  [1] ellipsis_0.3.2      rprojroot_2.0.2     htmlTable_2.4.0    
+  [4] base64enc_0.1-3     fs_1.5.2            rstudioapi_0.13    
+  [7] farver_2.1.0        bit64_4.0.5         fansi_1.0.2        
+ [10] lubridate_1.8.0     xml2_1.3.3          splines_4.1.2      
+ [13] knitr_1.37          polyclip_1.10-0     Formula_1.2-4      
+ [16] jsonlite_1.7.3      gsw_1.0-6           broom_0.7.11       
+ [19] cluster_2.1.2       dbplyr_2.1.1        png_0.1-7          
+ [22] compiler_4.1.2      httr_1.4.2          backports_1.4.1    
+ [25] assertthat_0.2.1    Matrix_1.4-0        fastmap_1.1.0      
+ [28] cli_3.1.1           later_1.3.0         tweenr_1.0.2       
+ [31] htmltools_0.5.2     tools_4.1.2         gtable_0.3.0       
+ [34] glue_1.6.0          Rcpp_1.0.8          cellranger_1.1.0   
+ [37] jquerylib_0.1.4     vctrs_0.3.8         xfun_0.29          
+ [40] ps_1.6.0            rvest_1.0.2         lifecycle_1.0.1    
+ [43] oce_1.5-0           getPass_0.2-2       MASS_7.3-55        
+ [46] scales_1.1.1        vroom_1.5.7         hms_1.1.1          
+ [49] promises_1.2.0.1    parallel_4.1.2      RColorBrewer_1.1-2 
+ [52] yaml_2.2.1          gridExtra_2.3       sass_0.4.0         
+ [55] rpart_4.1-15        latticeExtra_0.6-29 stringi_1.7.6      
+ [58] highr_0.9           checkmate_2.0.0     rlang_1.0.2        
+ [61] pkgconfig_2.0.3     evaluate_0.14       lattice_0.20-45    
+ [64] SolveSAPHE_2.1.0    htmlwidgets_1.5.4   labeling_0.4.2     
+ [67] bit_4.0.4           processx_3.5.2      tidyselect_1.1.1   
+ [70] here_1.0.1          seacarb_3.3.0       magrittr_2.0.1     
+ [73] R6_2.5.1            generics_0.1.1      Hmisc_4.6-0        
+ [76] DBI_1.1.2           pillar_1.6.4        haven_2.4.3        
+ [79] whisker_0.4         foreign_0.8-82      withr_2.4.3        
+ [82] survival_3.2-13     nnet_7.3-17         modelr_0.1.8       
+ [85] crayon_1.4.2        utf8_1.2.2          tzdb_0.2.0         
+ [88] rmarkdown_2.11      jpeg_0.1-9          grid_4.1.2         
+ [91] readxl_1.3.1        isoband_0.2.5       data.table_1.14.2  
+ [94] callr_3.7.0         git2r_0.29.0        reprex_2.0.1       
+ [97] digest_0.6.29       httpuv_1.6.5        munsell_0.5.0      
+[100] viridisLite_0.4.0   bslib_0.3.1        </code></pre>
 </div>
 </div>
 
