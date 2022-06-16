@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "test cruise-based data adjustment for NP 2010 data")
+wflow_publish(all = TRUE, message = "distuiguished data source")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -24,6 +24,7 @@ wflow_publish(here::here(
     "mapping_predictor_preparation.Rmd",
     "mapping_dcant_eMLR.Rmd",
     "mapping_dcant_mod_truth.Rmd",
+    "mapping_target_variable.Rmd",
     "analysis_budgets.Rmd",
     "analysis_column_inventory.Rmd",
     "analysis_zonal_sections.Rmd",
@@ -33,29 +34,8 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "test cruise-based data adjustment for NP 2010 data",
+message = "testrun with target variable mapping",
 republish = TRUE)
-
-
-wflow_publish(here::here(
-  "analysis",
-  c(
-    "eMLR_data_preparation.Rmd",
-    "eMLR_assumption_testing.Rmd",
-    "eMLR_model_fitting.Rmd",
-    "mapping_predictor_preparation.Rmd",
-    "mapping_dcant_eMLR.Rmd",
-    "mapping_dcant_mod_truth.Rmd",
-    "analysis_budgets.Rmd",
-    "analysis_column_inventory.Rmd",
-    "analysis_zonal_sections.Rmd",
-    "analysis_slab_inventory.Rmd",
-    "analysis_MLR_performance.Rmd",
-    "analysis_anomalous_changes.Rmd",
-    "tracers_GLODAPv2_2021.Rmd"
-  )
-),
-message = "test cruise-based data adjustment for IO 1990 data")
 
 
 # Push latest version to GitHub
@@ -86,15 +66,15 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1t")#[3:6]
+  pattern = "v_1s")#[c(4)]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_2t")#[6]
+  pattern = "v_2s")#[c(4)]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_3t")#[4:6]
+  pattern = "v_3s")#[c(4,2)]
 
 Version_IDs <- c(
   Version_IDs_1,

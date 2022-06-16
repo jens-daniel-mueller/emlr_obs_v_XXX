@@ -106,7 +106,8 @@ rm(predictors, lm_best_target)
 target <- b_target_model(target)
 
 target <- target %>%
-  select(lon,
+  select(data_source,
+         lon,
          lat,
          depth,
          era,
@@ -135,7 +136,7 @@ For each basin and era combination, the zonal mean of the target variable is cal
 ```{r Calculate_target_mean_sections}
 
 target_average_zonal <- target_average %>%
-  group_by(era) %>%
+  group_by(data_source, era) %>%
   nest() %>%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
@@ -145,12 +146,13 @@ target_average_zonal <- m_cut_gamma(target_average_zonal, "gamma_mean")
 
 target_average_zonal %>%
   ggplot(aes_string(paste0(params_local$MLR_target, "_mean"), col = "era")) +
-  geom_density()
+  geom_density() +
+  facet_grid(. ~ data_source)
 
 target_average_zonal %>%
-  group_by(basin_AIP, era) %>%
+  group_by(basin_AIP, data_source, era) %>%
   group_split() %>%
-  # head(1) %>%
+  head(1) %>%
   map(
     ~ p_section_zonal_continous_depth(
       df = .x,
@@ -159,6 +161,8 @@ target_average_zonal %>%
       plot_slabs = "n",
       subtitle_text = paste(
         "data_source: ",
+        unique(.x$data_source),
+        "| era: ",
         unique(.x$era),
         "| basin:",
         unique(.x$basin_AIP)
