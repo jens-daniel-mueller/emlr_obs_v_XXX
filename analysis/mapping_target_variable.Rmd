@@ -278,6 +278,8 @@ target_bias <- target_bias %>%
 
 For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
 
+### C* bias
+
 ```{r Calculate_target_bias_mean_sections}
 
 target_bias_zonal <- target_bias %>%
@@ -310,6 +312,40 @@ target_bias_zonal %>%
         "| basin:",
         unique(.x$basin_AIP)
       )
+    )
+  )
+
+```
+
+### C* bias offset
+
+```{r Calculate_target_bias_mean_sections_offset}
+
+target_bias_zonal <- target_bias_zonal %>% 
+  arrange(basin_AIP, lat, depth, era) %>% 
+  group_by(basin_AIP, lat, depth) %>% 
+  mutate(dcant_mean_bias = dcant_mean - lag(dcant_mean)) %>% 
+  ungroup()
+
+target_bias_zonal %>%
+  ggplot() +
+  geom_density(aes(dcant_mean, col = era)) +
+  geom_density(aes(dcant_mean_bias, col = "bias"))
+
+
+target_bias_zonal %>%
+  filter(!is.na(dcant_mean_bias)) %>%
+  group_by(basin_AIP) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_section_zonal_continous_depth(
+      df = .x,
+      var = "dcant_mean_bias",
+      col = "divergent",
+      plot_slabs = "n",
+      subtitle_text = paste("basin:",
+                            unique(.x$basin_AIP))
     )
   )
 
