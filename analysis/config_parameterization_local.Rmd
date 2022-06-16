@@ -35,7 +35,7 @@ gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_fille
 
 gobm_select <- gobms[c(1,2,3,5,8)]
 gobm_select <- gobm_select[4]
-gobm_select <- "CESM-ETHZ_v20211122"
+gobm_select <- "CESM-ETHZ_v20211122_monthly"
 
 rm(path_preprocessing, gobms)
 
@@ -128,9 +128,9 @@ params_local <-
       "31DS19940126"
     ),
     # Shallowest depth for data to be included in MLR fitting
-    depth_min = 100, 
+    depth_min = 0, 
     # Depth to extend the surface dcant estimate in mapping
-    depth_mapping = 200,
+    depth_mapping = 0,
     # Shallowest water depth for data to be included in MLR fitting
     bottomdepth_min = 0,
     # Lowest neutral density to map dcant with eMLR approach

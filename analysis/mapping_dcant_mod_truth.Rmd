@@ -36,6 +36,9 @@ if (params$Version_ID == "v_XXX") {
     )
 }
 
+if (params_local$gobm == "CESM-ETHZ_v20211122_monthly") {
+  params_local$gobm <- "CESM-ETHZ_v20211122"
+}
 
 ```
 
@@ -531,6 +534,19 @@ dcant_profile <- dcant_3d %>%
 
 ```
 
+```{r calc_cant_profiles_cstar}
+
+dcant_profile_cstar <- dcant_3d_cstar %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(data_source, basin_AIP, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+```
+
 
 
 ## Inventories
@@ -581,7 +597,7 @@ p_map_cant_inv(df = dcant_inv_cstar,
   facet_grid(inv_depth ~ data_source)
 
 if (surface_data == FALSE){
-  dcant_inv <- dcant_inv %>% 
+  dcant_inv_cstar <- dcant_inv_cstar %>% 
     mutate(method = "total")
 }
 
@@ -1106,6 +1122,10 @@ dcant_3d_cstar %>%
 dcant_zonal_cstar %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal_cstar.csv", sep = ""))
+
+dcant_profile_cstar %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_mod_truth_cstar.csv", sep = ""))
 
 dcant_zonal_method_cstar %>% 
   write_csv(paste(path_version_data,

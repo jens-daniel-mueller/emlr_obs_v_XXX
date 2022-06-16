@@ -112,7 +112,13 @@ dcant_inv_mod_truth_method <-
                  "dcant_inv_mod_truth_method.csv",
                  sep = ""))
 
-dcant_inv_method <- bind_rows(dcant_inv_method, dcant_inv_mod_truth_method)
+# check if surface data exist
+surface_data <- nrow(dcant_inv_mod_truth_method) > 0
+
+if (surface_data) {
+  dcant_inv_method <-
+    bind_rows(dcant_inv_method, dcant_inv_mod_truth_method)
+}
 
 ```
 
@@ -203,13 +209,6 @@ dcant_inv %>%
 ```
 
 ## Surface
-
-```{r test_surface_data}
-
-surface_data <- nrow(dcant_inv_method %>% filter(method == "surface")) > 0
-
-```
-
 
 ```{r dcant_all_inventory_map_method, fig.asp=0.5, eval=surface_data}
 
