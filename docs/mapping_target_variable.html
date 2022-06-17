@@ -462,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Mapping target variable</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">16 June, 2022</h4>
+<h4 class="date">17 June, 2022</h4>
 
 </div>
 
@@ -487,7 +487,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-16
+<strong>Last updated:</strong> 2022-06-17
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree08dc93c74df54af32ea5f920965a354882dc001etargetblank08dc93ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/08dc93c74df54af32ea5f920965a354882dc001e" target="_blank">08dc93c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree08dc93c74df54af32ea5f920965a354882dc001etargetblank08dc93ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/08dc93c74df54af32ea5f920965a354882dc001e" target="_blank">08dc93c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -596,10 +596,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -638,6 +634,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/08dc93c74df54af32ea5f920965a354882dc001e/analysis/mapping_target_variable.Rmd" target="_blank">08dc93c</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-17
+</td>
+<td>
+included column inventory maps and calculation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/mapping_target_variable.html" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1717,24 +1747,24 @@ target &lt;- target %&gt;%
 </div>
 <div id="average-model-target-variable" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Average model target variable</h2>
-<pre class="r"><code>target_average &lt;- m_target_model_average(target)
-target_average &lt;- m_cut_gamma(target_average, &quot;gamma&quot;)
+<pre class="r"><code>target_3d &lt;- m_target_model_average(target)
+target_3d &lt;- m_cut_gamma(target_3d, &quot;gamma&quot;)
 
 rm(target)</code></pre>
 </div>
 <div id="zonal-mean-sections" class="section level2" number="4.3">
 <h2><span class="header-section-number">4.3</span> Zonal mean sections</h2>
 <p>For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
-<pre class="r"><code>target_average_zonal &lt;- target_average %&gt;%
+<pre class="r"><code>target_zonal &lt;- target_3d %&gt;%
   group_by(data_source, era) %&gt;%
   nest() %&gt;%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(zonal)
 
-target_average_zonal &lt;- m_cut_gamma(target_average_zonal, &quot;gamma_mean&quot;)
+target_zonal &lt;- m_cut_gamma(target_zonal, &quot;gamma_mean&quot;)
 
-target_average_zonal %&gt;%
+target_zonal %&gt;%
   ggplot(aes_string(paste0(params_local$MLR_target, &quot;_mean&quot;), col = &quot;era&quot;)) +
   geom_density() +
   facet_grid(. ~ data_source)</code></pre>
@@ -1761,6 +1791,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-1.png" target="_blank">469a640</a>
@@ -1798,7 +1839,7 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>target_average_zonal %&gt;%
+<pre class="r"><code>target_zonal %&gt;%
   group_by(basin_AIP, data_source, era) %&gt;%
   group_split() %&gt;%
   # head(1) %&gt;%
@@ -1842,6 +1883,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-2.png" target="_blank">469a640</a>
@@ -1915,6 +1967,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-3.png" target="_blank">469a640</a>
@@ -2001,6 +2064,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-4.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2083,6 +2157,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-5.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-5.png" target="_blank">469a640</a>
@@ -2169,6 +2254,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-6.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-6.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2251,6 +2347,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-7.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-7.png" target="_blank">469a640</a>
@@ -2337,6 +2444,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-8.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-8.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2397,6 +2515,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-9.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-9.png" target="_blank">469a640</a>
@@ -2461,6 +2590,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-10.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-10.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2521,6 +2661,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-11.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-11.png" target="_blank">469a640</a>
@@ -2585,6 +2736,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-12.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-12.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2647,6 +2809,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-13.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_mean_sections-13.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -2688,7 +2861,7 @@ jens-daniel-mueller
 <p>For each basin, the mean (+ min and max) dcant profile is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
 <pre class="r"><code>var &lt;- sym(params_local$MLR_target)
 
-target_average_profile &lt;- target_average %&gt;%
+target_profile &lt;- target_3d %&gt;%
   mutate(area = earth_surf(lat, lon),
          !!paste0(var, &quot;_scaled&quot;) :=
            !!var * area) %&gt;%
@@ -2696,9 +2869,9 @@ target_average_profile &lt;- target_average %&gt;%
   summarise(!!paste0(var, &quot;_sd&quot;) := sqrt(Hmisc::wtd.var(!!var, area, na.rm = TRUE)),
             !!var := sum(!!sym(paste0(var, &quot;_scaled&quot;))) / sum(area)) %&gt;%
   ungroup()</code></pre>
-<pre class="r"><code>target_average_basin_MLR &lt;-
+<pre class="r"><code>target_profile_basin_MLR &lt;-
   full_join(
-    target_average %&gt;% select(data_source, lon, lat, depth, !!var),
+    target_3d %&gt;% select(data_source, lon, lat, depth, !!var),
     basinmask %&gt;% select(MLR_basins, basin, lon, lat)
   ) %&gt;%
   mutate(area = earth_surf(lat, lon),
@@ -2713,8 +2886,6 @@ target_average_profile &lt;- target_average %&gt;%
 </div>
 <div id="join-true-c" class="section level1" number="5">
 <h1><span class="header-section-number">5</span> Join true C*</h1>
-<pre class="r"><code>unique(tref$era[1])</code></pre>
-<pre><code>[1] &quot;2000-2009&quot;</code></pre>
 <pre class="r"><code>dcant_3d_cstar &lt;- dcant_3d_cstar %&gt;% 
   mutate(data_source = if_else(data_source == &quot;po4&quot;,
                                &quot;phosphate&quot;,
@@ -2731,83 +2902,36 @@ dcant_3d_cstar &lt;- dcant_3d_cstar %&gt;%
                        unique(tref$era[1]),
                        unique(tref$era[2])))
 
-target_bias &lt;- inner_join(
-  target_average %&gt;% 
+target_3d &lt;- inner_join(
+  target_3d %&gt;% 
     filter(data_source == &quot;mod&quot;) %&gt;% 
     select(-data_source),
   dcant_3d_cstar
 )
 
-target_bias &lt;- target_bias %&gt;% 
+target_3d &lt;- target_3d %&gt;% 
   mutate(dcant = cstar_tref - cstar_tref_mod_truth) %&gt;% 
   select(lat, lon, depth, basin_AIP, era, gamma, dcant)</code></pre>
-<div id="zonal-mean-sections-1" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Zonal mean sections</h2>
+</div>
+<div id="zonal-mean-sections-1" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Zonal mean sections</h1>
 <p>For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.</p>
-<div id="c-bias" class="section level3" number="5.1.1">
-<h3><span class="header-section-number">5.1.1</span> C* bias</h3>
-<pre class="r"><code>target_bias_zonal &lt;- target_bias %&gt;%
+<div id="c-bias" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> C* bias</h2>
+<pre class="r"><code>target_zonal &lt;- target_3d %&gt;%
   group_by(era) %&gt;%
   nest() %&gt;%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(zonal)
 
-target_bias_zonal &lt;- m_cut_gamma(target_bias_zonal, &quot;gamma_mean&quot;)
+target_zonal &lt;- m_cut_gamma(target_zonal, &quot;gamma_mean&quot;)
 
-target_bias_zonal %&gt;%
+target_zonal %&gt;%
   ggplot(aes(dcant_mean, col = era)) +
   geom_density()</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-1">
-Past versions of Calculate_target_bias_mean_sections-1.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-1.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-1.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>target_bias_zonal %&gt;%
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>target_zonal %&gt;%
   group_by(basin_AIP, era) %&gt;%
   group_split() %&gt;%
   # head(1) %&gt;%
@@ -2826,439 +2950,37 @@ jens-daniel-mueller
     )
   )</code></pre>
 <pre><code>[[1]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-2">
-Past versions of Calculate_target_bias_mean_sections-2.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-2.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-2.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-2.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[2]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-3">
-Past versions of Calculate_target_bias_mean_sections-3.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-3.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-3.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-3.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[3]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-4">
-Past versions of Calculate_target_bias_mean_sections-4.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-4.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-4.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-4.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[4]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-5">
-Past versions of Calculate_target_bias_mean_sections-5.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-5.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-5.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-5.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-5.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[5]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-6">
-Past versions of Calculate_target_bias_mean_sections-6.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-6" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-6.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-6.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-6.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-6.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[6]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-7.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections-7">
-Past versions of Calculate_target_bias_mean_sections-7.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections-7" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-7.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-7.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/73685d9d02fbdea17162a0fe581c2bfeaea9d790/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections-7.png" target="_blank">73685d9</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections-7.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-</div>
-</div>
-<div id="c-bias-offset" class="section level3" number="5.1.2">
-<h3><span class="header-section-number">5.1.2</span> C* bias offset</h3>
-<pre class="r"><code>target_bias_zonal &lt;- target_bias_zonal %&gt;% 
+<div id="c-bias-offset" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> C* bias offset</h2>
+<pre class="r"><code>target_zonal &lt;- target_zonal %&gt;% 
   arrange(basin_AIP, lat, depth, era) %&gt;% 
   group_by(basin_AIP, lat, depth) %&gt;% 
   mutate(dcant_mean_bias = dcant_mean - lag(dcant_mean)) %&gt;% 
   ungroup()
 
-target_bias_zonal %&gt;%
+target_zonal %&gt;%
   ggplot() +
   geom_density(aes(dcant_mean, col = era)) +
   geom_density(aes(dcant_mean_bias, col = &quot;bias&quot;))</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections_offset-1">
-Past versions of Calculate_target_bias_mean_sections_offset-1.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections_offset-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-1.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-1.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>target_bias_zonal %&gt;%
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>target_zonal %&gt;%
   filter(!is.na(dcant_mean_bias)) %&gt;%
   group_by(basin_AIP) %&gt;%
   group_split() %&gt;%
@@ -3274,179 +2996,85 @@ jens-daniel-mueller
     )
   )</code></pre>
 <pre><code>[[1]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections_offset-2">
-Past versions of Calculate_target_bias_mean_sections_offset-2.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections_offset-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-2.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-2.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[2]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections_offset-3">
-Past versions of Calculate_target_bias_mean_sections_offset-3.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections_offset-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-3.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-3.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections_offset-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>
 [[3]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-Calculate_target_bias_mean_sections_offset-4">
-Past versions of Calculate_target_bias_mean_sections_offset-4.png
-</button>
-</p>
-<div id="fig-Calculate_target_bias_mean_sections_offset-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-4.png" target="_blank">469a640</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/b7af400ceebb49ea587df91ff3d2218af0d82d2c/docs/figure/mapping_target_variable.Rmd/Calculate_target_bias_mean_sections_offset-4.png" target="_blank">b7af400</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-16
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_3d_mean_sections_offset-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="inventory-calculation" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Inventory calculation</h2>
+<p>To calculate dcant column inventories, we:</p>
+<ol style="list-style-type: decimal">
+<li>Convert dcant concentrations to volumetric units</li>
+<li>Multiply layer thickness with volumetric dcant concentration to get a layer inventory</li>
+<li>For each horizontal grid cell and era, sum dcant layer inventories for different inventory depths (100, 500, 1000, 3000, 10^{4} m)</li>
+</ol>
+<p>Step 2 is performed separately for all dcant and positive dcant values only.</p>
+</div>
+<div id="c-bias-1" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> C* bias</h2>
+<pre class="r"><code>target_inv &lt;- target_3d %&gt;%
+  mutate(dcant_pos = dcant) %&gt;% 
+  group_by(era) %&gt;%
+  nest() %&gt;%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %&gt;%
+  select(-data) %&gt;%
+  unnest(inv)
+
+p_map_cant_inv(df = target_inv,
+               var = &quot;dcant&quot;,
+               col = &quot;bias&quot;,
+               subtitle_text = &quot;for predefined integration depths&quot;) +
+  facet_grid(inv_depth ~ era)</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_inventory-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="c-bias-offset-1" class="section level2" number="6.5">
+<h2><span class="header-section-number">6.5</span> C* bias offset</h2>
+<pre class="r"><code>target_inv &lt;- target_inv %&gt;% 
+  arrange(era) %&gt;% 
+  group_by(basin_AIP, lat, lon, inv_depth) %&gt;% 
+  mutate(dcant_mean_bias = dcant - lag(dcant)) %&gt;% 
+  ungroup()
+
+target_inv %&gt;%
+  ggplot() +
+  geom_density(aes(dcant, col = era)) +
+  geom_density(aes(dcant_mean_bias, col = &quot;bias&quot;))</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_inventory_offset-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p_map_cant_inv(df = target_inv %&gt;% filter(!is.na(dcant_mean_bias)),
+               var = &quot;dcant_mean_bias&quot;,
+               col = &quot;bias&quot;,
+               subtitle_text = &quot;for predefined integration depths&quot;) +
+  facet_grid(inv_depth ~ .)</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/calculate_target_inventory_offset-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div id="write-csv" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Write csv</h1>
-<pre class="r"><code>target_average %&gt;%
+<div id="write-csv" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Write csv</h1>
+<pre class="r"><code>target_3d %&gt;%
   write_csv(paste(path_version_data,
                   &quot;target_3d.csv&quot;,
                   sep = &quot;&quot;))
 
-target_average_zonal %&gt;%
+target_zonal %&gt;%
   write_csv(paste(path_version_data,
                   &quot;target_zonal.csv&quot;,
                   sep = &quot;&quot;))
 
-target_average_profile %&gt;%
+target_profile %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;target_average_profile.csv&quot;, sep = &quot;&quot;))
+                  &quot;target_profile.csv&quot;, sep = &quot;&quot;))
 
-target_average_basin_MLR %&gt;%
+target_profile_basin_MLR %&gt;%
   write_csv(paste(path_version_data,
-                  &quot;target_average_profile_basin_MLR.csv&quot;, sep = &quot;&quot;))</code></pre>
+                  &quot;target_profile_basin_MLR.csv&quot;, sep = &quot;&quot;))
+
+target_inv %&gt;%
+  write_csv(paste(path_version_data,
+                  &quot;target_inv.csv&quot;, sep = &quot;&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
