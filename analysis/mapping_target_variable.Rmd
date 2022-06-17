@@ -349,7 +349,7 @@ target_zonal %>%
 
 ```
 
-## Inventory calculation
+# Inventory calculation
 
 To calculate dcant column inventories, we:  
 
@@ -404,6 +404,126 @@ p_map_cant_inv(df = target_inv %>% filter(!is.na(dcant_mean_bias)),
 
 ```
 
+
+# Budgets
+
+Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
+
+```{r budget_global}
+
+target_inv <- target_inv %>%
+  mutate(data_source = "mod",
+         method = "total")
+
+target_budget_global <- m_dcant_budget(target_inv)
+
+target_budget_global %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method == "total") %>%
+  ggplot(aes(estimate, value)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+
+```{r budget_basin_AIP}
+
+target_budget_basin_AIP <- target_inv %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+
+```{r budget_depth_layer_basin_AIP, eval=FALSE}
+
+dcant_budget_basin_AIP_layer <-
+  dcant_inv_layer %>%
+  mutate(method = "layer") %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_AIP_layer %>%
+  filter(estimate == "dcant") %>% 
+  ggplot(aes(value, as.factor(inv_depth), fill = basin_AIP)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  scale_y_discrete(limits = rev) +
+  facet_grid(~data_source)
+
+```
+
+
+
+```{r budget_MLR_regions}
+
+target_budget_basin_MLR <-
+  full_join(target_inv, basinmask) %>%
+  group_by(basin, MLR_basins) %>%
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+```{r budget_depth_layer_basin_MLR, eval=FALSE}
+
+dcant_budget_basin_MLR_layer <-
+  full_join(dcant_inv_layer, basinmask) %>%
+  mutate(method = "layer") %>% 
+  group_by(MLR_basins, basin) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_MLR_layer %>%
+  filter(estimate == "dcant",
+         MLR_basins == "5") %>% 
+  drop_na() %>% 
+  ggplot(aes(value, as.factor(inv_depth), fill = basin)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  scale_y_discrete(limits = rev) +
+  facet_grid(~data_source)
+
+```
+
+```{r budget_lat_grid, fig.asp=1}
+
+target_budget_lat_grid <- 
+  target_inv %>% 
+  m_grid_horizontal_coarse() %>%
+  group_by(lat_grid, basin_AIP) %>% 
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+
+```{r budget_lon_grid}
+
+target_budget_lon_grid <- 
+  target_inv %>% 
+  m_grid_horizontal_coarse() %>%
+  group_by(lon_grid, basin_AIP) %>% 
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+```
 
 # Write csv
 
