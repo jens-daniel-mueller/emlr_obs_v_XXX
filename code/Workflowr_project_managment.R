@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "calculated cstar offset era bias")
+wflow_publish(all = TRUE, message = "included column inventory maps and calculation")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -34,7 +34,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "testrun with target variable mapping",
+message = "rerun era2",
 republish = TRUE)
 
 

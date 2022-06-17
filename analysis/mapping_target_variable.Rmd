@@ -147,8 +147,8 @@ target <- target %>%
 
 ```{r calc_target_variable_mean}
 
-target_average <- m_target_model_average(target)
-target_average <- m_cut_gamma(target_average, "gamma")
+target_3d <- m_target_model_average(target)
+target_3d <- m_cut_gamma(target_3d, "gamma")
 
 rm(target)
 
@@ -160,21 +160,21 @@ For each basin and era combination, the zonal mean of the target variable is cal
 
 ```{r Calculate_target_mean_sections}
 
-target_average_zonal <- target_average %>%
+target_zonal <- target_3d %>%
   group_by(data_source, era) %>%
   nest() %>%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(zonal)
 
-target_average_zonal <- m_cut_gamma(target_average_zonal, "gamma_mean")
+target_zonal <- m_cut_gamma(target_zonal, "gamma_mean")
 
-target_average_zonal %>%
+target_zonal %>%
   ggplot(aes_string(paste0(params_local$MLR_target, "_mean"), col = "era")) +
   geom_density() +
   facet_grid(. ~ data_source)
 
-target_average_zonal %>%
+target_zonal %>%
   group_by(basin_AIP, data_source, era) %>%
   group_split() %>%
   # head(1) %>%
@@ -205,7 +205,7 @@ For each basin, the mean (+ min and max) dcant profile is calculated, again for 
 
 var <- sym(params_local$MLR_target)
 
-target_average_profile <- target_average %>%
+target_profile <- target_3d %>%
   mutate(area = earth_surf(lat, lon),
          !!paste0(var, "_scaled") :=
            !!var * area) %>%
@@ -220,9 +220,9 @@ target_average_profile <- target_average %>%
 
 ```{r calc_target_profiles_MLR_regions}
 
-target_average_basin_MLR <-
+target_profile_basin_MLR <-
   full_join(
-    target_average %>% select(data_source, lon, lat, depth, !!var),
+    target_3d %>% select(data_source, lon, lat, depth, !!var),
     basinmask %>% select(MLR_basins, basin, lon, lat)
   ) %>%
   mutate(area = earth_surf(lat, lon),
@@ -243,8 +243,6 @@ target_average_basin_MLR <-
 
 ```{r join_cstar_true_and_predicted}
 
-unique(tref$era[1])
-
 dcant_3d_cstar <- dcant_3d_cstar %>% 
   mutate(data_source = if_else(data_source == "po4",
                                "phosphate",
@@ -261,42 +259,42 @@ dcant_3d_cstar <- dcant_3d_cstar %>%
                        unique(tref$era[1]),
                        unique(tref$era[2])))
 
-target_bias <- inner_join(
-  target_average %>% 
+target_3d <- inner_join(
+  target_3d %>% 
     filter(data_source == "mod") %>% 
     select(-data_source),
   dcant_3d_cstar
 )
 
-target_bias <- target_bias %>% 
+target_3d <- target_3d %>% 
   mutate(dcant = cstar_tref - cstar_tref_mod_truth) %>% 
   select(lat, lon, depth, basin_AIP, era, gamma, dcant)
 
 ```
 
-## Zonal mean sections
+# Zonal mean sections
 
 For each basin and era combination, the zonal mean of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
 
-### C* bias
+## C* bias
 
-```{r Calculate_target_bias_mean_sections}
+```{r calculate_target_3d_mean_sections}
 
-target_bias_zonal <- target_bias %>%
+target_zonal <- target_3d %>%
   group_by(era) %>%
   nest() %>%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(zonal)
 
-target_bias_zonal <- m_cut_gamma(target_bias_zonal, "gamma_mean")
+target_zonal <- m_cut_gamma(target_zonal, "gamma_mean")
 
-target_bias_zonal %>%
+target_zonal %>%
   ggplot(aes(dcant_mean, col = era)) +
   geom_density()
 
 
-target_bias_zonal %>%
+target_zonal %>%
   group_by(basin_AIP, era) %>%
   group_split() %>%
   # head(1) %>%
@@ -317,23 +315,23 @@ target_bias_zonal %>%
 
 ```
 
-### C* bias offset
+## C* bias offset
 
-```{r Calculate_target_bias_mean_sections_offset}
+```{r calculate_target_3d_mean_sections_offset}
 
-target_bias_zonal <- target_bias_zonal %>% 
+target_zonal <- target_zonal %>% 
   arrange(basin_AIP, lat, depth, era) %>% 
   group_by(basin_AIP, lat, depth) %>% 
   mutate(dcant_mean_bias = dcant_mean - lag(dcant_mean)) %>% 
   ungroup()
 
-target_bias_zonal %>%
+target_zonal %>%
   ggplot() +
   geom_density(aes(dcant_mean, col = era)) +
   geom_density(aes(dcant_mean_bias, col = "bias"))
 
 
-target_bias_zonal %>%
+target_zonal %>%
   filter(!is.na(dcant_mean_bias)) %>%
   group_by(basin_AIP) %>%
   group_split() %>%
@@ -351,29 +349,87 @@ target_bias_zonal %>%
 
 ```
 
+## Inventory calculation
+
+To calculate dcant column inventories, we:  
+
+1. Convert dcant concentrations to volumetric units
+2. Multiply layer thickness with volumetric dcant concentration to get a layer inventory
+3. For each horizontal grid cell and era, sum dcant layer inventories for different inventory depths (`r params_global$inventory_depths` m)
+
+Step 2 is performed separately for all dcant and positive dcant values only.
+
+## C* bias
+
+```{r calculate_target_inventory, fig.asp=1}
+
+target_inv <- target_3d %>%
+  mutate(dcant_pos = dcant) %>% 
+  group_by(era) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(df = target_inv,
+               var = "dcant",
+               col = "bias",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ era)
+
+
+```
+
+## C* bias offset
+
+```{r calculate_target_inventory_offset}
+
+target_inv <- target_inv %>% 
+  arrange(era) %>% 
+  group_by(basin_AIP, lat, lon, inv_depth) %>% 
+  mutate(dcant_mean_bias = dcant - lag(dcant)) %>% 
+  ungroup()
+
+target_inv %>%
+  ggplot() +
+  geom_density(aes(dcant, col = era)) +
+  geom_density(aes(dcant_mean_bias, col = "bias"))
+
+
+p_map_cant_inv(df = target_inv %>% filter(!is.na(dcant_mean_bias)),
+               var = "dcant_mean_bias",
+               col = "bias",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ .)
+
+```
 
 
 # Write csv
 
 ```{r write_target_files}
 
-target_average %>%
+target_3d %>%
   write_csv(paste(path_version_data,
                   "target_3d.csv",
                   sep = ""))
 
-target_average_zonal %>%
+target_zonal %>%
   write_csv(paste(path_version_data,
                   "target_zonal.csv",
                   sep = ""))
 
-target_average_profile %>%
+target_profile %>%
   write_csv(paste(path_version_data,
-                  "target_average_profile.csv", sep = ""))
+                  "target_profile.csv", sep = ""))
 
-target_average_basin_MLR %>%
+target_profile_basin_MLR %>%
   write_csv(paste(path_version_data,
-                  "target_average_profile_basin_MLR.csv", sep = ""))
+                  "target_profile_basin_MLR.csv", sep = ""))
+
+target_inv %>%
+  write_csv(paste(path_version_data,
+                  "target_inv.csv", sep = ""))
 
 
 ```
