@@ -643,6 +643,12 @@ rm(IO_EW, IO_EW_grid, IO_EW_grid_offset, GLODAP_grid_Indian)
 ```{r zonal_sections, fig.asp=1}
 
 zonal_sections <- GLODAP %>% 
+  mutate(basin_AIP = if_else(basin_AIP == "Pacific" & lon < 200,
+                             "Western Pacific",
+                             basin_AIP),
+         basin_AIP = if_else(basin_AIP == "Pacific",
+                             "Eastern Pacific",
+                             basin_AIP)) %>% 
   select(lat, lon, depth, era, basin_AIP, pcfc12) %>% 
   group_by(era) %>%
   nest() %>%

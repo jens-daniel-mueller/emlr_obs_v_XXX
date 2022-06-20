@@ -405,6 +405,21 @@ p_map_cant_inv(df = target_inv %>% filter(!is.na(dcant_mean_bias)),
 ```
 
 
+```{r calculate_gamma_slab_maps, eval=FALSE}
+
+target_slab <- target_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(slab = map(.x = data, ~ m_dcant_slab_concentration(.x))) %>%
+  select(-data) %>%
+  unnest(slab)
+
+dcant_slab <- dcant_slab %>% 
+  arrange(gamma_slab, data_source)
+
+```
+
+
 # Budgets
 
 Global dcant budgets were estimated in units of Pg C. Please note that here we added dcant (all vs postitive only) values and do not apply additional corrections for areas not covered.
