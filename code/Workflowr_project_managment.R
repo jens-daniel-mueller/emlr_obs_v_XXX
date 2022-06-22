@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "included budget calcualtion and plots")
+wflow_publish(all = TRUE, message = "revised budget calcualtion and plots")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)

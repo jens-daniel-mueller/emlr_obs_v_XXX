@@ -175,24 +175,19 @@ target_zonal %>%
   facet_grid(. ~ data_source)
 
 target_zonal %>%
-  group_by(basin_AIP, data_source, era) %>%
+  group_by(basin_AIP) %>%
   group_split() %>%
   # head(1) %>%
   map(
     ~ p_section_zonal_continous_depth(
       df = .x,
       var = paste0(params_local$MLR_target, "_mean"),
-      breaks = seq(740,940,20),
+      breaks = seq(740, 940, 20),
       plot_slabs = "n",
-      subtitle_text = paste(
-        "data_source: ",
-        unique(.x$data_source),
-        "| era: ",
-        unique(.x$era),
-        "| basin:",
-        unique(.x$basin_AIP)
-      )
-    )
+      subtitle_text = paste("basin:",
+                            unique(.x$basin_AIP))
+    ) +
+      facet_grid(era ~ data_source)
   )
 
 ```
@@ -322,7 +317,7 @@ target_zonal %>%
 
 ## C* bias offset
 
-```{r calculate_target_3d_mean_sections_offset}
+```{r calculate_target_3d_mean_sections_offset, fig.asp=1}
 
 target_zonal <- target_zonal %>% 
   arrange(basin_AIP, lat, depth, era) %>% 
@@ -338,19 +333,10 @@ target_zonal %>%
 
 target_zonal %>%
   filter(!is.na(dcant_mean_bias)) %>%
-  group_by(basin_AIP) %>%
-  group_split() %>%
-  # head(1) %>%
-  map(
-    ~ p_section_zonal_continous_depth(
-      df = .x,
-      var = "dcant_mean_bias",
-      col = "divergent",
-      plot_slabs = "n",
-      subtitle_text = paste("basin:",
-                            unique(.x$basin_AIP))
-    )
-  )
+  p_section_zonal_continous_depth(var = "dcant_mean_bias",
+                                  col = "divergent",
+                                  plot_slabs = "n") +
+  facet_grid(basin_AIP ~ .)
 
 ```
 
