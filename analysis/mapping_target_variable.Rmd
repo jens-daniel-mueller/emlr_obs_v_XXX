@@ -303,7 +303,7 @@ target_zonal %>%
 
 
 target_zonal %>%
-  group_by(basin_AIP, era) %>%
+  group_by(basin_AIP) %>%
   group_split() %>%
   # head(1) %>%
   map(
@@ -312,13 +312,10 @@ target_zonal %>%
       var = "dcant_mean",
       col = "divergent",
       plot_slabs = "n",
-      subtitle_text = paste(
-        "era: ",
-        unique(.x$era),
-        "| basin:",
-        unique(.x$basin_AIP)
-      )
-    )
+      subtitle_text = paste("basin:",
+                            unique(.x$basin_AIP))
+    ) +
+      facet_grid(era ~ .)
   )
 
 ```
@@ -487,13 +484,15 @@ target_inv <- target_inv %>%
 
 target_budget_global <- m_dcant_budget(target_inv)
 
+target_budget_global <- target_budget_global %>%
+  mutate(inv_depth = as.factor(inv_depth))
+
 target_budget_global %>%
-  filter(inv_depth == params_global$inventory_depth_standard,
-         method == "total") %>%
-  ggplot(aes(estimate, value)) +
-  scale_fill_brewer(palette = "Dark2") +
-  geom_col() +
-  facet_grid(~data_source)
+  filter(estimate == "dcant") %>% 
+  ggplot() +
+  scale_fill_viridis_d() +
+  geom_col(aes(value, inv_depth)) +
+  scale_y_discrete(limits=rev)
 
 ```
 
@@ -505,32 +504,22 @@ target_budget_basin_AIP <- target_inv %>%
   nest() %>% 
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
   select(-data) %>%
-  unnest(budget)
+  unnest(budget) %>% 
+  ungroup()
 
-```
+target_budget_basin_AIP <- target_budget_basin_AIP %>% 
+  mutate(inv_depth = as.factor(inv_depth))
 
-
-```{r budget_depth_layer_basin_AIP, eval=FALSE}
-
-dcant_budget_basin_AIP_layer <-
-  dcant_inv_layer %>%
-  mutate(method = "layer") %>% 
-  group_by(basin_AIP) %>%
-  nest() %>% 
-  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
-  select(-data) %>%
-  unnest(budget)
-
-dcant_budget_basin_AIP_layer %>%
+target_budget_basin_AIP %>%
   filter(estimate == "dcant") %>% 
-  ggplot(aes(value, as.factor(inv_depth), fill = basin_AIP)) +
-  scale_fill_brewer(palette = "Dark2") +
-  geom_col() +
-  scale_y_discrete(limits = rev) +
-  facet_grid(~data_source)
+  ggplot() +
+  geom_vline(xintercept = 0) +
+  scale_fill_viridis_d() +
+  geom_col(aes(value, inv_depth)) +
+  scale_y_discrete(limits=rev) +
+  facet_grid(.~basin_AIP)
 
 ```
-
 
 
 ```{r budget_MLR_regions}
@@ -543,55 +532,18 @@ target_budget_basin_MLR <-
   select(-data) %>%
   unnest(budget)
 
-```
+target_budget_basin_MLR <- target_budget_basin_MLR %>% 
+  mutate(inv_depth = as.factor(inv_depth))
 
-```{r budget_depth_layer_basin_MLR, eval=FALSE}
-
-dcant_budget_basin_MLR_layer <-
-  full_join(dcant_inv_layer, basinmask) %>%
-  mutate(method = "layer") %>% 
-  group_by(MLR_basins, basin) %>%
-  nest() %>% 
-  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
-  select(-data) %>%
-  unnest(budget)
-
-dcant_budget_basin_MLR_layer %>%
+target_budget_basin_MLR %>%
   filter(estimate == "dcant",
          MLR_basins == "5") %>% 
-  drop_na() %>% 
-  ggplot(aes(value, as.factor(inv_depth), fill = basin)) +
-  scale_fill_brewer(palette = "Dark2") +
-  geom_col() +
-  scale_y_discrete(limits = rev) +
-  facet_grid(~data_source)
-
-```
-
-```{r budget_lat_grid, fig.asp=1}
-
-target_budget_lat_grid <- 
-  target_inv %>% 
-  m_grid_horizontal_coarse() %>%
-  group_by(lat_grid, basin_AIP) %>% 
-  nest() %>%
-  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
-  select(-data) %>%
-  unnest(budget)
-
-```
-
-
-```{r budget_lon_grid}
-
-target_budget_lon_grid <- 
-  target_inv %>% 
-  m_grid_horizontal_coarse() %>%
-  group_by(lon_grid, basin_AIP) %>% 
-  nest() %>%
-  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
-  select(-data) %>%
-  unnest(budget)
+  ggplot() +
+  geom_vline(xintercept = 0) +
+  scale_fill_viridis_d() +
+  geom_col(aes(value, inv_depth)) +
+  scale_y_discrete(limits=rev) +
+  facet_grid(basin~MLR_basins)
 
 ```
 
@@ -624,6 +576,14 @@ target_inv %>%
 target_slab %>%
   write_csv(paste(path_version_data,
                   "target_slab.csv", sep = ""))
+
+target_budget_basin_MLR %>%
+  write_csv(paste(path_version_data,
+                  "target_budget_basin_MLR.csv", sep = ""))
+
+target_budget_global %>%
+  write_csv(paste(path_version_data,
+                  "target_budget_global.csv", sep = ""))
 
 
 ```
