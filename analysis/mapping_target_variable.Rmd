@@ -270,6 +270,14 @@ target_3d <- target_3d %>%
   mutate(dcant = cstar_tref - cstar_tref_mod_truth) %>% 
   select(lat, lon, depth, basin_AIP, era, gamma, dcant)
 
+target_3d <- target_3d %>%
+  mutate(dcant_pos = dcant)
+
+target_3d <- m_cut_gamma(target_3d %>% rename(gamma_mean = gamma), "gamma_mean")
+
+target_3d <-
+  target_3d %>% rename(gamma = gamma_mean)
+
 ```
 
 # Zonal mean sections
@@ -364,7 +372,6 @@ Step 2 is performed separately for all dcant and positive dcant values only.
 ```{r calculate_target_inventory, fig.asp=1}
 
 target_inv <- target_3d %>%
-  mutate(dcant_pos = dcant) %>% 
   group_by(era) %>%
   nest() %>%
   mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
@@ -405,17 +412,65 @@ p_map_cant_inv(df = target_inv %>% filter(!is.na(dcant_mean_bias)),
 ```
 
 
-```{r calculate_gamma_slab_maps, eval=FALSE}
+# Slap concentrations
+
+```{r calculate_gamma_slab_maps}
 
 target_slab <- target_3d %>%
-  group_by(data_source) %>%
+  mutate(dcant_sd = 0,
+         dcant_pos_sd = 0) %>% 
+  group_by(era) %>%
   nest() %>%
   mutate(slab = map(.x = data, ~ m_dcant_slab_concentration(.x))) %>%
   select(-data) %>%
   unnest(slab)
+```
 
-dcant_slab <- dcant_slab %>% 
-  arrange(gamma_slab, data_source)
+## C* bias
+
+```{r dcant_all_gamma_slab_maps, fig.asp=1}
+
+target_slab %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = "dcant",
+      col = "bias",
+      subtitle_text = paste("Neutral density:",
+                            unique(.x$gamma_slab))
+    ) +
+      facet_grid(era~.)
+  )
+
+
+
+```
+
+## C* bias offset
+
+```{r dcant_gamma_slab_maps_bias}
+
+target_slab <- target_slab %>% 
+  arrange(era) %>% 
+  group_by(lat, lon, gamma_slab) %>% 
+  mutate(dcant_mean_bias = dcant - lag(dcant)) %>% 
+  ungroup()
+
+target_slab %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(~ p_map_dcant_slab(
+    df = .x,
+    var = "dcant_mean_bias",
+    col = "divergent",
+    subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
+  ))
+
 
 ```
 
@@ -565,6 +620,10 @@ target_profile_basin_MLR %>%
 target_inv %>%
   write_csv(paste(path_version_data,
                   "target_inv.csv", sep = ""))
+
+target_slab %>%
+  write_csv(paste(path_version_data,
+                  "target_slab.csv", sep = ""))
 
 
 ```
