@@ -462,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of dcant estimates</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">16 June, 2022</h4>
+<h4 class="date">23 June, 2022</h4>
 
 </div>
 
@@ -487,7 +487,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-16
+<strong>Last updated:</strong> 2022-06-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8a474165b0a31eb49f3bb89d3e51e33aa1b1c439targetblank8a47416a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8a474165b0a31eb49f3bb89d3e51e33aa1b1c439" target="_blank">8a47416</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree8a474165b0a31eb49f3bb89d3e51e33aa1b1c439targetblank8a47416a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/8a474165b0a31eb49f3bb89d3e51e33aa1b1c439" target="_blank">8a47416</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -596,10 +596,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -638,6 +634,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8a474165b0a31eb49f3bb89d3e51e33aa1b1c439/analysis/analysis_column_inventory.Rmd" target="_blank">8a47416</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-23
+</td>
+<td>
+added C* misfit analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/analysis_column_inventory.html" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4242,6 +4272,11 @@ dcant_inv_cstar &lt;-
                  &quot;dcant_inv_cstar.csv&quot;,
                  sep = &quot;&quot;))
 
+target_inv &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;target_inv.csv&quot;,
+                 sep = &quot;&quot;))
+
 dcant_inv &lt;- bind_rows(dcant_inv_read, dcant_inv_mod_truth)
 dcant_inv_cstar &lt;- bind_rows(dcant_inv_mod_truth, dcant_inv_cstar)
 dcant_inv_cstar &lt;- bind_rows(dcant_inv_read %&gt;% filter(data_source == &quot;mod&quot;)
@@ -4272,6 +4307,9 @@ dcant_inv_cstar &lt;- dcant_inv_cstar %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 dcant_inv_method &lt;- dcant_inv_method %&gt;%
+  filter(inv_depth == params_global$inventory_depth_standard)
+
+target_inv &lt;- target_inv %&gt;%
   filter(inv_depth == params_global$inventory_depth_standard)</code></pre>
 </div>
 <div id="dcant---positive" class="section level1" number="3">
@@ -4314,6 +4352,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-1.png" target="_blank">469a640</a>
@@ -5552,6 +5601,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-2.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -6780,6 +6840,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-3.png" target="_blank">0c2ca93</a>
 </td>
 <td>
@@ -7225,6 +7296,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_pos_inventory_map-4.png" target="_blank">469a640</a>
@@ -8607,10 +8689,10 @@ jens-daniel-mueller
   drop_na()
 
 p_map_cant_inv(
-    df = dcant_inv_bias,
-    var = &quot;dcant_bias&quot;,
+    df = target_inv,
+    var = &quot;dcant_mean_bias&quot;,
     col = &quot;bias&quot;,
-    subtitle_text = &quot;data_source: mod - mod_truth&quot;)</code></pre>
+    subtitle_text = &quot;data_source: delta C* misfit&quot;)</code></pre>
 <p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map-1">
@@ -8634,6 +8716,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-1.png" target="_blank">469a640</a>
@@ -9826,16 +9919,11 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>dcant_inv %&gt;%
-  group_split(data_source) %&gt;%
-  # head(1) %&gt;% 
-  map(~ p_map_cant_inv(
-    df = .x,
-      var = &quot;dcant&quot;,
-      col = &quot;continuous&quot;,
-    subtitle_text = paste(&quot;data_source:&quot;, unique(.x$data_source))
-  ))</code></pre>
-<pre><code>[[1]]</code></pre>
+<pre class="r"><code>p_map_cant_inv(
+    df = dcant_inv_bias,
+    var = &quot;dcant_bias&quot;,
+    col = &quot;bias&quot;,
+    subtitle_text = &quot;data_source: mod - mod_truth&quot;)</code></pre>
 <p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map-2">
@@ -9859,6 +9947,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-2.png" target="_blank">469a640</a>
@@ -11051,8 +11150,16 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre><code>
-[[2]]</code></pre>
+<pre class="r"><code>dcant_inv %&gt;%
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;% 
+  map(~ p_map_cant_inv(
+    df = .x,
+      var = &quot;dcant&quot;,
+      col = &quot;continuous&quot;,
+    subtitle_text = paste(&quot;data_source:&quot;, unique(.x$data_source))
+  ))</code></pre>
+<pre><code>[[1]]</code></pre>
 <p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map-3">
@@ -11076,6 +11183,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-3.png" target="_blank">0c2ca93</a>
@@ -11499,7 +11617,7 @@ jens-daniel-mueller
 </div>
 </div>
 <pre><code>
-[[3]]</code></pre>
+[[2]]</code></pre>
 <p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-4.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_inventory_map-4">
@@ -11523,6 +11641,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-4.png" target="_blank">469a640</a>
@@ -12880,6 +13009,9 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/analysis_column_inventory.Rmd/dcant_all_inventory_map-5.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="surface" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> Surface</h2>
 <pre class="r"><code>dcant_inv_bias_method &lt;- dcant_inv_method %&gt;%
@@ -12947,6 +13079,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-1.png" target="_blank">469a640</a>
@@ -13737,6 +13880,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-2.png" target="_blank">0c2ca93</a>
 </td>
 <td>
@@ -13995,6 +14149,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-3.png" target="_blank">0c2ca93</a>
@@ -14266,6 +14431,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/absolute_dcant_inv-4.png" target="_blank">0c2ca93</a>
@@ -14550,6 +14726,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_no3_mod_truth-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_no3_mod_truth-1.png" target="_blank">0c2ca93</a>
@@ -14848,6 +15035,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_mod_truth-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_mod_truth-1.png" target="_blank">0c2ca93</a>
 </td>
 <td>
@@ -15142,6 +15340,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_no3_mod-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_no3_mod-1.png" target="_blank">469a640</a>
@@ -15957,6 +16166,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_mod-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_mod-1.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -16757,6 +16977,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_no3-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/0c2ca93b5fe65371db29ee6c077103e9ec836f01/docs/figure/analysis_column_inventory.Rmd/dcant_all_inventory_map_cstar_po4_no3-1.png" target="_blank">0c2ca93</a>
