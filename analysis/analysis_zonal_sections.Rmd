@@ -409,7 +409,7 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 
 # Profiles
 
-## dCant
+## Absolute
 
 ```{r dcant_profiles}
 
@@ -427,13 +427,46 @@ dcant_profile %>%
 
 ```
 
-## Target
+## Bias
 
-```{r target_dcant_profiles, eval=FALSE}
+```{r dcant_profiles_bias}
 
-target_profile %>%
-  ggplot(aes(!!sym(params_local$MLR_target), depth,
-             col = data_source, fill=data_source)) +
+dcant_profile_bias <- dcant_profile %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(depth, basin_AIP, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - mod_truth)
+
+dcant_profile_bias %>%
+  ggplot(aes(dcant_bias, depth)) +
+  geom_vline(xintercept = 0) +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
+## Bias decomposition
+
+```{r dcant_profiles_decomposition}
+
+dcant_decomposition <-
+  bind_rows(
+    dcant_profile_bias %>%
+      select(depth, basin_AIP, dcant_bias) %>%
+      mutate(contribution = "dcant bias"),
+    target_profile %>%
+      select(depth, basin_AIP, dcant_bias) %>%
+      filter(!is.na(dcant_bias)) %>%
+      mutate(contribution = "C* prediction error")
+  )
+
+
+dcant_decomposition %>%
+  ggplot(aes(dcant_bias, depth,
+             col = contribution)) +
+  geom_vline(xintercept = 0) +
   geom_path() +
   scale_y_reverse() +
   facet_grid( ~ basin_AIP)
