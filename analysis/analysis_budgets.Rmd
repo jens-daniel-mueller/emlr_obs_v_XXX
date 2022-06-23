@@ -103,9 +103,9 @@ dcant_budget_basin_AIP_mod_truth <-
 dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
                                     dcant_budget_basin_AIP_mod_truth)
 
-# target_budget_basin_AIP <-
-#   read_csv(paste(path_version_data,
-#                   "target_budget_basin_AIP.csv", sep = ""))
+target_budget_basin_AIP <-
+  read_csv(paste(path_version_data,
+                  "target_budget_basin_AIP.csv", sep = ""))
 
 rm(dcant_budget_basin_AIP_mod_truth)
 
@@ -327,15 +327,28 @@ dcant_budget_basin_AIP_bias <- dcant_budget_basin_AIP %>%
   mutate(dcant_bias = mod - mod_truth,
          dcant_bias_rel = dcant_bias / mod_truth * 100)
 
-dcant_budget_basin_AIP_bias %>% 
-  filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(dcant_bias, estimate, fill=basin_AIP)) +
-  geom_vline(xintercept = 0) +
-  geom_col() +
-  scale_fill_brewer(palette = "Dark2")
+dcant_budget_basin_AIP_bias <-
+  bind_rows(
+    target_budget_basin_AIP %>%
+      rename(dcant_bias = value) %>%
+      mutate(contribution = "C* prediction error") %>%
+      select(-data_source),
+    dcant_budget_basin_AIP_bias %>%
+      mutate(contribution = "dcant offset")
+  )
+
 
 dcant_budget_basin_AIP_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, dcant_bias, fill=contribution)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(.~ basin_AIP)
+
+dcant_budget_basin_AIP_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard,
+         !is.na(dcant_bias_rel)) %>% 
   ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
   geom_vline(xintercept = 0) +
   geom_col(position = "dodge") +
@@ -369,11 +382,11 @@ dcant_budget_basin_AIP %>%
 
 
 dcant_budget_basin_AIP_bias %>% 
-  ggplot(aes(dcant_bias, estimate, fill=basin_AIP)) +
+  ggplot(aes(dcant_bias, estimate, fill=contribution)) +
   geom_vline(xintercept = 0) +
-  geom_col() +
+  geom_col(position = "dodge") +
   scale_fill_brewer(palette = "Dark2") +
-  facet_grid(inv_depth ~ .)
+  facet_grid(inv_depth ~ basin_AIP)
 
 dcant_budget_basin_AIP_bias %>% 
   ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
