@@ -103,6 +103,10 @@ dcant_budget_basin_AIP_mod_truth <-
 dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
                                     dcant_budget_basin_AIP_mod_truth)
 
+# target_budget_basin_AIP <-
+#   read_csv(paste(path_version_data,
+#                   "target_budget_basin_AIP.csv", sep = ""))
+
 rm(dcant_budget_basin_AIP_mod_truth)
 
 # globally integrated
@@ -127,6 +131,11 @@ dcant_budget_global <- bind_rows(dcant_budget_global,
                                     dcant_budget_global_mod_truth)
 
 rm(dcant_budget_global_mod_truth)
+
+
+target_budget_global <-
+  read_csv(paste(path_version_data,
+                  "target_budget_global.csv", sep = ""))
 
 # reference year
 
@@ -175,6 +184,7 @@ dcant_budget_global %>%
                fns = list(total = "sum"))
 
 
+
 dcant_budget_global_bias <- dcant_budget_global %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
   select(data_source, inv_depth, estimate, value) %>%
@@ -183,17 +193,29 @@ dcant_budget_global_bias <- dcant_budget_global %>%
   mutate(dcant_bias = mod - mod_truth,
          dcant_bias_rel = dcant_bias / mod_truth * 100)
 
+dcant_budget_global_bias <-
+  bind_rows(
+    target_budget_global %>%
+      rename(dcant_bias = value) %>%
+      mutate(contribution = "C* prediction error") %>%
+      select(-data_source),
+    dcant_budget_global_bias %>%
+      mutate(contribution = "dcant offset")
+  )
+
+
+
 dcant_budget_global_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(dcant_bias, estimate)) +
-  geom_vline(xintercept = 0) +
-  geom_col() +
+  ggplot(aes(estimate, dcant_bias, fill=contribution)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
   scale_fill_brewer(palette = "Dark2")
 
 dcant_budget_global_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
-  ggplot(aes(dcant_bias_rel, estimate)) +
-  geom_vline(xintercept = 0) +
+  ggplot(aes(estimate, dcant_bias_rel)) +
+  geom_hline(yintercept = 0) +
   geom_col() +
   scale_fill_brewer(palette = "Dark2")
 
@@ -209,17 +231,6 @@ dcant_budget_global_bias %>%
   scale_color_manual(values = c("red", "red")) +
   theme(legend.title = element_blank()) +
   labs(y = "value")
-  # geom_segment(aes(
-  #   x = estimate,
-  #   y = mod,
-  #   xend = estimate,
-  #   yend = mod_truth,
-  #   col = "truth"
-  # )) +
-  # geom_point(aes(x = estimate,
-  #                y = mod_truth,
-  #                col = "truth"))
-
 
 ```
 
@@ -235,8 +246,8 @@ dcant_budget_global <- dcant_budget_global %>%
 dcant_budget_global %>%
   ggplot() +
   scale_fill_viridis_d() +
-  geom_col(aes(data_source, value, fill = inv_depth),
-           position = position_dodge2()) +
+  geom_col(aes(value, data_source, fill = inv_depth),
+           position = position_dodge2(reverse = TRUE)) +
   facet_grid(. ~ estimate, scales = "free_y")
 
 dcant_budget_global %>%
@@ -251,9 +262,9 @@ dcant_budget_global %>%
 
 
 dcant_budget_global_bias %>% 
-  ggplot(aes(dcant_bias, estimate)) +
+  ggplot(aes(dcant_bias, estimate, fill=contribution)) +
   geom_vline(xintercept = 0) +
-  geom_col() +
+  geom_col(position = "dodge") +
   scale_fill_brewer(palette = "Dark2") +
   facet_grid(inv_depth ~ .)
 
