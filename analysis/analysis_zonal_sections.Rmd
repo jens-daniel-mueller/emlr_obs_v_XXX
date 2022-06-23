@@ -95,6 +95,21 @@ dcant_zonal_mod_truth <-
 dcant_zonal <- bind_rows(dcant_zonal,
                         dcant_zonal_mod_truth)
 
+
+target_zonal <-
+  read_csv(paste(path_version_data,
+                 "target_zonal.csv",
+                 sep = ""))
+
+dcant_zonal_cstar <-
+  read_csv(paste(path_version_data,
+                  "dcant_zonal_cstar.csv", sep = ""))
+
+dcant_zonal_cstar <- bind_rows(dcant_zonal_mod_truth, dcant_zonal_cstar)
+# dcant_inv_cstar <- bind_rows(dcant_inv_read %>% filter(data_source == "mod")
+#                              , dcant_inv_cstar)
+
+
 dcant_profile <-
   read_csv(paste(path_version_data,
                  "dcant_profile.csv",
@@ -107,6 +122,12 @@ dcant_profile_mod_truth <-
 
 dcant_profile <- bind_rows(dcant_profile,
                         dcant_profile_mod_truth)
+
+target_profile <-
+  read_csv(paste(path_version_data,
+                 "target_profile.csv",
+                 sep = ""))
+
 
 dcant_zonal_method <-
   read_csv(paste(path_version_data,
@@ -198,11 +219,31 @@ dcant_zonal_bias <- full_join(
   dcant_zonal_mod_truth %>% select(lat, depth, basin_AIP, gamma_mean)
 )
 
+
+dcant_zonal_cstar <- dcant_zonal_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_zonal_bias_cstar <- dcant_zonal_cstar %>%
+  filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
+  select(lat, depth, basin_AIP, data_source, dcant, gamma_mean) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
+  drop_na()
+
 # i_data_source <- unique(dcant_zonal$data_source)[1]
 # i_basin_AIP <- unique(dcant_zonal$basin_AIP)[1]
 
 for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
+  
   for (i_data_source in unique(dcant_zonal$data_source)) {
+  
     print(
       p_section_zonal(
         df = dcant_zonal %>%
@@ -211,20 +252,47 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
         var = "dcant",
         gamma = "gamma_mean",
         subtitle_text =
-          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source))
+          paste("Basin:", i_basin_AIP, "| data_source:", i_data_source)
+      )
     )
     
   }
   
-    print(
+  print(
     p_section_zonal(
       df = dcant_zonal_bias %>%
         filter(basin_AIP == i_basin_AIP),
       var = "dcant_bias",
-      col="divergent",
+      col = "divergent",
       breaks = params_global$breaks_dcant_offset,
       subtitle_text =
         paste("Basin:", i_basin_AIP, "| data_source: mod - mod_truth")
+    )
+  )
+  
+  print(
+    p_section_zonal(
+      df = target_zonal %>%
+        filter(basin_AIP == i_basin_AIP,
+               !is.na(dcant_mean_bias)),
+      var = "dcant_mean_bias",
+      col = "divergent",
+      breaks = params_global$breaks_dcant_offset,
+      subtitle_text =
+        paste("Basin:", i_basin_AIP, "| data_source: delta C* prediction bias")
+    )
+  )
+  
+  print(
+    p_section_zonal(
+      df = dcant_zonal_bias_cstar %>%
+        filter(basin_AIP == i_basin_AIP),
+      var = "dcant_bias",
+      col = "divergent",
+      breaks = params_global$breaks_dcant_offset,
+      subtitle_text =
+        paste("Basin:", i_basin_AIP, "| data_source: mod_truth - delta C* |",
+    params_local$cstar_nutrient)
     )
   )
   
