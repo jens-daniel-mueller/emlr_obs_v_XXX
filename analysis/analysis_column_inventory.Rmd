@@ -97,6 +97,11 @@ dcant_inv_cstar <-
                  "dcant_inv_cstar.csv",
                  sep = ""))
 
+target_inv <-
+  read_csv(paste(path_version_data,
+                 "target_inv.csv",
+                 sep = ""))
+
 dcant_inv <- bind_rows(dcant_inv_read, dcant_inv_mod_truth)
 dcant_inv_cstar <- bind_rows(dcant_inv_mod_truth, dcant_inv_cstar)
 dcant_inv_cstar <- bind_rows(dcant_inv_read %>% filter(data_source == "mod")
@@ -133,6 +138,9 @@ dcant_inv_cstar <- dcant_inv_cstar %>%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 dcant_inv_method <- dcant_inv_method %>%
+  filter(inv_depth == params_global$inventory_depth_standard)
+
+target_inv <- target_inv %>%
   filter(inv_depth == params_global$inventory_depth_standard)
 
 ```
@@ -189,6 +197,12 @@ dcant_inv_bias <- dcant_inv %>%
               values_from = dcant) %>%
   mutate(dcant_bias = mod - mod_truth) %>% 
   drop_na()
+
+p_map_cant_inv(
+    df = target_inv,
+    var = "dcant_mean_bias",
+    col = "bias",
+    subtitle_text = "data_source: delta C* misfit")
 
 p_map_cant_inv(
     df = dcant_inv_bias,
