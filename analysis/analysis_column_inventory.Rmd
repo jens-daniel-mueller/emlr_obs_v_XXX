@@ -153,7 +153,25 @@ In a first series of plots we explore the distribution of dcant, taking only pos
 
 Column inventory of positive dcant between the surface and `r params_global$inventory_depth`m water depth per horizontal grid cell (lat x lon).
 
-```{r dcant_pos_inventory_map, fig.asp=0.5}
+## Absolute
+
+```{r dcant_pos_inventory_map_absolute, fig.asp=0.5}
+
+dcant_inv %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(
+    ~ p_map_cant_inv(
+    df = .x,
+    var = "dcant_pos",
+    subtitle_text = paste("data_source:", unique(.x$data_source))
+  ))
+
+```
+
+## Bias
+
+```{r dcant_pos_inventory_map_bias, fig.asp=0.5}
 
 dcant_pos_inv_bias <- dcant_inv %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
@@ -169,17 +187,6 @@ p_map_cant_inv(
     col = "bias",
     subtitle_text = "data_source: mod - mod_truth")
 
-
-dcant_inv %>%
-  group_split(data_source) %>%
-  # head(1) %>%
-  map(
-    ~ p_map_cant_inv(
-    df = .x,
-    var = "dcant_pos",
-    subtitle_text = paste("data_source:", unique(.x$data_source))
-  ))
-
 ```
 
 # dcant - all
@@ -188,27 +195,9 @@ In a second series of plots we explore the distribution of all dcant, taking pos
 
 Column inventory of all dcant between the surface and `r params_global$inventory_depth_standard`m water depth per horizontal grid cell (lat x lon).
 
-```{r dcant_all_inventory_map, fig.asp=0.5}
+## Absolute
 
-dcant_inv_bias <- dcant_inv %>%
-  filter(data_source %in% c("mod", "mod_truth")) %>%
-  select(lat, lon, data_source, dcant) %>%
-  pivot_wider(names_from = data_source,
-              values_from = dcant) %>%
-  mutate(dcant_bias = mod - mod_truth) %>% 
-  drop_na()
-
-p_map_cant_inv(
-    df = target_inv,
-    var = "dcant_mean_bias",
-    col = "bias",
-    subtitle_text = "data_source: delta C* misfit")
-
-p_map_cant_inv(
-    df = dcant_inv_bias,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = "data_source: mod - mod_truth")
+```{r dcant_all_inventory_map_absolute, fig.asp=0.5}
 
 dcant_inv %>%
   group_split(data_source) %>%
@@ -222,33 +211,63 @@ dcant_inv %>%
 
 ```
 
+## Bias
+
+```{r dcant_all_inventory_map_bias, fig.asp=0.5}
+
+dcant_inv_bias <- dcant_inv %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(lat, lon, data_source, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = mod - mod_truth) %>% 
+  drop_na()
+
+p_map_cant_inv(
+    df = dcant_inv_bias,
+    var = "dcant_bias",
+    col = "bias",
+    subtitle_text = "data_source: mod - mod_truth")
+
+```
+
+## Bias decomposition
+
+```{r dcant_all_inventory_map_bias_decomposition, fig.asp=0.5}
+
+p_map_cant_inv(
+    df = target_inv,
+    var = "dcant_mean_bias",
+    col = "bias",
+    subtitle_text = "data_source: delta C* prediction bias")
 
 
-```{r dcant_all_inventory_map_cstar_nutrient_mod_truth, fig.asp=0.5}
-
+dcant_inv_cstar <- dcant_inv_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  mutate(data_source = case_when(
-    data_source == "po4" ~ "phosphate",
-    data_source == "no3" ~ "nitrate",
-    TRUE                 ~ data_source)) %>% 
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
   select(lat, lon, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
               values_from = dcant) %>%
-  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>% 
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
   drop_na()
 
 p_map_cant_inv(
-    df = dcant_inv_bias_cstar,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = paste("data_source: mod_truth - ", params_local$cstar_nutrient))
-
-```
-
-```{r combined_cstar_misfit_and_cstar_dcant_difference, fig.asp=0.5}
-
+  df = dcant_inv_bias_cstar,
+  var = "dcant_bias",
+  col = "bias",
+  subtitle_text = paste(
+    "data_source: mod_truth - delta C* |",
+    params_local$cstar_nutrient
+  )
+)
 
 dcant_bias_decomposition <- full_join(
   dcant_inv_bias_cstar %>%
@@ -259,19 +278,18 @@ dcant_bias_decomposition <- full_join(
 )
 
 dcant_bias_decomposition <- dcant_bias_decomposition %>% 
-  mutate(cstar_bias_combined = cstar_bias_mod_truth + cstar_predition_bias)
+  mutate(dcant_bias = cstar_bias_mod_truth + cstar_predition_bias)
 
 
 p_map_cant_inv(
     df = dcant_bias_decomposition,
-    var = "cstar_bias_combined",
+    var = "dcant_bias",
     col = "bias",
-    subtitle_text = "Cstar bias combined")
+    subtitle_text = "Combined bias contributions")
+
+
 
 ```
-
-
-
 
 ## Surface
 
@@ -310,9 +328,10 @@ dcant_inv_method %>%
 
 # dcant from Cstar
 
-```{r absolute_dcant_inv}
+```{r dcant_all_inventory_map_bias_cstar}
 
 dcant_inv_cstar %>%
+  filter(data_source %in% c("nitrate", "phosphate")) %>% 
   group_split(data_source) %>%
   # head(1) %>%
   map(~ p_map_cant_inv(
@@ -326,108 +345,51 @@ dcant_inv_cstar %>%
 ```
 
 
-## no3 vs mod_truth
+## mod_truth vs other Cstar nutrient
 
-```{r dcant_all_inventory_map_cstar_no3_mod_truth, fig.asp=0.5}
+```{r dcant_all_inventory_map_bias_cstar_nitrate_phosphate, fig.asp=0.5}
+
+other_cstar_nutrient <-
+  c("phosphate", "nitrate")[!(c("phosphate", "nitrate") %in% params_local$cstar_nutrient)]
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  filter(data_source %in% c("mod_truth", "no3")) %>%
+  filter(data_source %in% c("mod_truth", other_cstar_nutrient)) %>%
   select(lat, lon, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
               values_from = dcant) %>%
-  mutate(dcant_bias = mod_truth - no3) %>% 
+  mutate(dcant_bias = !!sym(other_cstar_nutrient) - mod_truth) %>%
   drop_na()
 
 p_map_cant_inv(
-    df = dcant_inv_bias_cstar,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = "data_source: mod_truth - no3")
-
-```
-
-
-## po4 vs mod_truth
-
-```{r dcant_all_inventory_map_cstar_po4_mod_truth, fig.asp=0.5}
-
-dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  filter(data_source %in% c("mod_truth", "po4")) %>%
-  select(lat, lon, data_source, dcant) %>%
-  pivot_wider(names_from = data_source,
-              values_from = dcant) %>%
-  mutate(dcant_bias = mod_truth - po4) %>% 
-  drop_na()
-
-p_map_cant_inv(
-    df = dcant_inv_bias_cstar,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = "data_source: mod - po4")
+  df = dcant_inv_bias_cstar,
+  var = "dcant_bias",
+  col = "bias",
+  subtitle_text = paste(
+    "data_source: mod_truth - delta C* |",
+    other_cstar_nutrient
+  )
+)
 
 
 ```
 
-## no3 vs mod
-
-```{r dcant_all_inventory_map_cstar_no3_mod, fig.asp=0.5}
-
-dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  filter(data_source %in% c("mod", "no3")) %>%
-  select(lat, lon, data_source, dcant) %>%
-  pivot_wider(names_from = data_source,
-              values_from = dcant) %>%
-  mutate(dcant_bias = mod - no3) %>% 
-  drop_na()
-
-p_map_cant_inv(
-    df = dcant_inv_bias_cstar,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = "data_source: mod - no3")
-
-```
-
-
-## po4 vs mod
-
-```{r dcant_all_inventory_map_cstar_po4_mod, fig.asp=0.5}
-
-dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  filter(data_source %in% c("mod", "po4")) %>%
-  select(lat, lon, data_source, dcant) %>%
-  pivot_wider(names_from = data_source,
-              values_from = dcant) %>%
-  mutate(dcant_bias = mod - po4) %>% 
-  drop_na()
-
-p_map_cant_inv(
-    df = dcant_inv_bias_cstar,
-    var = "dcant_bias",
-    col = "bias",
-    subtitle_text = "data_source: mod - po4")
-
-
-```
-
-
-## po4 vs no3
+## phospahte vs nitrate Cstar
 
 ```{r dcant_all_inventory_map_cstar_po4_no3, fig.asp=0.5}
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
-  filter(data_source %in% c("no3", "po4")) %>%
+  filter(data_source %in% c("nitrate", "phosphate")) %>%
   select(lat, lon, data_source, dcant) %>%
   pivot_wider(names_from = data_source,
               values_from = dcant) %>%
-  mutate(dcant_bias = no3 - po4) %>% 
+  mutate(dcant_bias = nitrate - phosphate) %>% 
   drop_na()
 
 p_map_cant_inv(
     df = dcant_inv_bias_cstar,
     var = "dcant_bias",
     col = "bias",
-    subtitle_text = "data_source: no3 - po4")
+    subtitle_text = "data_source: nitrate - phosphate")
 
 
 ```
