@@ -300,26 +300,6 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
   
 ```
 
-## Profiles
-
-
-```{r dcant_profiles}
-
-dcant_profile %>%
-  ggplot(aes(dcant, depth,
-             col = data_source, fill=data_source)) +
-  geom_vline(xintercept = 0) +
-  geom_ribbon(aes(xmin = dcant - dcant_sd,
-                  xmax = dcant + dcant_sd),
-              alpha = 0.2,
-              col = "transparent") +
-  geom_path() +
-  scale_y_reverse() +
-  facet_grid( ~ basin_AIP)
-
-```
-
-
 
 ## Surface
 
@@ -426,6 +406,40 @@ for (i_basin_AIP in unique(dcant_zonal$basin_AIP)) {
 }
   
 ```
+
+# Profiles
+
+## dCant
+
+```{r dcant_profiles}
+
+dcant_profile %>%
+  ggplot(aes(dcant, depth,
+             col = data_source, fill=data_source)) +
+  geom_vline(xintercept = 0) +
+  geom_ribbon(aes(xmin = dcant - dcant_sd,
+                  xmax = dcant + dcant_sd),
+              alpha = 0.2,
+              col = "transparent") +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
+## Target
+
+```{r target_dcant_profiles, eval=FALSE}
+
+target_profile %>%
+  ggplot(aes(!!sym(params_local$MLR_target), depth,
+             col = data_source, fill=data_source)) +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
 
 
 # Write files

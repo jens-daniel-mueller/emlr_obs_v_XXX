@@ -340,6 +340,111 @@ target_zonal %>%
 
 ```
 
+# Profiles
+
+For each basin and era combination, the mean profile of the target variable is calculated. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+## C* bias
+
+```{r calc_dcant_profiles}
+
+target_profile <- target_3d %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(era, basin_AIP, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+target_profile %>%
+  ggplot(aes(dcant, depth,
+             col = era, fill=era)) +
+  geom_vline(xintercept = 0) +
+  geom_ribbon(aes(xmin = dcant - dcant_sd,
+                  xmax = dcant + dcant_sd),
+              alpha = 0.2,
+              col = "transparent") +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
+
+```{r calc_dcant_profiles_MLR_regions}
+
+target_profile_basin_MLR <-
+  full_join(
+    target_3d %>% select(era, lon, lat, depth, dcant),
+    basinmask %>% select(MLR_basins, basin, lon, lat)
+  ) %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(era, basin, MLR_basins, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+target_profile_basin_MLR %>%
+  filter(MLR_basins == "5") %>%
+  ggplot(aes(dcant, depth,
+             col = era, fill = era)) +
+  geom_vline(xintercept = 0) +
+  geom_ribbon(aes(xmin = dcant - dcant_sd,
+                  xmax = dcant + dcant_sd),
+              alpha = 0.2,
+              col = "transparent") +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid(~ basin)
+
+```
+
+
+
+## C* bias offset
+
+```{r calculate_target_3d_profile_offset, fig.asp=1}
+
+target_profile <- target_profile %>% 
+  arrange(basin_AIP, depth, era) %>% 
+  group_by(basin_AIP, depth) %>% 
+  mutate(dcant_bias = dcant - lag(dcant)) %>% 
+  ungroup()
+
+target_profile %>%
+  filter(!is.na(dcant_bias)) %>%
+  ggplot(aes(dcant_bias, depth)) +
+  geom_vline(xintercept = 0) +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid( ~ basin_AIP)
+
+```
+
+
+```{r calculate_target_3d_profile_offset_MLR_regions, fig.asp=1}
+
+target_profile_basin_MLR <- target_profile_basin_MLR %>% 
+  arrange(basin, MLR_basins, depth, era) %>% 
+  group_by(basin, MLR_basins, depth) %>% 
+  mutate(dcant_bias = dcant - lag(dcant)) %>% 
+  ungroup()
+
+target_profile_basin_MLR %>%
+  filter(MLR_basins == "5",
+         !is.na(dcant_bias)) %>%
+  ggplot(aes(dcant_bias, depth)) +
+  geom_vline(xintercept = 0) +
+  geom_path() +
+  scale_y_reverse() +
+  facet_grid(~ basin)
+
+```
+
+
 # Inventory calculation
 
 To calculate dcant column inventories, we:  
