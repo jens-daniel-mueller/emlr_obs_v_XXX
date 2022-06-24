@@ -67,15 +67,15 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_11")#[c(4)]
+  pattern = "v_1s")#[c(4)]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_21")#[c(4)]
+  pattern = "v_2s")#[c(4)]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_31")#[c(4,2)]
+  pattern = "v_3s")#[c(4,2)]
 
 Version_IDs <- c(
   Version_IDs_1,

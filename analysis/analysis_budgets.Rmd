@@ -107,6 +107,10 @@ target_budget_basin_AIP <-
   read_csv(paste(path_version_data,
                   "target_budget_basin_AIP.csv", sep = ""))
 
+dcant_budget_basin_AIP_cstar <-
+  read_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_cstar.csv", sep = ""))
+
 rm(dcant_budget_basin_AIP_mod_truth)
 
 # globally integrated
@@ -137,6 +141,11 @@ target_budget_global <-
   read_csv(paste(path_version_data,
                   "target_budget_global.csv", sep = ""))
 
+dcant_budget_global_cstar <-
+  read_csv(paste(path_version_data,
+                  "dcant_budget_global_cstar.csv", sep = ""))
+
+
 # reference year
 
 tref <-
@@ -165,7 +174,6 @@ Results integrated over the upper `r params_global$inventory_depth_standard` m
 
 ```{r dcant_budget_standard_depth_global}
 
-
 dcant_budget_global %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>%
   ggplot(aes(estimate, value, fill = data_source)) +
@@ -182,8 +190,6 @@ dcant_budget_global %>%
   ) %>%
   summary_rows(groups = TRUE,
                fns = list(total = "sum"))
-
-
 
 dcant_budget_global_bias <- dcant_budget_global %>%
   filter(data_source %in% c("mod", "mod_truth")) %>%
@@ -203,6 +209,38 @@ dcant_budget_global_bias <-
       mutate(contribution = "dcant offset")
   )
 
+dcant_budget_global_cstar <- dcant_budget_global_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+
+dcant_budget_global_cstar <-
+  bind_rows(
+    dcant_budget_global %>%
+      filter(data_source == "mod_truth"),
+    dcant_budget_global_cstar
+  )
+
+dcant_budget_global_bias_cstar <- dcant_budget_global_cstar %>%
+  filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
+  select(inv_depth, data_source, estimate, dcant = value) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
+  drop_na()
+
+
+dcant_budget_global_bias <-
+  bind_rows(
+    dcant_budget_global_bias,
+    dcant_budget_global_bias_cstar %>%
+      mutate(contribution = "delta C* - mod_truth")
+  )
 
 
 dcant_budget_global_bias %>% 
@@ -218,19 +256,6 @@ dcant_budget_global_bias %>%
   geom_hline(yintercept = 0) +
   geom_col() +
   scale_fill_brewer(palette = "Dark2")
-
-dcant_budget_global_bias %>%
-  filter(inv_depth == params_global$inventory_depth_standard) %>%
-  ggplot() +
-  geom_col(aes(estimate, mod,
-               fill = "eMLR")) +
-  geom_col(aes(estimate, mod_truth,
-               col = "truth"),
-           fill = "transparent") +
-  scale_fill_manual(values = "grey60") +
-  scale_color_manual(values = c("red", "red")) +
-  theme(legend.title = element_blank()) +
-  labs(y = "value")
 
 ```
 
@@ -248,7 +273,7 @@ dcant_budget_global %>%
   scale_fill_viridis_d() +
   geom_col(aes(value, data_source, fill = inv_depth),
            position = position_dodge2(reverse = TRUE)) +
-  facet_grid(. ~ estimate, scales = "free_y")
+  facet_grid(. ~ estimate)
 
 dcant_budget_global %>%
   pivot_wider(names_from = estimate,
@@ -275,19 +300,6 @@ dcant_budget_global_bias %>%
   scale_fill_brewer(palette = "Dark2") +
   facet_grid(inv_depth ~ .)
 
-dcant_budget_global_bias %>%
-  ggplot() +
-  geom_vline(xintercept = 0) +
-  geom_col(aes(mod, estimate, fill = "eMLR"),
-           position = "dodge") +
-  geom_col(aes(mod_truth, estimate,
-               col = "truth"),
-           fill = "transparent") +
-  scale_fill_manual(values = "grey60") +
-  scale_color_manual(values = c("red", "red")) +
-  theme(legend.title = element_blank()) +
-  labs(x = "value") +
-  facet_grid(inv_depth ~ .)
 
 ```
 
@@ -301,10 +313,10 @@ Results integrated over the upper `r params_global$inventory_depth_standard` m
 
 dcant_budget_basin_AIP %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>%
-  ggplot(aes(estimate, value, fill=basin_AIP)) +
+  ggplot(aes(estimate, value, fill=data_source)) +
   scale_fill_brewer(palette = "Dark2") +
-  geom_col() +
-  facet_grid(~data_source)
+  geom_col(position = "dodge") +
+  facet_grid(~basin_AIP)
 
 dcant_budget_basin_AIP %>%
   filter(inv_depth == params_global$inventory_depth_standard) %>%
@@ -338,6 +350,42 @@ dcant_budget_basin_AIP_bias <-
   )
 
 
+
+dcant_budget_basin_AIP_cstar <- dcant_budget_basin_AIP_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+
+dcant_budget_basin_AIP_cstar <-
+  bind_rows(
+    dcant_budget_basin_AIP %>%
+      filter(data_source == "mod_truth"),
+    dcant_budget_basin_AIP_cstar
+  )
+
+dcant_budget_basin_AIP_bias_cstar <- dcant_budget_basin_AIP_cstar %>%
+  filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
+  select(basin_AIP, inv_depth, data_source, estimate, dcant = value) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
+  drop_na()
+
+
+dcant_budget_basin_AIP_bias <-
+  bind_rows(
+    dcant_budget_basin_AIP_bias,
+    dcant_budget_basin_AIP_bias_cstar %>%
+      mutate(contribution = "delta C* - mod_truth")
+  )
+
+
+
 dcant_budget_basin_AIP_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard) %>% 
   ggplot(aes(estimate, dcant_bias, fill=contribution)) +
@@ -364,11 +412,11 @@ Results integrated over the upper `r params_global$inventory_depths` m
 ```{r cant_budget_other_depth_basin_AIP, fig.asp=1}
 
 dcant_budget_basin_AIP %>%
-  ggplot(aes(data_source, value, fill=basin_AIP)) +
+  ggplot(aes(estimate, value, fill=data_source)) +
   scale_fill_brewer(palette = "Dark2") +
-  geom_col() +
-  facet_grid(inv_depth ~ estimate, scales = "free_y")
-
+  geom_col(position = "dodge") +
+  facet_grid(inv_depth ~ basin_AIP)
+             
 dcant_budget_basin_AIP %>%
   pivot_wider(names_from = estimate,
               values_from = value) %>% 

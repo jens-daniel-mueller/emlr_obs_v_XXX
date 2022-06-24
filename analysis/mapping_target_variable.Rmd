@@ -10,6 +10,8 @@ output:
       collapsed: false
 editor_options:
   chunk_output_type: console
+params:
+  Version_ID: "v_XXX"
 ---
 
 ```{r parent, child = "/nfs/kryo/work/jenmueller/emlr_cant/utilities/setup.Rmd"}
@@ -19,9 +21,24 @@ editor_options:
 ```
 
 ```{r read_params_local, include = FALSE}
-params_local <-
-  read_rds(here::here("data/auxillary",
-                       "params_local.rds"))
+
+if (params$Version_ID == "v_XXX") {
+  params_local <-
+    read_rds(here::here("data/auxillary", "params_local.rds"))
+  
+} else {
+  params_local <-
+    read_rds(
+      file = paste(path_root, "observations",
+                   params$Version_ID,
+                   "data/params_local.rds",
+                   sep = "/")
+    )
+}
+
+if (params_local$gobm == "CESM-ETHZ_v20211122_monthly") {
+  params_local$gobm <- "CESM-ETHZ_v20211122"
+}
 
 ```
 
@@ -570,8 +587,11 @@ Global dcant budgets were estimated in units of Pg C. Please note that here we a
 ```{r budget_global}
 
 target_inv <- target_inv %>%
+  filter(!is.na(dcant_mean_bias)) %>%
+  select(era, lon, lat, basin_AIP, inv_depth, dcant = dcant_mean_bias) %>%
   mutate(data_source = "mod",
-         method = "total")
+         method = "total",
+         dcant_pos = dcant)
 
 target_budget_global <- m_dcant_budget(target_inv)
 
@@ -615,8 +635,10 @@ target_budget_basin_AIP %>%
 
 ```{r budget_MLR_regions}
 
+
 target_budget_basin_MLR <-
   full_join(target_inv, basinmask) %>%
+  filter(!is.na(dcant)) %>% 
   group_by(basin, MLR_basins) %>%
   nest() %>%
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
