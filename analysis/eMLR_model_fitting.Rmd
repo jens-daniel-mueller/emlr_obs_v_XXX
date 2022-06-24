@@ -1027,7 +1027,7 @@ GLODAP_augmented_best <- GLODAP_augmented_best %>%
   ))))
 
 spatial_residual <- GLODAP_augmented_best %>%
-  group_by(data_source, gamma_slab, era, lat_grid, lon_grid) %>% 
+  group_by(data_source, gamma_slab, era, lat, lon) %>% 
   summarise(.resid_mean = mean(.resid)) %>% 
   ungroup()
 
@@ -1035,8 +1035,8 @@ spatial_obs <- GLODAP_augmented_best %>%
   distinct(gamma_slab, era, lat, lon)
 
 spatial_residual %>%
-  rename(lat = lat_grid,
-         lon = lon_grid) %>%
+  # rename(lat = lat_grid,
+  #        lon = lon_grid) %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>%
   group_split(data_source, gamma_slab) %>%
   # head(1) %>%
@@ -1053,9 +1053,10 @@ spatial_residual %>%
       ),
     legend_title = paste(params_local$MLR_target, "\nbias")
   ) +
-    geom_raster(data = spatial_obs,
-                aes(lon, lat)) +
-    facet_grid(era ~ .)
+    # geom_raster(data = spatial_obs,
+    #             aes(lon, lat)) +
+    facet_grid(era ~ .) +
+    theme_dark()
   )
 
 
@@ -1067,9 +1068,9 @@ spatial_residual %>%
 
 # calculate residual offset for adjacent eras
 spatial_residual_offset <- spatial_residual  %>%
-  select(data_source, gamma_slab, era, lat_grid, lon_grid, .resid_mean) %>% 
+  select(data_source, gamma_slab, era, lat, lon, .resid_mean) %>% 
   arrange(era) %>% 
-  group_by(data_source, gamma_slab, lat_grid, lon_grid) %>% 
+  group_by(data_source, gamma_slab, lat, lon) %>% 
   mutate(.resid_mean_offset = .resid_mean - lag(.resid_mean)) %>% 
   ungroup() %>% 
   drop_na()
@@ -1080,8 +1081,8 @@ spatial_obs <- spatial_obs %>%
   select(-n)
 
 spatial_residual_offset %>%
-  rename(lat = lat_grid,
-         lon = lon_grid) %>%
+  # rename(lat = lat_grid,
+  #        lon = lon_grid) %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>%
   group_split(data_source, gamma_slab) %>%
   # head(1) %>%
@@ -1098,8 +1099,9 @@ spatial_residual_offset %>%
       ),
     legend_title = paste(params_local$MLR_target, "\nbias offset")
   ) +
-    geom_raster(data = spatial_obs,
-                aes(lon, lat))
+    theme_dark()
+    # geom_raster(data = spatial_obs,
+    #             aes(lon, lat))
   )
 
 ```
