@@ -223,7 +223,8 @@ dcant_budget_global_cstar <-
   bind_rows(
     dcant_budget_global %>%
       filter(data_source == "mod_truth"),
-    dcant_budget_global_cstar
+    dcant_budget_global_cstar %>% 
+      filter(method == "total")
   )
 
 dcant_budget_global_bias_cstar <- dcant_budget_global_cstar %>%
@@ -365,7 +366,8 @@ dcant_budget_basin_AIP_cstar <-
   bind_rows(
     dcant_budget_basin_AIP %>%
       filter(data_source == "mod_truth"),
-    dcant_budget_basin_AIP_cstar
+    dcant_budget_basin_AIP_cstar %>% 
+      filter(method == "total")
   )
 
 dcant_budget_basin_AIP_bias_cstar <- dcant_budget_basin_AIP_cstar %>%
@@ -397,8 +399,8 @@ dcant_budget_basin_AIP_bias %>%
 dcant_budget_basin_AIP_bias %>% 
   filter(inv_depth == params_global$inventory_depth_standard,
          !is.na(dcant_bias_rel)) %>% 
-  ggplot(aes(dcant_bias_rel, estimate, fill=basin_AIP)) +
-  geom_vline(xintercept = 0) +
+  ggplot(aes(estimate, dcant_bias_rel, fill=basin_AIP)) +
+  geom_hline(yintercept = 0) +
   geom_col(position = "dodge") +
   scale_fill_brewer(palette = "Dark2")
 
