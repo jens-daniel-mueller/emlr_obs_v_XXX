@@ -94,13 +94,27 @@ dcant_3d_mod_truth <-
                  sep = ""))
 
 dcant_3d <- bind_rows(dcant_3d,
-                     dcant_3d_mod_truth)
+                      dcant_3d_mod_truth)
+
+
+dcant_3d_cstar <-
+  read_csv(paste(path_version_data,
+                 "dcant_3d_cstar.csv",
+                 sep = ""))
+
+dcant_3d_cstar <- bind_rows(dcant_3d_cstar,
+                            dcant_3d_mod_truth)
+
 
 tref <-
   read_csv(paste(path_version_data,
                  "tref.csv",
                  sep = ""))
 
+
+target_slab <-
+  read_csv(paste(path_version_data,
+                  "target_slab.csv", sep = ""))
 
 ```
 
@@ -270,7 +284,7 @@ dcant_slab %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -315,7 +329,7 @@ dcant_slab_bias %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -352,7 +366,7 @@ dcant_slab %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_by(gamma_slab, data_source) %>%
   group_split() %>% 
-  # head(3) %>%
+  # head(1) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -368,7 +382,7 @@ dcant_slab %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -394,7 +408,7 @@ dcant_slab %>%
 dcant_slab_bias %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>% 
   group_split(gamma_slab) %>%
-  # head(3) %>%
+  # head(1) %>%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -405,7 +419,7 @@ dcant_slab_bias %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -422,6 +436,104 @@ dcant_slab_bias %>%
 
 
 ```
+
+## Bias decomposition
+
+```{r dcant_slab_bias_decomposition}
+
+target_slab %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = "dcant_mean_bias",
+      col = "divergent",
+      subtitle_text = paste("Neutral density:", unique(.x$gamma_slab), 
+                            "| C* prediction bias")
+    )  +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == "both"),
+        aes(lon, lat), fill = "purple") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = "grey50") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = "black")
+  )
+
+
+dcant_3d_cstar <- dcant_3d_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_3d_bias_cstar <- dcant_3d_cstar %>%
+  filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
+  select(lat, lon, depth, data_source, gamma_slab, dcant) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
+  drop_na()
+
+dcant_slab_bias_cstar <-
+  m_dcant_slab_concentration(
+    dcant_3d_bias_cstar %>%
+      select(lat, lon, depth, gamma_slab, dcant = dcant_bias) %>%
+      mutate(
+        dcant_pos = dcant,
+        dcant_sd = 0,
+        dcant_pos_sd = 0
+      )
+  )
+
+
+dcant_slab_bias_cstar %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>% 
+  group_split(gamma_slab) %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = "dcant",
+      col = "divergent",
+      subtitle_text = paste("Neutral density:", unique(.x$gamma_slab), 
+                            "| mod_truth - delta C*")
+    )  +
+      geom_raster(
+        data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == "both"),
+        aes(lon, lat), fill = "purple") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = "grey50") +
+      geom_raster(
+        data = GLODAP_grid %>% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = "black")
+  )
+
+```
+
+
 
 ## SD across models
 
@@ -449,7 +561,7 @@ dcant_slab %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -488,7 +600,7 @@ dcant_slab %>%
       geom_raster(
         data = GLODAP_grid %>% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == "both"),
-        aes(lon, lat), fill = "red") +
+        aes(lon, lat), fill = "purple") +
       geom_raster(
         data = GLODAP_grid %>% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -550,14 +662,14 @@ dcant_slab_budget %>%
 
 dcant_slab_budget %>% 
   ggplot(aes(data_source, dcant, fill = gamma_slab)) +
-  geom_hline(yintercept = 0, col = "red") +
+  geom_hline(yintercept = 0, col = "purple") +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)
 
 dcant_slab_budget %>% 
   ggplot(aes(data_source, dcant, fill = basin_AIP)) +
-  geom_hline(yintercept = 0, col = "red") +
+  geom_hline(yintercept = 0, col = "purple") +
   geom_col() +
   scale_fill_viridis_d(direction = -1)
 
