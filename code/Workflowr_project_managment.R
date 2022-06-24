@@ -34,8 +34,20 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun era2",
+message = "rerun with depth filter",
 republish = TRUE)
+
+
+
+wflow_publish(here::here(
+  "analysis",
+  c(
+    "analysis_MLR_performance.Rmd",
+    "analysis_anomalous_changes.Rmd",
+    "tracers_GLODAPv2_2021.Rmd"
+  )
+),
+message = "rerun with depth filter")
 
 
 # Push latest version to GitHub
