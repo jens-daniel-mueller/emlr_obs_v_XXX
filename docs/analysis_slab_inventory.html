@@ -462,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis of dcant within density slabs</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">16 June, 2022</h4>
+<h4 class="date">24 June, 2022</h4>
 
 </div>
 
@@ -487,7 +487,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-06-16
+<strong>Last updated:</strong> 2022-06-24
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee1f9685b17be5326614d00be844fa3829b004155targetblanke1f9685a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e1f9685b17be5326614d00be844fa3829b004155" target="_blank">e1f9685</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreede2943b9923a0b007f5c2aeb38b2c42bd53fb231targetblankde2943ba" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreee1f9685b17be5326614d00be844fa3829b004155targetblanke1f9685a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/de2943b9923a0b007f5c2aeb38b2c42bd53fb231" target="_blank">de2943b</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/e1f9685b17be5326614d00be844fa3829b004155" target="_blank">e1f9685</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -596,10 +596,6 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-
-Unstaged changes:
-    Modified:   code/Workflowr_project_managment.R
-    Modified:   data/auxillary/params_local.rds
 
 </code></pre>
 <p>
@@ -638,6 +634,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/e1f9685b17be5326614d00be844fa3829b004155/analysis/analysis_slab_inventory.Rmd" target="_blank">e1f9685</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+<td>
+slab bias decomposition
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/analysis_slab_inventory.html" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4748,12 +4778,27 @@ dcant_3d_mod_truth &lt;-
                  sep = &quot;&quot;))
 
 dcant_3d &lt;- bind_rows(dcant_3d,
-                     dcant_3d_mod_truth)
+                      dcant_3d_mod_truth)
+
+
+dcant_3d_cstar &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;dcant_3d_cstar.csv&quot;,
+                 sep = &quot;&quot;))
+
+dcant_3d_cstar &lt;- bind_rows(dcant_3d_cstar,
+                            dcant_3d_mod_truth)
+
 
 tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;tref.csv&quot;,
-                 sep = &quot;&quot;))</code></pre>
+                 sep = &quot;&quot;))
+
+
+target_slab &lt;-
+  read_csv(paste(path_version_data,
+                  &quot;target_slab.csv&quot;, sep = &quot;&quot;))</code></pre>
 <p>Cleaned GLODAPv2_2020 file as used in this sensitivity case</p>
 <pre class="r"><code>GLODAP &lt;-
   read_csv(paste(
@@ -4809,6 +4854,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_volume_fractions-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_volume_fractions-1.png" target="_blank">469a640</a>
@@ -4979,6 +5035,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_volume_fractions-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_volume_fractions-2.png" target="_blank">469a640</a>
@@ -5166,6 +5233,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-1.png" target="_blank">469a640</a>
@@ -5408,6 +5486,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-2.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -5639,6 +5728,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_penetration_depth-3.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -5863,6 +5963,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/penetration_depth_zonal_mean-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/penetration_depth_zonal_mean-1.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -6068,7 +6179,7 @@ jens-daniel-mueller
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -6106,6 +6217,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-1.png" target="_blank">469a640</a>
@@ -7336,6 +7458,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-2.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -8331,6 +8464,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-3.png" target="_blank">469a640</a>
@@ -9737,6 +9881,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-4.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -10525,6 +10680,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-5.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-5.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -11157,6 +11323,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-6.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-6.png" target="_blank">469a640</a>
@@ -12024,6 +12201,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-7.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-7.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -12493,6 +12681,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-8.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-8.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -12905,6 +13104,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-9.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps-9.png" target="_blank">469a640</a>
@@ -13452,7 +13662,7 @@ dcant_slab_bias %&gt;%
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -13490,6 +13700,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-1.png" target="_blank">469a640</a>
@@ -14729,6 +14950,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-2.png" target="_blank">469a640</a>
@@ -15981,6 +16213,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_pos_gamma_slab_maps_bias-3.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -16913,7 +17156,7 @@ jens-daniel-mueller
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
   group_by(gamma_slab, data_source) %&gt;%
   group_split() %&gt;% 
-  # head(3) %&gt;%
+  # head(1) %&gt;%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -16929,7 +17172,7 @@ jens-daniel-mueller
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -16967,6 +17210,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-1.png" target="_blank">469a640</a>
@@ -18175,6 +18429,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-2.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -19148,6 +19413,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-3.png" target="_blank">469a640</a>
@@ -20532,6 +20808,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-4.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -21606,6 +21893,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-5.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-5.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -22469,6 +22767,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-6.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-6.png" target="_blank">469a640</a>
@@ -23699,6 +24008,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-7.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-7.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -24465,6 +24785,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-8.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-8.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -25119,6 +25450,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-9.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_gamma_slab_maps-9.png" target="_blank">469a640</a>
@@ -26020,7 +26362,7 @@ jens-daniel-mueller
 <pre class="r"><code>dcant_slab_bias %&gt;%
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
   group_split(gamma_slab) %&gt;%
-  # head(3) %&gt;%
+  # head(1) %&gt;%
   map(
     ~ p_map_dcant_slab(
       df = .x,
@@ -26031,7 +26373,7 @@ jens-daniel-mueller
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -26069,6 +26411,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-1.png" target="_blank">469a640</a>
@@ -27297,6 +27650,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-2.png" target="_blank">469a640</a>
@@ -28538,6 +28902,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_gamma_slab_maps_bias-3.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -29443,8 +29818,114 @@ jens-daniel-mueller
 </div>
 </div>
 </div>
-<div id="sd-across-models" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> SD across models</h2>
+<div id="bias-decomposition" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Bias decomposition</h2>
+<pre class="r"><code>target_slab %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
+  group_split(gamma_slab) %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;dcant_mean_bias&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;, unique(.x$gamma_slab), 
+                            &quot;| C* prediction bias&quot;)
+    )  +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;purple&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey50&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_3d_cstar &lt;- dcant_3d_cstar %&gt;%
+  mutate(
+    data_source = case_when(
+      data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
+      data_source == &quot;no3&quot; ~ &quot;nitrate&quot;,
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_3d_bias_cstar &lt;- dcant_3d_cstar %&gt;%
+  filter(data_source %in% c(&quot;mod_truth&quot;, params_local$cstar_nutrient)) %&gt;%
+  select(lat, lon, depth, data_source, gamma_slab, dcant) %&gt;%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %&gt;%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %&gt;%
+  drop_na()
+
+dcant_slab_bias_cstar &lt;-
+  m_dcant_slab_concentration(
+    dcant_3d_bias_cstar %&gt;%
+      select(lat, lon, depth, gamma_slab, dcant = dcant_bias) %&gt;%
+      mutate(
+        dcant_pos = dcant,
+        dcant_sd = 0,
+        dcant_pos_sd = 0
+      )
+  )
+
+
+dcant_slab_bias_cstar %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
+  group_split(gamma_slab) %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;dcant&quot;,
+      col = &quot;divergent&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;, unique(.x$gamma_slab), 
+                            &quot;| mod_truth - delta C*&quot;)
+    )  +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
+                                      era_label == &quot;both&quot;),
+        aes(lon, lat), fill = &quot;purple&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[1]
+        ),
+        aes(lon, lat), fill = &quot;grey50&quot;) +
+      geom_raster(
+        data = GLODAP_grid %&gt;% filter(
+          gamma_slab == unique(.x$gamma_slab),
+          era_label == unique(tref$era)[2]
+        ),
+        aes(lon, lat),fill = &quot;black&quot;)
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/analysis_slab_inventory.Rmd/dcant_slab_bias_decomposition-6.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="sd-across-models" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> SD across models</h2>
 <pre class="r"><code>dcant_slab %&gt;%
   filter(data_source %in% c(&quot;mod&quot;, &quot;obs&quot;)) %&gt;% 
   filter(gamma_slab %in% params_local$plot_slabs) %&gt;% 
@@ -29467,7 +29948,7 @@ jens-daniel-mueller
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -29505,6 +29986,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-1.png" target="_blank">469a640</a>
@@ -30678,6 +31170,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-2.png" target="_blank">469a640</a>
@@ -32029,6 +32532,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-3.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -33222,6 +33736,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-4.png" target="_blank">469a640</a>
@@ -34441,6 +34966,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-5.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-5.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -35194,6 +35730,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-6.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_all_SD_gamma_slab_maps-6.png" target="_blank">469a640</a>
@@ -36097,7 +36644,7 @@ jens-daniel-mueller
       geom_raster(
         data = GLODAP_grid %&gt;% filter(gamma_slab == unique(.x$gamma_slab),
                                       era_label == &quot;both&quot;),
-        aes(lon, lat), fill = &quot;red&quot;) +
+        aes(lon, lat), fill = &quot;purple&quot;) +
       geom_raster(
         data = GLODAP_grid %&gt;% filter(
           gamma_slab == unique(.x$gamma_slab),
@@ -36149,6 +36696,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-1.png" target="_blank">469a640</a>
@@ -37998,6 +38556,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-2.png" target="_blank">469a640</a>
@@ -39860,6 +40429,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-3.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-3.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -41258,6 +41838,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-4.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-4.png" target="_blank">469a640</a>
 </td>
 <td>
@@ -42593,7 +43184,7 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>dcant_slab_budget %&gt;% 
   ggplot(aes(data_source, dcant, fill = gamma_slab)) +
-  geom_hline(yintercept = 0, col = &quot;red&quot;) +
+  geom_hline(yintercept = 0, col = &quot;purple&quot;) +
   geom_col() +
   scale_fill_viridis_d(direction = -1) +
   facet_wrap(~ basin_AIP)</code></pre>
@@ -42620,6 +43211,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-5.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-5.png" target="_blank">469a640</a>
@@ -43561,7 +44163,7 @@ jens-daniel-mueller
 </div>
 <pre class="r"><code>dcant_slab_budget %&gt;% 
   ggplot(aes(data_source, dcant, fill = basin_AIP)) +
-  geom_hline(yintercept = 0, col = &quot;red&quot;) +
+  geom_hline(yintercept = 0, col = &quot;purple&quot;) +
   geom_col() +
   scale_fill_viridis_d(direction = -1)</code></pre>
 <p><img src="figure/analysis_slab_inventory.Rmd/calc_slab_inventory-6.png" width="672" style="display: block; margin: auto;" /></p>
@@ -43587,6 +44189,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-6.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/calc_slab_inventory-6.png" target="_blank">469a640</a>
@@ -44566,6 +45179,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_slab_budget_bias-1.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_slab_budget_bias-1.png" target="_blank">469a640</a>
@@ -45819,6 +46443,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a28c3f7028bd977f65cc8549388c9c75f9bf4a70/docs/figure/analysis_slab_inventory.Rmd/dcant_slab_budget_bias-2.png" target="_blank">a28c3f7</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/469a64089b3c891e953c48da522cc4b34fe510d0/docs/figure/analysis_slab_inventory.Rmd/dcant_slab_budget_bias-2.png" target="_blank">469a640</a>
