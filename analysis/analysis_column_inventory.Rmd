@@ -237,7 +237,7 @@ p_map_cant_inv(
 
 p_map_cant_inv(
     df = target_inv,
-    var = "dcant_mean_bias",
+    var = "dcant",
     col = "bias",
     subtitle_text = "data_source: delta C* prediction bias")
 
@@ -273,7 +273,7 @@ dcant_bias_decomposition <- full_join(
   dcant_inv_bias_cstar %>%
     select(lat, lon, cstar_bias_mod_truth = dcant_bias),
   target_inv %>%
-    select(lat, lon, cstar_predition_bias = dcant_mean_bias) %>%
+    select(lat, lon, cstar_predition_bias = dcant) %>%
     drop_na()
 )
 
