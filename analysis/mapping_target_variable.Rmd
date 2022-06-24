@@ -110,6 +110,23 @@ lm_best_target <-
 
 ```
 
+## Spatial MLR residuals
+
+```{r load_eMLR_residuals}
+
+
+spatial_residual <-
+  read_csv(paste(path_version_data,
+                 "lm_spatial_residual.csv",
+                 sep = ""))
+
+spatial_residual_offset <-
+  read_csv(paste(path_version_data,
+                 "lm_spatial_residual_offset.csv",
+                 sep = ""))
+
+```
+
 ## Others
 
 ```{r read_other_data}
@@ -533,7 +550,8 @@ target_slab <- target_3d %>%
 
 ## C* bias
 
-```{r dcant_all_gamma_slab_maps, fig.asp=1}
+```{r dcant_all_gamma_slab_maps, fig.asp=1, eval=FALSE}
+
 
 target_slab %>%
   filter(gamma_slab %in% params_local$plot_slabs) %>%
@@ -548,10 +566,64 @@ target_slab %>%
       subtitle_text = paste("Neutral density:",
                             unique(.x$gamma_slab))
     ) +
-      facet_grid(era~.)
+      facet_grid(era ~ .)
+  )
+
+spatial_residual %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = ".resid_mean",
+      col = "bias",
+      subtitle_text = paste("Neutral density:",
+                            unique(.x$gamma_slab))
+    ) +
+      facet_grid(era ~ data_source) +
+      theme_dark()
+  )
+
+target_slab_residual <-
+  full_join(
+    target_slab %>%
+      select(era, lat, lon, gamma_slab, cstar_predition_bias = dcant),
+    spatial_residual %>%
+      filter(data_source == "mod") %>%
+      select(era, lat, lon, gamma_slab, cstar_MLR_residual = .resid_mean)
   )
 
 
+target_slab_residual %>%
+  ggplot(aes(cstar_MLR_residual, cstar_predition_bias)) +
+  geom_bin_2d(binwidth = 1) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  coord_equal() +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_grid(gamma_slab ~ era)
+
+
+target_slab_residual %>%
+  mutate(resid_pred_offset = cstar_predition_bias + cstar_MLR_residual) %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = "resid_pred_offset",
+      col = "bias",
+      subtitle_text = paste("Neutral density:",
+                            unique(.x$gamma_slab),
+                            "| cstar_predition_bias + cstar_MLR_residual")
+    ) +
+      facet_grid(era ~ .) +
+      theme_dark()
+  )
 
 ```
 
@@ -575,6 +647,64 @@ target_slab %>%
     col = "divergent",
     subtitle_text = paste("Neutral density:", unique(.x$gamma_slab))
   ))
+
+spatial_residual_offset %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = ".resid_mean_offset",
+      col = "bias",
+      subtitle_text = paste("Neutral density:",
+                            unique(.x$gamma_slab))
+    ) +
+      facet_grid(era ~ data_source) +
+      theme_dark()
+  )
+
+target_slab_residual <-
+  full_join(
+    target_slab %>%
+      filter(!is.na(dcant_mean_bias)) %>% 
+      select(era, lat, lon, gamma_slab, cstar_predition_bias = dcant_mean_bias),
+    spatial_residual_offset %>%
+      filter(data_source == "mod") %>%
+      select(era, lat, lon, gamma_slab, cstar_MLR_residual = .resid_mean_offset)
+  )
+
+
+target_slab_residual %>%
+  ggplot(aes(cstar_MLR_residual, cstar_predition_bias)) +
+  geom_bin_2d(binwidth = 1) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  coord_equal() +
+  scale_fill_viridis_c(trans = "log10") +
+  facet_wrap(~ gamma_slab)
+
+
+target_slab_residual %>%
+  mutate(resid_pred_offset = cstar_predition_bias + cstar_MLR_residual) %>%
+  filter(gamma_slab %in% params_local$plot_slabs) %>%
+  group_by(gamma_slab) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = "resid_pred_offset",
+      col = "bias",
+      subtitle_text = paste("Neutral density:",
+                            unique(.x$gamma_slab),
+                            "| cstar_predition_bias + cstar_MLR_residual")
+    ) +
+      facet_grid(era ~ .) +
+      theme_dark()
+  )
+
 
 
 ```
