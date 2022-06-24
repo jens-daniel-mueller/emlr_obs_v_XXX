@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefef22e560f54de60208c31f1b8eb17b5f90955a3targetblankfef22e5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fef22e560f54de60208c31f1b8eb17b5f90955a3" target="_blank">fef22e5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree461b7e2890340c7fe6966432372e4ebdc3a21bcatargetblank461b7e2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/461b7e2890340c7fe6966432372e4ebdc3a21bca" target="_blank">461b7e2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreefef22e560f54de60208c31f1b8eb17b5f90955a3targetblankfef22e5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree461b7e2890340c7fe6966432372e4ebdc3a21bcatargetblank461b7e2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/fef22e560f54de60208c31f1b8eb17b5f90955a3" target="_blank">fef22e5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/461b7e2890340c7fe6966432372e4ebdc3a21bca" target="_blank">461b7e2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -596,6 +596,10 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+
+Unstaged changes:
+    Modified:   analysis/eMLR_model_fitting.Rmd
+    Modified:   code/Workflowr_project_managment.R
 
 </code></pre>
 <p>
@@ -634,6 +638,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/461b7e2890340c7fe6966432372e4ebdc3a21bca/analysis/mapping_target_variable.Rmd" target="_blank">461b7e2</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+<td>
+decompose residual
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/376182f020af4bcc3c8c55617808b87f7c128056/docs/mapping_target_variable.html" target="_blank">376182f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2015,8 +2053,20 @@ rebuild with eMLR target variable selection
                  &quot;lm_best_target.csv&quot;,
                  sep = &quot;&quot;))</code></pre>
 </div>
-<div id="others" class="section level2" number="2.4">
-<h2><span class="header-section-number">2.4</span> Others</h2>
+<div id="spatial-mlr-residuals" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Spatial MLR residuals</h2>
+<pre class="r"><code>spatial_residual &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;lm_spatial_residual.csv&quot;,
+                 sep = &quot;&quot;))
+
+spatial_residual_offset &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;lm_spatial_residual_offset.csv&quot;,
+                 sep = &quot;&quot;))</code></pre>
+</div>
+<div id="others" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Others</h2>
 <pre class="r"><code>tref  &lt;-
   read_csv(paste(path_version_data,
                  &quot;tref.csv&quot;,
@@ -3311,127 +3361,64 @@ jens-daniel-mueller
       subtitle_text = paste(&quot;Neutral density:&quot;,
                             unique(.x$gamma_slab))
     ) +
-      facet_grid(era~.)
+      facet_grid(era ~ .)
+  )
+
+spatial_residual %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;%
+  group_by(gamma_slab) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;.resid_mean&quot;,
+      col = &quot;bias&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;,
+                            unique(.x$gamma_slab))
+    ) +
+      facet_grid(era ~ data_source) +
+      theme_dark()
+  )
+
+target_slab_residual &lt;-
+  full_join(
+    target_slab %&gt;%
+      select(era, lat, lon, gamma_slab, cstar_predition_bias = dcant),
+    spatial_residual %&gt;%
+      filter(data_source == &quot;mod&quot;) %&gt;%
+      select(era, lat, lon, gamma_slab, cstar_MLR_residual = .resid_mean)
+  )
+
+
+target_slab_residual %&gt;%
+  ggplot(aes(cstar_MLR_residual, cstar_predition_bias)) +
+  geom_bin_2d(binwidth = 1) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  coord_equal() +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  facet_grid(gamma_slab ~ era)
+
+
+target_slab_residual %&gt;%
+  mutate(resid_pred_offset = cstar_predition_bias + cstar_MLR_residual) %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;%
+  group_by(gamma_slab) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;resid_pred_offset&quot;,
+      col = &quot;bias&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;,
+                            unique(.x$gamma_slab),
+                            &quot;| cstar_predition_bias + cstar_MLR_residual&quot;)
+    ) +
+      facet_grid(era ~ .) +
+      theme_dark()
   )</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_gamma_slab_maps-1">
-Past versions of dcant_all_gamma_slab_maps-1.png
-</button>
-</p>
-<div id="fig-dcant_all_gamma_slab_maps-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4274a87f5d6c0c5f3b92f1bd575651f5286f134c/docs/figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-1.png" target="_blank">4274a87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_gamma_slab_maps-2">
-Past versions of dcant_all_gamma_slab_maps-2.png
-</button>
-</p>
-<div id="fig-dcant_all_gamma_slab_maps-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4274a87f5d6c0c5f3b92f1bd575651f5286f134c/docs/figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-2.png" target="_blank">4274a87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[3]]</code></pre>
-<p><img src="figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-dcant_all_gamma_slab_maps-3">
-Past versions of dcant_all_gamma_slab_maps-3.png
-</button>
-</p>
-<div id="fig-dcant_all_gamma_slab_maps-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4274a87f5d6c0c5f3b92f1bd575651f5286f134c/docs/figure/mapping_target_variable.Rmd/dcant_all_gamma_slab_maps-3.png" target="_blank">4274a87</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-22
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="c-bias-offset-3" class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> C* bias offset</h2>
@@ -3570,6 +3557,76 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
+<pre class="r"><code>spatial_residual_offset %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;%
+  group_by(gamma_slab) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;.resid_mean_offset&quot;,
+      col = &quot;bias&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;,
+                            unique(.x$gamma_slab))
+    ) +
+      facet_grid(era ~ data_source) +
+      theme_dark()
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>target_slab_residual &lt;-
+  full_join(
+    target_slab %&gt;%
+      filter(!is.na(dcant_mean_bias)) %&gt;% 
+      select(era, lat, lon, gamma_slab, cstar_predition_bias = dcant_mean_bias),
+    spatial_residual_offset %&gt;%
+      filter(data_source == &quot;mod&quot;) %&gt;%
+      select(era, lat, lon, gamma_slab, cstar_MLR_residual = .resid_mean_offset)
+  )
+
+
+target_slab_residual %&gt;%
+  ggplot(aes(cstar_MLR_residual, cstar_predition_bias)) +
+  geom_bin_2d(binwidth = 1) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  coord_equal() +
+  scale_fill_viridis_c(trans = &quot;log10&quot;) +
+  facet_wrap(~ gamma_slab)</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>target_slab_residual %&gt;%
+  mutate(resid_pred_offset = cstar_predition_bias + cstar_MLR_residual) %&gt;%
+  filter(gamma_slab %in% params_local$plot_slabs) %&gt;%
+  group_by(gamma_slab) %&gt;%
+  group_split() %&gt;%
+  # head(1) %&gt;%
+  map(
+    ~ p_map_dcant_slab(
+      df = .x,
+      var = &quot;resid_pred_offset&quot;,
+      col = &quot;bias&quot;,
+      subtitle_text = paste(&quot;Neutral density:&quot;,
+                            unique(.x$gamma_slab),
+                            &quot;| cstar_predition_bias + cstar_MLR_residual&quot;)
+    ) +
+      facet_grid(era ~ .) +
+      theme_dark()
+  )</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[3]]</code></pre>
+<p><img src="figure/mapping_target_variable.Rmd/dcant_gamma_slab_maps_bias-10.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="budgets" class="section level1" number="10">
@@ -3616,6 +3673,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/376182f020af4bcc3c8c55617808b87f7c128056/docs/figure/mapping_target_variable.Rmd/budget_global-1.png" target="_blank">376182f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8380e17e86b658fafb0b69ccb69f4f7c3272219d/docs/figure/mapping_target_variable.Rmd/budget_global-1.png" target="_blank">8380e17</a>
@@ -3686,6 +3754,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/376182f020af4bcc3c8c55617808b87f7c128056/docs/figure/mapping_target_variable.Rmd/budget_basin_AIP-1.png" target="_blank">376182f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8380e17e86b658fafb0b69ccb69f4f7c3272219d/docs/figure/mapping_target_variable.Rmd/budget_basin_AIP-1.png" target="_blank">8380e17</a>
 </td>
 <td>
@@ -3743,6 +3822,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/376182f020af4bcc3c8c55617808b87f7c128056/docs/figure/mapping_target_variable.Rmd/budget_MLR_regions-1.png" target="_blank">376182f</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-24
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/8380e17e86b658fafb0b69ccb69f4f7c3272219d/docs/figure/mapping_target_variable.Rmd/budget_MLR_regions-1.png" target="_blank">8380e17</a>
