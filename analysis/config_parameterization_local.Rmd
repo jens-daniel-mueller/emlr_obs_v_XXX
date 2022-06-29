@@ -34,8 +34,8 @@ gobms <- str_remove(gobms, path_preprocessing)
 gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv")
 
 gobm_select <- gobms[c(1,2,3,5,8)]
-gobm_select <- gobm_select[4]
-gobm_select <- "CESM-ETHZ_v20211122_monthly"
+gobm_select <- gobm_select[2]
+# gobm_select <- "CESM-ETHZ_v20211122_monthly"
 
 rm(path_preprocessing, gobms)
 
@@ -155,8 +155,8 @@ params_local <-
     
     # bulk corrections for cruises from North Pacific 2010s
     phosphate_corr_NP_2010 = 1.007,
-    talk_corr_NP_2010 = 1.5,
-    tco2_corr_NP_2010 = -0.4,
+    talk_corr_NP_2010 = 2.05,
+    tco2_corr_NP_2010 = -0.6,
     
     # threshold for the cruise rmse from a global MLR model of the target variable
     target_global_rmse_max = 1000,
@@ -350,6 +350,7 @@ cruises_talk_calc = lst(cruises_talk_calc = c(
 
 # additive talk correction for calculate talk data
 talk_calc_corr = lst(talk_calc_corr = 3)
+# talk_calc_corr = lst(talk_calc_corr = 0)
 
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
@@ -405,8 +406,8 @@ tco2_corr_316N199 = 1.7
 
 # offset correction for cruises from North Pacific 2010s
 phosphate_corr_NP_2010 = 1.007
-talk_corr_NP_2010 = 1.5
-tco2_corr_NP_2010 = -0.4
+talk_corr_NP_2010 = 2.05
+tco2_corr_NP_2010 = -0.6
 
 # offset correction for cruises expodcode 316N199XXXXX
 cstar_corr_316N199 = lst(
@@ -636,7 +637,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_31%02d", i)
+  Version_ID <- sprintf("v_3n%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
