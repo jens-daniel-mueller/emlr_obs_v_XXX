@@ -506,6 +506,12 @@ p_map_cant_inv(df = target_inv,
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ era)
 
+p_map_cant_inv(df = target_inv %>%   filter(inv_depth == params_global$inventory_depth_standard),
+               var = "dcant",
+               col = "bias",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(. ~ era)
+
 
 ```
 

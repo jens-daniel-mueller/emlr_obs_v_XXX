@@ -5,7 +5,7 @@
 
 
 # commit regular changes (locally) and rebuild site
-wflow_publish(all = TRUE, message = "slab bias decomposition")
+wflow_publish(all = TRUE, message = "seperate plot for 3000m inventory")
 
 # commit changes including _site.yml (locally) and rebuild site
 wflow_publish(c("analysis/*Rmd"), message = "XXX", republish = TRUE)
@@ -34,20 +34,8 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun with depth filter",
+message = "rerun with CESM",
 republish = TRUE)
-
-
-
-wflow_publish(here::here(
-  "analysis",
-  c(
-    "analysis_MLR_performance.Rmd",
-    "analysis_anomalous_changes.Rmd",
-    "tracers_GLODAPv2_2021.Rmd"
-  )
-),
-message = "rerun with depth filter")
 
 
 # Push latest version to GitHub
@@ -79,18 +67,18 @@ files <- c(
 
 Version_IDs_1 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1s")#[c(4)]
+  pattern = "v_1n")#[5:6]
 
 Version_IDs_2 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_2s")#[c(4)]
+  pattern = "v_2n")[5:6]
 
 Version_IDs_3 <- list.files(
   path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_3s")#[c(4,2)]
+  pattern = "v_3n")#[4:6]
 
 Version_IDs <- c(
-  Version_IDs_1,
+  # Version_IDs_1,
   Version_IDs_2,
   Version_IDs_3
   )
