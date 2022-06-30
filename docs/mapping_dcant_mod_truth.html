@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5bb586f63243e8e272a0eb28039156facc6d1069targetblank5bb586fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5bb586f63243e8e272a0eb28039156facc6d1069" target="_blank">5bb586f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec3d49ab5aa6e831eabcb4f39c22933b5514dff50targetblankc3d49aba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c3d49ab5aa6e831eabcb4f39c22933b5514dff50" target="_blank">c3d49ab</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5bb586f63243e8e272a0eb28039156facc6d1069targetblank5bb586fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreec3d49ab5aa6e831eabcb4f39c22933b5514dff50targetblankc3d49aba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5bb586f63243e8e272a0eb28039156facc6d1069" target="_blank">5bb586f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/c3d49ab5aa6e831eabcb4f39c22933b5514dff50" target="_blank">c3d49ab</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -634,6 +634,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/c3d49ab5aa6e831eabcb4f39c22933b5514dff50/analysis/mapping_dcant_mod_truth.Rmd" target="_blank">c3d49ab</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-30
+</td>
+<td>
+included dissic changes for all runs
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/67aac515e0be32fd793a9212c7c4e890b961f97d/docs/mapping_dcant_mod_truth.html" target="_blank">67aac51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -3606,7 +3640,7 @@ tcant_cc_tref_2 &lt;-
 tcant_cc_tref_2 &lt;- tcant_cc_tref_2 %&gt;%
   rename(tcant_tref_2 = tcant) %&gt;%
   select(-year)</code></pre>
-<pre class="r"><code>dissic_tref_1 &lt;-
+<pre class="r"><code>dissic_tref_1_AD &lt;-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -3618,12 +3652,12 @@ tcant_cc_tref_2 &lt;- tcant_cc_tref_2 %&gt;%
     )
   )
 
-dissic_tref_1 &lt;- dissic_tref_1 %&gt;% 
+dissic_tref_1_AD &lt;- dissic_tref_1_AD %&gt;% 
   rename(A_1 = A,
          D_1 = D) %&gt;%
   select(-c(year))
 
-dissic_tref_2 &lt;-
+dissic_tref_2_AD &lt;-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -3635,9 +3669,42 @@ dissic_tref_2 &lt;-
     )
   )
 
-dissic_tref_2 &lt;- dissic_tref_2 %&gt;% 
+dissic_tref_2_AD &lt;- dissic_tref_2_AD %&gt;% 
   rename(A_2 = A,
          D_2 = D) %&gt;%
+  select(-c(year))</code></pre>
+<pre class="r"><code>dissic_tref_1_CB &lt;-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      &quot;Cant_CB_annual_all_models/dissic/&quot;,
+      unique(tref$median_year[1]),
+      &quot;_&quot;,
+      params_local$gobm,
+      &quot;.csv&quot;
+    )
+  )
+
+dissic_tref_1_CB &lt;- dissic_tref_1_CB %&gt;% 
+  rename(C_1 = C,
+         B_1 = B) %&gt;%
+  select(-c(year))
+
+dissic_tref_2_CB &lt;-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      &quot;Cant_CB_annual_all_models/dissic/&quot;,
+      unique(tref$median_year[2]),
+      &quot;_&quot;,
+      params_local$gobm,
+      &quot;.csv&quot;
+    )
+  )
+
+dissic_tref_2_CB &lt;- dissic_tref_2_CB %&gt;% 
+  rename(C_2 = C,
+         B_2 = B) %&gt;%
   select(-c(year))</code></pre>
 <pre class="r"><code>cstar_tref_1 &lt;-
   read_csv(
@@ -3781,30 +3848,42 @@ rm(
   dcant_3d_vc
 )</code></pre>
 <pre class="r"><code>surface_data &lt;- nrow(dcant_3d %&gt;% filter(method == &quot;surface&quot;)) &gt; 0</code></pre>
-<pre class="r"><code>dcant_3d_D &lt;- left_join(dissic_tref_1, dissic_tref_2) %&gt;%
-  mutate(dcant_A = A_2 - A_1,
-         dcant_D = D_2 - D_1)
+<pre class="r"><code>dcant_3d_dissic &lt;- left_join(dissic_tref_1_AD, dissic_tref_2_AD)
+dcant_3d_dissic &lt;- left_join(dcant_3d_dissic, dissic_tref_1_CB)
+dcant_3d_dissic &lt;- left_join(dcant_3d_dissic, dissic_tref_2_CB)
 
-rm(dissic_tref_1, dissic_tref_2)
 
-dcant_3d_D &lt;- dcant_3d_D %&gt;% 
+dcant_3d_dissic &lt;- dcant_3d_dissic %&gt;% 
+  mutate(
+    dcant_A = A_2 - A_1,
+    dcant_B = B_2 - B_1,
+    dcant_C = C_2 - C_1,
+    dcant_D = D_2 - D_1
+    )
+
+rm(dissic_tref_1_AD, dissic_tref_2_AD)
+rm(dissic_tref_1_CB, dissic_tref_2_CB)
+
+
+dcant_3d_dissic &lt;- dcant_3d_dissic %&gt;%
+  select(-c(A_1:B_2))
+
+dcant_3d_dissic &lt;- dcant_3d_dissic %&gt;% 
   pivot_longer(starts_with(&quot;dcant&quot;),
                names_prefix = &quot;dcant_&quot;,
                names_to = &quot;data_source&quot;,
                values_to = &quot;dcant&quot;)
 
 
-dcant_3d_D &lt;- dcant_3d_D %&gt;%
-  select(-c(A_1:D_2))
 
-dcant_3d_D &lt;- dcant_3d_D %&gt;%
+dcant_3d_dissic &lt;- dcant_3d_dissic %&gt;%
   mutate(dcant_pos = if_else(dcant &lt;= 0, 0, dcant))
 
-dcant_3d_D &lt;- full_join(dcant_3d_D, climatology)
+dcant_3d_dissic &lt;- full_join(dcant_3d_dissic, climatology)
 
-dcant_3d_D &lt;- m_cut_gamma(dcant_3d_D, &quot;gamma&quot;)
+dcant_3d_dissic &lt;- m_cut_gamma(dcant_3d_dissic, &quot;gamma&quot;)
 
-dcant_3d_D &lt;- dcant_3d_D %&gt;% 
+dcant_3d_dissic &lt;- dcant_3d_dissic %&gt;% 
   select(lon, lat, depth, basin_AIP, data_source,
             dcant, dcant_pos,
             gamma, gamma_slab) %&gt;% 
@@ -7619,6 +7698,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/67aac515e0be32fd793a9212c7c4e890b961f97d/docs/figure/mapping_dcant_mod_truth.Rmd/calc_dcant_inventories-1.png" target="_blank">67aac51</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-06-30
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/21dbfcaf5718b7c37df2258ef8291e7ae1d56d45/docs/figure/mapping_dcant_mod_truth.Rmd/calc_dcant_inventories-1.png" target="_blank">21dbfca</a>
 </td>
 <td>
@@ -8098,7 +8188,7 @@ jens-daniel-mueller
   dcant_inv &lt;- dcant_inv %&gt;% 
     mutate(method = &quot;total&quot;)
 }</code></pre>
-<pre class="r"><code>dcant_inv_D &lt;- dcant_3d_D %&gt;%
+<pre class="r"><code>dcant_inv_dissic &lt;- dcant_3d_dissic %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
   mutate(inv = map(.x = data, ~ m_dcant_inv(.x))) %&gt;%
@@ -8106,49 +8196,12 @@ jens-daniel-mueller
   unnest(inv) %&gt;%
   mutate(method = &quot;total&quot;)
 
-p_map_cant_inv(df = dcant_inv_D,
+p_map_cant_inv(df = dcant_inv_dissic,
                var = &quot;dcant&quot;,
                col = &quot;divergent&quot;,
                subtitle_text = &quot;for predefined integration depths&quot;) +
   facet_grid(inv_depth ~ data_source)</code></pre>
-<p><img src="figure/mapping_dcant_mod_truth.Rmd/calc_dcant_inventories_simD-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calc_dcant_inventories_simD-1">
-Past versions of calc_dcant_inventories_simD-1.png
-</button>
-</p>
-<div id="fig-calc_dcant_inventories_simD-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9425b813dc2de6638fbab8cf0d603e2416c14d8a/docs/figure/mapping_dcant_mod_truth.Rmd/calc_dcant_inventories_simD-1.png" target="_blank">9425b81</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_dcant_mod_truth.Rmd/calc_dcant_inventories_simABCD-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_inv_cstar &lt;- dcant_3d_cstar %&gt;%
   group_by(data_source) %&gt;%
   nest() %&gt;%
@@ -15326,52 +15379,15 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>dcant_budget_global_D &lt;- m_dcant_budget(dcant_inv_D)
+<pre class="r"><code>dcant_budget_global_dissic &lt;- m_dcant_budget(dcant_inv_dissic)
 
-dcant_budget_global_D %&gt;%
+dcant_budget_global_dissic %&gt;%
   filter(method == &quot;total&quot;) %&gt;%
   ggplot(aes(estimate, value)) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
   facet_grid(data_source ~ inv_depth)</code></pre>
-<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_global_simD-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-budget_global_simD-1">
-Past versions of budget_global_simD-1.png
-</button>
-</p>
-<div id="fig-budget_global_simD-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9425b813dc2de6638fbab8cf0d603e2416c14d8a/docs/figure/mapping_dcant_mod_truth.Rmd/budget_global_simD-1.png" target="_blank">9425b81</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_global_simABCD-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_global_cstar &lt;- m_dcant_budget(dcant_inv_cstar)
 
 dcant_budget_global_cstar %&gt;%
@@ -16835,58 +16851,21 @@ jens-daniel-mueller
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %&gt;% 
   select(-data) %&gt;%
   unnest(budget)</code></pre>
-<pre class="r"><code>dcant_budget_basin_AIP_D &lt;- dcant_inv_D %&gt;% 
+<pre class="r"><code>dcant_budget_basin_AIP_dissic &lt;- dcant_inv_dissic %&gt;% 
   group_by(basin_AIP) %&gt;%
   nest() %&gt;% 
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %&gt;% 
   select(-data) %&gt;%
   unnest(budget)
 
-dcant_budget_basin_AIP_D %&gt;%
+dcant_budget_basin_AIP_dissic %&gt;%
   filter(method == &quot;total&quot;) %&gt;%
   ggplot(aes(estimate, value, fill = basin_AIP)) +
   geom_hline(yintercept = 0) +
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
   facet_grid(data_source ~ inv_depth)</code></pre>
-<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_basin_AIP_simD-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-budget_basin_AIP_simD-1">
-Past versions of budget_basin_AIP_simD-1.png
-</button>
-</p>
-<div id="fig-budget_basin_AIP_simD-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/9425b813dc2de6638fbab8cf0d603e2416c14d8a/docs/figure/mapping_dcant_mod_truth.Rmd/budget_basin_AIP_simD-1.png" target="_blank">9425b81</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-06-30
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_basin_AIP_simABCD-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_AIP_cstar &lt;- dcant_inv_cstar %&gt;% 
   group_by(basin_AIP) %&gt;%
   nest() %&gt;% 
@@ -17870,8 +17849,8 @@ jens-daniel-mueller
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %&gt;%
   select(-data) %&gt;%
   unnest(budget)</code></pre>
-<pre class="r"><code>dcant_budget_basin_MLR_D &lt;-
-  full_join(dcant_inv_D, basinmask) %&gt;%
+<pre class="r"><code>dcant_budget_basin_MLR_dissic &lt;-
+  full_join(dcant_inv_dissic, basinmask) %&gt;%
   group_by(basin, MLR_basins) %&gt;%
   nest() %&gt;%
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %&gt;%
@@ -17879,7 +17858,7 @@ jens-daniel-mueller
   unnest(budget)
 
 
-dcant_budget_basin_MLR_D %&gt;%
+dcant_budget_basin_MLR_dissic %&gt;%
   filter(method == &quot;total&quot;,
          MLR_basins == &quot;5&quot;) %&gt;%
   ggplot(aes(estimate, value, fill = basin)) +
@@ -17887,7 +17866,7 @@ dcant_budget_basin_MLR_D %&gt;%
   scale_fill_brewer(palette = &quot;Dark2&quot;) +
   geom_col() +
   facet_grid(data_source ~ inv_depth)</code></pre>
-<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_MLR_regions_simD-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/mapping_dcant_mod_truth.Rmd/budget_MLR_regions_simABCD-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>dcant_budget_basin_MLR_cstar &lt;-
   full_join(dcant_inv_cstar, basinmask) %&gt;%
   group_by(basin, MLR_basins) %&gt;%
