@@ -88,15 +88,23 @@ The results displayed on this site correspond to the Version_ID: `r params$Versi
 
 # Required data
 
-- tcant 3D fields at tref1 and tref2 for variable and constant climate model runs
-
-
-```{r read_model_tcant_files_vc}
+```{r read_tref}
 
 tref  <-
   read_csv(paste(path_version_data,
                  "tref.csv",
                  sep = ""))
+
+```
+
+
+
+
+- tcant 3D fields at tref1 and tref2 for variable and constant climate model runs
+
+
+```{r read_model_tcant_files_vc}
+
 
 tcant_tref_1 <-
   read_csv(
@@ -165,6 +173,44 @@ tcant_cc_tref_2 <-
 tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
   rename(tcant_tref_2 = tcant) %>%
   select(-year)
+
+```
+
+```{r read_model_dissic_files_simD}
+
+dissic_tref_1 <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_AD_annual_all_models/dissic/",
+      unique(tref$median_year[1]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+dissic_tref_1 <- dissic_tref_1 %>% 
+  rename(A_1 = A,
+         D_1 = D) %>%
+  select(-c(year))
+
+dissic_tref_2 <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_AD_annual_all_models/dissic/",
+      unique(tref$median_year[2]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+dissic_tref_2 <- dissic_tref_2 %>% 
+  rename(A_2 = A,
+         D_2 = D) %>%
+  select(-c(year))
 
 ```
 
@@ -351,6 +397,40 @@ rm(
 ```{r test_surface_data}
 
 surface_data <- nrow(dcant_3d %>% filter(method == "surface")) > 0
+
+```
+
+
+```{r calc_model_cant_between_tref_simD}
+
+dcant_3d_D <- left_join(dissic_tref_1, dissic_tref_2) %>%
+  mutate(dcant_A = A_2 - A_1,
+         dcant_D = D_2 - D_1)
+
+rm(dissic_tref_1, dissic_tref_2)
+
+dcant_3d_D <- dcant_3d_D %>% 
+  pivot_longer(starts_with("dcant"),
+               names_prefix = "dcant_",
+               names_to = "data_source",
+               values_to = "dcant")
+
+
+dcant_3d_D <- dcant_3d_D %>%
+  select(-c(A_1:D_2))
+
+dcant_3d_D <- dcant_3d_D %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_3d_D <- full_join(dcant_3d_D, climatology)
+
+dcant_3d_D <- m_cut_gamma(dcant_3d_D, "gamma")
+
+dcant_3d_D <- dcant_3d_D %>% 
+  select(lon, lat, depth, basin_AIP, data_source,
+            dcant, dcant_pos,
+            gamma, gamma_slab) %>% 
+  mutate(method = "total")
 
 ```
 
@@ -582,6 +662,25 @@ if (surface_data == FALSE){
 
 ```
 
+```{r calc_dcant_inventories_simD, fig.asp=1}
+
+dcant_inv_D <- dcant_3d_D %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~ m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv) %>%
+  mutate(method = "total")
+
+p_map_cant_inv(df = dcant_inv_D,
+               var = "dcant",
+               col = "divergent",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ data_source)
+
+
+```
+
 ```{r calc_dcant_inventories_cstar, fig.asp=1}
 
 dcant_inv_cstar <- dcant_3d_cstar %>%
@@ -774,6 +873,19 @@ dcant_budget_global %>%
 
 ```
 
+```{r budget_global_simD}
+
+dcant_budget_global_D <- m_dcant_budget(dcant_inv_D)
+
+dcant_budget_global_D %>%
+  filter(method == "total") %>%
+  ggplot(aes(estimate, value)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(data_source ~ inv_depth)
+
+```
+
 ```{r budget_global_cstar}
 
 dcant_budget_global_cstar <- m_dcant_budget(dcant_inv_cstar)
@@ -822,6 +934,25 @@ dcant_budget_basin_AIP <- dcant_inv %>%
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
   select(-data) %>%
   unnest(budget)
+
+```
+
+```{r budget_basin_AIP_simD}
+
+dcant_budget_basin_AIP_D <- dcant_inv_D %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_AIP_D %>%
+  filter(method == "total") %>%
+  ggplot(aes(estimate, value, fill = basin_AIP)) +
+  geom_hline(yintercept = 0) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(data_source ~ inv_depth)
 
 ```
 
