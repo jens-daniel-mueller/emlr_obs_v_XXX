@@ -176,9 +176,9 @@ tcant_cc_tref_2 <- tcant_cc_tref_2 %>%
 
 ```
 
-```{r read_model_dissic_files_simD}
+```{r read_model_dissic_files_simAD}
 
-dissic_tref_1 <-
+dissic_tref_1_AD <-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -190,12 +190,12 @@ dissic_tref_1 <-
     )
   )
 
-dissic_tref_1 <- dissic_tref_1 %>% 
+dissic_tref_1_AD <- dissic_tref_1_AD %>% 
   rename(A_1 = A,
          D_1 = D) %>%
   select(-c(year))
 
-dissic_tref_2 <-
+dissic_tref_2_AD <-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -207,9 +207,47 @@ dissic_tref_2 <-
     )
   )
 
-dissic_tref_2 <- dissic_tref_2 %>% 
+dissic_tref_2_AD <- dissic_tref_2_AD %>% 
   rename(A_2 = A,
          D_2 = D) %>%
+  select(-c(year))
+
+```
+
+```{r read_model_dissic_files_simCB}
+
+dissic_tref_1_CB <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_CB_annual_all_models/dissic/",
+      unique(tref$median_year[1]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+dissic_tref_1_CB <- dissic_tref_1_CB %>% 
+  rename(C_1 = C,
+         B_1 = B) %>%
+  select(-c(year))
+
+dissic_tref_2_CB <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_CB_annual_all_models/dissic/",
+      unique(tref$median_year[2]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+dissic_tref_2_CB <- dissic_tref_2_CB %>% 
+  rename(C_2 = C,
+         B_2 = B) %>%
   select(-c(year))
 
 ```
@@ -401,32 +439,44 @@ surface_data <- nrow(dcant_3d %>% filter(method == "surface")) > 0
 ```
 
 
-```{r calc_model_cant_between_tref_simD}
+```{r calc_model_cant_between_tref_simABCD}
 
-dcant_3d_D <- left_join(dissic_tref_1, dissic_tref_2) %>%
-  mutate(dcant_A = A_2 - A_1,
-         dcant_D = D_2 - D_1)
+dcant_3d_dissic <- left_join(dissic_tref_1_AD, dissic_tref_2_AD)
+dcant_3d_dissic <- left_join(dcant_3d_dissic, dissic_tref_1_CB)
+dcant_3d_dissic <- left_join(dcant_3d_dissic, dissic_tref_2_CB)
 
-rm(dissic_tref_1, dissic_tref_2)
 
-dcant_3d_D <- dcant_3d_D %>% 
+dcant_3d_dissic <- dcant_3d_dissic %>% 
+  mutate(
+    dcant_A = A_2 - A_1,
+    dcant_B = B_2 - B_1,
+    dcant_C = C_2 - C_1,
+    dcant_D = D_2 - D_1
+    )
+
+rm(dissic_tref_1_AD, dissic_tref_2_AD)
+rm(dissic_tref_1_CB, dissic_tref_2_CB)
+
+
+dcant_3d_dissic <- dcant_3d_dissic %>%
+  select(-c(A_1:B_2))
+
+dcant_3d_dissic <- dcant_3d_dissic %>% 
   pivot_longer(starts_with("dcant"),
                names_prefix = "dcant_",
                names_to = "data_source",
                values_to = "dcant")
 
 
-dcant_3d_D <- dcant_3d_D %>%
-  select(-c(A_1:D_2))
 
-dcant_3d_D <- dcant_3d_D %>%
+dcant_3d_dissic <- dcant_3d_dissic %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d_D <- full_join(dcant_3d_D, climatology)
+dcant_3d_dissic <- full_join(dcant_3d_dissic, climatology)
 
-dcant_3d_D <- m_cut_gamma(dcant_3d_D, "gamma")
+dcant_3d_dissic <- m_cut_gamma(dcant_3d_dissic, "gamma")
 
-dcant_3d_D <- dcant_3d_D %>% 
+dcant_3d_dissic <- dcant_3d_dissic %>% 
   select(lon, lat, depth, basin_AIP, data_source,
             dcant, dcant_pos,
             gamma, gamma_slab) %>% 
@@ -663,9 +713,9 @@ if (surface_data == FALSE){
 
 ```
 
-```{r calc_dcant_inventories_simD, fig.asp=1}
+```{r calc_dcant_inventories_simABCD, fig.asp=1}
 
-dcant_inv_D <- dcant_3d_D %>%
+dcant_inv_dissic <- dcant_3d_dissic %>%
   group_by(data_source) %>%
   nest() %>%
   mutate(inv = map(.x = data, ~ m_dcant_inv(.x))) %>%
@@ -673,7 +723,7 @@ dcant_inv_D <- dcant_3d_D %>%
   unnest(inv) %>%
   mutate(method = "total")
 
-p_map_cant_inv(df = dcant_inv_D,
+p_map_cant_inv(df = dcant_inv_dissic,
                var = "dcant",
                col = "divergent",
                subtitle_text = "for predefined integration depths") +
@@ -874,11 +924,11 @@ dcant_budget_global %>%
 
 ```
 
-```{r budget_global_simD}
+```{r budget_global_simABCD}
 
-dcant_budget_global_D <- m_dcant_budget(dcant_inv_D)
+dcant_budget_global_dissic <- m_dcant_budget(dcant_inv_dissic)
 
-dcant_budget_global_D %>%
+dcant_budget_global_dissic %>%
   filter(method == "total") %>%
   ggplot(aes(estimate, value)) +
   scale_fill_brewer(palette = "Dark2") +
@@ -938,16 +988,16 @@ dcant_budget_basin_AIP <- dcant_inv %>%
 
 ```
 
-```{r budget_basin_AIP_simD}
+```{r budget_basin_AIP_simABCD}
 
-dcant_budget_basin_AIP_D <- dcant_inv_D %>% 
+dcant_budget_basin_AIP_dissic <- dcant_inv_dissic %>% 
   group_by(basin_AIP) %>%
   nest() %>% 
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
   select(-data) %>%
   unnest(budget)
 
-dcant_budget_basin_AIP_D %>%
+dcant_budget_basin_AIP_dissic %>%
   filter(method == "total") %>%
   ggplot(aes(estimate, value, fill = basin_AIP)) +
   geom_hline(yintercept = 0) +
@@ -1007,10 +1057,10 @@ dcant_budget_basin_MLR <-
 ```
 
 
-```{r budget_MLR_regions_simD}
+```{r budget_MLR_regions_simABCD}
 
-dcant_budget_basin_MLR_D <-
-  full_join(dcant_inv_D, basinmask) %>%
+dcant_budget_basin_MLR_dissic <-
+  full_join(dcant_inv_dissic, basinmask) %>%
   group_by(basin, MLR_basins) %>%
   nest() %>%
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
@@ -1018,7 +1068,7 @@ dcant_budget_basin_MLR_D <-
   unnest(budget)
 
 
-dcant_budget_basin_MLR_D %>%
+dcant_budget_basin_MLR_dissic %>%
   filter(method == "total",
          MLR_basins == "5") %>%
   ggplot(aes(estimate, value, fill = basin)) +
