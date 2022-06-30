@@ -652,6 +652,7 @@ dcant_inv <- dcant_3d %>%
 
 p_map_cant_inv(df = dcant_inv,
                var = "dcant",
+               col = "divergent",
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
@@ -1002,6 +1003,29 @@ dcant_budget_basin_MLR <-
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
   select(-data) %>%
   unnest(budget)
+
+```
+
+
+```{r budget_MLR_regions_simD}
+
+dcant_budget_basin_MLR_D <-
+  full_join(dcant_inv_D, basinmask) %>%
+  group_by(basin, MLR_basins) %>%
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+
+dcant_budget_basin_MLR_D %>%
+  filter(method == "total",
+         MLR_basins == "5") %>%
+  ggplot(aes(estimate, value, fill = basin)) +
+  geom_hline(yintercept = 0) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(data_source ~ inv_depth)
 
 ```
 

@@ -82,37 +82,6 @@ dcant estimates from this sensitivity case:
 
 ```{r read_dcant_budget_files}
 
-# integrated per basin_AIP
-
-dcant_budget_basin_AIP <-
-  read_csv(paste(path_version_data,
-                 "dcant_budget_basin_AIP.csv",
-                 sep = "")) %>% 
-  filter(method == "total") %>% 
-  select(-method)
-
-dcant_budget_basin_AIP_mod_truth <-
-  read_csv(paste(
-    path_version_data,
-    "dcant_budget_basin_AIP_mod_truth.csv",
-    sep = ""
-  )) %>% 
-  filter(method == "total") %>% 
-  select(-method)
-
-dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
-                                    dcant_budget_basin_AIP_mod_truth)
-
-target_budget_basin_AIP <-
-  read_csv(paste(path_version_data,
-                  "target_budget_basin_AIP.csv", sep = ""))
-
-dcant_budget_basin_AIP_cstar <-
-  read_csv(paste(path_version_data,
-                  "dcant_budget_basin_AIP_cstar.csv", sep = ""))
-
-rm(dcant_budget_basin_AIP_mod_truth)
-
 # globally integrated
 
 dcant_budget_global <-
@@ -136,7 +105,6 @@ dcant_budget_global <- bind_rows(dcant_budget_global,
 
 rm(dcant_budget_global_mod_truth)
 
-
 target_budget_global <-
   read_csv(paste(path_version_data,
                   "target_budget_global.csv", sep = ""))
@@ -144,6 +112,77 @@ target_budget_global <-
 dcant_budget_global_cstar <-
   read_csv(paste(path_version_data,
                   "dcant_budget_global_cstar.csv", sep = ""))
+
+# integrated per basin_AIP
+
+dcant_budget_basin_AIP <-
+  read_csv(paste(path_version_data,
+                 "dcant_budget_basin_AIP.csv",
+                 sep = "")) %>% 
+  filter(method == "total") %>% 
+  select(-method)
+
+dcant_budget_basin_AIP_mod_truth <-
+  read_csv(paste(
+    path_version_data,
+    "dcant_budget_basin_AIP_mod_truth.csv",
+    sep = ""
+  )) %>% 
+  filter(method == "total") %>% 
+  select(-method)
+
+dcant_budget_basin_AIP <- bind_rows(dcant_budget_basin_AIP,
+                                    dcant_budget_basin_AIP_mod_truth)
+
+rm(dcant_budget_basin_AIP_mod_truth)
+
+
+target_budget_basin_AIP <-
+  read_csv(paste(path_version_data,
+                  "target_budget_basin_AIP.csv", sep = ""))
+
+dcant_budget_basin_AIP_cstar <-
+  read_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_cstar.csv", sep = ""))
+
+# integrated per basin hemisphere
+
+dcant_budget_basin_MLR <-
+  read_csv(paste(path_version_data,
+                 "dcant_budget_basin_MLR.csv",
+                 sep = "")) %>% 
+  filter(method == "total",
+         MLR_basins == "5") %>% 
+  select(-c(method, MLR_basins))
+
+dcant_budget_basin_MLR_mod_truth <-
+  read_csv(paste(
+    path_version_data,
+    "dcant_budget_basin_MLR_mod_truth.csv",
+    sep = ""
+  )) %>% 
+  filter(method == "total",
+         MLR_basins == "5") %>% 
+  select(-c(method, MLR_basins))
+
+dcant_budget_basin_MLR <- bind_rows(dcant_budget_basin_MLR,
+                                    dcant_budget_basin_MLR_mod_truth)
+
+rm(dcant_budget_basin_MLR_mod_truth)
+
+target_budget_basin_MLR <-
+  read_csv(paste(path_version_data,
+                 "target_budget_basin_MLR.csv", sep = "")) %>%
+  filter(method == "total",
+         MLR_basins == "5") %>%
+  select(-c(method, MLR_basins))
+
+dcant_budget_basin_MLR_cstar <-
+  read_csv(paste(path_version_data,
+                 "dcant_budget_basin_MLR_cstar.csv", sep = "")) %>%
+  filter(method == "total",
+         MLR_basins == "5") %>%
+  select(-c(method, MLR_basins))
 
 
 # reference year
@@ -448,6 +487,149 @@ dcant_budget_basin_AIP_bias %>%
 
 ```
 
+# Basin hemispheres
+
+## Standard depth
+
+Results integrated over the upper `r params_global$inventory_depth_standard` m
+
+```{r dcant_budget_standard_depth_basin_MLR}
+
+dcant_budget_basin_MLR %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  ggplot(aes(estimate, value, fill=data_source)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col(position = "dodge") +
+  facet_grid(~basin)
+
+dcant_budget_basin_MLR %>%
+  filter(inv_depth == params_global$inventory_depth_standard) %>%
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    rowname_col = "basin",
+    groupname_col = c("data_source", "inv_depth"),
+    row_group.sep = " | Depth: "
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
+
+
+dcant_budget_basin_MLR_bias <- dcant_budget_basin_MLR %>%
+  filter(data_source %in% c("mod", "mod_truth")) %>%
+  select(data_source, basin, inv_depth, estimate, value) %>%
+  pivot_wider(names_from = data_source,
+              values_from = value) %>%
+  mutate(dcant_bias = mod - mod_truth,
+         dcant_bias_rel = dcant_bias / mod_truth * 100)
+
+dcant_budget_basin_MLR_bias <-
+  bind_rows(
+    target_budget_basin_MLR %>%
+      rename(dcant_bias = value) %>%
+      mutate(contribution = "C* prediction error") %>%
+      select(-data_source),
+    dcant_budget_basin_MLR_bias %>%
+      mutate(contribution = "dcant offset")
+  )
+
+
+
+dcant_budget_basin_MLR_cstar <- dcant_budget_basin_MLR_cstar %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+
+dcant_budget_basin_MLR_cstar <-
+  bind_rows(
+    dcant_budget_basin_MLR %>%
+      filter(data_source == "mod_truth"),
+    dcant_budget_basin_MLR_cstar
+  )
+
+dcant_budget_basin_MLR_bias_cstar <- dcant_budget_basin_MLR_cstar %>%
+  filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
+  select(basin, inv_depth, data_source, estimate, dcant = value) %>%
+  pivot_wider(names_from = data_source,
+              values_from = dcant) %>%
+  mutate(dcant_bias = !!sym(params_local$cstar_nutrient) - mod_truth) %>%
+  drop_na()
+
+
+dcant_budget_basin_MLR_bias <-
+  bind_rows(
+    dcant_budget_basin_MLR_bias,
+    dcant_budget_basin_MLR_bias_cstar %>%
+      mutate(contribution = "delta C* - mod_truth")
+  )
+
+
+
+dcant_budget_basin_MLR_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard) %>% 
+  ggplot(aes(estimate, dcant_bias, fill=contribution)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(.~ basin)
+
+dcant_budget_basin_MLR_bias %>% 
+  filter(inv_depth == params_global$inventory_depth_standard,
+         !is.na(dcant_bias_rel)) %>% 
+  ggplot(aes(estimate, dcant_bias_rel, fill=basin)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2")
+
+
+```
+
+## Other depths
+
+Results integrated over the upper `r params_global$inventory_depths` m
+
+```{r cant_budget_other_depth_basin_MLR, fig.asp=1}
+
+dcant_budget_basin_MLR %>%
+  ggplot(aes(estimate, value, fill=data_source)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col(position = "dodge") +
+  facet_grid(inv_depth ~ basin)
+             
+dcant_budget_basin_MLR %>%
+  pivot_wider(names_from = estimate,
+              values_from = value) %>% 
+  gt(
+    rowname_col = "basin",
+    groupname_col = c("data_source", "inv_depth"),
+    row_group.sep = " | Depth: "
+  ) %>%
+  summary_rows(groups = TRUE,
+               fns = list(total = "sum"))
+
+
+dcant_budget_basin_MLR_bias %>% 
+  ggplot(aes(dcant_bias, estimate, fill=contribution)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(inv_depth ~ basin)
+
+dcant_budget_basin_MLR_bias %>% 
+  ggplot(aes(dcant_bias_rel, estimate, fill=basin)) +
+  geom_vline(xintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_grid(inv_depth ~ .)
+
+
+```
+
 
 # Write files
 
@@ -456,6 +638,10 @@ dcant_budget_basin_AIP_bias %>%
 dcant_budget_basin_AIP_bias %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_basin_AIP_bias.csv", sep = ""))
+
+dcant_budget_basin_MLR_bias %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_bias.csv", sep = ""))
 
 dcant_budget_global_bias %>%
   write_csv(paste(path_version_data,
