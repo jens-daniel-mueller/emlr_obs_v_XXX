@@ -578,16 +578,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree812b45011807e52bdf689bb66e6c513b138e3ddbtargetblank812b450a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/812b45011807e52bdf689bb66e6c513b138e3ddb" target="_blank">812b450</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d698d49dbcd4ffd6ec5434265775270946ffc19targetblank5d698d4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d698d49dbcd4ffd6ec5434265775270946ffc19" target="_blank">5d698d4</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree812b45011807e52bdf689bb66e6c513b138e3ddbtargetblank812b450a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5d698d49dbcd4ffd6ec5434265775270946ffc19targetblank5d698d4a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/812b45011807e52bdf689bb66e6c513b138e3ddb" target="_blank">812b450</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5d698d49dbcd4ffd6ec5434265775270946ffc19" target="_blank">5d698d4</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -634,6 +634,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/5d698d49dbcd4ffd6ec5434265775270946ffc19/analysis/analysis_budgets.Rmd" target="_blank">5d698d4</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-07-05
+</td>
+<td>
+use cstar A files
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/2cf42bb8269662d4782c51148ca6f60b1927ee5c/docs/analysis_budgets.html" target="_blank">2cf42bb</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-07-05
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -4539,9 +4573,13 @@ target_budget_global &lt;-
   read_csv(paste(path_version_data,
                   &quot;target_budget_global.csv&quot;, sep = &quot;&quot;))
 
-dcant_budget_global_cstar &lt;-
+dcant_budget_global_cstar_A &lt;-
   read_csv(paste(path_version_data,
                   &quot;dcant_budget_global_cstar_A.csv&quot;, sep = &quot;&quot;))
+
+dcant_budget_global_cstar_B &lt;-
+  read_csv(paste(path_version_data,
+                  &quot;dcant_budget_global_cstar_B.csv&quot;, sep = &quot;&quot;))
 
 # integrated per basin_AIP
 
@@ -4571,9 +4609,13 @@ target_budget_basin_AIP &lt;-
   read_csv(paste(path_version_data,
                   &quot;target_budget_basin_AIP.csv&quot;, sep = &quot;&quot;))
 
-dcant_budget_basin_AIP_cstar &lt;-
+dcant_budget_basin_AIP_cstar_A &lt;-
   read_csv(paste(path_version_data,
                   &quot;dcant_budget_basin_AIP_cstar_A.csv&quot;, sep = &quot;&quot;))
+
+dcant_budget_basin_AIP_cstar_B &lt;-
+  read_csv(paste(path_version_data,
+                  &quot;dcant_budget_basin_AIP_cstar_B.csv&quot;, sep = &quot;&quot;))
 
 # integrated per basin hemisphere
 
@@ -4607,12 +4649,19 @@ target_budget_basin_MLR &lt;-
          MLR_basins == &quot;5&quot;) %&gt;%
   select(-c(method, MLR_basins))
 
-dcant_budget_basin_MLR_cstar &lt;-
+dcant_budget_basin_MLR_cstar_A &lt;-
   read_csv(paste(path_version_data,
                  &quot;dcant_budget_basin_MLR_cstar_A.csv&quot;, sep = &quot;&quot;)) %&gt;%
   filter(method == &quot;total&quot;,
          MLR_basins == &quot;5&quot;) %&gt;%
   select(-c(method, MLR_basins))
+
+dcant_budget_basin_MLR_cstar_B &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;dcant_budget_basin_MLR_cstar_B.csv&quot;, sep = &quot;&quot;)) %&gt;%
+  filter(method == &quot;total&quot;,
+         MLR_basins == &quot;5&quot;) %&gt;%
+  select(-c(MLR_basins))
 
 
 # reference year
@@ -6515,7 +6564,16 @@ dcant_budget_global_bias &lt;-
       mutate(contribution = &quot;dcant offset&quot;)
   )
 
-dcant_budget_global_cstar &lt;- dcant_budget_global_cstar %&gt;%
+dcant_budget_global_cstar_A &lt;- dcant_budget_global_cstar_A %&gt;%
+  mutate(
+    data_source = case_when(
+      data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
+      data_source == &quot;no3&quot; ~ &quot;nitrate&quot;,
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_budget_global_cstar_B &lt;- dcant_budget_global_cstar_B %&gt;%
   mutate(
     data_source = case_when(
       data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
@@ -6525,15 +6583,15 @@ dcant_budget_global_cstar &lt;- dcant_budget_global_cstar %&gt;%
   )
 
 
-dcant_budget_global_cstar &lt;-
+dcant_budget_global_cstar_A &lt;-
   bind_rows(
     dcant_budget_global %&gt;%
       filter(data_source == &quot;mod_truth&quot;),
-    dcant_budget_global_cstar %&gt;% 
+    dcant_budget_global_cstar_A %&gt;% 
       filter(method == &quot;total&quot;)
   )
 
-dcant_budget_global_bias_cstar &lt;- dcant_budget_global_cstar %&gt;%
+dcant_budget_global_bias_cstar_A &lt;- dcant_budget_global_cstar_A %&gt;%
   filter(data_source %in% c(&quot;mod_truth&quot;, params_local$cstar_nutrient)) %&gt;%
   select(inv_depth, data_source, estimate, dcant = value) %&gt;%
   pivot_wider(names_from = data_source,
@@ -6545,8 +6603,17 @@ dcant_budget_global_bias_cstar &lt;- dcant_budget_global_cstar %&gt;%
 dcant_budget_global_bias &lt;-
   bind_rows(
     dcant_budget_global_bias,
-    dcant_budget_global_bias_cstar %&gt;%
+    dcant_budget_global_bias_cstar_A %&gt;%
       mutate(contribution = &quot;delta C* - mod_truth&quot;)
+  )
+
+dcant_budget_global_bias &lt;-
+  bind_rows(
+    dcant_budget_global_bias,
+    dcant_budget_global_cstar_B %&gt;%
+      filter(data_source %in% params_local$cstar_nutrient) %&gt;% 
+      select(method, estimate, inv_depth, dcant_bias = value) %&gt;% 
+      mutate(contribution = &quot;C* drift&quot;)
   )
 
 
@@ -15677,7 +15744,7 @@ dcant_budget_basin_AIP_bias &lt;-
 
 
 
-dcant_budget_basin_AIP_cstar &lt;- dcant_budget_basin_AIP_cstar %&gt;%
+dcant_budget_basin_AIP_cstar_A &lt;- dcant_budget_basin_AIP_cstar_A %&gt;%
   mutate(
     data_source = case_when(
       data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
@@ -15687,15 +15754,25 @@ dcant_budget_basin_AIP_cstar &lt;- dcant_budget_basin_AIP_cstar %&gt;%
   )
 
 
-dcant_budget_basin_AIP_cstar &lt;-
+dcant_budget_basin_AIP_cstar_B &lt;- dcant_budget_basin_AIP_cstar_B %&gt;%
+  mutate(
+    data_source = case_when(
+      data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
+      data_source == &quot;no3&quot; ~ &quot;nitrate&quot;,
+      TRUE                 ~ data_source
+    )
+  )
+
+
+dcant_budget_basin_AIP_cstar_A &lt;-
   bind_rows(
     dcant_budget_basin_AIP %&gt;%
       filter(data_source == &quot;mod_truth&quot;),
-    dcant_budget_basin_AIP_cstar %&gt;% 
+    dcant_budget_basin_AIP_cstar_A %&gt;% 
       filter(method == &quot;total&quot;)
   )
 
-dcant_budget_basin_AIP_bias_cstar &lt;- dcant_budget_basin_AIP_cstar %&gt;%
+dcant_budget_basin_AIP_bias_cstar_A &lt;- dcant_budget_basin_AIP_cstar_A %&gt;%
   filter(data_source %in% c(&quot;mod_truth&quot;, params_local$cstar_nutrient)) %&gt;%
   select(basin_AIP, inv_depth, data_source, estimate, dcant = value) %&gt;%
   pivot_wider(names_from = data_source,
@@ -15707,10 +15784,18 @@ dcant_budget_basin_AIP_bias_cstar &lt;- dcant_budget_basin_AIP_cstar %&gt;%
 dcant_budget_basin_AIP_bias &lt;-
   bind_rows(
     dcant_budget_basin_AIP_bias,
-    dcant_budget_basin_AIP_bias_cstar %&gt;%
+    dcant_budget_basin_AIP_bias_cstar_A %&gt;%
       mutate(contribution = &quot;delta C* - mod_truth&quot;)
   )
 
+dcant_budget_basin_AIP_bias &lt;-
+  bind_rows(
+    dcant_budget_basin_AIP_bias,
+    dcant_budget_basin_AIP_cstar_B %&gt;%
+      filter(data_source %in% params_local$cstar_nutrient) %&gt;% 
+      select(basin_AIP, method, estimate, inv_depth, dcant_bias = value) %&gt;% 
+      mutate(contribution = &quot;C* drift&quot;)
+  )
 
 
 dcant_budget_basin_AIP_bias %&gt;% 
@@ -23605,7 +23690,16 @@ dcant_budget_basin_MLR_bias &lt;-
 
 
 
-dcant_budget_basin_MLR_cstar &lt;- dcant_budget_basin_MLR_cstar %&gt;%
+dcant_budget_basin_MLR_cstar_A &lt;- dcant_budget_basin_MLR_cstar_A %&gt;%
+  mutate(
+    data_source = case_when(
+      data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
+      data_source == &quot;no3&quot; ~ &quot;nitrate&quot;,
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_budget_basin_MLR_cstar_B &lt;- dcant_budget_basin_MLR_cstar_B %&gt;%
   mutate(
     data_source = case_when(
       data_source == &quot;po4&quot; ~ &quot;phosphate&quot;,
@@ -23615,14 +23709,14 @@ dcant_budget_basin_MLR_cstar &lt;- dcant_budget_basin_MLR_cstar %&gt;%
   )
 
 
-dcant_budget_basin_MLR_cstar &lt;-
+dcant_budget_basin_MLR_cstar_A &lt;-
   bind_rows(
     dcant_budget_basin_MLR %&gt;%
       filter(data_source == &quot;mod_truth&quot;),
-    dcant_budget_basin_MLR_cstar
+    dcant_budget_basin_MLR_cstar_A
   )
 
-dcant_budget_basin_MLR_bias_cstar &lt;- dcant_budget_basin_MLR_cstar %&gt;%
+dcant_budget_basin_MLR_bias_cstar_A &lt;- dcant_budget_basin_MLR_cstar_A %&gt;%
   filter(data_source %in% c(&quot;mod_truth&quot;, params_local$cstar_nutrient)) %&gt;%
   select(basin, inv_depth, data_source, estimate, dcant = value) %&gt;%
   pivot_wider(names_from = data_source,
@@ -23634,10 +23728,18 @@ dcant_budget_basin_MLR_bias_cstar &lt;- dcant_budget_basin_MLR_cstar %&gt;%
 dcant_budget_basin_MLR_bias &lt;-
   bind_rows(
     dcant_budget_basin_MLR_bias,
-    dcant_budget_basin_MLR_bias_cstar %&gt;%
+    dcant_budget_basin_MLR_bias_cstar_A %&gt;%
       mutate(contribution = &quot;delta C* - mod_truth&quot;)
   )
 
+dcant_budget_basin_MLR_bias &lt;-
+  bind_rows(
+    dcant_budget_basin_MLR_bias,
+    dcant_budget_basin_MLR_cstar_B %&gt;%
+      filter(data_source %in% params_local$cstar_nutrient) %&gt;% 
+      select(basin, method, estimate, inv_depth, dcant_bias = value) %&gt;% 
+      mutate(contribution = &quot;C* drift&quot;)
+  )
 
 
 dcant_budget_basin_MLR_bias %&gt;% 
