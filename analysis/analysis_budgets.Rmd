@@ -549,10 +549,18 @@ dcant_budget_basin_AIP %>%
 
 
 dcant_budget_basin_AIP_bias %>% 
+  ggplot(aes(estimate, dcant_bias, fill=basin_AIP)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Set2") +
+  facet_grid(inv_depth ~ .)
+
+
+dcant_budget_basin_AIP_bias %>% 
   ggplot(aes(estimate, dcant_bias_rel, fill=basin_AIP)) +
   geom_hline(yintercept = 0) +
   geom_col(position = "dodge") +
-  scale_fill_brewer(palette = "Dark2") +
+  scale_fill_brewer(palette = "Set2") +
   facet_grid(inv_depth ~ .)
 
 
@@ -719,6 +727,20 @@ dcant_budget_basin_MLR %>%
   summary_rows(groups = TRUE,
                fns = list(total = "sum"))
 
+
+dcant_budget_basin_MLR_bias %>% 
+  ggplot(aes(estimate, dcant_bias, fill=basin)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Set2") +
+  facet_grid(inv_depth ~ .)
+
+dcant_budget_basin_MLR_bias %>% 
+  ggplot(aes(estimate, dcant_bias_rel, fill=basin)) +
+  geom_hline(yintercept = 0) +
+  geom_col(position = "dodge") +
+  scale_fill_brewer(palette = "Set2") +
+  facet_grid(inv_depth ~ .)
 
 dcant_budget_basin_MLR_bias_decomposition %>% 
   ggplot(aes(estimate, dcant_bias, fill=contribution)) +
