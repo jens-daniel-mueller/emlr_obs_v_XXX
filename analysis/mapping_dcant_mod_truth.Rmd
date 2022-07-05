@@ -253,9 +253,9 @@ dissic_tref_2_CB <- dissic_tref_2_CB %>%
 ```
 
 
-```{r read_model_cstar_files_vc}
+```{r read_model_cstar_files_simA}
 
-cstar_tref_1 <-
+cstar_tref_1_A <-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -267,14 +267,14 @@ cstar_tref_1 <-
     )
   )
 
-cstar_tref_1 <- cstar_tref_1 %>%
+cstar_tref_1_A <- cstar_tref_1_A %>%
   select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
   pivot_longer(cstar_no3:cstar_po4,
                names_to = "data_source",
                names_prefix = "cstar_",
                values_to = "cstar_tref_1")
 
-cstar_tref_2 <-
+cstar_tref_2_A <-
   read_csv(
     paste0(
       path_model_preprocessing,
@@ -286,7 +286,49 @@ cstar_tref_2 <-
     )
   )
 
-cstar_tref_2 <- cstar_tref_2 %>%
+cstar_tref_2_A <- cstar_tref_2_A %>%
+  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
+  pivot_longer(cstar_no3:cstar_po4,
+               names_to = "data_source",
+               names_prefix = "cstar_",
+               values_to = "cstar_tref_2")
+
+```
+
+```{r read_model_cstar_files_simB}
+
+cstar_tref_1_B <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_CB_annual_all_models/Cstar_B_annual_all_models/",
+      unique(tref$median_year[1]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+cstar_tref_1_B <- cstar_tref_1_B %>%
+  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
+  pivot_longer(cstar_no3:cstar_po4,
+               names_to = "data_source",
+               names_prefix = "cstar_",
+               values_to = "cstar_tref_1")
+
+cstar_tref_2_B <-
+  read_csv(
+    paste0(
+      path_model_preprocessing,
+      "Cant_CB_annual_all_models/Cstar_B_annual_all_models/",
+      unique(tref$median_year[2]),
+      "_",
+      params_local$gobm,
+      ".csv"
+    )
+  )
+
+cstar_tref_2_B <- cstar_tref_2_B %>%
   select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
   pivot_longer(cstar_no3:cstar_po4,
                names_to = "data_source",
@@ -485,19 +527,19 @@ dcant_3d_dissic <- dcant_3d_dissic %>%
 ```
 
 
-```{r calc_model_dcant_between_tref_vc_cstar}
+```{r calc_model_dcant_between_tref_cstar_A}
 
-dcant_3d_cstar <- left_join(cstar_tref_1, cstar_tref_2) %>%
+dcant_3d_cstar_A <- left_join(cstar_tref_1_A, cstar_tref_2_A) %>%
   mutate(dcant = cstar_tref_2 - cstar_tref_1)
 
-rm(cstar_tref_1, cstar_tref_2)
+rm(cstar_tref_1_A, cstar_tref_2_A)
 
-dcant_3d_cstar <- dcant_3d_cstar %>%
+dcant_3d_cstar_A <- dcant_3d_cstar_A %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d_cstar <- full_join(dcant_3d_cstar, climatology)
+dcant_3d_cstar_A <- full_join(dcant_3d_cstar_A, climatology)
 
-dcant_3d_cstar <- dcant_3d_cstar %>%
+dcant_3d_cstar_A <- dcant_3d_cstar_A %>%
   mutate(
     method = "surface",
     method = if_else(
@@ -508,15 +550,53 @@ dcant_3d_cstar <- dcant_3d_cstar %>%
   )
 
 
-dcant_3d_cstar <- inner_join(
-  dcant_3d_cstar,
+dcant_3d_cstar_A <- inner_join(
+  dcant_3d_cstar_A,
   basinmask_AIP
 ) 
 
-dcant_3d_cstar <- m_cut_gamma(dcant_3d_cstar, "gamma")
+dcant_3d_cstar_A <- m_cut_gamma(dcant_3d_cstar_A, "gamma")
 
 
-dcant_3d_cstar <- dcant_3d_cstar %>% 
+dcant_3d_cstar_A <- dcant_3d_cstar_A %>% 
+  select(lon, lat, depth, basin_AIP, data_source, method,
+            cstar_tref_1, cstar_tref_2, dcant, dcant_pos,
+            gamma, gamma_slab)
+
+```
+
+```{r calc_model_dcant_between_tref_cstar_B}
+
+dcant_3d_cstar_B <- left_join(cstar_tref_1_B, cstar_tref_2_B) %>%
+  mutate(dcant = cstar_tref_2 - cstar_tref_1)
+
+rm(cstar_tref_1_B, cstar_tref_2_B)
+
+dcant_3d_cstar_B <- dcant_3d_cstar_B %>%
+  mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
+
+dcant_3d_cstar_B <- full_join(dcant_3d_cstar_B, climatology)
+
+dcant_3d_cstar_B <- dcant_3d_cstar_B %>%
+  mutate(
+    method = "surface",
+    method = if_else(
+      depth > params_local$depth_mapping,
+      "eMLR",
+      method
+    )
+  )
+
+
+dcant_3d_cstar_B <- inner_join(
+  dcant_3d_cstar_B,
+  basinmask_AIP
+) 
+
+dcant_3d_cstar_B <- m_cut_gamma(dcant_3d_cstar_B, "gamma")
+
+
+dcant_3d_cstar_B <- dcant_3d_cstar_B %>% 
   select(lon, lat, depth, basin_AIP, data_source, method,
             cstar_tref_1, cstar_tref_2, dcant, dcant_pos,
             gamma, gamma_slab)
@@ -540,9 +620,22 @@ dcant_3d %>%
 ```
 
 
-```{r cant_deep_climatology_map_cstar, fig.asp=0.6}
+```{r cant_deep_climatology_map_cstar_A, fig.asp=0.6}
 
-dcant_3d_cstar %>%
+dcant_3d_cstar_A %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_map_climatology(
+    df = .x,
+    var = "dcant",
+    subtitle_text = paste("data_source: ", .x$data_source)
+  ))
+
+```
+
+```{r cant_deep_climatology_map_cstar_B, fig.asp=0.6}
+
+dcant_3d_cstar_B %>%
   group_split(data_source) %>%
   # head(1) %>%
   map(~ p_map_climatology(
@@ -567,9 +660,22 @@ dcant_3d %>%
 
 ```
 
-```{r cant_deep_climatology_sections_cstar, fig.asp=1}
+```{r cant_deep_climatology_sections_cstar_A, fig.asp=1}
 
-dcant_3d_cstar %>%
+dcant_3d_cstar_A %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~ p_section_climatology_regular(
+    df = .x,
+    var = "dcant",
+    subtitle_text = paste("data_source: ", .x$data_source)
+  ))
+
+```
+
+```{r cant_deep_climatology_sections_cstar_B, fig.asp=1}
+
+dcant_3d_cstar_B %>%
   group_split(data_source) %>%
   # head(1) %>%
   map(~ p_section_climatology_regular(
@@ -615,32 +721,64 @@ dcant_zonal_method <- dcant_zonal_method %>%
 
 ```
 
-```{r calc_dcant_zonal_mean_sections_cstar}
+```{r calc_dcant_zonal_mean_sections_cstar_A}
 
-dcant_zonal_cstar <- dcant_3d_cstar %>%
+dcant_zonal_cstar_A <- dcant_3d_cstar_A %>%
   group_by(data_source) %>%
   nest() %>%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(zonal)
 
-dcant_zonal_cstar <- m_cut_gamma(dcant_zonal_cstar, "gamma_mean")
+dcant_zonal_cstar_A <- m_cut_gamma(dcant_zonal_cstar_A, "gamma_mean")
 
-dcant_zonal_method_cstar <- dcant_3d_cstar %>%
+dcant_zonal_method_cstar_A <- dcant_3d_cstar_A %>%
   group_by(data_source, method) %>%
   nest() %>%
   mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
   select(-data) %>%
   unnest(zonal)
 
-dcant_zonal_method_cstar <- m_cut_gamma(dcant_zonal_method_cstar,
+dcant_zonal_method_cstar_A <- m_cut_gamma(dcant_zonal_method_cstar_A,
                                    "gamma_mean")
 
-dcant_zonal_cstar <- dcant_zonal_cstar %>% 
+dcant_zonal_cstar_A <- dcant_zonal_cstar_A %>% 
   rename(dcant = dcant_mean,
          dcant_pos = dcant_pos_mean)
 
-dcant_zonal_method_cstar <- dcant_zonal_method_cstar %>% 
+dcant_zonal_method_cstar_A <- dcant_zonal_method_cstar_A %>% 
+  rename(dcant = dcant_mean,
+         dcant_pos = dcant_pos_mean)
+
+```
+
+
+```{r calc_dcant_zonal_mean_sections_cstar_B}
+
+dcant_zonal_cstar_B <- dcant_3d_cstar_B %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+dcant_zonal_cstar_B <- m_cut_gamma(dcant_zonal_cstar_B, "gamma_mean")
+
+dcant_zonal_method_cstar_B <- dcant_3d_cstar_B %>%
+  group_by(data_source, method) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_zonal_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+dcant_zonal_method_cstar_B <- m_cut_gamma(dcant_zonal_method_cstar_B,
+                                   "gamma_mean")
+
+dcant_zonal_cstar_B <- dcant_zonal_cstar_B %>% 
+  rename(dcant = dcant_mean,
+         dcant_pos = dcant_pos_mean)
+
+dcant_zonal_method_cstar_B <- dcant_zonal_method_cstar_B %>% 
   rename(dcant = dcant_mean,
          dcant_pos = dcant_pos_mean)
 
@@ -664,9 +802,23 @@ dcant_profile <- dcant_3d %>%
 
 ```
 
-```{r calc_dcant_profiles_cstar}
+```{r calc_dcant_profiles_cstar_A}
 
-dcant_profile_cstar <- dcant_3d_cstar %>%
+dcant_profile_cstar_A <- dcant_3d_cstar_A %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>% 
+  group_by(data_source, basin_AIP, depth) %>% 
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+```
+
+
+```{r calc_dcant_profiles_cstar_B}
+
+dcant_profile_cstar_B <- dcant_3d_cstar_B %>%
   mutate(area = earth_surf(lat, lon),
          dcant_scaled = dcant * area) %>% 
   group_by(data_source, basin_AIP, depth) %>% 
@@ -732,22 +884,46 @@ p_map_cant_inv(df = dcant_inv_dissic,
 
 ```
 
-```{r calc_dcant_inventories_cstar, fig.asp=1}
+```{r calc_dcant_inventories_cstar_A, fig.asp=1}
 
-dcant_inv_cstar <- dcant_3d_cstar %>%
+dcant_inv_cstar_A <- dcant_3d_cstar_A %>%
   group_by(data_source) %>%
   nest() %>%
   mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
   select(-data) %>%
   unnest(inv)
 
-p_map_cant_inv(df = dcant_inv_cstar,
+p_map_cant_inv(df = dcant_inv_cstar_A,
                var = "dcant",
+               col = "divergent",
                subtitle_text = "for predefined integration depths") +
   facet_grid(inv_depth ~ data_source)
 
 if (surface_data == FALSE){
-  dcant_inv_cstar <- dcant_inv_cstar %>% 
+  dcant_inv_cstar_A <- dcant_inv_cstar_A %>% 
+    mutate(method = "total")
+}
+
+```
+
+
+```{r calc_dcant_inventories_cstar_B, fig.asp=1}
+
+dcant_inv_cstar_B <- dcant_3d_cstar_B %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(df = dcant_inv_cstar_B,
+               var = "dcant",
+               col = "divergent",
+               subtitle_text = "for predefined integration depths") +
+  facet_grid(inv_depth ~ data_source)
+
+if (surface_data == FALSE){
+  dcant_inv_cstar_B <- dcant_inv_cstar_B %>% 
     mutate(method = "total")
 }
 
@@ -778,9 +954,9 @@ p_map_cant_inv(
 
 ```
 
-```{r cant_inventories_surface_cstar, eval=surface_data}
+```{r cant_inventories_surface_cstar_A, eval=surface_data}
 
-dcant_inv_surface_cstar <- dcant_3d_cstar %>%
+dcant_inv_surface_cstar_A <- dcant_3d_cstar_A %>%
   filter(method == "surface") %>% 
   group_by(data_source) %>%
   nest() %>%
@@ -789,7 +965,29 @@ dcant_inv_surface_cstar <- dcant_3d_cstar %>%
   unnest(inv)
 
 p_map_cant_inv(
-  df = dcant_inv_surface_cstar %>%
+  df = dcant_inv_surface_cstar_A %>%
+    filter(inv_depth < 1000),
+  var = "dcant_pos",
+  subtitle_text = "for predefined integration depths",
+  breaks = c(-Inf, seq(0, 4, 0.5), Inf)
+) +
+  facet_grid(inv_depth ~ data_source)
+
+
+```
+
+```{r cant_inventories_surface_cstar_B, eval=surface_data}
+
+dcant_inv_surface_cstar_B <- dcant_3d_cstar_B %>%
+  filter(method == "surface") %>% 
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+p_map_cant_inv(
+  df = dcant_inv_surface_cstar_B %>%
     filter(inv_depth < 1000),
   var = "dcant_pos",
   subtitle_text = "for predefined integration depths",
@@ -854,29 +1052,29 @@ dcant_inv %>%
 ```
 
 
-```{r combine_dcant_inventories_cstar, eval=surface_data}
+```{r combine_dcant_inventories_cstar_A, eval=surface_data}
 
-dcant_inv_cstar <- full_join(
-  dcant_inv_cstar %>% rename(dcant_total = dcant,
+dcant_inv_cstar_A <- full_join(
+  dcant_inv_cstar_A %>% rename(dcant_total = dcant,
                        dcant_pos_total = dcant_pos),
-  dcant_inv_surface_cstar %>% rename(dcant_surface = dcant,
+  dcant_inv_surface_cstar_A %>% rename(dcant_surface = dcant,
                                dcant_pos_surface = dcant_pos)
 )
 
-dcant_inv_cstar <- dcant_inv_cstar %>%
+dcant_inv_cstar_A <- dcant_inv_cstar_A %>%
   mutate(dcant_eMLR = dcant_total -
            replace(dcant_surface, is.na(dcant_surface), 0),
          dcant_pos_eMLR = dcant_pos_total -
            replace(dcant_pos_surface, is.na(dcant_pos_surface), 0))
 
-dcant_inv_all_cstar <- dcant_inv_cstar %>% 
+dcant_inv_all_cstar_A <- dcant_inv_cstar_A %>% 
   select(-starts_with("dcant_pos")) %>% 
   pivot_longer(starts_with("dcant_"),
                names_to = "method",
                names_prefix = "dcant_",
                values_to = "dcant")
 
-dcant_inv_pos_cstar <- dcant_inv_cstar %>% 
+dcant_inv_pos_cstar_A <- dcant_inv_cstar_A %>% 
   select(data_source, lon, lat, basin_AIP, inv_depth,
          starts_with("dcant_pos_")) %>% 
   pivot_longer(starts_with("dcant_pos_"),
@@ -884,14 +1082,65 @@ dcant_inv_pos_cstar <- dcant_inv_cstar %>%
                names_prefix = "dcant_pos_",
                values_to = "dcant_pos")
 
-dcant_inv_cstar <- full_join(
-  dcant_inv_all_cstar,
-  dcant_inv_pos_cstar
+dcant_inv_cstar_A <- full_join(
+  dcant_inv_all_cstar_A,
+  dcant_inv_pos_cstar_A
 )
 
-rm(dcant_inv_all_cstar, dcant_inv_pos_cstar, dcant_inv_surface_cstar)
+rm(dcant_inv_all_cstar_A, dcant_inv_pos_cstar_A, dcant_inv_surface_cstar_A)
 
-dcant_inv_cstar %>%
+dcant_inv_cstar_A %>%
+  group_by(inv_depth) %>%
+  group_split() %>% 
+  # tail(1) %>%
+  map(
+    ~ p_map_cant_inv(df = .x,
+                     var = "dcant",
+                     subtitle_text = paste("Integration depth",
+                                           unique(.x$inv_depth))) +
+      facet_grid(method ~ data_source)
+  )
+
+```
+
+```{r combine_dcant_inventories_cstar_B, eval=surface_data}
+
+dcant_inv_cstar_B <- full_join(
+  dcant_inv_cstar_B %>% rename(dcant_total = dcant,
+                       dcant_pos_total = dcant_pos),
+  dcant_inv_surface_cstar_B %>% rename(dcant_surface = dcant,
+                               dcant_pos_surface = dcant_pos)
+)
+
+dcant_inv_cstar_B <- dcant_inv_cstar_B %>%
+  mutate(dcant_eMLR = dcant_total -
+           replace(dcant_surface, is.na(dcant_surface), 0),
+         dcant_pos_eMLR = dcant_pos_total -
+           replace(dcant_pos_surface, is.na(dcant_pos_surface), 0))
+
+dcant_inv_all_cstar_B <- dcant_inv_cstar_B %>% 
+  select(-starts_with("dcant_pos")) %>% 
+  pivot_longer(starts_with("dcant_"),
+               names_to = "method",
+               names_prefix = "dcant_",
+               values_to = "dcant")
+
+dcant_inv_pos_cstar_B <- dcant_inv_cstar_B %>% 
+  select(data_source, lon, lat, basin_AIP, inv_depth,
+         starts_with("dcant_pos_")) %>% 
+  pivot_longer(starts_with("dcant_pos_"),
+               names_to = "method",
+               names_prefix = "dcant_pos_",
+               values_to = "dcant_pos")
+
+dcant_inv_cstar_B <- full_join(
+  dcant_inv_all_cstar_B,
+  dcant_inv_pos_cstar_B
+)
+
+rm(dcant_inv_all_cstar_B, dcant_inv_pos_cstar_B, dcant_inv_surface_cstar_B)
+
+dcant_inv_cstar_B %>%
   group_by(inv_depth) %>%
   group_split() %>% 
   # tail(1) %>%
@@ -937,11 +1186,25 @@ dcant_budget_global_dissic %>%
 
 ```
 
-```{r budget_global_cstar}
+```{r budget_global_cstar_A}
 
-dcant_budget_global_cstar <- m_dcant_budget(dcant_inv_cstar)
+dcant_budget_global_cstar_A <- m_dcant_budget(dcant_inv_cstar_A)
 
-dcant_budget_global_cstar %>%
+dcant_budget_global_cstar_A %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method == "total") %>%
+  ggplot(aes(estimate, value)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(~data_source)
+
+```
+
+```{r budget_global_cstar_B}
+
+dcant_budget_global_cstar_B <- m_dcant_budget(dcant_inv_cstar_B)
+
+dcant_budget_global_cstar_B %>%
   filter(inv_depth == params_global$inventory_depth_standard,
          method == "total") %>%
   ggplot(aes(estimate, value)) +
@@ -964,9 +1227,22 @@ dcant_budget_global %>%
 ```
 
 
-```{r budget_global_surface_cstar, eval=surface_data}
+```{r budget_global_surface_cstar_A, eval=surface_data}
 
-dcant_budget_global_cstar %>%
+dcant_budget_global_cstar_A %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  ggplot(aes(estimate, value, fill=method)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(.~data_source)
+
+```
+
+
+```{r budget_global_surface_cstar_B, eval=surface_data}
+
+dcant_budget_global_cstar_B %>%
   filter(inv_depth == params_global$inventory_depth_standard,
          method %in% c("surface", "eMLR")) %>%
   ggplot(aes(estimate, value, fill=method)) +
@@ -1008,9 +1284,20 @@ dcant_budget_basin_AIP_dissic %>%
 ```
 
 
-```{r budget_basin_AIP_cstar}
+```{r budget_basin_AIP_cstar_A}
 
-dcant_budget_basin_AIP_cstar <- dcant_inv_cstar %>% 
+dcant_budget_basin_AIP_cstar_A <- dcant_inv_cstar_A %>% 
+  group_by(basin_AIP) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+```{r budget_basin_AIP_cstar_B}
+
+dcant_budget_basin_AIP_cstar_B <- dcant_inv_cstar_B %>% 
   group_by(basin_AIP) %>%
   nest() %>% 
   mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
@@ -1031,9 +1318,21 @@ dcant_budget_basin_AIP %>%
 
 ```
 
-```{r budget_basin_AIP_fig_cstar, eval=surface_data}
+```{r budget_basin_AIP_fig_cstar_A, eval=surface_data}
 
-dcant_budget_basin_AIP_cstar %>%
+dcant_budget_basin_AIP_cstar_A %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR")) %>%
+  ggplot(aes(basin_AIP, value, fill=method)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  facet_grid(estimate~data_source)
+
+```
+
+```{r budget_basin_AIP_fig_cstar_B, eval=surface_data}
+
+dcant_budget_basin_AIP_cstar_B %>%
   filter(inv_depth == params_global$inventory_depth_standard,
          method %in% c("surface", "eMLR")) %>%
   ggplot(aes(basin_AIP, value, fill=method)) +
@@ -1079,10 +1378,22 @@ dcant_budget_basin_MLR_dissic %>%
 
 ```
 
-```{r budget_MLR_regions_cstar}
+```{r budget_MLR_regions_cstar_A}
 
-dcant_budget_basin_MLR_cstar <-
-  full_join(dcant_inv_cstar, basinmask) %>%
+dcant_budget_basin_MLR_cstar_A <-
+  full_join(dcant_inv_cstar_A, basinmask) %>%
+  group_by(basin, MLR_basins) %>%
+  nest() %>%
+  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
+  select(-data) %>%
+  unnest(budget)
+
+```
+
+```{r budget_MLR_regions_cstar_B}
+
+dcant_budget_basin_MLR_cstar_B <-
+  full_join(dcant_inv_cstar_B, basinmask) %>%
   group_by(basin, MLR_basins) %>%
   nest() %>%
   mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
@@ -1096,7 +1407,8 @@ dcant_budget_basin_MLR_cstar <-
 
 dcant_budget_basin_MLR %>%
   filter(inv_depth == params_global$inventory_depth_standard,
-         method %in% c("surface", "eMLR")) %>%
+         method %in% c("surface", "eMLR"),
+         MLR_basins == "5") %>%
   group_by(MLR_basins) %>%
   group_split() %>%
   # head(1) %>%
@@ -1111,11 +1423,32 @@ dcant_budget_basin_MLR %>%
 
 ```
 
-```{r budget_MLR_regions_fig_cstar, fig.asp=1, eval=surface_data}
+```{r budget_MLR_regions_fig_cstar_A, fig.asp=1, eval=surface_data}
 
-dcant_budget_basin_MLR_cstar %>%
+dcant_budget_basin_MLR_cstar_A %>%
   filter(inv_depth == params_global$inventory_depth_standard,
-         method %in% c("surface", "eMLR")) %>%
+         method %in% c("surface", "eMLR"),
+         MLR_basins == "5") %>%
+  group_by(MLR_basins) %>%
+  group_split() %>%
+  # head(1) %>%
+  map(
+    ~ ggplot(data = .x,
+             aes(basin, value, fill = method)) +
+      scale_fill_brewer(palette = "Dark2") +
+      geom_col() +
+      facet_grid(estimate ~ data_source) +
+      labs(title = paste("MLR_basins:", unique(.x$MLR_basins)))
+  )
+
+```
+
+```{r budget_MLR_regions_fig_cstar_B, fig.asp=1, eval=surface_data}
+
+dcant_budget_basin_MLR_cstar_B %>%
+  filter(inv_depth == params_global$inventory_depth_standard,
+         method %in% c("surface", "eMLR"),
+         MLR_basins == "5") %>%
   group_by(MLR_basins) %>%
   group_split() %>%
   # head(1) %>%
@@ -1144,19 +1477,6 @@ dcant_budget_lat_grid <-
 
 ```
 
-```{r budget_lat_grid_cstar, fig.asp=1}
-
-dcant_budget_lat_grid_cstar <- 
-  dcant_inv_cstar %>% 
-  m_grid_horizontal_coarse() %>%
-  group_by(lat_grid, basin_AIP) %>% 
-  nest() %>%
-  mutate(budget = map(.x = data, ~ m_dcant_budget(.x))) %>%
-  select(-data) %>%
-  unnest(budget)
-
-```
-
 ```{r budget_lat_grid_fig, fig.asp=1, eval=surface_data}
 
 dcant_budget_lat_grid %>%
@@ -1176,27 +1496,6 @@ dcant_budget_lat_grid %>%
   )
 
 ```
-
-```{r budget_lat_grid_fig_cstar, fig.asp=1, eval=surface_data}
-
-dcant_budget_lat_grid_cstar %>%
-  filter(inv_depth == params_global$inventory_depth_standard,
-         method %in% c("surface", "eMLR")) %>%
-  group_by(basin_AIP) %>%
-  group_split() %>%
-  # head(1) %>%
-  map(
-    ~ ggplot(data = .x,
-             aes(lat_grid, value, fill = method)) +
-      scale_fill_brewer(palette = "Dark2") +
-      geom_col() +
-      coord_flip() +
-      facet_grid(estimate ~ data_source) +
-      labs(title = paste("MLR_basins:", unique(.x$basin_AIP)))
-  )
-
-```
-
 
 
 
@@ -1318,52 +1617,94 @@ dcant_budget_lat_grid %>%
 ```
 
 
-```{r write_cant_files_cstar}
+```{r write_cant_files_cstar_A}
 
-dcant_3d_cstar %>%
+dcant_3d_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_3d_cstar.csv", sep = ""))
+                  "dcant_3d_cstar_A.csv", sep = ""))
 
-dcant_zonal_cstar %>%
+dcant_zonal_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_zonal_cstar.csv", sep = ""))
+                  "dcant_zonal_cstar_A.csv", sep = ""))
 
-dcant_profile_cstar %>%
+dcant_profile_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_profile_mod_truth_cstar.csv", sep = ""))
+                  "dcant_profile_mod_truth_cstar_A.csv", sep = ""))
 
-dcant_zonal_method_cstar %>% 
+dcant_zonal_method_cstar_A %>% 
   write_csv(paste(path_version_data,
-                  "dcant_zonal_method_cstar.csv", sep = ""))
+                  "dcant_zonal_method_cstar_A.csv", sep = ""))
 
-dcant_inv_cstar %>%
+dcant_inv_cstar_A %>%
   filter(method == "total") %>%
   write_csv(paste(path_version_data,
-                  "dcant_inv_cstar.csv", sep = ""))
+                  "dcant_inv_cstar_A.csv", sep = ""))
 
-dcant_inv_cstar %>%
+dcant_inv_cstar_A %>%
   filter(method != "total") %>%
   write_csv(paste(path_version_data,
-                  "dcant_inv_method_cstar.csv", sep = ""))
+                  "dcant_inv_method_cstar_A.csv", sep = ""))
 
-dcant_budget_global_cstar %>%
+dcant_budget_global_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_budget_global_cstar.csv", sep = ""))
+                  "dcant_budget_global_cstar_A.csv", sep = ""))
 
 
-dcant_budget_basin_AIP_cstar %>%
+dcant_budget_basin_AIP_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_budget_basin_AIP_cstar.csv", sep = ""))
+                  "dcant_budget_basin_AIP_cstar_A.csv", sep = ""))
 
 
-dcant_budget_basin_MLR_cstar %>%
+dcant_budget_basin_MLR_cstar_A %>%
   write_csv(paste(path_version_data,
-                  "dcant_budget_basin_MLR_cstar.csv", sep = ""))
+                  "dcant_budget_basin_MLR_cstar_A.csv", sep = ""))
 
 
-dcant_budget_lat_grid_cstar %>%
+```
+
+
+```{r write_cant_files_cstar_B}
+
+dcant_3d_cstar_B %>%
   write_csv(paste(path_version_data,
-                  "dcant_budget_lat_grid_cstar.csv", sep = ""))
+                  "dcant_3d_cstar_B.csv", sep = ""))
+
+dcant_zonal_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_cstar_B.csv", sep = ""))
+
+dcant_profile_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_mod_truth_cstar_B.csv", sep = ""))
+
+dcant_zonal_method_cstar_B %>% 
+  write_csv(paste(path_version_data,
+                  "dcant_zonal_method_cstar_B.csv", sep = ""))
+
+dcant_inv_cstar_B %>%
+  filter(method == "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_cstar_B.csv", sep = ""))
+
+dcant_inv_cstar_B %>%
+  filter(method != "total") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_inv_method_cstar_B.csv", sep = ""))
+
+dcant_budget_global_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_global_cstar_B.csv", sep = ""))
+
+
+dcant_budget_basin_AIP_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_cstar_B.csv", sep = ""))
+
+
+dcant_budget_basin_MLR_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_cstar_B.csv", sep = ""))
+
 
 ```
 
