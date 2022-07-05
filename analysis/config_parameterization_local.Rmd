@@ -34,8 +34,8 @@ gobms <- str_remove(gobms, path_preprocessing)
 gobms <- str_remove(gobms, "_GLODAPv2.2021_preprocessed_model_runA_both_NA_filled_ann.csv")
 
 gobm_select <- gobms[c(1,2,3,5,8)]
-gobm_select <- gobm_select[2]
-# gobm_select <- "CESM-ETHZ_v20211122_monthly"
+gobm_select <- gobm_select[1]
+gobm_select <- "CESM-ETHZ_v20211122_monthly"
 
 rm(path_preprocessing, gobms)
 
@@ -162,14 +162,12 @@ params_local <-
     target_global_rmse_max = 1000,
 
     # start years for eras
-    # era_start = c(1989, 2000),
-    era_start = c(1989, 2005),
+    era_start = c(1989, 2000),
     # era_start = c(2000, 2010),
     # era_start = c(2000, 2010),
     
     # end years for eras
-    # era_end = c(1999, 2009),
-    era_end = c(2004, 2020),
+    era_end = c(1999, 2009),
     # era_end = c(2009, 2020),
     # era_end = c(2009, 2020),
     
@@ -178,8 +176,8 @@ params_local <-
     # tref1 = 2004,
     
     # manually define tref2, set to NULL to use median year
-    # tref2 = 2004,
-    tref2 = 2014,
+    tref2 = 2004,
+    # tref2 = 2014,
     
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
