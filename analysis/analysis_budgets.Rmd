@@ -109,9 +109,13 @@ target_budget_global <-
   read_csv(paste(path_version_data,
                   "target_budget_global.csv", sep = ""))
 
-dcant_budget_global_cstar <-
+dcant_budget_global_cstar_A <-
   read_csv(paste(path_version_data,
                   "dcant_budget_global_cstar_A.csv", sep = ""))
+
+dcant_budget_global_cstar_B <-
+  read_csv(paste(path_version_data,
+                  "dcant_budget_global_cstar_B.csv", sep = ""))
 
 # integrated per basin_AIP
 
@@ -141,9 +145,13 @@ target_budget_basin_AIP <-
   read_csv(paste(path_version_data,
                   "target_budget_basin_AIP.csv", sep = ""))
 
-dcant_budget_basin_AIP_cstar <-
+dcant_budget_basin_AIP_cstar_A <-
   read_csv(paste(path_version_data,
                   "dcant_budget_basin_AIP_cstar_A.csv", sep = ""))
+
+dcant_budget_basin_AIP_cstar_B <-
+  read_csv(paste(path_version_data,
+                  "dcant_budget_basin_AIP_cstar_B.csv", sep = ""))
 
 # integrated per basin hemisphere
 
@@ -177,12 +185,19 @@ target_budget_basin_MLR <-
          MLR_basins == "5") %>%
   select(-c(method, MLR_basins))
 
-dcant_budget_basin_MLR_cstar <-
+dcant_budget_basin_MLR_cstar_A <-
   read_csv(paste(path_version_data,
                  "dcant_budget_basin_MLR_cstar_A.csv", sep = "")) %>%
   filter(method == "total",
          MLR_basins == "5") %>%
   select(-c(method, MLR_basins))
+
+dcant_budget_basin_MLR_cstar_B <-
+  read_csv(paste(path_version_data,
+                 "dcant_budget_basin_MLR_cstar_B.csv", sep = "")) %>%
+  filter(method == "total",
+         MLR_basins == "5") %>%
+  select(-c(MLR_basins))
 
 
 # reference year
@@ -248,7 +263,16 @@ dcant_budget_global_bias <-
       mutate(contribution = "dcant offset")
   )
 
-dcant_budget_global_cstar <- dcant_budget_global_cstar %>%
+dcant_budget_global_cstar_A <- dcant_budget_global_cstar_A %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_budget_global_cstar_B <- dcant_budget_global_cstar_B %>%
   mutate(
     data_source = case_when(
       data_source == "po4" ~ "phosphate",
@@ -258,15 +282,15 @@ dcant_budget_global_cstar <- dcant_budget_global_cstar %>%
   )
 
 
-dcant_budget_global_cstar <-
+dcant_budget_global_cstar_A <-
   bind_rows(
     dcant_budget_global %>%
       filter(data_source == "mod_truth"),
-    dcant_budget_global_cstar %>% 
+    dcant_budget_global_cstar_A %>% 
       filter(method == "total")
   )
 
-dcant_budget_global_bias_cstar <- dcant_budget_global_cstar %>%
+dcant_budget_global_bias_cstar_A <- dcant_budget_global_cstar_A %>%
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
   select(inv_depth, data_source, estimate, dcant = value) %>%
   pivot_wider(names_from = data_source,
@@ -278,8 +302,17 @@ dcant_budget_global_bias_cstar <- dcant_budget_global_cstar %>%
 dcant_budget_global_bias <-
   bind_rows(
     dcant_budget_global_bias,
-    dcant_budget_global_bias_cstar %>%
+    dcant_budget_global_bias_cstar_A %>%
       mutate(contribution = "delta C* - mod_truth")
+  )
+
+dcant_budget_global_bias <-
+  bind_rows(
+    dcant_budget_global_bias,
+    dcant_budget_global_cstar_B %>%
+      filter(data_source %in% params_local$cstar_nutrient) %>% 
+      select(method, estimate, inv_depth, dcant_bias = value) %>% 
+      mutate(contribution = "C* drift")
   )
 
 
@@ -391,7 +424,7 @@ dcant_budget_basin_AIP_bias <-
 
 
 
-dcant_budget_basin_AIP_cstar <- dcant_budget_basin_AIP_cstar %>%
+dcant_budget_basin_AIP_cstar_A <- dcant_budget_basin_AIP_cstar_A %>%
   mutate(
     data_source = case_when(
       data_source == "po4" ~ "phosphate",
@@ -401,15 +434,25 @@ dcant_budget_basin_AIP_cstar <- dcant_budget_basin_AIP_cstar %>%
   )
 
 
-dcant_budget_basin_AIP_cstar <-
+dcant_budget_basin_AIP_cstar_B <- dcant_budget_basin_AIP_cstar_B %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+
+dcant_budget_basin_AIP_cstar_A <-
   bind_rows(
     dcant_budget_basin_AIP %>%
       filter(data_source == "mod_truth"),
-    dcant_budget_basin_AIP_cstar %>% 
+    dcant_budget_basin_AIP_cstar_A %>% 
       filter(method == "total")
   )
 
-dcant_budget_basin_AIP_bias_cstar <- dcant_budget_basin_AIP_cstar %>%
+dcant_budget_basin_AIP_bias_cstar_A <- dcant_budget_basin_AIP_cstar_A %>%
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
   select(basin_AIP, inv_depth, data_source, estimate, dcant = value) %>%
   pivot_wider(names_from = data_source,
@@ -421,10 +464,18 @@ dcant_budget_basin_AIP_bias_cstar <- dcant_budget_basin_AIP_cstar %>%
 dcant_budget_basin_AIP_bias <-
   bind_rows(
     dcant_budget_basin_AIP_bias,
-    dcant_budget_basin_AIP_bias_cstar %>%
+    dcant_budget_basin_AIP_bias_cstar_A %>%
       mutate(contribution = "delta C* - mod_truth")
   )
 
+dcant_budget_basin_AIP_bias <-
+  bind_rows(
+    dcant_budget_basin_AIP_bias,
+    dcant_budget_basin_AIP_cstar_B %>%
+      filter(data_source %in% params_local$cstar_nutrient) %>% 
+      select(basin_AIP, method, estimate, inv_depth, dcant_bias = value) %>% 
+      mutate(contribution = "C* drift")
+  )
 
 
 dcant_budget_basin_AIP_bias %>% 
@@ -535,7 +586,16 @@ dcant_budget_basin_MLR_bias <-
 
 
 
-dcant_budget_basin_MLR_cstar <- dcant_budget_basin_MLR_cstar %>%
+dcant_budget_basin_MLR_cstar_A <- dcant_budget_basin_MLR_cstar_A %>%
+  mutate(
+    data_source = case_when(
+      data_source == "po4" ~ "phosphate",
+      data_source == "no3" ~ "nitrate",
+      TRUE                 ~ data_source
+    )
+  )
+
+dcant_budget_basin_MLR_cstar_B <- dcant_budget_basin_MLR_cstar_B %>%
   mutate(
     data_source = case_when(
       data_source == "po4" ~ "phosphate",
@@ -545,14 +605,14 @@ dcant_budget_basin_MLR_cstar <- dcant_budget_basin_MLR_cstar %>%
   )
 
 
-dcant_budget_basin_MLR_cstar <-
+dcant_budget_basin_MLR_cstar_A <-
   bind_rows(
     dcant_budget_basin_MLR %>%
       filter(data_source == "mod_truth"),
-    dcant_budget_basin_MLR_cstar
+    dcant_budget_basin_MLR_cstar_A
   )
 
-dcant_budget_basin_MLR_bias_cstar <- dcant_budget_basin_MLR_cstar %>%
+dcant_budget_basin_MLR_bias_cstar_A <- dcant_budget_basin_MLR_cstar_A %>%
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
   select(basin, inv_depth, data_source, estimate, dcant = value) %>%
   pivot_wider(names_from = data_source,
@@ -564,10 +624,18 @@ dcant_budget_basin_MLR_bias_cstar <- dcant_budget_basin_MLR_cstar %>%
 dcant_budget_basin_MLR_bias <-
   bind_rows(
     dcant_budget_basin_MLR_bias,
-    dcant_budget_basin_MLR_bias_cstar %>%
+    dcant_budget_basin_MLR_bias_cstar_A %>%
       mutate(contribution = "delta C* - mod_truth")
   )
 
+dcant_budget_basin_MLR_bias <-
+  bind_rows(
+    dcant_budget_basin_MLR_bias,
+    dcant_budget_basin_MLR_cstar_B %>%
+      filter(data_source %in% params_local$cstar_nutrient) %>% 
+      select(basin, method, estimate, inv_depth, dcant_bias = value) %>% 
+      mutate(contribution = "C* drift")
+  )
 
 
 dcant_budget_basin_MLR_bias %>% 
