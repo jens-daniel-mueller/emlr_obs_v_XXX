@@ -68,6 +68,17 @@ library(gt)
 library(colorspace)
 ```
 
+
+```{r select_basin_mask, include=FALSE}
+
+basinmask <- basinmask %>% 
+  filter(MLR_basins == "5") %>% 
+  select(-c(MLR_basins, basin_AIP))
+
+```
+
+
+
 # Version ID
 
 The results displayed on this site correspond to the Version_ID: `r params$Version_ID`
@@ -165,17 +176,38 @@ dcant_3d %>%
   facet_grid(basin_AIP ~ data_source)
 
 
-dcant_3d %>% 
-  mutate(dcant_grid = cut(dcant, seq(-4,20,2))) %>% 
+dcant_3d_grid <- 
+  full_join(dcant_3d,
+            basinmask) %>% 
+  mutate(dcant_grid = cut(dcant, seq(-4,20,1), seq(-3.5,20,1)),
+         depth_grid = cut(depth, seq(0,10000,200), seq(100,10000,200))) %>% 
   filter(!is.na(dcant_grid)) %>%
-  count(basin_AIP, depth, data_source, dcant_grid) %>% 
-  group_by(basin_AIP, depth, data_source) %>% 
-  mutate(vol_frac = 100 * (n / sum(n))) %>% 
-  ggplot(aes(dcant_grid, depth, col=vol_frac)) +
-  geom_point() +
-  scale_y_reverse() +
-  scale_color_viridis_c() +
-  facet_grid(basin_AIP ~ data_source)
+  count(basin, depth_grid, data_source, dcant_grid) %>% 
+  group_by(basin, depth_grid, data_source) %>% 
+  mutate(grid_cell_frac = 100 * (n / sum(n)),
+         dcant_grid = as.numeric(as.character(dcant_grid)),
+         depth_grid = as.numeric(as.character(depth_grid))
+         )
+
+dcant_3d_grid %>% 
+  ggplot(aes(dcant_grid, depth_grid, fill=grid_cell_frac)) +
+  geom_tile(col = "grey30") +
+  geom_vline(xintercept = 0) +
+  scale_y_reverse(expand = c(0,0)) +
+  scale_fill_gradient(low = "white", high = "firebrick") +
+  facet_grid(basin ~ data_source)
+
+library(ggridges)
+
+dcant_3d_grid %>% 
+  filter(depth_grid <= 3000) %>% 
+  ggplot(aes(x = dcant_grid, y = as.factor(depth_grid), fill=grid_cell_frac)) +
+  geom_density_ridges(col = "grey30",
+                      rel_min_height = 0.01) +
+  geom_vline(xintercept = 0) +
+  scale_y_discrete(limits = rev) +
+  scale_fill_gradient(low = "white", high = "firebrick") +
+  facet_grid(basin ~ data_source)
 
 ```
 
@@ -240,11 +272,14 @@ map +
 
 ```{r penetration_depth_zonal_mean, fig.asp=1.5}
 
-dcant_penetration_depth_all %>% 
+dcant_penetration_depth_all_lat_mean <- 
+  dcant_penetration_depth_all %>% 
   group_by(data_source, dcant_lim, basin_AIP, lat) %>% 
   summarise(depth_mean = mean(depth, na.rm=TRUE),
             depth_sd = sd(depth, na.rm = TRUE)) %>% 
-  ungroup() %>% 
+  ungroup() 
+
+dcant_penetration_depth_all_lat_mean %>% 
   ggplot(aes(depth_mean, lat)) +
   geom_ribbon(aes(xmax = depth_mean + depth_sd, xmin = depth_mean - depth_sd,
                   fill = data_source), alpha = 0.3) +
@@ -723,6 +758,14 @@ dcant_slab_bias %>%
 dcant_slab %>%
   write_csv(paste0(path_version_data,
                    "dcant_slab.csv"))
+
+dcant_penetration_depth_all_lat_mean %>%
+  write_csv(paste0(path_version_data,
+                   "dcant_penetration_depth_all_lat_mean.csv"))
+
+dcant_penetration_depth_all %>%
+  write_csv(paste0(path_version_data,
+                   "dcant_penetration_depth_all.csv"))
 
 ```
 

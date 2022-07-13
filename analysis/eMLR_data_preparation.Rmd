@@ -524,15 +524,17 @@ if (params_local$data_adjustment == "cruise") {
 
 ```{r correct_calculated_talk}
 
-GLODAP <- GLODAP %>%
-  mutate(
-    talk = if_else(
-      cruise_expocode %in% params_local$cruises_talk_calc &
-        data_source == "obs",
-      talk + params_local$talk_calc_corr,
-      talk
+if (params_local$data_adjustment != "none") {
+  GLODAP <- GLODAP %>%
+    mutate(
+      talk = if_else(
+        cruise_expocode %in% params_local$cruises_talk_calc &
+          data_source == "obs",
+        talk + params_local$talk_calc_corr,
+        talk
+      )
     )
-  )
+}
 
 
 ```
