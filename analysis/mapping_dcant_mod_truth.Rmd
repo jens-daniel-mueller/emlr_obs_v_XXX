@@ -441,7 +441,7 @@ dcant_3d <- dcant_3d %>%
   mutate(
     method = "surface",
     method = if_else(
-      depth >= params_local$depth_min | gamma >= params_local$gamma_min,
+      depth >= params_local$depth_mapping | gamma >= params_local$gamma_min,
       "eMLR",
       method
     )
