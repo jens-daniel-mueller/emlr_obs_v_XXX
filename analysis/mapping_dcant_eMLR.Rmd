@@ -101,8 +101,6 @@ predictors_surface <-
                  "W18_st_G16_opsn_surface.csv",
                  sep = ""))
 
-# check if surface data exist
-surface_data <- nrow(predictors_surface) > 0
 
 tref  <-
   read_csv(paste(path_version_data,
@@ -338,7 +336,7 @@ $\Delta$~t~C~ant,eq~(t2 − t1) = 1∕$\gamma$ ⋅ DIC/pCO~2~ ⋅ (pCO~2,atm~ (t
 
 ### Layer depth
 
-```{r surface_layer_depth, eval=surface_data}
+```{r surface_layer_depth}
 
 surface_layer <- predictors_surface %>% 
   group_by(lat, lon, data_source) %>% 
@@ -365,7 +363,7 @@ map +
 
 ### Surface pCO2
 
-```{r calc_surface_pCO2, eval=surface_data}
+```{r calc_surface_pCO2}
 
 predictors_surface_all_depth <- predictors_surface
 
@@ -387,7 +385,7 @@ predictors_surface <- predictors_surface %>%
 
 ```
 
-```{r pCO2_climatology_map, fig.asp=0.6, eval=surface_data}
+```{r pCO2_climatology_map, fig.asp=0.6}
 
 predictors_surface %>%
   mutate(depth = 0) %>% 
@@ -408,7 +406,7 @@ predictors_surface %>%
 
 Plots below show the calculated climatological Revelle factor values.
 
-```{r calc_revelle_factor_climatology, eval=surface_data}
+```{r calc_revelle_factor_climatology}
 
 predictors_surface <- predictors_surface %>%
   mutate(
@@ -429,7 +427,7 @@ predictors_surface <- predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_map, fig.asp=0.6, eval=surface_data}
+```{r revelle_factor_climatology_map, fig.asp=0.6}
 
 predictors_surface %>%
   group_split(data_source) %>%
@@ -462,7 +460,7 @@ predictors_surface %>%
 
 ### dcant calculation
 
-```{r calc_dcant_surface, eval=surface_data}
+```{r calc_dcant_surface}
 
 # calculate increase in atm pCO2 between eras
 co2_atm_tref <- co2_atm_tref %>%
@@ -504,7 +502,7 @@ dcant_surface <- full_join(
 
 ```
 
-```{r calc_dcant_surface_disequi, eval=surface_data}
+```{r calc_dcant_surface_disequi}
 
 # extract disequilibrium change of pCO2
 disequi_pCO2_tref <- disequi_pCO2_tref %>% 
@@ -903,7 +901,7 @@ dcant_average %>%
 
 The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
 
-```{r calc_dcant_mean_surface, eval=surface_data}
+```{r calc_dcant_mean_surface}
 
 dcant_surface_average <-
   m_dcant_3d_average(dcant_surface)
@@ -938,40 +936,57 @@ dcant_3d <- left_join(
   dcant_surface_average)
 
 dcant_3d <- dcant_3d %>% 
-  mutate(dcant_surface = if_else(depth > d_min,
+  mutate(dcant_surface = if_else(depth >= d_min,
                                  NaN,
                                  dcant_surface),
-         dcant_pos_surface = if_else(depth > d_min,
+         dcant_pos_surface = if_else(depth >= d_min,
                                  NaN,
                                  dcant_pos_surface))
 
 
+if(d_min > 0) {
+  dcant_3d <- dcant_3d %>%
+    mutate(
+      mix = (d_min - depth) / d_min,
+      dcant = if_else(
+        depth <= d_min,
+        (mix * dcant_surface) +
+          ((1 - mix) * dcant_eMLR),
+        dcant_eMLR
+      ),
+      dcant_pos = if_else(
+        depth <= d_min,
+        (mix * dcant_pos_surface) +
+          ((1 - mix) * dcant_pos_eMLR),
+        dcant_pos_eMLR
+      )
+    ) %>%
+    select(-c(
+      dcant_eMLR,
+      dcant_surface,
+      dcant_pos_eMLR,
+      dcant_pos_surface,
+      mix
+    )) %>%
+    mutate(method = if_else(depth <= d_min,
+                            "surface",
+                            "eMLR"))
+}
 
-
-dcant_3d <- dcant_3d %>%
-  mutate(
-    mix = (d_min - depth) / d_min,
-    dcant = if_else(depth <= d_min,
-                    (mix * dcant_surface) +
-                      ((1 - mix) * dcant_eMLR),
-                    dcant_eMLR),
-    dcant_pos = if_else(
-      depth <= d_min,
-      (mix * dcant_pos_surface) +
-        ((1 - mix) * dcant_pos_eMLR),
-      dcant_pos_eMLR
-    )
-  ) %>%
-  select(-c(
-    dcant_eMLR,
-    dcant_surface,
-    dcant_pos_eMLR,
-    dcant_pos_surface,
-    mix
-  )) %>%
-  mutate(method = if_else(depth <= d_min,
-                          "surface",
-                          "eMLR"))
+if(d_min == 0) {
+  dcant_3d <- dcant_3d %>%
+    mutate(dcant = dcant_eMLR,
+           dcant_pos = dcant_pos_eMLR) %>%
+    select(-c(
+      dcant_eMLR,
+      dcant_surface,
+      dcant_pos_eMLR,
+      dcant_pos_surface
+    )) %>%
+    mutate(method = if_else(depth < d_min,
+                            "surface",
+                            "eMLR"))
+}
 
 
 rm(dcant_surface_average, dcant_average)
@@ -1088,6 +1103,16 @@ Step 2 is performed separately for all dcant and positive dcant values only.
 
 ### Full water column
 
+```{r check_surface_mapping}
+# check if surface data exist
+surface_data <- nrow(dcant_3d %>%
+                       filter(method == "surface")) > 0
+
+```
+
+
+
+
 ```{r cant_inventories, fig.asp=1}
 
 dcant_inv <- dcant_3d %>%
@@ -1111,6 +1136,8 @@ if (surface_data == FALSE){
 ```
 
 ### Surface layer
+
+
 
 ```{r cant_inventories_surface, eval=surface_data}
 

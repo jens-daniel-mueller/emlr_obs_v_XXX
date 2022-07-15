@@ -370,13 +370,13 @@ cruises_qc_flag = lst(cruises_qc_flag = c(
   ))
 
 # Shallowest depth for data to be included in MLR fitting
-depth_min = lst(depth_min = 100
+depth_min = lst(depth_min = 0
                 # depth_min = 150
                 )
                 
 # Depth to extend the surface dcant estimate in mapping
 depth_mapping = lst(
-  depth_mapping = 200
+  depth_mapping = 0
   )
 
 # Shallowest water depth for data to be included in MLR fitting
@@ -484,7 +484,7 @@ cstar_deep_sd = lst(
 # rarefication approach, options:
 # "coarse_grid" (horizontal 5x5 grid);
 # "reoccupation" (only 1x1 grids sampled in both eras)
-rarefication = "reoccupation"
+rarefication = "coarse_grid"
 
 # rarefication approach threshold
 rarefication_threshold = lst(
@@ -648,7 +648,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_3o%02d", i)
+  Version_ID <- sprintf("v_3e%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID
