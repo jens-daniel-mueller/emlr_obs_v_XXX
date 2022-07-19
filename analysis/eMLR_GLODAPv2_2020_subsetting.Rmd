@@ -1135,7 +1135,9 @@ GLODAP <- GLODAP %>%
   filter(
     if_all(ends_with("qc"), ~ . %in% params_local$flag_qc) |
       cruise_expocode %in% cruises_co2_calc |
-      cruise_expocode %in% params_local$cruises_qc_flag
+      cruise_expocode %in% params_local$cruises_qc_flag |
+      cruise_expocode %in% params_local$cruises_talk_gap_fill |
+      cruise_expocode %in% params_local$cruises_phosphate_gap_fill
   )
 
 rm(cruises_co2_calc)
