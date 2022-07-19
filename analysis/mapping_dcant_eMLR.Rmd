@@ -367,8 +367,9 @@ map +
 
 predictors_surface_all_depth <- predictors_surface
 
+# predictors_surface %>% distinct(data_source, depth)
+
 predictors_surface <- predictors_surface %>%
-  filter(depth %in% c(0, 5)) %>%
   mutate(
     pCO2 = carb(
       flag = 15,
@@ -936,10 +937,10 @@ dcant_3d <- left_join(
   dcant_surface_average)
 
 dcant_3d <- dcant_3d %>% 
-  mutate(dcant_surface = if_else(depth >= d_min,
+  mutate(dcant_surface = if_else(depth > d_min,
                                  NaN,
                                  dcant_surface),
-         dcant_pos_surface = if_else(depth >= d_min,
+         dcant_pos_surface = if_else(depth > d_min,
                                  NaN,
                                  dcant_pos_surface))
 
