@@ -464,7 +464,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">eMLR data preparation</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">21 July, 2022</h4>
+<h4 class="date">26 September, 2022</h4>
 
 </div>
 
@@ -489,7 +489,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-07-21
+<strong>Last updated:</strong> 2022-09-26
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -580,16 +580,16 @@ This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a> analysi
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree51b8224776a21d0b7534d87752e51080bfea25f9targetblank51b8224a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/51b8224776a21d0b7534d87752e51080bfea25f9" target="_blank">51b8224</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedd3690626f3786190428d8fe03a00819a0147fe5targetblankdd36906a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dd3690626f3786190428d8fe03a00819a0147fe5" target="_blank">dd36906</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree51b8224776a21d0b7534d87752e51080bfea25f9targetblank51b8224a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreedd3690626f3786190428d8fe03a00819a0147fe5targetblankdd36906a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/51b8224776a21d0b7534d87752e51080bfea25f9" target="_blank">51b8224</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/dd3690626f3786190428d8fe03a00819a0147fe5" target="_blank">dd36906</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -600,6 +600,9 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Unstaged changes:
+    Modified:   analysis/mapping_dcant_eMLR.Rmd
+    Modified:   analysis/mapping_dcant_mod_truth.Rmd
+    Modified:   analysis/mapping_predictor_preparation.Rmd
     Modified:   code/Workflowr_project_managment.R
     Modified:   data/auxillary/params_local.rds
 
@@ -640,6 +643,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/dd3690626f3786190428d8fe03a00819a0147fe5/analysis/eMLR_data_preparation.Rmd" target="_blank">dd36906</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-09-26
+</td>
+<td>
+run with Talk calc correction
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/d27bc1881516afdf77beb6ef334df122c29a20ff/docs/eMLR_data_preparation.html" target="_blank">d27bc18</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-07-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -9125,6 +9162,18 @@ IO_CRM_xover_1990 &lt;-
       phosphate = phosphate * params_local$phosphate_corr_316N199,
     )
   
+  GLODAP_adjustment_stats &lt;-
+    bind_rows(
+      GLODAP_adj %&gt;%
+        count(era, basin) %&gt;%
+        mutate(adjustment = &quot;yes&quot;),
+      GLODAP_unadj %&gt;%
+        filter(data_source == &quot;obs&quot;) %&gt;% 
+        count(era, basin) %&gt;%
+        mutate(adjustment = &quot;no&quot;)
+    ) %&gt;% 
+    mutate(group = &quot;IO_1990&quot;)
+  
   GLODAP &lt;- bind_rows(GLODAP_adj,
                       GLODAP_unadj)
   
@@ -11750,8 +11799,32 @@ if (params_local$data_adjustment == &quot;cruise&quot;) {
                      tco2)
     )
   
+  GLODAP_adjustment_stats &lt;-
+    GLODAP %&gt;%
+    filter(data_source == &quot;obs&quot;) %&gt;%
+    mutate(adjustment = &quot;no&quot;,
+           adjustment = if_else(
+             is.na(talk_corr_IO_1900) &amp;
+               is.na(tco2_corr_IO_1900),
+             adjustment,
+             &quot;yes&quot;
+           )) %&gt;%
+    count(era, basin, adjustment) %&gt;% 
+    mutate(group = &quot;IO_1990&quot;)
+  
+  
   GLODAP &lt;- GLODAP %&gt;%
     select(-ends_with(&quot;corr_IO_1900&quot;))
+  
+}</code></pre>
+<pre class="r"><code>if (params_local$data_adjustment == &quot;none&quot;) {
+  
+  GLODAP_adjustment_stats &lt;-
+    GLODAP %&gt;%
+    filter(data_source == &quot;obs&quot;) %&gt;%
+    mutate(adjustment = &quot;no&quot;) %&gt;%
+    count(era, basin, adjustment) %&gt;% 
+    mutate(group = &quot;IO_1990&quot;)
   
 }</code></pre>
 </div>
@@ -11767,7 +11840,37 @@ if (params_local$data_adjustment == &quot;cruise&quot;) {
         talk
       )
     )
-}</code></pre>
+  
+  GLODAP_adjustment_stats_temp &lt;- GLODAP %&gt;%
+    filter(data_source == &quot;obs&quot;) %&gt;%
+    mutate(
+      adjustment = &quot;no&quot;,
+      adjustment = if_else(
+        cruise_expocode %in% params_local$cruises_talk_calc,
+        &quot;yes&quot;,
+        adjustment
+      )
+    ) %&gt;%
+    count(era, basin, adjustment) %&gt;%
+    mutate(group = &quot;talk_calc&quot;)
+  
+  if (exists(&quot;GLODAP_adjustment_stats&quot;)) {
+    GLODAP_adjustment_stats &lt;-
+      bind_rows(GLODAP_adjustment_stats,
+                GLODAP_adjustment_stats_temp)
+  }
+  
+  if (!exists(&quot;GLODAP_adjustment_stats&quot;)) {
+    GLODAP_adjustment_stats &lt;- GLODAP_adjustment_stats_temp
+  }
+  
+  rm(GLODAP_adjustment_stats_temp)
+  
+}
+
+# GLODAP_adjustment_stats %&gt;% 
+#   group_by(group) %&gt;% 
+#   summarise(sum(n))</code></pre>
 </div>
 <div id="north-pacific-2010s" class="section level3" number="2.7.3">
 <h3><span class="header-section-number">2.7.3</span> North Pacific 2010s</h3>
@@ -11857,6 +11960,36 @@ if (params_local$data_adjustment == &quot;cruise&quot;) {
   
   GLODAP &lt;- GLODAP %&gt;% 
     select(-ends_with(&quot;corr_NP_2010&quot;))
+  
+}
+
+if (params_local$data_adjustment != &quot;none&quot;) {
+
+  GLODAP_adjustment_stats_temp &lt;- GLODAP %&gt;%
+    filter(data_source == &quot;obs&quot;) %&gt;%
+    mutate(
+      adjustment = &quot;no&quot;,
+      adjustment = if_else(
+        cruise_expocode %in% expocodes_xover_NP &amp;
+          era == &quot;2010-2020&quot;,
+        &quot;yes&quot;,
+        adjustment
+      )
+    ) %&gt;%
+    count(era, basin, adjustment) %&gt;%
+    mutate(group = &quot;NP&quot;)
+  
+  if (exists(&quot;GLODAP_adjustment_stats&quot;)) {
+    GLODAP_adjustment_stats &lt;-
+      bind_rows(GLODAP_adjustment_stats,
+                GLODAP_adjustment_stats_temp)
+  }
+  
+  if (!exists(&quot;GLODAP_adjustment_stats&quot;)) {
+    GLODAP_adjustment_stats &lt;- GLODAP_adjustment_stats_temp
+  }
+  
+  rm(GLODAP_adjustment_stats_temp)
   
 }
 
@@ -139578,6 +139711,11 @@ GLODAP_grid_era_gamma &lt;- GLODAP %&gt;%
   sep = &quot;&quot;
 ))
 
+
+GLODAP_adjustment_stats %&gt;% write_csv(paste(path_version_data,
+                                            &quot;GLODAP_adjustment_stats.csv&quot;,
+                                            sep = &quot;&quot;))
+
 GLODAP_grid  %&gt;%
   write_csv(paste(path_version_data,
                   &quot;GLODAPv2.2020_clean_obs_grid.csv&quot;,
@@ -139669,13 +139807,13 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] kableExtra_1.3.4 seacarb_3.3.0    SolveSAPHE_2.1.0 oce_1.5-0       
- [5] gsw_1.0-6        broom_0.7.11     lubridate_1.8.0  colorspace_2.0-2
- [9] marelac_2.1.10   shape_1.4.6      ggforce_0.3.3    metR_0.11.0     
-[13] scico_1.3.0      patchwork_1.1.1  collapse_1.7.0   forcats_0.5.1   
-[17] stringr_1.4.0    dplyr_1.0.7      purrr_0.3.4      readr_2.1.1     
-[21] tidyr_1.1.4      tibble_3.1.6     ggplot2_3.3.5    tidyverse_1.3.1 
-[25] workflowr_1.7.0 
+ [1] kableExtra_1.3.4   seacarb_3.3.0      SolveSAPHE_2.1.0   oce_1.5-0         
+ [5] gsw_1.0-6          broom_0.7.11       lubridate_1.8.0    geomtextpath_0.1.0
+ [9] colorspace_2.0-2   marelac_2.1.10     shape_1.4.6        ggforce_0.3.3     
+[13] metR_0.11.0        scico_1.3.0        patchwork_1.1.1    collapse_1.7.0    
+[17] forcats_0.5.1      stringr_1.4.0      dplyr_1.0.7        purrr_0.3.4       
+[21] readr_2.1.1        tidyr_1.1.4        tibble_3.1.6       ggplot2_3.3.5     
+[25] tidyverse_1.3.1    workflowr_1.7.0   
 
 loaded via a namespace (and not attached):
  [1] nlme_3.1-155       fs_1.5.2           bit64_4.0.5        RColorBrewer_1.1-2
@@ -139683,23 +139821,23 @@ loaded via a namespace (and not attached):
  [9] backports_1.4.1    bslib_0.3.1        utf8_1.2.2         R6_2.5.1          
 [13] mgcv_1.8-38        DBI_1.1.2          withr_2.4.3        tidyselect_1.1.1  
 [17] processx_3.5.2     bit_4.0.4          compiler_4.1.2     git2r_0.29.0      
-[21] cli_3.1.1          rvest_1.0.2        xml2_1.3.3         labeling_0.4.2    
-[25] sass_0.4.0         scales_1.1.1       checkmate_2.0.0    callr_3.7.0       
-[29] systemfonts_1.0.3  digest_0.6.29      svglite_2.0.0      rmarkdown_2.11    
-[33] pkgconfig_2.0.3    htmltools_0.5.2    highr_0.9          dbplyr_2.1.1      
-[37] fastmap_1.1.0      rlang_1.0.2        readxl_1.3.1       rstudioapi_0.13   
-[41] jquerylib_0.1.4    generics_0.1.1     farver_2.1.0       jsonlite_1.7.3    
-[45] vroom_1.5.7        magrittr_2.0.1     Matrix_1.4-0       Rcpp_1.0.8        
-[49] munsell_0.5.0      fansi_1.0.2        lifecycle_1.0.1    stringi_1.7.6     
-[53] whisker_0.4        yaml_2.2.1         MASS_7.3-55        grid_4.1.2        
-[57] parallel_4.1.2     promises_1.2.0.1   crayon_1.4.2       lattice_0.20-45   
-[61] splines_4.1.2      haven_2.4.3        hms_1.1.1          knitr_1.37        
-[65] ps_1.6.0           pillar_1.6.4       reprex_2.0.1       glue_1.6.0        
-[69] evaluate_0.14      getPass_0.2-2      data.table_1.14.2  modelr_0.1.8      
-[73] vctrs_0.3.8        tzdb_0.2.0         tweenr_1.0.2       httpuv_1.6.5      
-[77] cellranger_1.1.0   gtable_0.3.0       polyclip_1.10-0    assertthat_0.2.1  
-[81] xfun_0.29          later_1.3.0        viridisLite_0.4.0  ellipsis_0.3.2    
-[85] here_1.0.1        </code></pre>
+[21] textshaping_0.3.6  cli_3.1.1          rvest_1.0.2        xml2_1.3.3        
+[25] labeling_0.4.2     sass_0.4.0         scales_1.1.1       checkmate_2.0.0   
+[29] callr_3.7.0        systemfonts_1.0.3  digest_0.6.29      svglite_2.0.0     
+[33] rmarkdown_2.11     pkgconfig_2.0.3    htmltools_0.5.2    highr_0.9         
+[37] dbplyr_2.1.1       fastmap_1.1.0      rlang_1.0.2        readxl_1.3.1      
+[41] rstudioapi_0.13    jquerylib_0.1.4    generics_0.1.1     farver_2.1.0      
+[45] jsonlite_1.7.3     vroom_1.5.7        magrittr_2.0.1     Matrix_1.4-0      
+[49] Rcpp_1.0.8         munsell_0.5.0      fansi_1.0.2        lifecycle_1.0.1   
+[53] stringi_1.7.6      whisker_0.4        yaml_2.2.1         MASS_7.3-55       
+[57] grid_4.1.2         parallel_4.1.2     promises_1.2.0.1   crayon_1.4.2      
+[61] lattice_0.20-45    splines_4.1.2      haven_2.4.3        hms_1.1.1         
+[65] knitr_1.37         ps_1.6.0           pillar_1.6.4       reprex_2.0.1      
+[69] glue_1.6.0         evaluate_0.14      getPass_0.2-2      data.table_1.14.2 
+[73] modelr_0.1.8       vctrs_0.3.8        tzdb_0.2.0         tweenr_1.0.2      
+[77] httpuv_1.6.5       cellranger_1.1.0   gtable_0.3.0       polyclip_1.10-0   
+[81] assertthat_0.2.1   xfun_0.29          later_1.3.0        viridisLite_0.4.0 
+[85] ellipsis_0.3.2     here_1.0.1        </code></pre>
 </div>
 </div>
 
