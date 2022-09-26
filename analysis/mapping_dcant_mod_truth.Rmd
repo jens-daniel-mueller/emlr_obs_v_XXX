@@ -802,6 +802,26 @@ dcant_profile <- dcant_3d %>%
 
 ```
 
+
+```{r calc_dcant_profiles_MLR_regions}
+
+dcant_profile_basin_MLR <-
+  full_join(dcant_3d %>% select(data_source, lon, lat, depth, dcant),
+            basinmask %>% select(MLR_basins, basin, lon, lat)) %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>%
+  drop_na() %>% 
+  group_by(data_source, basin, MLR_basins, depth) %>%
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+
+```
+
+
+
 ```{r calc_dcant_profiles_cstar_A}
 
 dcant_profile_cstar_A <- dcant_3d_cstar_A %>%
@@ -816,6 +836,27 @@ dcant_profile_cstar_A <- dcant_3d_cstar_A %>%
 ```
 
 
+```{r calc_dcant_profiles_MLR_regions_cstar_A}
+
+dcant_profile_basin_MLR_cstar_A <-
+  full_join(dcant_3d_cstar_A %>% select(data_source, lon, lat, depth, dcant),
+            basinmask %>% select(MLR_basins, basin, lon, lat)) %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>%
+  drop_na() %>% 
+  group_by(data_source, basin, MLR_basins, depth) %>%
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+
+```
+
+
+
+
+
 ```{r calc_dcant_profiles_cstar_B}
 
 dcant_profile_cstar_B <- dcant_3d_cstar_B %>%
@@ -828,6 +869,24 @@ dcant_profile_cstar_B <- dcant_3d_cstar_B %>%
   ungroup()
 
 ```
+
+```{r calc_dcant_profiles_MLR_regions_cstar_B}
+
+dcant_profile_basin_MLR_cstar_B <-
+  full_join(dcant_3d_cstar_B %>% select(data_source, lon, lat, depth, dcant),
+            basinmask %>% select(MLR_basins, basin, lon, lat)) %>%
+  mutate(area = earth_surf(lat, lon),
+         dcant_scaled = dcant * area) %>%
+  drop_na() %>% 
+  group_by(data_source, basin, MLR_basins, depth) %>%
+  summarise(dcant_sd = sqrt(
+              Hmisc::wtd.var(dcant, area, na.rm = TRUE)),
+            dcant = sum(dcant_scaled) / sum(area)) %>% 
+  ungroup()
+
+
+```
+
 
 
 
@@ -1154,6 +1213,37 @@ dcant_inv_cstar_B %>%
 
 ```
 
+### Discrete layers
+
+```{r dcant_layer_inventories, fig.asp=1}
+
+dcant_inv_layer <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(inv = map(.x = data, ~m_dcant_inv_layer(.x))) %>%
+  select(-data) %>%
+  unnest(inv)
+
+# dcant_inv_layer <- dcant_inv_layer %>% 
+#   mutate(inv_depth = fct_inorder(as.factor(inv_depth)))
+
+p_map_cant_inv(df = dcant_inv_layer,
+               var = "dcant",
+               subtitle_text = "for predefined integration depths",
+               breaks = c(-Inf, seq(0,7,1), Inf)
+               ) +
+  facet_grid(inv_depth ~ data_source) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank())
+
+if (surface_data == FALSE){
+  dcant_inv <- dcant_inv %>% 
+    mutate(method = "total")
+}
+
+
+```
+
 
 ## Budgets
 
@@ -1356,6 +1446,30 @@ dcant_budget_basin_MLR <-
 ```
 
 
+```{r budget_depth_layer_basin_MLR}
+
+dcant_budget_basin_MLR_layer <-
+  full_join(dcant_inv_layer, basinmask) %>%
+  mutate(method = "layer") %>% 
+  group_by(MLR_basins, basin) %>%
+  nest() %>% 
+  mutate(budget = map(.x = data, ~m_dcant_budget(.x))) %>% 
+  select(-data) %>%
+  unnest(budget)
+
+dcant_budget_basin_MLR_layer %>%
+  filter(estimate == "dcant",
+         MLR_basins == "5") %>% 
+  drop_na() %>% 
+  ggplot(aes(value, as.factor(inv_depth), fill = basin)) +
+  scale_fill_brewer(palette = "Dark2") +
+  geom_col() +
+  scale_y_discrete(limits = rev) +
+  facet_grid(~data_source)
+
+```
+
+
 ```{r budget_MLR_regions_simABCD}
 
 dcant_budget_basin_MLR_dissic <-
@@ -1527,6 +1641,11 @@ dcant_profile %>%
   write_csv(paste(path_version_data,
                   "dcant_profile_mod_truth.csv", sep = ""))
 
+dcant_profile_basin_MLR %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_basin_MLR_mod_truth.csv", sep = ""))
+
 dcant_zonal_method %>%
   filter(data_source == "mod_truth") %>%
   write_csv(paste(path_version_data,
@@ -1599,6 +1718,11 @@ dcant_budget_basin_MLR %>%
   write_csv(paste(path_version_data,
                   "dcant_budget_basin_MLR_mod_truth.csv", sep = ""))
 
+dcant_budget_basin_MLR_layer %>%
+  filter(data_source == "mod_truth") %>%
+  write_csv(paste(path_version_data,
+                  "dcant_budget_basin_MLR_layer_mod_truth.csv", sep = ""))
+
 dcant_budget_basin_MLR %>%
   filter(data_source == "mod_truth_cc") %>%
   write_csv(paste(path_version_data,
@@ -1630,6 +1754,10 @@ dcant_zonal_cstar_A %>%
 dcant_profile_cstar_A %>%
   write_csv(paste(path_version_data,
                   "dcant_profile_mod_truth_cstar_A.csv", sep = ""))
+
+dcant_profile_basin_MLR_cstar_A %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_basin_MLR_mod_truth_cstar_A.csv", sep = ""))
 
 dcant_zonal_method_cstar_A %>% 
   write_csv(paste(path_version_data,
@@ -1676,6 +1804,10 @@ dcant_zonal_cstar_B %>%
 dcant_profile_cstar_B %>%
   write_csv(paste(path_version_data,
                   "dcant_profile_mod_truth_cstar_B.csv", sep = ""))
+
+dcant_profile_basin_MLR_cstar_B %>%
+  write_csv(paste(path_version_data,
+                  "dcant_profile_basin_MLR_mod_truth_cstar_B.csv", sep = ""))
 
 dcant_zonal_method_cstar_B %>% 
   write_csv(paste(path_version_data,

@@ -994,10 +994,11 @@ rm(dcant_surface_average, dcant_average)
 
 ```
 
-
 ## Zonal sections
 
 For each basin and era combination, the zonal mean dcant is calculated, again for all vs positive only values. Likewise, sd is calculated for the averaging of the mean basin fields.
+
+### Three basins
 
 ```{r calc_cant_zonal_mean_sections}
 
@@ -1032,6 +1033,44 @@ dcant_zonal_method <- dcant_zonal_method %>%
          dcant_pos = dcant_pos_mean) %>% 
   select(-c(dcant_sd_sd, dcant_pos_sd_sd,
             gamma_sd_mean, gamma_sd_sd))
+
+```
+
+
+### Global transect
+
+```{r calc_cant_global_mean_sections}
+
+dcant_global_section <- dcant_3d %>%
+  group_by(data_source) %>%
+  nest() %>%
+  mutate(zonal = map(.x = data, ~m_section_global_mean_sd(.x))) %>%
+  select(-data) %>%
+  unnest(zonal)
+
+dcant_global_section <- dcant_global_section %>% 
+  rename(dcant = dcant_mean,
+         dcant_pos = dcant_pos_mean) %>% 
+  select(-c(dcant_sd_sd, dcant_pos_sd_sd,
+            gamma_sd_mean, gamma_sd_sd))
+
+
+
+p_section_global(
+  df = dcant_global_section %>%
+    filter(data_source == "obs"),
+  var = "dcant",
+  plot_slabs = "n",
+  title_text = "Global section basin"
+)
+
+p_section_global(
+  df = dcant_3d %>%
+    filter(data_source == "obs"),
+  var = "dcant",
+  plot_slabs = "n",
+  title_text = "Global section transect"
+)
 
 ```
 
@@ -1458,6 +1497,10 @@ dcant_predictor_3d %>%
 dcant_zonal %>%
   write_csv(paste(path_version_data,
                   "dcant_zonal.csv", sep = ""))
+
+dcant_global_section %>%
+  write_csv(paste(path_version_data,
+                  "dcant_global_section.csv", sep = ""))
 
 dcant_profile %>%
   write_csv(paste(path_version_data,
