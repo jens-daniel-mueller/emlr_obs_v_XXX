@@ -528,10 +528,12 @@ predictors %>%
 
 predictors %>%
   group_split(data_source) %>%
+  head(1) %>% 
   map(
     ~ p_section_global(
       df = .x,
       var = "aou",
+      plot_slabs = "n",
       col = "divergent",
       subtitle_text = paste("Data source: ", unique(.x$data_source))
     )
