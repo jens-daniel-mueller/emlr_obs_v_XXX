@@ -451,6 +451,18 @@ if (params_local$data_adjustment == "bulk") {
       phosphate = phosphate * params_local$phosphate_corr_316N199,
     )
   
+  GLODAP_adjustment_stats <-
+    bind_rows(
+      GLODAP_adj %>%
+        count(era, basin) %>%
+        mutate(adjustment = "yes"),
+      GLODAP_unadj %>%
+        filter(data_source == "obs") %>% 
+        count(era, basin) %>%
+        mutate(adjustment = "no")
+    ) %>% 
+    mutate(group = "IO_1990")
+  
   GLODAP <- bind_rows(GLODAP_adj,
                       GLODAP_unadj)
   
@@ -511,8 +523,38 @@ if (params_local$data_adjustment == "cruise") {
                      tco2)
     )
   
+  GLODAP_adjustment_stats <-
+    GLODAP %>%
+    filter(data_source == "obs") %>%
+    mutate(adjustment = "no",
+           adjustment = if_else(
+             is.na(talk_corr_IO_1900) &
+               is.na(tco2_corr_IO_1900),
+             adjustment,
+             "yes"
+           )) %>%
+    count(era, basin, adjustment) %>% 
+    mutate(group = "IO_1990")
+  
+  
   GLODAP <- GLODAP %>%
     select(-ends_with("corr_IO_1900"))
+  
+}
+
+
+```
+
+```{r adjustment_stats_without_adjustments}
+
+if (params_local$data_adjustment == "none") {
+  
+  GLODAP_adjustment_stats <-
+    GLODAP %>%
+    filter(data_source == "obs") %>%
+    mutate(adjustment = "no") %>%
+    count(era, basin, adjustment) %>% 
+    mutate(group = "IO_1990")
   
 }
 
@@ -524,6 +566,7 @@ if (params_local$data_adjustment == "cruise") {
 
 ```{r correct_calculated_talk}
 
+
 if (params_local$data_adjustment != "none") {
   GLODAP <- GLODAP %>%
     mutate(
@@ -534,8 +577,37 @@ if (params_local$data_adjustment != "none") {
         talk
       )
     )
+  
+  GLODAP_adjustment_stats_temp <- GLODAP %>%
+    filter(data_source == "obs") %>%
+    mutate(
+      adjustment = "no",
+      adjustment = if_else(
+        cruise_expocode %in% params_local$cruises_talk_calc,
+        "yes",
+        adjustment
+      )
+    ) %>%
+    count(era, basin, adjustment) %>%
+    mutate(group = "talk_calc")
+  
+  if (exists("GLODAP_adjustment_stats")) {
+    GLODAP_adjustment_stats <-
+      bind_rows(GLODAP_adjustment_stats,
+                GLODAP_adjustment_stats_temp)
+  }
+  
+  if (!exists("GLODAP_adjustment_stats")) {
+    GLODAP_adjustment_stats <- GLODAP_adjustment_stats_temp
+  }
+  
+  rm(GLODAP_adjustment_stats_temp)
+  
 }
 
+# GLODAP_adjustment_stats %>% 
+#   group_by(group) %>% 
+#   summarise(sum(n))
 
 ```
 
@@ -632,7 +704,39 @@ if (params_local$data_adjustment == "cruise") {
   
 }
 
+if (params_local$data_adjustment != "none") {
+
+  GLODAP_adjustment_stats_temp <- GLODAP %>%
+    filter(data_source == "obs") %>%
+    mutate(
+      adjustment = "no",
+      adjustment = if_else(
+        cruise_expocode %in% expocodes_xover_NP &
+          era == "2010-2020",
+        "yes",
+        adjustment
+      )
+    ) %>%
+    count(era, basin, adjustment) %>%
+    mutate(group = "NP")
+  
+  if (exists("GLODAP_adjustment_stats")) {
+    GLODAP_adjustment_stats <-
+      bind_rows(GLODAP_adjustment_stats,
+                GLODAP_adjustment_stats_temp)
+  }
+  
+  if (!exists("GLODAP_adjustment_stats")) {
+    GLODAP_adjustment_stats <- GLODAP_adjustment_stats_temp
+  }
+  
+  rm(GLODAP_adjustment_stats_temp)
+  
+}
+
 rm(expocodes_xover_NP)
+
+
 
 ```
 
@@ -2401,6 +2505,11 @@ GLODAP %>% write_csv(paste(
   "GLODAPv2.2020_MLR_fitting_ready.csv",
   sep = ""
 ))
+
+
+GLODAP_adjustment_stats %>% write_csv(paste(path_version_data,
+                                            "GLODAP_adjustment_stats.csv",
+                                            sep = ""))
 
 GLODAP_grid  %>%
   write_csv(paste(path_version_data,

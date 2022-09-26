@@ -354,9 +354,9 @@ cruises_tco2_calc = lst(cruises_tco2_calc =
 # cruises for which calculated talk data are accepted
 # even if generally f-flag = 0 data are excluded
 cruises_talk_calc = lst(cruises_talk_calc = c(
-  # "06MT19900123",
-  # "316N19920502",
-  # "316N19921006"
+  "06MT19900123",
+  "316N19920502",
+  "316N19921006"
   ))
 
 # additive talk correction for calculate talk data
@@ -366,7 +366,7 @@ talk_calc_corr = lst(talk_calc_corr = 3)
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
 cruises_qc_flag = lst(cruises_qc_flag = c(
-  # "31DS19940126"
+  "31DS19940126"
   ))
 
 # Shallowest depth for data to be included in MLR fitting
@@ -446,24 +446,24 @@ MLR_basins = lst(
 
 # gap filling of NA values in GLODAP
 gap_filling = lst(
-  # gap_filling = "CANYON-B"
-  gap_filling = "none"
+  gap_filling = "CANYON-B"
+  # gap_filling = "none"
 )
 
 
 # cruises for which phosphate gaps should be filled with CANYON-B
 cruises_phosphate_gap_fill = lst(
   cruises_phosphate_gap_fill = c(
-    # "33MW19930704",
-    # "33RO20030604",
-    # "33RO20050111",
-    # "33RO19980123"
+    "33MW19930704",
+    "33RO20030604",
+    "33RO20050111",
+    "33RO19980123"
   )
 )
 
 # cruises for which talk gaps should be filled with CANYON-B
 cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
-  # "06AQ19980328"
+  "06AQ19980328"
   ))
 
 # cruise adjustment thresholds, not applied when Inf
@@ -648,7 +648,7 @@ path_root <- "/nfs/kryo/work/jenmueller/emlr_cant/observations"
 for (i in 1:length(params_local_all)) {
   # i <- 3
   
-  Version_ID <- sprintf("v_3g%02d", i)
+  Version_ID <- sprintf("v_G0%02d", i)
 
   params_local <- nth(params_local_all, i)
   params_local$Version_ID <- Version_ID

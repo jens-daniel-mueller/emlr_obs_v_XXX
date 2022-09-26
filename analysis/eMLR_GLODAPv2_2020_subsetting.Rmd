@@ -135,7 +135,7 @@ GLODAP_CB <-
     paste0(
       path_preprocessing,
       "GLODAPv2.",
-      "2022",
+      params_local$GLODAPv2_version,
       "_Canyon-B.csv"
     )
   )
@@ -873,7 +873,7 @@ GLODAP <- GLODAP %>%
   select(!ends_with("_CANYONB")) %>% 
   select(!starts_with("fill_"))
 
-rm(GLODAP_filling_long, GLODAP_filling_wide)
+rm(GLODAP_filling_wide)
 
 }
 
@@ -1127,7 +1127,6 @@ GLODAP <- GLODAP %>%
       cruise_expocode %in% cruises_co2_calc
   )
 
-
 # Remove all data that do not meet qc-flag criterion,
 # except defined exceptions
 
@@ -1138,6 +1137,28 @@ GLODAP <- GLODAP %>%
       cruise_expocode %in% params_local$cruises_qc_flag |
       cruise_expocode %in% params_local$cruises_talk_gap_fill |
       cruise_expocode %in% params_local$cruises_phosphate_gap_fill
+  )
+
+GLODAP_flagging_stats <-
+  bind_rows(
+    GLODAP %>%
+      mutate(group = "all_good") %>%
+      mutate(group = if_else(
+        if_all(ends_with("f"), ~ . %in% params_local$flag_f),
+        group,
+        "filled"
+      )) %>%
+      count(group, era) %>%
+      mutate(criterion = "f_flag"),
+    GLODAP %>%
+      mutate(group = "all_good") %>%
+      mutate(group = if_else(
+        if_all(ends_with("qc"), ~ . %in% params_local$flag_qc),
+        group,
+        "filled"
+      )) %>%
+      count(group, era) %>%
+      mutate(criterion = "qc_flag")
   )
 
 rm(cruises_co2_calc)
@@ -1394,6 +1415,14 @@ GLODAP <- GLODAP %>%
 GLODAP  %>%  write_csv(paste(path_version_data,
                              "GLODAPv2.2020_clean.csv",
                              sep = ""))
+
+GLODAP_filling_long  %>%  write_csv(paste(path_version_data,
+                                          "GLODAP_CanyonB_filling_stats.csv",
+                                          sep = ""))
+
+GLODAP_flagging_stats  %>%  write_csv(paste(path_version_data,
+                                          "GLODAP_flagging_stats.csv",
+                                          sep = ""))
 
 tref  %>%  write_csv(paste(path_version_data,
                            "tref.csv",
