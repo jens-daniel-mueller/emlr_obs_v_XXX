@@ -34,7 +34,7 @@ wflow_publish(here::here(
     "tracers_GLODAPv2_2021.Rmd"
   )
 ),
-message = "rerun with CESM",
+message = "run with GM16",
 republish = TRUE)
 
 
@@ -48,41 +48,58 @@ jens-daniel-mueller
 library(rmarkdown)
 
 files <- c(
-  "eMLR_GLODAPv2_2020_subsetting.Rmd",
-  "eMLR_data_preparation.Rmd",
-  "eMLR_assumption_testing.Rmd",
-  "eMLR_model_fitting.Rmd",
-  "mapping_predictor_preparation.Rmd",
-  "mapping_dcant_eMLR.Rmd",
-  "mapping_dcant_mod_truth.Rmd",
-  "mapping_target_variable.Rmd",
-  "analysis_budgets.Rmd",
-  "analysis_column_inventory.Rmd",
-  "analysis_zonal_sections.Rmd",
-  "analysis_slab_inventory.Rmd",
-  "analysis_MLR_performance.Rmd",
-  "analysis_anomalous_changes.Rmd",
-  "tracers_GLODAPv2_2021.Rmd"
+  # "eMLR_GLODAPv2_2020_subsetting.Rmd",
+  # "eMLR_data_preparation.Rmd"
+  # "eMLR_assumption_testing.Rmd",
+  # "eMLR_model_fitting.Rmd",
+  # "mapping_predictor_preparation.Rmd",
+  # "mapping_dcant_eMLR.Rmd",
+  # "mapping_dcant_mod_truth.Rmd",
+  # "mapping_target_variable.Rmd",
+  # "analysis_budgets.Rmd",
+  # "analysis_column_inventory.Rmd",
+  # "analysis_zonal_sections.Rmd",
+  "analysis_slab_inventory.Rmd"
+  # "analysis_MLR_performance.Rmd",
+  # "analysis_anomalous_changes.Rmd",
+  # "tracers_GLODAPv2_2021.Rmd"
 )
 
-Version_IDs_1 <- list.files(
-  path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_1c")#[5:6]
+# quit from 1g01
 
-Version_IDs_2 <- list.files(
-  path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_2c")#[5:6]
+for (i_index in c("1", "o", "d", "g", "n", "c", "e")) {
+  # i_index <- "1"
 
-Version_IDs_3 <- list.files(
-  path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
-  pattern = "v_3c")#[4:6]
+  Version_IDs_1 <- list.files(path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
+                              pattern = paste0("v_1", i_index))#[1:1]
 
-Version_IDs <- c(
-  Version_IDs_1,
-  Version_IDs_2,
-  Version_IDs_3
-  )
+  Version_IDs_2 <- list.files(path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
+                              pattern = paste0("v_2", i_index))
 
+  Version_IDs_3 <- list.files(path = "/nfs/kryo/work/jenmueller/emlr_cant/observations",
+                              pattern = paste0("v_3", i_index))
+
+  Version_IDs_temp <- c(Version_IDs_1,
+                        Version_IDs_2,
+                        Version_IDs_3)
+
+  if (exists("Version_IDs")) {
+    Version_IDs <- c(Version_IDs, Version_IDs_temp)
+  }
+
+  if (!exists("Version_IDs")) {
+    Version_IDs <- Version_IDs_temp
+  }
+
+}
+
+rm(Version_IDs_1,
+   Version_IDs_2,
+   Version_IDs_3,
+   Version_IDs_temp,
+   i_index)
+
+# Version_IDs <- Version_IDs[c(3,9,15)]
 
 for (i_Version_IDs in Version_IDs) {
   for (i_files in files) {
