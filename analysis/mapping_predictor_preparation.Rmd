@@ -186,6 +186,11 @@ WOA18_predictors <-
                  "WOA18_sal_temp.csv",
                  sep = ""))
 
+WOA18_predictors_nuts_O2 <-
+  read_csv(paste(path_preprocessing,
+                 "WOA18_nuts_O2.csv",
+                 sep = ""))
+
 ```
 
 
@@ -264,11 +269,14 @@ WOA18 and GLODAP predictor climatologies are merged. Only horizontal grid cells 
 ```{r join_WOA18_GLODAP_predictors}
 
 # join deep water predictors
-predictors <- full_join(
-  GLODAP_predictors,
-  WOA18_predictors)
-
-rm(GLODAP_predictors)
+if (params_local$predictor_climatology == "WOA18") {
+  predictors <- full_join(WOA18_predictors_nuts_O2,
+                          WOA18_predictors)
+  
+} else {
+  predictors <- full_join(GLODAP_predictors,
+                          WOA18_predictors)
+}
 
 predictors <- predictors %>% 
   drop_na()
@@ -280,6 +288,8 @@ predictors_surface <- full_join(
 
 predictors_surface <- predictors_surface %>% 
   drop_na()
+
+rm(GLODAP_predictors, WOA18_predictors_nuts_O2, WOA18_predictors)
 
 ```
 

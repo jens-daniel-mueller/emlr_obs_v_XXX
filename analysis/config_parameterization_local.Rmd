@@ -121,7 +121,7 @@ params_local <-
       "316N19921006"
     ),
     # additive talk correction for calculate talk data
-    talk_calc_corr = 0,
+    talk_calc_corr = 3,
     # cruises for which data with qc = 0 flag are accepted
     # even if generally qc-flag = 0 data are excluded
     cruises_qc_flag = c(
@@ -162,22 +162,22 @@ params_local <-
     target_global_rmse_max = 1000,
 
     # start years for eras
-    era_start = c(1989, 2000),
-    # era_start = c(2000, 2010),
+    # era_start = c(1989, 2000),
+    era_start = c(2000, 2010),
     # era_start = c(2000, 2010),
     
     # end years for eras
-    era_end = c(1999, 2009),
-    # era_end = c(2009, 2020),
+    # era_end = c(1999, 2009),
+    era_end = c(2009, 2020),
     # era_end = c(2009, 2020),
     
     # manually define tref1, set to NULL to use median year
-    tref1 = 1994,
-    # tref1 = 2004,
+    # tref1 = 1994,
+    tref1 = 2004,
     
     # manually define tref2, set to NULL to use median year
-    tref2 = 2004,
-    # tref2 = 2014,
+    # tref2 = 2004,
+    tref2 = 2014,
     
     # ID for basins for MLR fits (options: "2", "AIP", "5", "SO")
     MLR_basins = "AIP",
@@ -244,6 +244,8 @@ params_local <-
     preind_atm_pCO2 = 280,
     # index of slabs to be plotted
     plot_slabs = as.factor(c("(26,26.5]", "(27.5,27.75]", "(27.95,28.05]")),
+    # nutrient and oxygen predictor fields: WOA18 or GM16
+    predictor_climatology = "GM16",
     # generate a high number of diagnostic plots while running the analysis (y/n)
     plot_all_figures = "n"
   )

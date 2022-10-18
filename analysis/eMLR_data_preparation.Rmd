@@ -115,6 +115,21 @@ GLODAP <-
 
 ```
 
+```{r aou_test, eval=FALSE}
+
+GLODAP %>%
+  sample_n(10000) %>%
+  mutate(
+    temp_cons = gsw_CT_from_t(sal, temp, depth),
+    aou_recalc = b_aou(sal, temp, depth, oxygen)
+  ) %>%
+  ggplot(aes(aou, aou_recalc)) +
+  geom_bin2d()
+  
+  
+```
+
+
 ## Cant fields
 
 ```{r read_cant_files}
