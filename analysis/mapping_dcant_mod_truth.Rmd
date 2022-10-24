@@ -77,6 +77,21 @@ basinmask_AIP <- basinmask %>%
 ```
 
 
+```{r read_basinmask_excl_Japan, include = FALSE}
+
+basinmask_excl_Japan <-
+  read_csv(paste(path_files,
+                 "basin_mask_WOA18_excl_Japan.csv",
+                 sep = ""))
+
+basinmask_excl_Japan <- basinmask_excl_Japan %>% 
+  select(-basin_AIP)
+
+basinmask_AIP <- inner_join(basinmask_AIP, basinmask_excl_Japan)
+
+```
+
+
 ```{r load_libraries_specific, include=FALSE}
 library(marelac)
 ```
@@ -350,6 +365,8 @@ climatology <-
     )
   )
 
+climatology <- inner_join(climatology, basinmask_excl_Japan)
+
 ```
 
 
@@ -403,7 +420,7 @@ rm(tcant_tref_1, tcant_tref_2)
 dcant_3d <- dcant_3d %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d <- full_join(dcant_3d, climatology)
+dcant_3d <- right_join(dcant_3d, climatology)
 
 dcant_3d <- dcant_3d %>%
   mutate(
@@ -435,7 +452,7 @@ rm(tcant_cc_tref_1, tcant_cc_tref_2)
 dcant_3d <- dcant_3d %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d <- full_join(dcant_3d, climatology)
+dcant_3d <- right_join(dcant_3d, climatology)
 
 dcant_3d <- dcant_3d %>%
   mutate(
@@ -514,7 +531,7 @@ dcant_3d_dissic <- dcant_3d_dissic %>%
 dcant_3d_dissic <- dcant_3d_dissic %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d_dissic <- full_join(dcant_3d_dissic, climatology)
+dcant_3d_dissic <- right_join(dcant_3d_dissic, climatology)
 
 dcant_3d_dissic <- m_cut_gamma(dcant_3d_dissic, "gamma")
 
@@ -537,7 +554,7 @@ rm(cstar_tref_1_A, cstar_tref_2_A)
 dcant_3d_cstar_A <- dcant_3d_cstar_A %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d_cstar_A <- full_join(dcant_3d_cstar_A, climatology)
+dcant_3d_cstar_A <- right_join(dcant_3d_cstar_A, climatology)
 
 dcant_3d_cstar_A <- dcant_3d_cstar_A %>%
   mutate(
@@ -575,7 +592,7 @@ rm(cstar_tref_1_B, cstar_tref_2_B)
 dcant_3d_cstar_B <- dcant_3d_cstar_B %>%
   mutate(dcant_pos = if_else(dcant <= 0, 0, dcant))
 
-dcant_3d_cstar_B <- full_join(dcant_3d_cstar_B, climatology)
+dcant_3d_cstar_B <- right_join(dcant_3d_cstar_B, climatology)
 
 dcant_3d_cstar_B <- dcant_3d_cstar_B %>%
   mutate(
