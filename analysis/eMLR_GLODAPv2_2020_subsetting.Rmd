@@ -76,6 +76,20 @@ basinmask <- basinmask %>%
 
 ```
 
+
+```{r read_basinmask_excl_Japan, include = FALSE}
+
+basinmask_excl_Japan <-
+  read_csv(paste(path_files,
+                 "basin_mask_WOA18_excl_Japan.csv",
+                 sep = ""))
+
+basinmask_excl_Japan <- basinmask_excl_Japan %>% 
+  select(-basin_AIP)
+
+```
+
+
 # Version ID
 
 The results displayed on this site correspond to the Version_ID:
@@ -199,6 +213,9 @@ GLODAP <- GLODAP %>%
 
 # use only data inside basinmask
 GLODAP <- inner_join(GLODAP, basinmask)
+
+# remove obs data from Sea of Japan
+GLODAP <- inner_join(GLODAP, basinmask_excl_Japan)
 
 ```
 
