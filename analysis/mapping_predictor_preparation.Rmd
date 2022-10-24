@@ -95,6 +95,7 @@ basinmask_excl_Japan <- basinmask_excl_Japan %>%
 library(metR)
 library(marelac)
 library(gsw)
+library(rquery)
 ```
 
 # Version ID
@@ -233,6 +234,7 @@ climatology <- climatology %>%
   select(-aou)
 
 climatology <- inner_join(climatology, basinmask)
+climatology <- inner_join(climatology, basinmask_excl_Japan)
 
 model_predictors <- climatology %>%
   select(lon, lat, depth, basin_AIP, gamma, 
@@ -288,17 +290,29 @@ if (params_local$predictor_climatology == "WOA18") {
                           WOA18_predictors)
   
 } else {
-  predictors <- full_join(GLODAP_predictors,
+  predictors <- right_join(GLODAP_predictors,
                           WOA18_predictors)
 }
+
+predictors <- natural_join(predictors, WOA18_predictors_nuts_O2,
+                           by = c("lon", "lat", "depth", "basin_AIP"),
+                           jointype = "LEFT") %>% 
+  as_tibble()
 
 predictors <- predictors %>% 
   drop_na()
 
 # join surface water predictors
-predictors_surface <- full_join(
+predictors_surface <- right_join(
   GLODAP_predictors_CO2,
   WOA18_predictors)
+
+predictors_surface <- predictors_surface %>% 
+  arrange(-lon) %>% 
+  group_by(lat,depth,basin_AIP) %>% 
+  fill(c(phosphate, silicate, TAlk, TCO2)) %>% 
+  ungroup()
+
 
 predictors_surface <- predictors_surface %>% 
   drop_na()
