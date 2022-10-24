@@ -77,6 +77,20 @@ basinmask <- basinmask %>%
 
 ```
 
+```{r read_basinmask_excl_Japan, include = FALSE}
+
+basinmask_excl_Japan <-
+  read_csv(paste(path_files,
+                 "basin_mask_WOA18_excl_Japan.csv",
+                 sep = ""))
+
+basinmask_excl_Japan <- basinmask_excl_Japan %>% 
+  select(-basin_AIP)
+
+```
+
+
+
 ```{r load_libraries_specific, include=FALSE}
 library(metR)
 library(marelac)
@@ -381,6 +395,9 @@ Data outside the WOA18 basin mask were removed for further analysis.
 
 predictors <- inner_join(predictors, basinmask)
 predictors_surface <- inner_join(predictors_surface, basinmask)
+
+predictors <- inner_join(predictors, basinmask_excl_Japan)
+predictors_surface <- inner_join(predictors_surface, basinmask_excl_Japan)
 
 ```
 
