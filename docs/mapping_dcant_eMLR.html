@@ -622,15 +622,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree02cb22dfab045a01c8b725d87089faec893e85d9targetblank02cb22da">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6271b7921d08acf3f63f2c2d5757989b8e63bbd4targetblank6271b79a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/02cb22dfab045a01c8b725d87089faec893e85d9" target="_blank">02cb22d</a>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6271b7921d08acf3f63f2c2d5757989b8e63bbd4" target="_blank">6271b79</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree02cb22dfab045a01c8b725d87089faec893e85d9targetblank02cb22da"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree6271b7921d08acf3f63f2c2d5757989b8e63bbd4targetblank6271b79a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -640,7 +640,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/02cb22dfab045a01c8b725d87089faec893e85d9" target="_blank">02cb22d</a>.
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/6271b7921d08acf3f63f2c2d5757989b8e63bbd4" target="_blank">6271b79</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -706,6 +706,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/6271b7921d08acf3f63f2c2d5757989b8e63bbd4/analysis/mapping_dcant_eMLR.Rmd" target="_blank">6271b79</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+<td>
+testrun with revelle adjustment to tmean
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/mapping_dcant_eMLR.html" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -7099,16 +7133,6 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>predictors_surface %&gt;%
-  group_split(data_source) %&gt;%
-  # head(1) %&gt;%
-  map( ~
-         p_section_climatology_regular(
-           df = .x,
-           var = &quot;rev_fac&quot;,
-           surface = &quot;y&quot;,
-           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
-         ))</code></pre>
 </div>
 <div id="dcant-calculation" class="section level3" number="4.2.4">
 <h3><span class="header-section-number">4.2.4</span> dcant
@@ -7127,10 +7151,10 @@ dcant_surface &lt;- full_join(predictors_surface, co2_atm_tref,
 
 # calculate cant
 dcant_surface &lt;- dcant_surface %&gt;%
-  mutate(dcant = (1 / rev_fac) *
+  mutate(dcant_atm_clim = (1 / rev_fac) *
            (TCO2 / pCO2) * d_pCO2_tref)
 
-surface_rev_fac &lt;- dcant_surface
+# surface_rev_fac &lt;- dcant_surface
 
 if (params_local$MLR_target %in% c(&quot;cstar_phosphate&quot;,
                                    &quot;cstar_nitrate&quot;,
@@ -7140,16 +7164,10 @@ if (params_local$MLR_target %in% c(&quot;cstar_phosphate&quot;,
     mutate(dcant = 0)
 }
 
-# calculate positive cant
-dcant_surface &lt;- dcant_surface %&gt;%
-  mutate(dcant_pos = if_else(dcant &lt; 0, 0, dcant)) %&gt;% 
-  select(lon, lat, data_source, dcant, dcant_pos)
-
-
-dcant_surface &lt;- full_join(
-  dcant_surface,
-  predictors_surface_all_depth
-)</code></pre>
+# dcant_surface &lt;- full_join(
+#   dcant_surface,
+#   predictors_surface_all_depth
+# )</code></pre>
 <pre class="r"><code># extract disequilibrium change of pCO2
 disequi_pCO2_tref &lt;- disequi_pCO2_tref %&gt;% 
   arrange(era) %&gt;% 
@@ -7169,7 +7187,7 @@ co2_atm_tref &lt;- co2_atm_tref %&gt;%
   mutate(d_pCO2_tref_disequi = d_pCO2_tref + delta_disequi_pco2) %&gt;% 
   select(data_source, d_pCO2_tref_disequi)
 
-dcant_surface_disequi &lt;- full_join(predictors_surface, co2_atm_tref)
+dcant_surface &lt;- full_join(dcant_surface, co2_atm_tref)
 
 co2_atm_tref_2002 &lt;- co2_atm_tref_2002 %&gt;% 
   mutate(pCO2_tref_delta_2002 = 
@@ -7180,14 +7198,14 @@ mean_delta_pCO2_atm &lt;- co2_atm_tref_2002 %&gt;%
   summarize(mean(pCO2_tref_delta_2002)) %&gt;% 
   pull()
 
-dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
-  mutate(pCO2_new = pCO2 + mean_delta_pCO2_atm)
+dcant_surface &lt;- dcant_surface %&gt;% 
+  mutate(pCO2_tmean = pCO2 + mean_delta_pCO2_atm)
 
-dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
+dcant_surface &lt;- dcant_surface %&gt;% 
   mutate(
-    TCO2_new = carb(
+    TCO2_tmean = carb(
       flag = 24,
-      var1 = pCO2_new,
+      var1 = pCO2_tmean,
       var2 = TAlk * 1e-6,
       S = sal,
       T = temp,
@@ -7199,9 +7217,9 @@ dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;%
   )
 
 
-dcant_surface_disequi %&gt;%
+dcant_surface %&gt;%
   mutate(depth = 0,
-         delta_TCO2 = TCO2_new - TCO2) %&gt;% 
+         delta_TCO2 = TCO2_tmean - TCO2) %&gt;% 
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
   map( ~
@@ -7311,12 +7329,12 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
+<pre class="r"><code>dcant_surface &lt;- dcant_surface %&gt;% 
   mutate(
-    rev_fac_new = buffer(
+    rev_fac_tmean = buffer(
       flag = 15,
       var1 = TAlk * 1e-6,
-      var2 = TCO2_new * 1e-6,
+      var2 = TCO2_tmean * 1e-6,
       S = sal,
       T = temp,
       P = depth / 10,
@@ -7326,9 +7344,9 @@ jens-daniel-mueller
     )$BetaD
   )
 
-dcant_surface_disequi %&gt;%
+dcant_surface %&gt;%
   mutate(depth = 0,
-         delta_rev_fac = rev_fac_new - rev_fac) %&gt;% 
+         delta_rev_fac = rev_fac_tmean - rev_fac) %&gt;% 
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
   map( ~
@@ -7439,31 +7457,28 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code># calculate cant
-dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;%
-  mutate(dcant = (1 / rev_fac_new) *
-           (TCO2_new / pCO2_new) * d_pCO2_tref_disequi)
+dcant_surface &lt;- dcant_surface %&gt;%
+  mutate(dcant_disequi_tmean = (1 / rev_fac_tmean) *
+           (TCO2_tmean / pCO2_tmean) * d_pCO2_tref_disequi)
 
-surface_rev_fac_disequi &lt;- dcant_surface_disequi
+# calculate cant
+dcant_surface &lt;- dcant_surface %&gt;%
+  mutate(dcant_atm_tmean = (1 / rev_fac_tmean) *
+           (TCO2_tmean / pCO2_tmean) * d_pCO2_tref)
 
-# calculate positive cant
-dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;%
-  mutate(dcant_pos = if_else(dcant &lt; 0, 0, dcant)) %&gt;%
-  select(lon, lat, data_source, dcant, dcant_pos)
+# surface_rev_fac_disequi &lt;- dcant_surface_disequi
 
-
-dcant_surface_disequi &lt;- full_join(dcant_surface_disequi,
-                                   predictors_surface_all_depth)
-
-dcant_surface_disequi %&gt;%
-  mutate(depth = 0) %&gt;% 
+dcant_surface %&gt;%
+  mutate(depth = 0,
+         delta_dcant = dcant_atm_tmean - dcant_atm_clim) %&gt;%
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
-  map( ~
-         p_map_climatology(
-           df = .x,
-           var = &quot;dcant&quot;,
-           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
-         ))</code></pre>
+  map(~
+        p_map_climatology(
+          df = .x,
+          var = &quot;delta_dcant&quot;,
+          subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+        ))</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-5.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -7566,15 +7581,16 @@ jens-daniel-mueller
 </div>
 </div>
 <pre class="r"><code>dcant_surface %&gt;%
-  mutate(depth = 0) %&gt;% 
+  mutate(depth = 0,
+         delta_dcant = dcant_disequi_tmean - dcant_atm_clim) %&gt;%
   group_split(data_source) %&gt;%
   # head(1) %&gt;%
-  map( ~
-         p_map_climatology(
-           df = .x,
-           var = &quot;dcant&quot;,
-           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
-         ))</code></pre>
+  map(~
+        p_map_climatology(
+          df = .x,
+          var = &quot;delta_dcant&quot;,
+          subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+        ))</code></pre>
 <pre><code>[[1]]</code></pre>
 <p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-7.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -7676,123 +7692,8 @@ jens-daniel-mueller
 </table>
 </div>
 </div>
-<pre class="r"><code>full_join(
-  dcant_surface %&gt;%
-    select(lon, lat, data_source, depth, dcant_surface = dcant),
-  dcant_surface_disequi %&gt;%
-    select(lon, lat, data_source, depth, dcant_surface_disequi = dcant)
-) %&gt;%
-  mutate(depth = 0,
-         delta_dcant_surface = dcant_surface - dcant_surface_disequi) %&gt;%
-  group_split(data_source) %&gt;%
-  # head(1) %&gt;%
-  map(~
-        p_map_climatology(
-          df = .x,
-          var = &quot;delta_dcant_surface&quot;,
-          subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
-        ))</code></pre>
-<pre><code>[[1]]</code></pre>
-<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-9.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calc_dcant_surface_disequi-9">
-Past versions of calc_dcant_surface_disequi-9.png
-</button>
-</p>
-<div id="fig-calc_dcant_surface_disequi-9" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-9.png" target="_blank">4ba3af5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-10-25
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc44d2cc1fcf88b1cce02289620a1b387abaf4c5/docs/figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-9.png" target="_blank">bc44d2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-10-25
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre><code>
-[[2]]</code></pre>
-<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-10.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-calc_dcant_surface_disequi-10">
-Past versions of calc_dcant_surface_disequi-10.png
-</button>
-</p>
-<div id="fig-calc_dcant_surface_disequi-10" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-10.png" target="_blank">4ba3af5</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-10-25
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/bc44d2cc1fcf88b1cce02289620a1b387abaf4c5/docs/figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-10.png" target="_blank">bc44d2c</a>
-</td>
-<td>
-jens-daniel-mueller
-</td>
-<td>
-2022-10-25
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<pre class="r"><code>dcant_surface &lt;- dcant_surface %&gt;% 
+  select(lon:rev_fac, dcant = dcant_atm_tmean)</code></pre>
 </div>
 <div id="sea-surface-observations" class="section level3"
 number="4.2.5">
@@ -14267,7 +14168,10 @@ averaging</h3>
 <p>The averaging function is also applied to the surface data, although
 only one value per grid cell was mapped, to ensure consistency with the
 deep water values.</p>
-<pre class="r"><code>dcant_surface_average &lt;-
+<pre class="r"><code>dcant_surface &lt;- dcant_surface %&gt;%
+  mutate(dcant_pos = if_else(dcant &lt; 0, 0, dcant))
+
+dcant_surface_average &lt;-
   m_dcant_3d_average(dcant_surface)
 
 dcant_surface_average &lt;- m_cut_gamma(dcant_surface_average, &quot;gamma&quot;)
@@ -14442,6 +14346,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/calc_cant_global_mean_sections-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/calc_cant_global_mean_sections-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -14606,6 +14521,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/calc_cant_global_mean_sections-2.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/calc_cant_global_mean_sections-2.png" target="_blank">4ba3af5</a>
@@ -14827,6 +14753,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories-1.png" target="_blank">4ba3af5</a>
@@ -16626,6 +16563,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories_surface-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/cant_inventories_surface-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -18252,6 +18200,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-1.png" target="_blank">4ba3af5</a>
@@ -19887,6 +19846,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-2.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-2.png" target="_blank">4ba3af5</a>
@@ -21623,6 +21593,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-3.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-3.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -23357,6 +23338,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-4.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-4.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -25089,6 +25081,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-5.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/combine_dcant_inventories-5.png" target="_blank">4ba3af5</a>
@@ -26845,6 +26848,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/dcant_layer_inventories-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/dcant_layer_inventories-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -28089,6 +28103,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_global-1.png" target="_blank">4ba3af5</a>
@@ -29874,6 +29899,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_global_surface-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_global_surface-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -31630,6 +31666,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP_fig-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_basin_AIP_fig-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -33257,6 +33304,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_depth_layer_basin_AIP-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_depth_layer_basin_AIP-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -33936,6 +33994,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_depth_layer_basin_MLR-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_depth_layer_basin_MLR-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -34603,6 +34672,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-1.png" target="_blank">4ba3af5</a>
@@ -36229,6 +36309,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-2.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-2.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -37851,6 +37942,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-3.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-3.png" target="_blank">4ba3af5</a>
@@ -39477,6 +39579,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-4.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-4.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -41099,6 +41212,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-5.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-5.png" target="_blank">4ba3af5</a>
@@ -42725,6 +42849,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-6.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-6.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -44349,6 +44484,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-7.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_MLR_regions_fig-7.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -45951,6 +46097,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-1.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -47353,6 +47510,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-2.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-2.png" target="_blank">4ba3af5</a>
@@ -48792,6 +48960,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-3.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_lat_grid_fig-3.png" target="_blank">4ba3af5</a>
 </td>
 <td>
@@ -50198,6 +50377,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/f70e2fca1cc478b85c1b133f42ae1df582365a6f/docs/figure/mapping_dcant_eMLR.Rmd/budget_lon_grid_fig-1.png" target="_blank">f70e2fc</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/4ba3af54471f5739b689944f35cfff192058be8a/docs/figure/mapping_dcant_eMLR.Rmd/budget_lon_grid_fig-1.png" target="_blank">4ba3af5</a>
