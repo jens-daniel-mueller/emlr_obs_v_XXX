@@ -370,7 +370,7 @@ map +
 
 ```{r calc_surface_pCO2}
 
-predictors_surface_all_depth <- predictors_surface
+# predictors_surface_all_depth <- predictors_surface
 
 # predictors_surface %>% distinct(data_source, depth)
 
@@ -429,7 +429,6 @@ predictors_surface <- predictors_surface %>%
     )$BetaD
   )
 
-
 ```
 
 
@@ -463,6 +462,7 @@ co2_atm_tref_change <- co2_atm_tref
 
 dcant_surface <- full_join(predictors_surface, co2_atm_tref,
                            by = character())
+
 
 # calculate cant
 dcant_surface <- dcant_surface %>%
@@ -613,7 +613,7 @@ dcant_surface %>%
         ))
 
 dcant_surface <- dcant_surface %>% 
-  select(lon:rev_fac, dcant = dcant_atm_clim)
+  select(lon:rev_fac, dcant = dcant_atm_tmean)
 
 ```
 
@@ -1008,7 +1008,7 @@ dcant_average <- dcant_average %>%
 #   dcant_average_join %>% mutate(method = "eMLR"),
 #   dcant_surface_average_join %>% mutate(method = "surface"))
 
-dcant_3d <- left_join(
+dcant_3d <- inner_join(
   dcant_average,
   dcant_surface_average)
 
@@ -1184,6 +1184,18 @@ dcant_profile_basin_MLR <-
             dcant = sum(dcant_scaled) / sum(area)) %>% 
   ungroup()
 
+# dcant_profile_basin_MLR %>%
+#   filter(MLR_basins == "5") %>% 
+#   ggplot(aes(dcant, depth,
+#              col = data_source, fill=data_source)) +
+#   geom_vline(xintercept = 0) +
+#   geom_ribbon(aes(xmin = dcant - dcant_sd,
+#                   xmax = dcant + dcant_sd),
+#               alpha = 0.2,
+#               col = "transparent") +
+#   geom_path() +
+#   scale_y_reverse() +
+#   facet_grid( ~ basin)
 
 ```
 
