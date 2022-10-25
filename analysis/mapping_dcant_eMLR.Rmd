@@ -448,22 +448,6 @@ predictors_surface %>%
 ```
 
 
-```{r revelle_factor_climatology_sections, fig.asp=1, eval=FALSE}
-
-predictors_surface %>%
-  group_split(data_source) %>%
-  # head(1) %>%
-  map( ~
-         p_section_climatology_regular(
-           df = .x,
-           var = "rev_fac",
-           surface = "y",
-           subtitle_text = paste("Data source: ", unique(.x$data_source))
-         ))
-
-```
-
-
 ### dcant calculation
 
 ```{r calc_dcant_surface}
@@ -482,10 +466,10 @@ dcant_surface <- full_join(predictors_surface, co2_atm_tref,
 
 # calculate cant
 dcant_surface <- dcant_surface %>%
-  mutate(dcant = (1 / rev_fac) *
+  mutate(dcant_atm_clim = (1 / rev_fac) *
            (TCO2 / pCO2) * d_pCO2_tref)
 
-surface_rev_fac <- dcant_surface
+# surface_rev_fac <- dcant_surface
 
 if (params_local$MLR_target %in% c("cstar_phosphate",
                                    "cstar_nitrate",
@@ -495,16 +479,10 @@ if (params_local$MLR_target %in% c("cstar_phosphate",
     mutate(dcant = 0)
 }
 
-# calculate positive cant
-dcant_surface <- dcant_surface %>%
-  mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>% 
-  select(lon, lat, data_source, dcant, dcant_pos)
-
-
-dcant_surface <- full_join(
-  dcant_surface,
-  predictors_surface_all_depth
-)
+# dcant_surface <- full_join(
+#   dcant_surface,
+#   predictors_surface_all_depth
+# )
 
 ```
 
@@ -529,7 +507,7 @@ co2_atm_tref <- co2_atm_tref %>%
   mutate(d_pCO2_tref_disequi = d_pCO2_tref + delta_disequi_pco2) %>% 
   select(data_source, d_pCO2_tref_disequi)
 
-dcant_surface_disequi <- full_join(predictors_surface, co2_atm_tref)
+dcant_surface <- full_join(dcant_surface, co2_atm_tref)
 
 co2_atm_tref_2002 <- co2_atm_tref_2002 %>% 
   mutate(pCO2_tref_delta_2002 = 
@@ -540,14 +518,14 @@ mean_delta_pCO2_atm <- co2_atm_tref_2002 %>%
   summarize(mean(pCO2_tref_delta_2002)) %>% 
   pull()
 
-dcant_surface_disequi <- dcant_surface_disequi %>% 
-  mutate(pCO2_new = pCO2 + mean_delta_pCO2_atm)
+dcant_surface <- dcant_surface %>% 
+  mutate(pCO2_tmean = pCO2 + mean_delta_pCO2_atm)
 
-dcant_surface_disequi <- dcant_surface_disequi %>% 
+dcant_surface <- dcant_surface %>% 
   mutate(
-    TCO2_new = carb(
+    TCO2_tmean = carb(
       flag = 24,
-      var1 = pCO2_new,
+      var1 = pCO2_tmean,
       var2 = TAlk * 1e-6,
       S = sal,
       T = temp,
@@ -559,9 +537,9 @@ dcant_surface_disequi <- dcant_surface_disequi %>%
   )
 
 
-dcant_surface_disequi %>%
+dcant_surface %>%
   mutate(depth = 0,
-         delta_TCO2 = TCO2_new - TCO2) %>% 
+         delta_TCO2 = TCO2_tmean - TCO2) %>% 
   group_split(data_source) %>%
   # head(1) %>%
   map( ~
@@ -571,12 +549,12 @@ dcant_surface_disequi %>%
            subtitle_text = paste("Data source: ", unique(.x$data_source))
          ))
 
-dcant_surface_disequi <- dcant_surface_disequi %>% 
+dcant_surface <- dcant_surface %>% 
   mutate(
-    rev_fac_new = buffer(
+    rev_fac_tmean = buffer(
       flag = 15,
       var1 = TAlk * 1e-6,
-      var2 = TCO2_new * 1e-6,
+      var2 = TCO2_tmean * 1e-6,
       S = sal,
       T = temp,
       P = depth / 10,
@@ -586,9 +564,9 @@ dcant_surface_disequi <- dcant_surface_disequi %>%
     )$BetaD
   )
 
-dcant_surface_disequi %>%
+dcant_surface %>%
   mutate(depth = 0,
-         delta_rev_fac = rev_fac_new - rev_fac) %>% 
+         delta_rev_fac = rev_fac_tmean - rev_fac) %>% 
   group_split(data_source) %>%
   # head(1) %>%
   map( ~
@@ -599,59 +577,43 @@ dcant_surface_disequi %>%
          ))
 
 # calculate cant
-dcant_surface_disequi <- dcant_surface_disequi %>%
-  mutate(dcant = (1 / rev_fac_new) *
-           (TCO2_new / pCO2_new) * d_pCO2_tref_disequi)
+dcant_surface <- dcant_surface %>%
+  mutate(dcant_disequi_tmean = (1 / rev_fac_tmean) *
+           (TCO2_tmean / pCO2_tmean) * d_pCO2_tref_disequi)
 
-surface_rev_fac_disequi <- dcant_surface_disequi
+# calculate cant
+dcant_surface <- dcant_surface %>%
+  mutate(dcant_atm_tmean = (1 / rev_fac_tmean) *
+           (TCO2_tmean / pCO2_tmean) * d_pCO2_tref)
 
-# calculate positive cant
-dcant_surface_disequi <- dcant_surface_disequi %>%
-  mutate(dcant_pos = if_else(dcant < 0, 0, dcant)) %>%
-  select(lon, lat, data_source, dcant, dcant_pos)
-
-
-dcant_surface_disequi <- full_join(dcant_surface_disequi,
-                                   predictors_surface_all_depth)
-
-dcant_surface_disequi %>%
-  mutate(depth = 0) %>% 
-  group_split(data_source) %>%
-  # head(1) %>%
-  map( ~
-         p_map_climatology(
-           df = .x,
-           var = "dcant",
-           subtitle_text = paste("Data source: ", unique(.x$data_source))
-         ))
+# surface_rev_fac_disequi <- dcant_surface_disequi
 
 dcant_surface %>%
-  mutate(depth = 0) %>% 
-  group_split(data_source) %>%
-  # head(1) %>%
-  map( ~
-         p_map_climatology(
-           df = .x,
-           var = "dcant",
-           subtitle_text = paste("Data source: ", unique(.x$data_source))
-         ))
-
-full_join(
-  dcant_surface %>%
-    select(lon, lat, data_source, depth, dcant_surface = dcant),
-  dcant_surface_disequi %>%
-    select(lon, lat, data_source, depth, dcant_surface_disequi = dcant)
-) %>%
   mutate(depth = 0,
-         delta_dcant_surface = dcant_surface - dcant_surface_disequi) %>%
+         delta_dcant = dcant_atm_tmean - dcant_atm_clim) %>%
   group_split(data_source) %>%
   # head(1) %>%
   map(~
         p_map_climatology(
           df = .x,
-          var = "delta_dcant_surface",
+          var = "delta_dcant",
           subtitle_text = paste("Data source: ", unique(.x$data_source))
         ))
+
+dcant_surface %>%
+  mutate(depth = 0,
+         delta_dcant = dcant_disequi_tmean - dcant_atm_clim) %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~
+        p_map_climatology(
+          df = .x,
+          var = "delta_dcant",
+          subtitle_text = paste("Data source: ", unique(.x$data_source))
+        ))
+
+dcant_surface <- dcant_surface %>% 
+  select(lon:rev_fac, dcant = dcant_atm_tmean)
 
 ```
 
@@ -1014,6 +976,9 @@ dcant_average %>%
 The averaging function is also applied to the surface data, although only one value per grid cell was mapped, to ensure consistency with the deep water values.
 
 ```{r calc_dcant_mean_surface}
+
+dcant_surface <- dcant_surface %>%
+  mutate(dcant_pos = if_else(dcant < 0, 0, dcant))
 
 dcant_surface_average <-
   m_dcant_3d_average(dcant_surface)
