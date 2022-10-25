@@ -156,6 +156,11 @@ co2_atm_tref <-
                  "co2_atm_tref.csv",
                  sep = ""))
 
+co2_atm_tref_2002 <-
+  read_csv(paste(path_version_data,
+                 "co2_atm_tref.csv",
+                 sep = ""))
+
 disequi_pCO2_tref <-
   read_csv(paste(path_version_data,
                  "disequi_pCO2_tref.csv",
@@ -526,10 +531,77 @@ co2_atm_tref <- co2_atm_tref %>%
 
 dcant_surface_disequi <- full_join(predictors_surface, co2_atm_tref)
 
+co2_atm_tref_2002 <- co2_atm_tref_2002 %>% 
+  mutate(pCO2_tref_delta_2002 = 
+           pCO2_tref - co2_atm %>% filter(year == 2002) %>% pull(pCO2)) %>% 
+  select(era, pCO2_tref_delta_2002)
+
+mean_delta_pCO2_atm <- co2_atm_tref_2002 %>% 
+  summarize(mean(pCO2_tref_delta_2002)) %>% 
+  pull()
+
+dcant_surface_disequi <- dcant_surface_disequi %>% 
+  mutate(pCO2_new = pCO2 + mean_delta_pCO2_atm)
+
+dcant_surface_disequi <- dcant_surface_disequi %>% 
+  mutate(
+    TCO2_new = carb(
+      flag = 24,
+      var1 = pCO2_new,
+      var2 = TAlk * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = "l"
+    )$DIC *1e6
+  )
+
+
+dcant_surface_disequi %>%
+  mutate(depth = 0,
+         delta_TCO2 = TCO2_new - TCO2) %>% 
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "delta_TCO2",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+dcant_surface_disequi <- dcant_surface_disequi %>% 
+  mutate(
+    rev_fac_new = buffer(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2_new * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = "l"
+    )$BetaD
+  )
+
+dcant_surface_disequi %>%
+  mutate(depth = 0,
+         delta_rev_fac = rev_fac_new - rev_fac) %>% 
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "delta_rev_fac",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
 # calculate cant
 dcant_surface_disequi <- dcant_surface_disequi %>%
-  mutate(dcant = (1 / rev_fac) *
-           (TCO2 / pCO2) * d_pCO2_tref_disequi)
+  mutate(dcant = (1 / rev_fac_new) *
+           (TCO2_new / pCO2_new) * d_pCO2_tref_disequi)
 
 surface_rev_fac_disequi <- dcant_surface_disequi
 
@@ -541,6 +613,45 @@ dcant_surface_disequi <- dcant_surface_disequi %>%
 
 dcant_surface_disequi <- full_join(dcant_surface_disequi,
                                    predictors_surface_all_depth)
+
+dcant_surface_disequi %>%
+  mutate(depth = 0) %>% 
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "dcant",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+dcant_surface %>%
+  mutate(depth = 0) %>% 
+  group_split(data_source) %>%
+  # head(1) %>%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = "dcant",
+           subtitle_text = paste("Data source: ", unique(.x$data_source))
+         ))
+
+full_join(
+  dcant_surface %>%
+    select(lon, lat, data_source, depth, dcant_surface = dcant),
+  dcant_surface_disequi %>%
+    select(lon, lat, data_source, depth, dcant_surface_disequi = dcant)
+) %>%
+  mutate(depth = 0,
+         delta_dcant_surface = dcant_surface - dcant_surface_disequi) %>%
+  group_split(data_source) %>%
+  # head(1) %>%
+  map(~
+        p_map_climatology(
+          df = .x,
+          var = "delta_dcant_surface",
+          subtitle_text = paste("Data source: ", unique(.x$data_source))
+        ))
 
 ```
 
@@ -905,7 +1016,7 @@ The averaging function is also applied to the surface data, although only one va
 ```{r calc_dcant_mean_surface}
 
 dcant_surface_average <-
-  m_dcant_3d_average(dcant_surface)
+  m_dcant_3d_average(dcant_surface_disequi)
 
 dcant_surface_average <- m_cut_gamma(dcant_surface_average, "gamma")
 rm(dcant_surface)
