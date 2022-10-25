@@ -622,15 +622,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree36a9e152eefe32c60558afbff90bde34f49d882ctargetblank36a9e15a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea9a424dbd911bc9d0c83228ec7f95d114ff5fac0targetblanka9a424da">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/36a9e152eefe32c60558afbff90bde34f49d882c" target="_blank">36a9e15</a>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a9a424dbd911bc9d0c83228ec7f95d114ff5fac0" target="_blank">a9a424d</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree36a9e152eefe32c60558afbff90bde34f49d882ctargetblank36a9e15a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtreea9a424dbd911bc9d0c83228ec7f95d114ff5fac0targetblanka9a424da"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -640,7 +640,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/36a9e152eefe32c60558afbff90bde34f49d882c" target="_blank">36a9e15</a>.
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/a9a424dbd911bc9d0c83228ec7f95d114ff5fac0" target="_blank">a9a424d</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -705,6 +705,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/a9a424dbd911bc9d0c83228ec7f95d114ff5fac0/analysis/mapping_dcant_eMLR.Rmd" target="_blank">a9a424d</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+<td>
+testrun with surface disequilibrium calculation
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/7b39b3e57517864ec0b080d3550810e753df2212/docs/mapping_dcant_eMLR.html" target="_blank">7b39b3e</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-10-25
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -4595,6 +4629,11 @@ co2_atm_tref &lt;-
                  &quot;co2_atm_tref.csv&quot;,
                  sep = &quot;&quot;))
 
+co2_atm_tref_2002 &lt;-
+  read_csv(paste(path_version_data,
+                 &quot;co2_atm_tref.csv&quot;,
+                 sep = &quot;&quot;))
+
 disequi_pCO2_tref &lt;-
   read_csv(paste(path_version_data,
                  &quot;disequi_pCO2_tref.csv&quot;,
@@ -7080,10 +7119,85 @@ co2_atm_tref &lt;- co2_atm_tref %&gt;%
 
 dcant_surface_disequi &lt;- full_join(predictors_surface, co2_atm_tref)
 
-# calculate cant
+co2_atm_tref_2002 &lt;- co2_atm_tref_2002 %&gt;% 
+  mutate(pCO2_tref_delta_2002 = 
+           pCO2_tref - co2_atm %&gt;% filter(year == 2002) %&gt;% pull(pCO2)) %&gt;% 
+  select(era, pCO2_tref_delta_2002)
+
+mean_delta_pCO2_atm &lt;- co2_atm_tref_2002 %&gt;% 
+  summarize(mean(pCO2_tref_delta_2002)) %&gt;% 
+  pull()
+
+dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
+  mutate(pCO2_new = pCO2 + mean_delta_pCO2_atm)
+
+dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
+  mutate(
+    TCO2_new = carb(
+      flag = 24,
+      var1 = pCO2_new,
+      var2 = TAlk * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = &quot;l&quot;
+    )$DIC *1e6
+  )
+
+
+dcant_surface_disequi %&gt;%
+  mutate(depth = 0,
+         delta_TCO2 = TCO2_new - TCO2) %&gt;% 
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = &quot;delta_TCO2&quot;,
+           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+         ))</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;% 
+  mutate(
+    rev_fac_new = buffer(
+      flag = 15,
+      var1 = TAlk * 1e-6,
+      var2 = TCO2_new * 1e-6,
+      S = sal,
+      T = temp,
+      P = depth / 10,
+      Pt = phosphate * 1e-6,
+      Sit = silicate * 1e-6,
+      k1k2 = &quot;l&quot;
+    )$BetaD
+  )
+
+dcant_surface_disequi %&gt;%
+  mutate(depth = 0,
+         delta_rev_fac = rev_fac_new - rev_fac) %&gt;% 
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = &quot;delta_rev_fac&quot;,
+           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+         ))</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># calculate cant
 dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;%
-  mutate(dcant = (1 / rev_fac) *
-           (TCO2 / pCO2) * d_pCO2_tref_disequi)
+  mutate(dcant = (1 / rev_fac_new) *
+           (TCO2_new / pCO2_new) * d_pCO2_tref_disequi)
 
 surface_rev_fac_disequi &lt;- dcant_surface_disequi
 
@@ -7094,7 +7208,59 @@ dcant_surface_disequi &lt;- dcant_surface_disequi %&gt;%
 
 
 dcant_surface_disequi &lt;- full_join(dcant_surface_disequi,
-                                   predictors_surface_all_depth)</code></pre>
+                                   predictors_surface_all_depth)
+
+dcant_surface_disequi %&gt;%
+  mutate(depth = 0) %&gt;% 
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = &quot;dcant&quot;,
+           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+         ))</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dcant_surface %&gt;%
+  mutate(depth = 0) %&gt;% 
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map( ~
+         p_map_climatology(
+           df = .x,
+           var = &quot;dcant&quot;,
+           subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+         ))</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-8.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>full_join(
+  dcant_surface %&gt;%
+    select(lon, lat, data_source, depth, dcant_surface = dcant),
+  dcant_surface_disequi %&gt;%
+    select(lon, lat, data_source, depth, dcant_surface_disequi = dcant)
+) %&gt;%
+  mutate(depth = 0,
+         delta_dcant_surface = dcant_surface - dcant_surface_disequi) %&gt;%
+  group_split(data_source) %&gt;%
+  # head(1) %&gt;%
+  map(~
+        p_map_climatology(
+          df = .x,
+          var = &quot;delta_dcant_surface&quot;,
+          subtitle_text = paste(&quot;Data source: &quot;, unique(.x$data_source))
+        ))</code></pre>
+<pre><code>[[1]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-9.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>
+[[2]]</code></pre>
+<p><img src="figure/mapping_dcant_eMLR.Rmd/calc_dcant_surface_disequi-10.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="sea-surface-observations" class="section level3"
 number="4.2.5">
@@ -13526,7 +13692,7 @@ averaging</h3>
 only one value per grid cell was mapped, to ensure consistency with the
 deep water values.</p>
 <pre class="r"><code>dcant_surface_average &lt;-
-  m_dcant_3d_average(dcant_surface)
+  m_dcant_3d_average(dcant_surface_disequi)
 
 dcant_surface_average &lt;- m_cut_gamma(dcant_surface_average, &quot;gamma&quot;)
 rm(dcant_surface)</code></pre>
