@@ -816,7 +816,7 @@ GLODAP <- GLODAP %>%
     ),
     phosphate = if_else(
       fill_phosphate == "filled",
-      phosphate_CANYONB,
+      phosphate_CANYONB * params_local$cruises_phosphate_gap_fill_uncertainty,
       phosphate
     ),
     silicate = if_else(
@@ -826,7 +826,7 @@ GLODAP <- GLODAP %>%
     ),
     talk = if_else(
       fill_talk == "filled",
-      talk_CANYONB,
+      talk_CANYONB + params_local$cruises_talk_gap_fill_uncertainty,
       talk
     )
   )

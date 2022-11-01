@@ -95,7 +95,6 @@ basinmask_excl_Japan <- basinmask_excl_Japan %>%
 library(metR)
 library(marelac)
 library(gsw)
-library(rquery)
 ```
 
 # Version ID
@@ -294,7 +293,7 @@ if (params_local$predictor_climatology == "WOA18") {
                           WOA18_predictors)
 }
 
-predictors <- natural_join(predictors, WOA18_predictors_nuts_O2,
+predictors <- rquery::natural_join(predictors, WOA18_predictors_nuts_O2,
                            by = c("lon", "lat", "depth", "basin_AIP"),
                            jointype = "LEFT") %>% 
   as_tibble()
