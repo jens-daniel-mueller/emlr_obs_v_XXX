@@ -283,8 +283,8 @@ cstar_tref_1_A <-
   )
 
 cstar_tref_1_A <- cstar_tref_1_A %>%
-  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
-  pivot_longer(cstar_no3:cstar_po4,
+  select(lon, lat, depth, starts_with("cstar_")) %>% 
+  pivot_longer(starts_with("cstar_"),
                names_to = "data_source",
                names_prefix = "cstar_",
                values_to = "cstar_tref_1")
@@ -302,8 +302,8 @@ cstar_tref_2_A <-
   )
 
 cstar_tref_2_A <- cstar_tref_2_A %>%
-  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
-  pivot_longer(cstar_no3:cstar_po4,
+  select(lon, lat, depth, starts_with("cstar_")) %>% 
+  pivot_longer(starts_with("cstar_"),
                names_to = "data_source",
                names_prefix = "cstar_",
                values_to = "cstar_tref_2")
@@ -325,8 +325,8 @@ cstar_tref_1_B <-
   )
 
 cstar_tref_1_B <- cstar_tref_1_B %>%
-  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
-  pivot_longer(cstar_no3:cstar_po4,
+  select(lon, lat, depth, starts_with("cstar_")) %>% 
+  pivot_longer(starts_with("cstar_"),
                names_to = "data_source",
                names_prefix = "cstar_",
                values_to = "cstar_tref_1")
@@ -344,8 +344,8 @@ cstar_tref_2_B <-
   )
 
 cstar_tref_2_B <- cstar_tref_2_B %>%
-  select(lon, lat, depth, cstar_no3, cstar_po4) %>% 
-  pivot_longer(cstar_no3:cstar_po4,
+  select(lon, lat, depth, starts_with("cstar_")) %>% 
+  pivot_longer(starts_with("cstar_"),
                names_to = "data_source",
                names_prefix = "cstar_",
                values_to = "cstar_tref_2")
