@@ -220,14 +220,14 @@ dcant_zonal_bias <- full_join(
 )
 
 
-dcant_zonal_cstar <- dcant_zonal_cstar %>%
-  mutate(
-    data_source = case_when(
-      data_source == "po4" ~ "phosphate",
-      data_source == "no3" ~ "nitrate",
-      TRUE                 ~ data_source
-    )
-  )
+# dcant_zonal_cstar <- dcant_zonal_cstar %>%
+#   mutate(
+#     data_source = case_when(
+#       data_source == "po4" ~ "phosphate",
+#       data_source == "no3" ~ "nitrate",
+#       TRUE                 ~ data_source
+#     )
+#   )
 
 dcant_zonal_bias_cstar <- dcant_zonal_cstar %>%
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
