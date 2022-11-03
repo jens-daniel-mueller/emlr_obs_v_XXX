@@ -800,8 +800,11 @@ C* can optionally be calculated based on phosphate or nitrate.
 
 GLODAP <- GLODAP %>%
   mutate(
-    cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk),
-    cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)
+    cstar_nitrate = b_cstar_nitrate(tco2, nitrate),
+    cstar_phosphate = b_cstar_phosphate(tco2, phosphate),
+    cstar_nitrate_talk = b_cstar_nitrate_talk(tco2, nitrate, talk),
+    cstar_phosphate_talk = b_cstar_phosphate_talk(tco2, phosphate, talk),
+    cstar_talk = b_cstar_talk(tco2, talk)
   )
 
 
@@ -822,6 +825,16 @@ GLODAP %>%
   scale_fill_viridis_c() +
   facet_grid(data_source ~ basin_AIP)
 
+p_prop_prop(df = GLODAP,
+            var1 = "cstar_phosphate_talk",
+            var2 = "cstar_nitrate_talk") +
+  facet_grid(data_source ~ basin_AIP)
+
+p_prop_prop(df = GLODAP,
+            var1 = "cstar_phosphate_talk",
+            var2 = "cstar_talk") +
+  facet_grid(data_source ~ basin_AIP)
+
 ```
 
 C* was actually calculated as: 
@@ -832,18 +845,40 @@ if (params_local$cstar_nutrient == "phosphate") {
   print(b_cstar_phosphate)
   
   GLODAP <- GLODAP %>%
-    mutate(cstar_phosphate = b_cstar_phosphate(tco2, phosphate, talk)) %>%
     rename(cstar = cstar_phosphate) %>%
-    select(-cstar_nitrate)
+    select(-starts_with("cstar_"))
 }
 
 if (params_local$cstar_nutrient == "nitrate") {
   print(b_cstar_nitrate)
   
   GLODAP <- GLODAP %>%
-    mutate(cstar_nitrate = b_cstar_nitrate(tco2, nitrate, talk)) %>%
     rename(cstar = cstar_nitrate) %>%
-    select(-cstar_phosphate)
+    select(-starts_with("cstar_"))
+}
+
+if (params_local$cstar_nutrient == "phosphate_talk") {
+  print(b_cstar_phosphate_talk)
+  
+  GLODAP <- GLODAP %>%
+    rename(cstar = cstar_phosphate_talk) %>%
+    select(-starts_with("cstar_"))
+}
+
+if (params_local$cstar_nutrient == "nitrate_talk") {
+  print(b_cstar_nitrate_talk)
+  
+  GLODAP <- GLODAP %>%
+    rename(cstar = cstar_nitrate_talk) %>%
+    select(-starts_with("cstar_"))
+}
+
+if (params_local$cstar_nutrient == "talk") {
+  print(b_cstar_talk)
+  
+  GLODAP <- GLODAP %>%
+    rename(cstar = cstar_talk) %>%
+    select(-starts_with("cstar_"))
 }
 
 ```
