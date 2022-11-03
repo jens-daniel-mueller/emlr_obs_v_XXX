@@ -273,9 +273,9 @@ target_profile_basin_MLR <-
 ```{r join_cstar_true_and_predicted}
 
 dcant_3d_cstar <- dcant_3d_cstar %>% 
-  mutate(data_source = if_else(data_source == "po4",
-                               "phosphate",
-                               "nitrate")) %>% 
+  # mutate(data_source = if_else(data_source == "po4",
+  #                              "phosphate",
+  #                              "nitrate")) %>% 
   filter(data_source == params_local$cstar_nutrient)
 
 dcant_3d_cstar <- dcant_3d_cstar %>% 
