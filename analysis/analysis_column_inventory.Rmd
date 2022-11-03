@@ -242,14 +242,14 @@ p_map_cant_inv(
     subtitle_text = "data_source: delta C* prediction bias")
 
 
-dcant_inv_cstar <- dcant_inv_cstar %>%
-  mutate(
-    data_source = case_when(
-      data_source == "po4" ~ "phosphate",
-      data_source == "no3" ~ "nitrate",
-      TRUE                 ~ data_source
-    )
-  )
+# dcant_inv_cstar <- dcant_inv_cstar %>%
+#   mutate(
+#     data_source = case_when(
+#       data_source == "po4" ~ "phosphate",
+#       data_source == "no3" ~ "nitrate",
+#       TRUE                 ~ data_source
+#     )
+#   )
 
 dcant_inv_bias_cstar <- dcant_inv_cstar %>%
   filter(data_source %in% c("mod_truth", params_local$cstar_nutrient)) %>%
@@ -361,7 +361,7 @@ dcant_inv_cstar %>%
 
 ## mod_truth vs other Cstar nutrient
 
-```{r dcant_all_inventory_map_bias_cstar_nitrate_phosphate, fig.asp=0.5}
+```{r dcant_all_inventory_map_bias_cstar_nitrate_phosphate, eval=FALSE}
 
 other_cstar_nutrient <-
   c("phosphate", "nitrate")[!(c("phosphate", "nitrate") %in% params_local$cstar_nutrient)]
