@@ -462,7 +462,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Parameterization</h1>
 <h4 class="author">Jens Daniel Müller</h4>
-<h4 class="date">03 November, 2022</h4>
+<h4 class="date">12 November, 2022</h4>
 
 </div>
 
@@ -491,7 +491,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2022-11-03
+<strong>Last updated:</strong> 2022-11-12
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -622,15 +622,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5b6740eb15b4df8d78153a850287ddc1c05a26a6targetblank5b6740ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree74c7189e16b7d42fc4717cae48393e1818f53658targetblank74c7189a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5b6740eb15b4df8d78153a850287ddc1c05a26a6" target="_blank">5b6740e</a>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/74c7189e16b7d42fc4717cae48393e1818f53658" target="_blank">74c7189</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree5b6740eb15b4df8d78153a850287ddc1c05a26a6targetblank5b6740ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjensdanielmuelleremlrobsvXXXtree74c7189e16b7d42fc4717cae48393e1818f53658targetblank74c7189a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -640,7 +640,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/5b6740eb15b4df8d78153a850287ddc1c05a26a6" target="_blank">5b6740e</a>.
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/tree/74c7189e16b7d42fc4717cae48393e1818f53658" target="_blank">74c7189</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -707,6 +707,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jens-daniel-mueller/emlr_obs_v_XXX/blob/74c7189e16b7d42fc4717cae48393e1818f53658/analysis/config_parameterization_local.Rmd" target="_blank">74c7189</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-11-12
+</td>
+<td>
+test tco2 target variable
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jens-daniel-mueller/emlr_obs_v_XXX/9247cda9d5290488882c4dd687e6612748f30107/docs/config_parameterization_local.html" target="_blank">9247cda</a>
+</td>
+<td>
+jens-daniel-mueller
+</td>
+<td>
+2022-11-03
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -10763,7 +10797,7 @@ params_local &lt;-
     # 1 is equivalent to no rarefication applied
     rarefication_threshold = 0.95,
     # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
-    MLR_target = &quot;cstar_tref&quot;,
+    MLR_target = &quot;cstar_tco2&quot;,
     # see above
     MLR_predictors = MLR_predictors,
     # # see above
@@ -10786,7 +10820,7 @@ params_local &lt;-
     # see above
     slabs_Ind_Pac = slabs_Ind_Pac,
     # nutrient for cstar calculation
-    cstar_nutrient = &quot;phosphate&quot;,
+    cstar_nutrient = &quot;phosphate_talk&quot;,
     # Stoichiometric ratio of C to P
     rCP = 117,
     # Stoichiometric ratio of N to P
@@ -10911,8 +10945,8 @@ cruises_talk_calc = lst(cruises_talk_calc = c(
   ))
 
 # additive talk correction for calculate talk data
-# talk_calc_corr = lst(talk_calc_corr = 3)
-talk_calc_corr = lst(talk_calc_corr = 0)
+talk_calc_corr = lst(talk_calc_corr = 3)
+# talk_calc_corr = lst(talk_calc_corr = 0)
 
 # cruises for which data with qc = 0 flag are accepted
 # even if generally qc-flag = 0 data are excluded
@@ -11015,7 +11049,9 @@ cruises_phosphate_gap_fill = lst(
 
 # uncertainty of phosphate gaps filled with CANYON-B
 cruises_phosphate_gap_fill_uncertainty = lst(
-  cruises_phosphate_gap_fill_uncertainty = 1.01)
+  # cruises_phosphate_gap_fill_uncertainty = 1.01
+  cruises_phosphate_gap_fill_uncertainty = 1
+  )
 
 # cruises for which talk gaps should be filled with CANYON-B
 cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
@@ -11024,7 +11060,9 @@ cruises_talk_gap_fill = lst(cruises_talk_gap_fill = c(
 
 # uncertainty of talk gaps filled with CANYON-B
 cruises_talk_gap_fill_uncertainty = lst(
-  cruises_talk_gap_fill_uncertainty = -1)
+  # cruises_talk_gap_fill_uncertainty = -1
+  cruises_talk_gap_fill_uncertainty = 0
+  )
 
 # cruise adjustment thresholds, not applied when Inf
 cruise_adjustment_relative = Inf # levels as absolute factor -1
@@ -11059,9 +11097,9 @@ rarefication_threshold = lst(
 # Select the target variable for MLR, either &quot;tco2&quot;, &quot;cstar&quot; or &quot;cstar_tref&quot;
 MLR_target = lst(
   # MLR_target = &quot;cstar_tref_delta&quot;,
-  MLR_target = &quot;cstar_tref&quot;
+  # MLR_target = &quot;cstar_tref&quot;
   # MLR_target = &quot;cstar&quot;,
-  # MLR_target = &quot;cstar_tco2&quot;,
+  MLR_target = &quot;cstar_tco2&quot;
   # MLR_target = &quot;cstar_talk&quot;,
   # MLR_target = &quot;cstar_phosphate&quot;
 )
@@ -11092,7 +11130,13 @@ vif_max = lst(
 MLR_criterion = &quot;rmse&quot;
 
 # nutrient for cstar calculation
-cstar_nutrient = &quot;phosphate&quot;
+cstar_nutrient = lst(
+  cstar_nutrient = &quot;phosphate_talk&quot;,
+  # cstar_nutrient = &quot;phosphate&quot;
+  # cstar_nutrient = &quot;nitrate_talk&quot;,
+  # cstar_nutrient = &quot;nitrate&quot;,
+  # cstar_nutrient = &quot;talk&quot;
+)
 
 # Stoichiometric ratio of C to P
 rCP = 117
@@ -11214,7 +11258,7 @@ path_root &lt;- &quot;/nfs/kryo/work/jenmueller/emlr_cant/observations&quot;
 for (i in 1:length(params_local_all)) {
   # i &lt;- 3
   
-  Version_ID &lt;- sprintf(&quot;v_3g%02d&quot;, i)
+  Version_ID &lt;- sprintf(&quot;v_3t%02d&quot;, i)
 
   params_local &lt;- nth(params_local_all, i)
   params_local$Version_ID &lt;- Version_ID
