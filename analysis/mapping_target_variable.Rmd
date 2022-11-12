@@ -296,7 +296,7 @@ target_3d <- inner_join(
 )
 
 target_3d <- target_3d %>% 
-  mutate(dcant = cstar_tref - cstar_tref_mod_truth) %>% 
+  mutate(dcant = !!sym(params_local$MLR_target) - cstar_tref_mod_truth) %>% 
   select(lat, lon, depth, basin_AIP, era, gamma, dcant)
 
 target_3d <- target_3d %>%
